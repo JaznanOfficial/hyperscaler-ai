@@ -54,7 +54,7 @@ export default function EmployeeDashboardPage() {
           ))}
         </div>
 
-        <div className="border-t border-slate-200 bg-white px-6 py-4">
+        <div className="border-t border-slate-200 bg-white px-2 py-1 pt-4">
           <div className="relative rounded-3xl border border-slate-200 bg-white shadow-sm focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
             <Textarea
               placeholder="Type a message"
