@@ -40,6 +40,7 @@ type NavItem = {
   url: string
   icon: IconKey
   isActive?: boolean
+  matchSubRoutes?: boolean
 }
 
 const user = {
@@ -54,6 +55,7 @@ const defaultNavItems: NavItem[] = [
     url: "/s-admin",
     icon: "bot",
     isActive: true,
+    matchSubRoutes: true,
   },
   {
     title: "Services",
@@ -92,6 +94,7 @@ export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarP
     url: string
     icon: LucideIcon
     isActive?: boolean
+    matchSubRoutes?: boolean
   }>
 
   return (

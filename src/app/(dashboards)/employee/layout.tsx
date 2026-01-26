@@ -19,12 +19,13 @@ const employeeNavItems: AppSidebarNavItem[] = [
     title: "Hyperscaler AI",
     url: "/employee",
     icon: "bot",
-    isActive: true,
+    matchSubRoutes: false,
   },
   {
     title: "Projects",
-    url: "/projects",
+    url: "/employee/projects",
     icon: "folderKanban",
+    matchSubRoutes: true,
   },
 ]
 
@@ -53,7 +54,7 @@ export default function EmployeeDashboardLayout({
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-hidden p-4">{children}</div>
+        <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-hidden">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   )

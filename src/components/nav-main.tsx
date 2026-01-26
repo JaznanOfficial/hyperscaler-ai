@@ -28,6 +28,7 @@ export function NavMain({
     url: string
     icon: LucideIcon
     isActive?: boolean
+    matchSubRoutes?: boolean
     items?: {
       title: string
       url: string
@@ -36,9 +37,13 @@ export function NavMain({
 }) {
   const pathname = usePathname()
 
-  const isPathActive = (path: string) => {
+  const isPathActive = (path: string, matchSubRoutes = true) => {
     if (path === "/") {
       return pathname === "/"
+    }
+
+    if (!matchSubRoutes) {
+      return pathname === path
     }
 
     return pathname === path || pathname.startsWith(`${path}/`)
@@ -58,7 +63,7 @@ export function NavMain({
               <SidebarMenuButton
                 asChild
                 tooltip={item.title}
-                isActive={item.isActive ?? isPathActive(item.url)}
+                isActive={item.isActive ?? isPathActive(item.url, item.matchSubRoutes)}
               >
                 <a href={item.url}>
                   <item.icon />
