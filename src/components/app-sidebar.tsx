@@ -1,0 +1,124 @@
+"use client"
+
+import type { ComponentProps } from "react"
+import type { LucideIcon } from "lucide-react"
+import {
+  Bot,
+  Briefcase,
+  Command,
+  CreditCard,
+  FolderKanban,
+  Layers,
+  Users2,
+} from "lucide-react"
+
+import { NavMain } from "@/components/nav-main"
+import { NavUser } from "@/components/nav-user"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar"
+
+const iconMap = {
+  bot: Bot,
+  layers: Layers,
+  users: Users2,
+  briefcase: Briefcase,
+  creditCard: CreditCard,
+  folderKanban: FolderKanban,
+} as const
+
+type IconKey = keyof typeof iconMap
+
+type NavItem = {
+  title: string
+  url: string
+  icon: IconKey
+  isActive?: boolean
+}
+
+const user = {
+  name: "shadcn",
+  email: "m@example.com",
+  avatar: "/avatars/shadcn.jpg",
+}
+
+const defaultNavItems: NavItem[] = [
+  {
+    title: "Hyperscaler AI",
+    url: "/s-admin",
+    icon: "bot",
+    isActive: true,
+  },
+  {
+    title: "Services",
+    url: "/services",
+    icon: "layers",
+  },
+  {
+    title: "Employees",
+    url: "/employees",
+    icon: "users",
+  },
+  {
+    title: "Clients",
+    url: "/clients",
+    icon: "briefcase",
+  },
+  {
+    title: "Subscriptions",
+    url: "/subscriptions",
+    icon: "creditCard",
+  },
+]
+
+export type AppSidebarNavItem = NavItem
+
+type AppSidebarProps = ComponentProps<typeof Sidebar> & {
+  navItems?: NavItem[]
+}
+
+export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarProps) {
+  const resolvedNavItems = navItems.map((item) => ({
+    ...item,
+    icon: iconMap[item.icon] ?? iconMap.bot,
+  })) satisfies Array<{
+    title: string
+    url: string
+    icon: LucideIcon
+    isActive?: boolean
+  }>
+
+  return (
+    <Sidebar variant="inset" {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <a href="/">
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Command className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">Acme Inc</span>
+                  <span className="truncate text-xs">Enterprise</span>
+                </div>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <NavMain items={resolvedNavItems} />
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={user} />
+      </SidebarFooter>
+    </Sidebar>
+  )
+}
