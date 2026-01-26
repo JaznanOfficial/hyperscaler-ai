@@ -1,36 +1,11 @@
-import { StatsGrid } from "@/components/dashboard/s-admin/stats-grid"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-
 export default function SuperAdminPage() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Control Tower</h1>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Real-time signals pulled from your tenant orchestration layer.
-        </p>
-        <Separator className="mt-4" />
+    <section className="flex h-full flex-1 flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center text-slate-600">
+      <div className="space-y-4">
+        <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Super admin workspace</p>
+        <h1 className="text-2xl font-semibold text-slate-900">Chat interface removed</h1>
+        <p>All chat-related components were deleted per request. Rebuild a new experience when ready.</p>
       </div>
-      <StatsGrid />
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card className="border-dashed">
-          <CardHeader>
-            <CardTitle>Recent escalations</CardTitle>
-          </CardHeader>
-          <CardContent className="text-muted-foreground text-sm">
-            Hook up the incidents feed to surface severity-one threads.
-          </CardContent>
-        </Card>
-        <Card className="border-dashed">
-          <CardHeader>
-            <CardTitle>Automation backlog</CardTitle>
-          </CardHeader>
-          <CardContent className="text-muted-foreground text-sm">
-            Drop workflow cards here once the runbooks are wired in.
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    </section>
   )
 }

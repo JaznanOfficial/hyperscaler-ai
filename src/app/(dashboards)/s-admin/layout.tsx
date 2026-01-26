@@ -39,7 +39,7 @@ export default function SDashboardLayout({
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+        <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-hidden p-4">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   )
