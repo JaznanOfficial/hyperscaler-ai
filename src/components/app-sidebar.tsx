@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import type { ComponentProps } from "react"
 import type { LucideIcon } from "lucide-react"
 import {
@@ -56,8 +57,7 @@ const defaultNavItems: NavItem[] = [
     title: "Hyperscaler AI",
     url: "/s-admin",
     icon: "bot",
-    isActive: true,
-    matchSubRoutes: true,
+    matchSubRoutes: false,
   },
   {
     title: "Services",
@@ -76,7 +76,7 @@ const defaultNavItems: NavItem[] = [
   },
   {
     title: "Subscriptions",
-    url: "/subscriptions",
+    url: "/s-admin/subscriptions",
     icon: "creditCard",
   },
 ]
@@ -105,7 +105,7 @@ export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarP
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="/">
+              <Link href="/">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Command className="size-4" />
                 </div>
@@ -113,7 +113,7 @@ export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarP
                   <span className="truncate font-medium">Acme Inc</span>
                   <span className="truncate text-xs">Enterprise</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
