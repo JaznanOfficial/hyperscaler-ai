@@ -66,12 +66,12 @@ const defaultNavItems: NavItem[] = [
   },
   {
     title: "Employees",
-    url: "/employees",
+    url: "/s-admin/employees",
     icon: "users",
   },
   {
     title: "Clients",
-    url: "/clients",
+    url: "/s-admin/clients",
     icon: "briefcase",
   },
   {
