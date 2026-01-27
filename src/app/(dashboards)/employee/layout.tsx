@@ -27,6 +27,12 @@ const employeeNavItems: AppSidebarNavItem[] = [
     icon: "folderKanban",
     matchSubRoutes: true,
   },
+  {
+    title: "Feedbacks",
+    url: "/employee/feedbacks",
+    icon: "messageSquare",
+    matchSubRoutes: false,
+  },
 ]
 
 export default function EmployeeDashboardLayout({

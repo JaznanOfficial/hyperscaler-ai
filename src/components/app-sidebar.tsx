@@ -9,6 +9,7 @@ import {
   CreditCard,
   FolderKanban,
   Layers,
+  MessageSquare,
   Users2,
 } from "lucide-react"
 
@@ -31,6 +32,7 @@ const iconMap = {
   briefcase: Briefcase,
   creditCard: CreditCard,
   folderKanban: FolderKanban,
+  messageSquare: MessageSquare,
 } as const
 
 type IconKey = keyof typeof iconMap
