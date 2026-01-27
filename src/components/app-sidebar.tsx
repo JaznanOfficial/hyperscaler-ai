@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import type { ComponentProps } from "react"
 import type { LucideIcon } from "lucide-react"
 import {
@@ -9,6 +10,7 @@ import {
   CreditCard,
   FolderKanban,
   Layers,
+  MessageSquare,
   Users2,
 } from "lucide-react"
 
@@ -31,6 +33,7 @@ const iconMap = {
   briefcase: Briefcase,
   creditCard: CreditCard,
   folderKanban: FolderKanban,
+  messageSquare: MessageSquare,
 } as const
 
 type IconKey = keyof typeof iconMap
@@ -40,6 +43,7 @@ type NavItem = {
   url: string
   icon: IconKey
   isActive?: boolean
+  matchSubRoutes?: boolean
 }
 
 const user = {
@@ -53,7 +57,7 @@ const defaultNavItems: NavItem[] = [
     title: "Hyperscaler AI",
     url: "/s-admin",
     icon: "bot",
-    isActive: true,
+    matchSubRoutes: false,
   },
   {
     title: "Services",
@@ -62,17 +66,17 @@ const defaultNavItems: NavItem[] = [
   },
   {
     title: "Employees",
-    url: "/employees",
+    url: "/s-admin/employees",
     icon: "users",
   },
   {
     title: "Clients",
-    url: "/clients",
+    url: "/s-admin/clients",
     icon: "briefcase",
   },
   {
     title: "Subscriptions",
-    url: "/subscriptions",
+    url: "/s-admin/subscriptions",
     icon: "creditCard",
   },
 ]
@@ -92,6 +96,7 @@ export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarP
     url: string
     icon: LucideIcon
     isActive?: boolean
+    matchSubRoutes?: boolean
   }>
 
   return (
@@ -100,7 +105,7 @@ export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarP
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="/">
+              <Link href="/">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Command className="size-4" />
                 </div>
@@ -108,7 +113,7 @@ export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarP
                   <span className="truncate font-medium">Acme Inc</span>
                   <span className="truncate text-xs">Enterprise</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

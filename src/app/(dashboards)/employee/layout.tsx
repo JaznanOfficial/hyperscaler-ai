@@ -19,12 +19,19 @@ const employeeNavItems: AppSidebarNavItem[] = [
     title: "Hyperscaler AI",
     url: "/employee",
     icon: "bot",
-    isActive: true,
+    matchSubRoutes: false,
   },
   {
     title: "Projects",
-    url: "/projects",
+    url: "/employee/projects",
     icon: "folderKanban",
+    matchSubRoutes: true,
+  },
+  {
+    title: "Feedbacks",
+    url: "/employee/feedbacks",
+    icon: "messageSquare",
+    matchSubRoutes: false,
   },
 ]
 

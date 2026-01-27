@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ChevronRight, type LucideIcon } from "lucide-react"
 
@@ -28,6 +29,7 @@ export function NavMain({
     url: string
     icon: LucideIcon
     isActive?: boolean
+    matchSubRoutes?: boolean
     items?: {
       title: string
       url: string
@@ -36,9 +38,13 @@ export function NavMain({
 }) {
   const pathname = usePathname()
 
-  const isPathActive = (path: string) => {
+  const isPathActive = (path: string, matchSubRoutes = true) => {
     if (path === "/") {
       return pathname === "/"
+    }
+
+    if (!matchSubRoutes) {
+      return pathname === path
     }
 
     return pathname === path || pathname.startsWith(`${path}/`)
@@ -58,12 +64,12 @@ export function NavMain({
               <SidebarMenuButton
                 asChild
                 tooltip={item.title}
-                isActive={item.isActive ?? isPathActive(item.url)}
+                isActive={item.isActive ?? isPathActive(item.url, item.matchSubRoutes)}
               >
-                <a href={item.url}>
+                <Link href={item.url}>
                   <item.icon />
                   <span>{item.title}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
               {item.items?.length ? (
                 <>
@@ -81,9 +87,9 @@ export function NavMain({
                             asChild
                             isActive={isPathActive(subItem.url)}
                           >
-                            <a href={subItem.url}>
+                            <Link href={subItem.url}>
                               <span>{subItem.title}</span>
-                            </a>
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}
