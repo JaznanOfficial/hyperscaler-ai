@@ -1,3 +1,5 @@
+import { Save } from "lucide-react"
+
 import {
   Card,
   CardContent,
@@ -5,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 const metricGroups = [
@@ -165,9 +168,8 @@ export default function ProjectDetailPage() {
   return (
     <section className="flex flex-1 flex-col gap-4">
       <header className="rounded-2xl border border-slate-200 bg-white px-6 py-4">
-        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Project</p>
-        <h1 className="text-2xl font-semibold text-slate-900">Automation Playbooks</h1>
-        <p className="text-sm text-slate-500">Toggle inputs by setting the metric configuration. Only enabled metrics render cards.</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Projects</p>
+        <h1 className="text-2xl font-semibold text-slate-900">Metrics</h1>
       </header>
 
       <div className="space-y-4">
@@ -195,6 +197,13 @@ export default function ProjectDetailPage() {
             </Card>
           )
         })}
+      </div>
+
+      <div className="flex justify-end">
+        <Button size="lg" className="gap-2">
+          <Save className="h-4 w-4" />
+          Save metrics
+        </Button>
       </div>
     </section>
   )
