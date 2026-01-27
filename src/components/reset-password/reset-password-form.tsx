@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { Eye, EyeOff } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -12,12 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
@@ -32,12 +26,6 @@ export function ResetPasswordForm({
 
   const passwordsMismatch =
     confirmPassword.trim().length > 0 && password !== confirmPassword
-
-  const requirements = [
-    { label: "At least 8 characters", met: password.length >= 8 },
-    { label: "One uppercase letter", met: /[A-Z]/.test(password) },
-    { label: "One number", met: /\d/.test(password) },
-  ]
 
   const toggleVisibility = (field: "password" | "confirm") => {
     setVisibleField((current) => (current === field ? null : field))
@@ -99,19 +87,6 @@ export function ResetPasswordForm({
                     )}
                   </button>
                 </div>
-                <FieldDescription>
-                  Use a mix of letters, numbers, and symbols for best security.
-                </FieldDescription>
-                <ul className="text-muted-foreground mt-2 flex list-disc flex-col gap-1 pl-5 text-xs">
-                  {requirements.map((requirement) => (
-                    <li
-                      key={requirement.label}
-                      className={cn(requirement.met && "text-foreground")}
-                    >
-                      {requirement.label}
-                    </li>
-                  ))}
-                </ul>
               </Field>
               <Field data-invalid={passwordsMismatch}>
                 <FieldLabel htmlFor="confirm-password">Confirm password</FieldLabel>
@@ -166,15 +141,6 @@ export function ResetPasswordForm({
                   You can now close this tab and login with your new password.
                 </p>
               )}
-              <p className="text-center text-sm text-muted-foreground">
-                Need a fresh link?{" "}
-                <Link
-                  href="/forgot-password"
-                  className="font-semibold text-primary underline-offset-4 hover:underline"
-                >
-                  Request again
-                </Link>
-              </p>
             </div>
           </form>
         </CardContent>
