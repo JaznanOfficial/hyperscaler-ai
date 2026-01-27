@@ -61,7 +61,7 @@ const defaultNavItems: NavItem[] = [
   },
   {
     title: "Services",
-    url: "/services",
+    url: "/s-admin/services",
     icon: "layers",
   },
   {
