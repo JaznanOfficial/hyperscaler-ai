@@ -1,6 +1,4 @@
-import Link from "next/link"
-
-import { Button } from "@/components/ui/button"
+import { ServiceListItem } from "@/components/admin/service-list-item"
 
 export type ServiceItem = {
   id: string
@@ -27,21 +25,7 @@ export function ServiceList() {
     <div>
       <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
         {serviceItems.map((item) => (
-          <li key={item.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-lg font-semibold text-slate-900">{item.name}</p>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Button variant="outline" size="sm" className="cursor-pointer" asChild>
-                <Link href={`/s-admin/services/${item.id}`}>
-                  View
-                </Link>
-              </Button>
-              <Button variant="destructive" size="sm" className="cursor-pointer">
-                Delete
-              </Button>
-            </div>
-          </li>
+          <ServiceListItem key={item.id} item={item} />
         ))}
       </ul>
     </div>
