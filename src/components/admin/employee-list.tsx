@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button"
-import { EditEmployeeDialog } from "@/components/admin/edit-employee-dialog"
+import { EmployeeListItem } from "@/components/admin/employee-list-item"
 
 export type EmployeeItem = {
   id: string
@@ -46,22 +45,7 @@ export function EmployeeList() {
     <div>
       <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
         {employeeItems.map((item) => (
-          <li key={item.id} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-lg font-semibold text-slate-900">{item.name}</p>
-              <p className="text-sm text-slate-500">{item.email}</p>
-              <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-slate-900">{item.title}</p>
-              <p className="text-xs text-slate-500">{item.yearsExperience} yrs experience</p>
-            </div>
-            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-              <div className="flex flex-wrap items-center gap-2">
-                <EditEmployeeDialog employee={item} />
-                <Button variant="destructive" size="sm" className="cursor-pointer">
-                  Delete
-                </Button>
-              </div>
-            </div>
-          </li>
+          <EmployeeListItem key={item.id} item={item} />
         ))}
       </ul>
     </div>
