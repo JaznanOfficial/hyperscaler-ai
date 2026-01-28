@@ -45,7 +45,7 @@ export function ServiceDetailsForm({ initialServiceName, initialSections }: Serv
   }
 
   const handleAddSection = () => {
-    setSections((previous) => [...previous, { id: generateSectionId(), name: "", type: "input" }])
+    setSections((previous) => [{ id: generateSectionId(), name: "", type: "input" }, ...previous])
   }
 
   const handleRemoveSection = (id: string) => {
@@ -73,25 +73,22 @@ export function ServiceDetailsForm({ initialServiceName, initialSections }: Serv
         </div>
 
         <div className="space-y-3">
-          {sections.map((section, index) => (
+          {sections.map((section) => (
             <div
               key={section.id}
-              className="rounded-xl border border-slate-200 p-4"
+              className="relative rounded-xl border border-slate-200 p-4 pt-8"
             >
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-slate-900">Section {index + 1}</p>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="cursor-pointer text-slate-500"
-                  onClick={() => handleRemoveSection(section.id)}
-                  disabled={sections.length === 1}
-                >
-                  Remove
-                </Button>
-              </div>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute right-2 top-2 cursor-pointer text-slate-500"
+                onClick={() => handleRemoveSection(section.id)}
+                disabled={sections.length === 1}
+              >
+                Remove
+              </Button>
+              <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor={`section-name-${section.id}`}>Section name</Label>
                   <Input

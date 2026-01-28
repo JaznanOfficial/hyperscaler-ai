@@ -50,7 +50,7 @@ const feedbackItems: FeedbackItem[] = [
 export function FeedbackList() {
   return (
     <div>
-      <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+      <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white list-none p-0">
         {feedbackItems.map((item) => (
           <li key={item.id} className="relative">
             <AlertDialog>
@@ -80,7 +80,7 @@ export function FeedbackList() {
                 </div>
                 <AlertDialogFooter>
                   <AlertDialogCancel className="cursor-pointer">Close</AlertDialogCancel>
-                  <AlertDialogAction className="cursor-pointer">Mark as read</AlertDialogAction>
+                  <AlertDialogAction className="cursor-pointer">Mark as resolved</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
