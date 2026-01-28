@@ -53,10 +53,7 @@ export function ServiceDetailsForm({ initialServiceName, initialSections }: Serv
   }
 
   return (
-    <form
-      className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-xs"
-      onSubmit={(event) => event.preventDefault()}
-    >
+    <form className="space-y-6" onSubmit={(event) => event.preventDefault()}>
       <div className="space-y-2">
         <Label htmlFor="service-name">Service name</Label>
         <Input
