@@ -1,4 +1,4 @@
-export type ClientServiceStatus = "active" | "monitoring" | "blocked"
+export type ClientServiceStatus = "Approved" | "Pending" | "Cancelled"
 
 export type ClientServiceRequest = {
   id: string
@@ -39,7 +39,7 @@ export const clientDetails: ClientDetail[] = [
         id: "srv-401",
         name: "Automation Intelligence Suite",
         description: "Scaling revenue automation and telemetry for growth pods.",
-        status: "active",
+        status: "Approved",
         assignedEmployees: ["Lana Zimmerman", "Arjun Patel"],
         renewal: "Renews Mar 01",
       },
@@ -47,7 +47,7 @@ export const clientDetails: ClientDetail[] = [
         id: "srv-389",
         name: "Telemetry & Risk Mesh",
         description: "Enterprise telemetry rollout with risk escalation playbooks.",
-        status: "monitoring",
+        status: "Pending",
         assignedEmployees: ["Maya Collins"],
         renewal: "Discovery wk 2",
       },
@@ -64,7 +64,7 @@ export const clientDetails: ClientDetail[] = [
         id: "srv-389",
         name: "Telemetry & Risk Mesh",
         description: "Compliance instrumentation + outage war room automations.",
-        status: "blocked",
+        status: "Cancelled",
         assignedEmployees: ["Noah Whitfield"],
         renewal: "Needs legal clearance",
       },
@@ -72,7 +72,7 @@ export const clientDetails: ClientDetail[] = [
         id: "srv-376",
         name: "Revenue Autopilot",
         description: "Autonomous routing for SDR + lifecycle teams.",
-        status: "monitoring",
+        status: "Pending",
         assignedEmployees: ["Devon Ellis"],
         renewal: "Pilot retro Feb 18",
       },
@@ -89,7 +89,7 @@ export const clientDetails: ClientDetail[] = [
         id: "srv-376",
         name: "Revenue Autopilot",
         description: "AI-assisted merchandising triggers and replenishment ops.",
-        status: "active",
+        status: "Approved",
         assignedEmployees: ["Priya Ramesh", "Maya Collins"],
         renewal: "Trial ends Mar 15",
       },

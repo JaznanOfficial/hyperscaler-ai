@@ -31,15 +31,15 @@ const accountStatusStyles: Record<ClientDetail["accountStatus"], string> = {
 }
 
 const serviceStatusLabels: Record<ClientServiceStatus, string> = {
-  active: "Active",
-  monitoring: "Monitoring",
-  blocked: "Blocked",
+  Approved: "Approved",
+  Pending: "Pending",
+  Cancelled: "Cancelled",
 }
 
 const serviceStatusStyles: Record<ClientServiceStatus, string> = {
-  active: "bg-emerald-50 text-emerald-700",
-  monitoring: "bg-amber-50 text-amber-800",
-  blocked: "bg-rose-50 text-rose-700",
+  Approved: "bg-emerald-100 text-emerald-700",
+  Pending: "bg-amber-100 text-amber-700",
+  Cancelled: "bg-rose-100 text-rose-700",
 }
 
 export function ClientDetailView({ client }: { client: ClientDetail }) {
@@ -106,20 +106,24 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
-        {services.map((service) => (
-          <Card key={service.id} className="border border-slate-200">
-            <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <CardTitle className="text-lg text-slate-900">{service.name}</CardTitle>
-                <CardDescription className="text-sm text-slate-500">{service.description}</CardDescription>
-              </div>
-              <Badge className={`rounded-full px-3 py-1 text-xs font-semibold ${serviceStatusStyles[service.status]}`}>
-                {serviceStatusLabels[service.status]}
-              </Badge>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-3 sm:grid-cols-2">
+      <div className="space-y-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Services</p>
+          <p className="text-base font-semibold text-slate-900">Active workstreams</p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {services.map((service) => (
+            <Card key={service.id} className="border border-slate-200">
+              <CardHeader className="flex flex-col gap-2">
+                <div>
+                  <CardTitle className="text-lg text-slate-900">{service.name}</CardTitle>
+                  <CardDescription className="text-sm text-slate-500">{service.description}</CardDescription>
+                </div>
+                <Badge className={`w-fit rounded-full px-3 py-1 text-[11px] font-semibold ${serviceStatusStyles[service.status]}`}>
+                  {serviceStatusLabels[service.status]}
+                </Badge>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Service status</p>
                   <Select value={service.status} onValueChange={(value) => handleServiceStatusChange(service.id, value as ClientServiceStatus)}>
@@ -135,64 +139,60 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Renewal</p>
-                  <p className="text-sm text-slate-900">{service.renewal}</p>
-                </div>
-              </div>
 
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Assigned team</p>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="gap-2">
-                        <UserPlus className="size-4" /> Assign employees
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="min-w-56">
-                      <DropdownMenuLabel>Assign teammates</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {availableEmployees.map((employee) => (
-                        <DropdownMenuCheckboxItem
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Assigned team</p>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm" className="gap-2">
+                          <UserPlus className="size-4" /> Assign employees
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" className="min-w-56">
+                        <DropdownMenuLabel>Assign teammates</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {availableEmployees.map((employee) => (
+                          <DropdownMenuCheckboxItem
+                            key={employee}
+                            checked={service.assignedEmployees.includes(employee)}
+                            onCheckedChange={() => toggleEmployeeAssignment(service.id, employee)}
+                            className="cursor-pointer"
+                          >
+                            {employee}
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {service.assignedEmployees.length ? (
+                      service.assignedEmployees.map((employee) => (
+                        <Badge
                           key={employee}
-                          checked={service.assignedEmployees.includes(employee)}
-                          onCheckedChange={() => toggleEmployeeAssignment(service.id, employee)}
-                          className="cursor-pointer"
+                          variant="secondary"
+                          className="flex items-center gap-1 rounded-full px-3 py-1 text-[11px]"
                         >
                           {employee}
-                        </DropdownMenuCheckboxItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                          <button
+                            type="button"
+                            onClick={() => removeEmployee(service.id, employee)}
+                            className="cursor-pointer text-slate-500 transition hover:text-slate-900"
+                            aria-label={`Remove ${employee}`}
+                          >
+                            <X className="size-3" />
+                          </button>
+                        </Badge>
+                      ))
+                    ) : (
+                      <p className="text-sm text-slate-500">No teammates assigned yet.</p>
+                    )}
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {service.assignedEmployees.length ? (
-                    service.assignedEmployees.map((employee) => (
-                      <Badge
-                        key={employee}
-                        variant="secondary"
-                        className="flex items-center gap-1 rounded-full px-3 py-1 text-[11px]"
-                      >
-                        {employee}
-                        <button
-                          type="button"
-                          onClick={() => removeEmployee(service.id, employee)}
-                          className="cursor-pointer text-slate-500 transition hover:text-slate-900"
-                          aria-label={`Remove ${employee}`}
-                        >
-                          <X className="size-3" />
-                        </button>
-                      </Badge>
-                    ))
-                  ) : (
-                    <p className="text-sm text-slate-500">No teammates assigned yet.</p>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   )

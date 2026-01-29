@@ -33,16 +33,16 @@ export function ClientListItem({ item, onStatusChange }: ClientListItemProps) {
 
   return (
     <li className="px-4 py-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <button
-          type="button"
-          onClick={goToDetail}
-          className="flex flex-1 flex-col rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
-        >
+      <button
+        type="button"
+        onClick={goToDetail}
+        className="flex w-full cursor-pointer flex-col gap-3 rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div className="flex flex-1 flex-col">
           <p className="text-lg font-semibold text-slate-900">{item.name}</p>
           <p className="text-sm text-slate-500">{item.email}</p>
           <p className="text-sm text-slate-500">Service: {item.requestedService}</p>
-        </button>
+        </div>
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <div className="flex flex-wrap items-center gap-3">
             <Badge variant="secondary" className={`rounded-full px-3 py-1 text-[11px] font-semibold ${statusStyles[item.status]}`}>
@@ -51,19 +51,32 @@ export function ClientListItem({ item, onStatusChange }: ClientListItemProps) {
             <span className="text-xs font-semibold text-slate-900">{item.subscriptionId}</span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Button variant="outline" size="sm" className="cursor-pointer" onClick={goToDetail}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="cursor-pointer"
+              onClick={(event) => {
+                event.stopPropagation()
+                goToDetail()
+              }}
+            >
               View
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="sm" className="cursor-pointer">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="cursor-pointer"
+                  onClick={(event) => event.stopPropagation()}
+                >
                   Update status
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-48">
+              <DropdownMenuContent align="end" className="min-w-48" onClick={(event) => event.stopPropagation()}>
                 <DropdownMenuLabel>Set status</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup value={item.status} onValueChange={(value) => onStatusChange(item.id, value as ClientItem["status"])}>
+                <DropdownMenuRadioGroup value={item.status} onValueChange={(value) => onStatusChange(item.id, value as ClientItem["status"]) }>
                   {(["Approved", "Pending", "Cancelled"] as const).map((status) => (
                     <DropdownMenuRadioItem key={status} value={status}>
                       {status}
@@ -74,7 +87,7 @@ export function ClientListItem({ item, onStatusChange }: ClientListItemProps) {
             </DropdownMenu>
           </div>
         </div>
-      </div>
+      </button>
     </li>
   )
 }
