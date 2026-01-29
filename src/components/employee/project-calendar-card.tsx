@@ -2,26 +2,18 @@
 
 import * as React from "react"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Calendar } from "@/components/ui/calendar"
 
 export function ProjectCalendarCard() {
   const [date, setDate] = React.useState<Date | undefined>(new Date())
 
   return (
-    <Card className="rounded-2xl border-slate-200">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-base">Project schedule</CardTitle>
-        <CardDescription>Quickly glance upcoming milestones.</CardDescription>
-      </CardHeader>
-      <CardContent className="flex justify-center">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          className="rounded-lg border"
-        />
-      </CardContent>
-    </Card>
+    <div className="space-y-2">
+      <div>
+        <p className="text-sm font-semibold text-slate-900">Project schedule</p>
+        <p className="text-xs text-slate-500">Quickly glance upcoming milestones.</p>
+      </div>
+      <Calendar mode="single" selected={date} onSelect={setDate} className="rounded-lg border" />
+    </div>
   )
 }

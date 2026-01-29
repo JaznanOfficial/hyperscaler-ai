@@ -9,7 +9,7 @@ import { metricGroups } from "@/data/project-metric-groups"
 export default function ProjectDetailPage() {
   return (
     <section className="flex flex-1 flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_320px]">
-      <div className="flex flex-col gap-4">
+      <div className="order-2 flex flex-col gap-4 lg:order-1">
         <ProjectMetricsHeader title="Metrics" description="Configure the signals you want to capture for this project." />
 
         <div className="space-y-4">
@@ -26,7 +26,7 @@ export default function ProjectDetailPage() {
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="order-1 space-y-4 lg:order-2">
         <ProjectCalendarCard />
       </div>
     </section>
