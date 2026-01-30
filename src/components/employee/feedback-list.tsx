@@ -1,5 +1,13 @@
 import { FeedbackListItem } from "@/components/employee/feedback-list-item"
-import type { FeedbackItem } from "@/types/feedback"
+
+export type FeedbackItem = {
+  id: string
+  title: string
+  owner: string
+  updated: string
+  summary: string
+  details: string
+}
 
 const feedbackItems: FeedbackItem[] = [
   {
