@@ -24,6 +24,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar"
 
 const iconMap = {
@@ -44,12 +45,6 @@ type NavItem = {
   icon: IconKey
   isActive?: boolean
   matchSubRoutes?: boolean
-}
-
-const user = {
-  name: "shadcn",
-  email: "m@example.com",
-  avatar: "/avatars/shadcn.jpg",
 }
 
 const defaultNavItems: NavItem[] = [
@@ -85,9 +80,13 @@ export type AppSidebarNavItem = NavItem
 
 type AppSidebarProps = ComponentProps<typeof Sidebar> & {
   navItems?: NavItem[]
+  profileLink?: {
+    label: string
+    href: string
+  }
 }
 
-export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarProps) {
+export function AppSidebar({ navItems = defaultNavItems, profileLink, ...props }: AppSidebarProps) {
   const resolvedNavItems = navItems.map((item) => ({
     ...item,
     icon: iconMap[item.icon] ?? iconMap.bot,
@@ -100,7 +99,7 @@ export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarP
   }>
 
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -122,8 +121,9 @@ export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarP
         <NavMain items={resolvedNavItems} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser profileLink={profileLink} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   )
 }
