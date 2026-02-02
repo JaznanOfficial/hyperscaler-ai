@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import { AppSidebar } from "@/components/app-sidebar"
+import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,14 +14,35 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
-export default function SDashboardLayout({
+const clientNavItems: AppSidebarNavItem[] = [
+  {
+    title: "Hyperscaler AI",
+    url: "/client",
+    icon: "bot",
+    matchSubRoutes: false,
+  },
+  {
+    title: "Statistics",
+    url: "/client/statistics",
+    icon: "layers",
+    matchSubRoutes: false,
+  },
+  {
+    title: "Subscriptions",
+    url: "/client/subscriptions",
+    icon: "creditCard",
+    matchSubRoutes: false,
+  },
+]
+
+export default function ClientDashboardLayout({
   children,
 }: {
   children: ReactNode
 }) {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar navItems={clientNavItems} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex w-full items-center gap-2 px-4">
@@ -33,13 +54,15 @@ export default function SDashboardLayout({
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Super Admin</BreadcrumbPage>
+                  <BreadcrumbPage>Client</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-hidden p-4">{children}</div>
+        <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-hidden p-4">
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

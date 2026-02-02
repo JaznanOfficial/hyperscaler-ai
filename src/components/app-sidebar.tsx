@@ -24,6 +24,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar"
 
 const iconMap = {
@@ -100,7 +101,7 @@ export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarP
   }>
 
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -124,6 +125,7 @@ export function AppSidebar({ navItems = defaultNavItems, ...props }: AppSidebarP
       <SidebarFooter>
         <NavUser user={user} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   )
 }
