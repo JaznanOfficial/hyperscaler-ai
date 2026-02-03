@@ -83,9 +83,7 @@ export function AgentEmptyState({
                 onClick={() => onDraftChange(action.prompt)}
                 className="inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-3 text-left shadow-sm"
               >
-                <span className="flex size-7 items-center justify-center rounded-full  text-fuchsia-600">
-                  <Icon className="size-4" />
-                </span>
+                <Icon className="size-5 text-violet-600" />
                 <span className="text-base font-medium text-slate-800">{action.prompt}</span>
               </button>
             )
@@ -103,17 +101,17 @@ export function AgentEmptyState({
                 className="flex h-full cursor-pointer flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-[0px_2px_4px_rgba(0,0,0,0.04)] transition hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500/40"
               >
                 <div className="space-y-4">
-                  <div className="flex size-12 items-center justify-center rounded-2xl bg-linear-to-r from-violet-800/10 to-fuchsia-500/10 text-fuchsia-600">
-                    <Icon className="size-5" />
-                  </div>
+                  <Icon className="size-6 text-violet-600" />
                   <div className="space-y-1">
                     <p className="text-lg font-semibold leading-6 text-slate-900">{action.title}</p>
                     <p className="text-sm leading-5 text-slate-600">{action.description}</p>
                   </div>
                 </div>
-                <div className="mt-6 inline-flex items-center gap-2 rounded-xl bg-fuchsia-50/80 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-fuchsia-600">
-                  <ArrowUp className="size-4" />
-                  <span className="text-left">{action.prompt}</span>
+                <div className="mt-6 inline-flex items-center gap-2 rounded-xl bg-fuchsia-50/80 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-violet-800">
+                  <Sparkles className="size-4 shrink-0" />
+                  <span className="bg-linear-to-r from-violet-800 to-fuchsia-500 bg-clip-text text-left text-transparent">
+                    {action.prompt}
+                  </span>
                 </div>
               </button>
             )
