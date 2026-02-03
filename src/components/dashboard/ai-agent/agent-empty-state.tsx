@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 import { ArrowUp, CreditCard, MessageSquare, Sparkles, Sunrise } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -37,8 +39,15 @@ export function AgentEmptyState({
   return (
     <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-12 px-0 py-10 text-center">
       <div className="flex w-full max-w-3xl flex-col items-center gap-7">
-        <div className="flex size-16 items-center justify-center rounded-2xl bg-linear-to-r from-violet-800 to-fuchsia-500 p-3 shadow-lg shadow-fuchsia-500/40">
-          <Sparkles className="size-8 text-white" />
+        <div className="flex items-center justify-center">
+          <Image
+            src="/logo-without-text.png"
+            alt="Hyperscaler logo"
+            width={96}
+            height={56}
+            className="h-14 w-24 object-contain"
+            priority
+          />
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-3xl font-semibold leading-10 text-slate-900">Good morning, Jamie</p>
