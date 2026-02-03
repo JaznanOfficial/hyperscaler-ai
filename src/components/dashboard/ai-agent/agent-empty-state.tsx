@@ -1,6 +1,8 @@
 "use client"
 
-import { ArrowUpRight, Activity, CreditCard, LifeBuoy, Sparkles } from "lucide-react"
+import { ArrowUp, Activity, CreditCard, LifeBuoy, Sparkles } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 
 const quickActions = [
   {
@@ -24,9 +26,13 @@ const quickActions = [
 ] as const
 
 export function AgentEmptyState({
-  onPromptSelect,
+  draft,
+  onDraftChange,
+  onSubmit,
 }: {
-  onPromptSelect?: (prompt: string) => void
+  draft: string
+  onDraftChange: (value: string) => void
+  onSubmit: () => void
 }) {
   return (
     <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-12 px-4 py-10 text-center">
@@ -40,16 +46,28 @@ export function AgentEmptyState({
             What would you like to know about your services today?
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => onPromptSelect?.("")}
-          className="flex w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-6 py-5 text-left text-base text-slate-400 shadow-[0px_2px_4px_rgba(0,0,0,0.04)]"
+        <form
+          onSubmit={(event) => {
+            event.preventDefault()
+            onSubmit()
+          }}
+          className="relative flex w-full items-stretch rounded-2xl border border-slate-200 bg-white px-2 py-2 shadow-[0px_2px_4px_rgba(0,0,0,0.04)]"
         >
-          <span>How can I help you today?</span>
-          <span className="flex size-10 items-center justify-center rounded-xl bg-linear-to-l from-fuchsia-500 to-violet-800 text-white">
-            <ArrowUpRight className="size-5" />
-          </span>
-        </button>
+          <textarea
+            value={draft}
+            onChange={(event) => onDraftChange(event.target.value)}
+            placeholder="How can I help you today?"
+            rows={3}
+            className="flex-1 resize-none rounded-2xl border-0 bg-transparent px-4 py-4 pr-16 text-base text-slate-900 outline-none focus:ring-0 min-h-22"
+          />
+          <Button
+            type="submit"
+            size="icon"
+            className="absolute bottom-4 right-4 flex size-10 items-center justify-center rounded-xl bg-linear-to-l from-fuchsia-500 to-violet-800 text-white shadow-lg"
+          >
+            <ArrowUp className="size-5" />
+          </Button>
+        </form>
       </div>
 
       <div className="flex w-full max-w-5xl flex-col gap-4 text-left">
@@ -73,10 +91,10 @@ export function AgentEmptyState({
                 </div>
                 <button
                   type="button"
-                  onClick={() => onPromptSelect?.(action.prompt)}
+                  onClick={() => onDraftChange(action.prompt)}
                   className="mt-6 inline-flex items-center gap-2 rounded-xl bg-fuchsia-50/80 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-fuchsia-600"
                 >
-                  <ArrowUpRight className="size-4" />
+                  <ArrowUp className="size-4" />
                   <span className="text-left">{action.prompt}</span>
                 </button>
               </div>

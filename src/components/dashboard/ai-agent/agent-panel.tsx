@@ -57,7 +57,7 @@ export function AiAgentPanel({
           {showConversation ? (
             conversation.map((message) => <ChatMessageItem key={message.id} message={message} />)
           ) : (
-            <AgentEmptyState onPromptSelect={(prompt) => setDraft(prompt)} />
+            <AgentEmptyState draft={draft} onDraftChange={setDraft} onSubmit={handleSend} />
           )}
         </div>
 
