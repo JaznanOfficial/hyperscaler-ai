@@ -76,9 +76,11 @@ export function AgentEmptyState({
           {quickActions.map((action) => {
             const Icon = action.icon
             return (
-              <div
+              <button
                 key={action.title}
-                className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-[0px_2px_4px_rgba(0,0,0,0.04)]"
+                type="button"
+                onClick={() => onDraftChange(action.prompt)}
+                className="flex h-full cursor-pointer flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-[0px_2px_4px_rgba(0,0,0,0.04)] transition hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500/40"
               >
                 <div className="space-y-4">
                   <div className="flex size-12 items-center justify-center rounded-2xl bg-linear-to-r from-violet-800/10 to-fuchsia-500/10 text-fuchsia-600">
@@ -89,15 +91,11 @@ export function AgentEmptyState({
                     <p className="text-sm leading-5 text-slate-600">{action.description}</p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => onDraftChange(action.prompt)}
-                  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-fuchsia-50/80 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-fuchsia-600"
-                >
+                <div className="mt-6 inline-flex items-center gap-2 rounded-xl bg-fuchsia-50/80 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-fuchsia-600">
                   <ArrowUp className="size-4" />
                   <span className="text-left">{action.prompt}</span>
-                </button>
-              </div>
+                </div>
+              </button>
             )
           })}
         </div>
