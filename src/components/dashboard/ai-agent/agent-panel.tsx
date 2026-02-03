@@ -13,7 +13,7 @@ export function AiAgentPanel({
   inputPlaceholder?: string
 }) {
   return (
-    <section className="relative flex h-[calc(100vh-6rem)] max-h-[calc(100vh-7rem)] min-h-112 w-full flex-1 flex-col overflow-hidden p-4">
+    <section className="relative flex h-[calc(100vh)] max-h-[calc(100vh)] min-h-112 w-full flex-1 flex-col overflow-hidden p-4">
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
