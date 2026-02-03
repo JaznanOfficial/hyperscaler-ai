@@ -35,7 +35,7 @@ export function AgentEmptyState({
   onSubmit: () => void
 }) {
   return (
-    <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-12 px-4 py-10 text-center">
+    <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-12 px-0 py-10 text-center">
       <div className="flex w-full max-w-3xl flex-col items-center gap-7">
         <div className="flex size-16 items-center justify-center rounded-2xl bg-linear-to-r from-violet-800 to-fuchsia-500 p-3 shadow-lg shadow-fuchsia-500/40">
           <Sparkles className="size-8 text-white" />
