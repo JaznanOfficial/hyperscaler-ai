@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowUp, Activity, CreditCard, LifeBuoy, Sparkles } from "lucide-react"
+import { ArrowUp, CreditCard, MessageSquare, Sparkles, Sunrise } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -9,7 +9,7 @@ const quickActions = [
     title: "Project Progress",
     description: "Get real-time updates and insights across all your services.",
     prompt: "Show me the overall progress of all my active services.",
-    icon: Activity,
+    icon: Sunrise,
   },
   {
     title: "Subscription",
@@ -21,7 +21,7 @@ const quickActions = [
     title: "Contact & Support",
     description: "Reach out to our team for help or requests.",
     prompt: "I'd like to contact the support team regarding my services.",
-    icon: LifeBuoy,
+    icon: MessageSquare,
   },
 ] as const
 
@@ -74,19 +74,22 @@ export function AgentEmptyState({
         <p className="text-center text-lg text-slate-600 md:text-left">What I can help you with</p>
 
         <div className="flex flex-col gap-3 text-sm text-slate-600 lg:hidden">
-          {quickActions.map((action) => (
-            <button
-              key={action.title}
-              type="button"
-              onClick={() => onDraftChange(action.prompt)}
-              className="inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-3 text-left shadow-sm"
-            >
-              <span className="flex size-7 items-center justify-center rounded-full  text-fuchsia-600">
-                <ArrowUp className="size-4" />
-              </span>
-              <span className="text-base font-medium text-slate-800">{action.prompt}</span>
-            </button>
-          ))}
+          {quickActions.map((action) => {
+            const Icon = action.icon
+            return (
+              <button
+                key={action.title}
+                type="button"
+                onClick={() => onDraftChange(action.prompt)}
+                className="inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-3 text-left shadow-sm"
+              >
+                <span className="flex size-7 items-center justify-center rounded-full  text-fuchsia-600">
+                  <Icon className="size-4" />
+                </span>
+                <span className="text-base font-medium text-slate-800">{action.prompt}</span>
+              </button>
+            )
+          })}
         </div>
 
         <div className="hidden gap-4 lg:grid lg:grid-cols-3">
