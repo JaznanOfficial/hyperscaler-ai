@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-import { Send } from "lucide-react"
+import { ArrowUp } from "lucide-react"
 
 import { ChatMessageItem } from "@/components/chat/message-item"
 import type { ChatMessage } from "@/components/chat/types"
@@ -79,11 +79,10 @@ export function AiAgentPanel({
               <Button
                 type="button"
                 size="icon"
-                variant="ghost"
-                className="absolute bottom-3 right-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+                className="absolute bottom-3 right-3 flex size-10 items-center justify-center rounded-xl bg-linear-to-l from-fuchsia-500 to-violet-800 text-white shadow-lg transition hover:opacity-90"
                 onClick={handleSend}
               >
-                <Send className="size-4" />
+                <ArrowUp className="size-5" />
               </Button>
             </div>
           </div>
