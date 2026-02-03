@@ -1,7 +1,12 @@
+"use client"
+
+import { useState } from "react"
+
 import { Send } from "lucide-react"
 
 import { ChatMessageItem } from "@/components/chat/message-item"
 import type { ChatMessage } from "@/components/chat/types"
+import { AgentEmptyState } from "@/components/dashboard/ai-agent/agent-empty-state"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 
@@ -12,6 +17,29 @@ export function AiAgentPanel({
   messages: ChatMessage[]
   inputPlaceholder?: string
 }) {
+  const [draft, setDraft] = useState("")
+  const [hasConversationStarted, setHasConversationStarted] = useState(false)
+  const [conversation, setConversation] = useState<ChatMessage[]>(messages)
+
+  const handleSend = () => {
+    const content = draft.trim()
+    if (!content) return
+
+    const nextMessage: ChatMessage = {
+      id: `local-${Date.now()}`,
+      role: "user",
+      author: "You",
+      content,
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    }
+
+    setConversation((prev) => [...prev, nextMessage])
+    setDraft("")
+    setHasConversationStarted(true)
+  }
+
+  const showConversation = hasConversationStarted && conversation.length > 0
+
   return (
     <section className="relative flex h-[calc(100vh)] max-h-[calc(100vh)] min-h-112 w-full flex-1 flex-col overflow-hidden p-4">
       <div
@@ -26,27 +54,40 @@ export function AiAgentPanel({
           aria-live="polite"
           role="log"
         >
-          {messages.map((message) => (
-            <ChatMessageItem key={message.id} message={message} />
-          ))}
+          {showConversation ? (
+            conversation.map((message) => <ChatMessageItem key={message.id} message={message} />)
+          ) : (
+            <AgentEmptyState onPromptSelect={(prompt) => setDraft(prompt)} />
+          )}
         </div>
 
-        <div className="border-t border-slate-200 bg-white px-2 py-1 pt-4">
-          <div className="relative rounded-3xl border border-slate-200 bg-white shadow-sm focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
-            <Textarea
-              placeholder={inputPlaceholder}
-              className="min-h-20 w-full resize-none rounded-3xl border-0 bg-transparent pr-16 text-base text-slate-900 focus-visible:ring-0"
-            />
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="absolute bottom-3 right-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              <Send className="size-4" />
-            </Button>
+        {showConversation && (
+          <div className="border-t border-slate-200 bg-white px-2 py-1 pt-4">
+            <div className="relative rounded-3xl border border-slate-200 bg-white shadow-sm focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
+              <Textarea
+                placeholder={inputPlaceholder}
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault()
+                    handleSend()
+                  }
+                }}
+                className="min-h-20 w-full resize-none rounded-3xl border-0 bg-transparent pr-16 text-base text-slate-900 focus-visible:ring-0"
+              />
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                className="absolute bottom-3 right-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+                onClick={handleSend}
+              >
+                <Send className="size-4" />
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   )
