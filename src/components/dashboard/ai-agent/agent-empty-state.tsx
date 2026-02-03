@@ -72,7 +72,24 @@ export function AgentEmptyState({
 
       <div className="flex w-full max-w-5xl flex-col gap-4 text-left">
         <p className="text-center text-lg text-slate-600 md:text-left">What I can help you with</p>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+        <div className="flex flex-col gap-3 text-sm text-slate-600 lg:hidden">
+          {quickActions.map((action) => (
+            <button
+              key={action.title}
+              type="button"
+              onClick={() => onDraftChange(action.prompt)}
+              className="inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-3 text-left shadow-sm"
+            >
+              <span className="flex size-7 items-center justify-center rounded-full  text-fuchsia-600">
+                <ArrowUp className="size-4" />
+              </span>
+              <span className="text-base font-medium text-slate-800">{action.prompt}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="hidden gap-4 lg:grid lg:grid-cols-3">
           {quickActions.map((action) => {
             const Icon = action.icon
             return (
