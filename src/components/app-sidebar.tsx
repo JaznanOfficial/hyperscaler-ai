@@ -1,18 +1,10 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import type { ComponentProps } from "react"
 import type { LucideIcon } from "lucide-react"
-import {
-  Bot,
-  Briefcase,
-  Command,
-  CreditCard,
-  FolderKanban,
-  Layers,
-  MessageSquare,
-  Users2,
-} from "lucide-react"
+import { Bot, Briefcase, CreditCard, FolderKanban, Layers, MessageSquare, Users2 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -105,13 +97,7 @@ export function AppSidebar({ navItems = defaultNavItems, profileLink, ...props }
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Command className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
-                </div>
+                <Image src="/logo.png" alt="Hyperscaler" width={160} height={40} className="h-10 w-auto" priority />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
