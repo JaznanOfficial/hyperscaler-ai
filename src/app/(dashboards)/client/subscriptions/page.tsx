@@ -1,60 +1,46 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { Switch } from "@/components/ui/switch"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-const subscriptions = [
-  {
-    tier: "Core",
-    description: "Baseline automations with 99.5% SLA",
-    seats: "150 seats",
-    spend: "$18,500 / mo",
-    enabled: true,
-  },
-  {
-    tier: "Copilot+",
-    description: "Guided workflows and adaptive copilots",
-    seats: "50 seats",
-    spend: "$6,200 / mo",
-    enabled: true,
-  },
-  {
-    tier: "Labs",
-    description: "Early access to orchestrator experiments",
-    seats: "10 seats",
-    spend: "$1,400 / mo",
-    enabled: false,
-  },
-]
+
 
 export default function ClientSubscriptionsPage() {
   return (
     <div className="space-y-6 p-4">
-      <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Subscriptions</h1>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Manage entitlements, seat allocations, and feature toggles.
+      <div className="max-w-xl">
+        <h1
+          className="text-3xl font-semibold leading-10"
+          style={{ fontFamily: "var(--font-outfit)" }}
+        >
+          <span className="inline-block bg-linear-to-r from-violet-800 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
+            Subscriptions
+          </span>
+        </h1>
+        <p className="text-base leading-3 text-slate-600">
+          Track the status, billing, and lifecycle of your services
         </p>
-        <Separator className="mt-4" />
       </div>
-      <div className="grid gap-4 lg:grid-cols-2">
-        {subscriptions.map((subscription) => (
-          <Card key={subscription.tier}>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div>
-                  <p>{subscription.tier}</p>
-                  <CardDescription>{subscription.description}</CardDescription>
-                </div>
-                <Switch defaultChecked={subscription.enabled} aria-label={`Toggle ${subscription.tier}`} />
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground">
-              <p className="font-medium text-foreground">{subscription.seats}</p>
-              <p>{subscription.spend}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Tabs defaultValue="all" className="w-full mt-8">
+        <TabsList className="rounded-full px-2 py-2 text-base h-12! bg-white border border-slate-300 cursor-pointer">
+          <TabsTrigger value="all" className="rounded-full px-5 py-2 text-lg h-9 data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white cursor-pointer">
+            <span>All</span>
+            <span className="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-fuchsia-100 text-sm font-semibold text-fuchsia-700">
+              5
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="active" className="rounded-full px-5 py-2 text-lg h-9 data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white cursor-pointer">
+            <span>Active</span>
+            <span className="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-fuchsia-100 text-sm font-semibold text-fuchsia-700">
+              1
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="cancelled" className="rounded-full px-5 py-2 text-lg h-9 data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white cursor-pointer">
+            <span>Cancelled</span>
+            <span className="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-fuchsia-100 text-sm font-semibold text-fuchsia-700">
+              1
+            </span>
+          </TabsTrigger>
+        
+        </TabsList>
+      </Tabs>
     </div>
   )
 }
