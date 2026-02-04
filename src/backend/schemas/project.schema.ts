@@ -6,7 +6,7 @@ export const projectSchema = z.object({
   assignedEmployees: z.array(z.string()).optional(),
   services: z.array(z.object({
     serviceId: z.string(),
-    updates: z.record(z.any()).optional(),
+    updates: z.any().optional(),
   })).optional(),
 });
 
