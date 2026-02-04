@@ -25,33 +25,37 @@ export function ForgotPasswordForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [email, setEmail] = React.useState("")
-  const [status, setStatus] = React.useState<"idle" | "submitting" | "success">("idle")
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [status, setStatus] = React.useState<"idle" | "submitting" | "success" | "error">("idle")
+  const [error, setError] = React.useState("")
 
-  React.useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-    }
-  }, [])
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     if (!email.trim() || status === "submitting") {
       return
     }
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
-    }
-
     setStatus("submitting")
+    setError("")
 
-    timeoutRef.current = setTimeout(() => {
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong")
+      }
+
       setStatus("success")
-    }, 1200)
+    } catch (err: any) {
+      setError(err.message)
+      setStatus("error")
+    }
   }
 
   return (
@@ -66,6 +70,11 @@ export function ForgotPasswordForm({
         </CardHeader>
         <CardContent>
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && (
+              <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="reset-email">Email address</FieldLabel>
@@ -79,6 +88,7 @@ export function ForgotPasswordForm({
                   value={email}
                   onChange={(event) => {
                     setStatus("idle")
+                    setError("")
                     setEmail(event.target.value)
                   }}
                   disabled={status === "submitting"}
@@ -96,7 +106,7 @@ export function ForgotPasswordForm({
               </Button>
               {status === "success" && (
                 <p className="text-center text-sm text-emerald-600 dark:text-emerald-400">
-                  Check your inbox for a secure link. It expires in 10 minutes.
+                  Check your inbox for a secure link. It expires in 1 hour.
                 </p>
               )}
               <p className="text-center text-sm text-muted-foreground">

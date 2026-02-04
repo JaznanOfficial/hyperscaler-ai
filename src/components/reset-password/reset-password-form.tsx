@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Eye, EyeOff } from "lucide-react"
+import { useSearchParams, useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -19,9 +20,14 @@ export function ResetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get("token")
+  
   const [password, setPassword] = React.useState("")
   const [confirmPassword, setConfirmPassword] = React.useState("")
-  const [status, setStatus] = React.useState<"idle" | "submitting" | "success">("idle")
+  const [status, setStatus] = React.useState<"idle" | "submitting" | "success" | "error">("idle")
+  const [error, setError] = React.useState("")
   const [visibleField, setVisibleField] = React.useState<"password" | "confirm" | null>(null)
 
   const passwordsMismatch =
@@ -31,18 +37,43 @@ export function ResetPasswordForm({
     setVisibleField((current) => (current === field ? null : field))
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     if (status === "submitting" || !password.trim() || passwordsMismatch) {
       return
     }
 
-    setStatus("submitting")
+    if (!token) {
+      setError("Invalid reset token")
+      setStatus("error")
+      return
+    }
 
-    setTimeout(() => {
+    setStatus("submitting")
+    setError("")
+
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, password }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong")
+      }
+
       setStatus("success")
-    }, 1100)
+      setTimeout(() => {
+        router.push("/login")
+      }, 2000)
+    } catch (err: any) {
+      setError(err.message)
+      setStatus("error")
+    }
   }
 
   return (
@@ -56,6 +87,11 @@ export function ResetPasswordForm({
         </CardHeader>
         <CardContent>
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && (
+              <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="new-password">New password</FieldLabel>
