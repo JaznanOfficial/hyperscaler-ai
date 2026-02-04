@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
         email: validatedData.email,
         password: hashedPassword,
         role: validatedData.role || "CLIENT",
-        generalInfo: validatedData.generalInfo || {},
+        generalInfo: validatedData.generalInfo as any,
       },
       select: {
         id: true,
