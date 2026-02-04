@@ -12,19 +12,19 @@ const statusBreakdown = [
   {
     label: "Active Services",
     value: "3",
-    dotColor: "#38bdf8",
+    
     badgeColor: "bg-sky-100 text-sky-700",
   },
   {
     label: "On Track",
     value: "1",
-    dotColor: "#34d399",
+    
     badgeColor: "bg-emerald-100 text-emerald-700",
   },
   {
     label: "Needs Attention",
     value: "2",
-    dotColor: "#fbbf24",
+    
     badgeColor: "bg-amber-100 text-amber-700",
   },
 ]
@@ -36,7 +36,7 @@ export function OverallProgressCard() {
       sparkline: { enabled: true },
       animations: { enabled: true },
     },
-    colors: ["#d946ef"],
+    colors: ["#9E32DD"],
     labels: ["Growth"],
     stroke: {
       lineCap: "round",
@@ -80,7 +80,7 @@ export function OverallProgressCard() {
           <div className="w-full">
             <ApexChart options={chartOptions} series={[73]} type="radialBar" width="100%" height={420} />
           </div>
-          <div className="mt-2 w-[87%] mx-auto flex items-center justify-between text-sm font-semibold text-slate-900">
+          <div className=" w-[87%] md:w-[77%] lg:w-[87%] mx-auto flex items-center justify-between text-sm font-semibold text-slate-900">
             <span>0</span>
             <span>100</span>
           </div>
@@ -88,15 +88,11 @@ export function OverallProgressCard() {
         <div className="flex w-full flex-col gap-4 text-sm text-slate-600 lg:max-w-xs">
           {statusBreakdown.map((status) => (
             <div key={status.label} className="flex items-center justify-between">
-              <div className="flex items-center gap-2 font-medium text-slate-800">
-                <span
-                  className="size-2.5 rounded-full"
-                  style={{ backgroundColor: status.dotColor }}
-                  aria-hidden
-                />
+              <div className="flex items-center gap-2 font-medium text-gray-700 text-xs">
+                
                 {status.label}
               </div>
-              <span className={cn("min-w-9 rounded-full px-2 py-1 text-center text-sm font-semibold", status.badgeColor)}>
+              <span className={cn("min-w-9 rounded px-2 py-1 text-center text-sm font-semibold", status.badgeColor)}>
                 {status.value}
               </span>
             </div>
