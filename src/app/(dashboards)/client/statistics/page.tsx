@@ -11,13 +11,13 @@ import { SocialMediaPerformanceCard } from "@/components/dashboard/client/social
 export default function ClientStatisticsPage() {
   return (
     <div className="space-y-6 p-4">
-      <div className="max-w-xl space-y-2">
+      <div className="max-w-xl">
         <h1 className="text-3xl font-semibold leading-10" style={{ fontFamily: "var(--font-outfit)" }}>
           <span className="inline-block bg-linear-to-r from-violet-800 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
             Statistics
           </span>
         </h1>
-        <p className="text-base leading-6 text-slate-600">
+        <p className="text-base leading-3 text-slate-600">
           Track your conversations, replies, and lead generation in real time.
         </p>
       </div>
