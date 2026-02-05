@@ -37,7 +37,17 @@ export default function ClientStatisticsPage() {
           </div>
           <OverallProgressCard />
         </div>
-        <ActiveServicesStatusCard />
+        <div className="space-y-3">
+          <div>
+            <h2 className="font-semibold text-slate-900 text-xl">
+              Active Services Status
+            </h2>
+            <p className="text-slate-600 text-sm">
+              Quick highlights that show service health status.
+            </p>
+          </div>
+          <ActiveServicesStatusCard />
+        </div>
       </div>
 
       <ConversionRateTrendsCard />

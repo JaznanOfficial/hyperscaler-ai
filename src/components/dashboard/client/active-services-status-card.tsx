@@ -10,13 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
@@ -54,12 +48,6 @@ const serviceConfig = {
 export function ActiveServicesStatusCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
-      <CardHeader>
-        <CardTitle>Active Services Status</CardTitle>
-        <CardDescription>
-          Quick highlights that show service health status.
-        </CardDescription>
-      </CardHeader>
       <CardContent>
         <ChartContainer className="h-64" config={serviceConfig}>
           <ResponsiveContainer height="100%" width="100%">
@@ -128,7 +116,9 @@ function CustomTooltip({
   active?: boolean;
   payload?: { value?: number }[];
 }) {
-  if (!(active && payload?.length)) return null;
+  if (!(active && payload?.length)) {
+    return null;
+  }
   const value = payload[0]?.value ?? 0;
   return (
     <div className="rounded-lg border bg-white px-3 py-2 text-xs shadow-md">
