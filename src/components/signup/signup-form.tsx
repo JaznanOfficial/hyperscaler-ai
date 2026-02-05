@@ -5,6 +5,7 @@ import { ArrowRight, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -25,12 +26,10 @@ export function SignupForm({
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
   const [isConfirmVisible, setIsConfirmVisible] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
-  const [error, setError] = React.useState("")
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsLoading(true)
-    setError("")
 
     const formData = new FormData(event.currentTarget)
     const name = formData.get("name") as string
@@ -39,7 +38,7 @@ export function SignupForm({
     const confirmPassword = formData.get("confirm-password") as string
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match")
+      toast.error("Passwords do not match", { richColors: true })
       setIsLoading(false)
       return
     }
@@ -57,6 +56,8 @@ export function SignupForm({
         throw new Error(data.error || "Something went wrong")
       }
 
+      toast.success("Account created successfully", { richColors: true })
+
       const result = await signIn("credentials", {
         email,
         password,
@@ -71,7 +72,7 @@ export function SignupForm({
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Something went wrong"
-      setError(message)
+      toast.error(message, { richColors: true })
       setIsLoading(false)
     }
   }
@@ -87,13 +88,6 @@ export function SignupForm({
               Enter your name, email and password to create an account.
             </p>
           </div>
-
-          {error && (
-            <div className="bg-red-50 text-red-600 border border-red-100 p-3 rounded-md text-sm" role="alert">
-              {error}
-            </div>
-          )}
-
           <Field>
             <FieldLabel htmlFor="full-name">Full name</FieldLabel>
             <Input

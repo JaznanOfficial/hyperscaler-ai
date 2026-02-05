@@ -29,7 +29,7 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <div className="relative hidden lg:block pt-10 pb-10 pr-10">
+      <div className="relative hidden lg:block pt-5 pb-5 pr-5">
         <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-2xl">
           <Image
             src="/signup.png"

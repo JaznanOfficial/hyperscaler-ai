@@ -3,14 +3,9 @@
 import * as React from "react"
 import Link from "next/link"
 
+import { ArrowRight } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import {
   Field,
   FieldDescription,
@@ -52,76 +47,77 @@ export function ForgotPasswordForm({
       }
 
       setStatus("success")
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Something went wrong"
+      setError(message)
       setStatus("error")
     }
   }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Forgot password?</CardTitle>
-          <CardDescription>
-            Enter the email associated with your account and we&apos;ll send a
-            secure reset link.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-                {error}
-              </div>
-            )}
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="reset-email">Email address</FieldLabel>
-                <FieldDescription>
-                  We&apos;ll send you instructions to reset your password.
-                </FieldDescription>
-                <Input
-                  id="reset-email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(event) => {
-                    setStatus("idle")
-                    setError("")
-                    setEmail(event.target.value)
-                  }}
-                  disabled={status === "submitting"}
-                  required
-                />
-              </Field>
-            </FieldGroup>
-            <div className="flex flex-col gap-3">
-              <Button disabled={status === "submitting"} type="submit" className="w-full">
-                {status === "success"
-                  ? "Link sent"
-                  : status === "submitting"
-                    ? "Sending..."
-                    : "Send reset link"}
-              </Button>
-              {status === "success" && (
-                <p className="text-center text-sm text-emerald-600 dark:text-emerald-400">
-                  Check your inbox for a secure link. It expires in 1 hour.
-                </p>
-              )}
-              <p className="text-center text-sm text-muted-foreground">
-                Changed your mind?{" "}
-                <Link
-                  href="/login"
-                  className="font-semibold text-primary underline-offset-4 hover:underline"
-                >
-                  Back to login
-                </Link>
-              </p>
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+        <FieldGroup>
+          <div className="flex flex-col items-center gap-1 text-center">
+            <h1 className="text-2xl font-medium font-['Outfit'] leading-8">Reset your password</h1>
+            <p className="text-muted-foreground text-sm text-balance">
+              Enter the email associated with your account and we&apos;ll send a secure reset link.
+            </p>
+          </div>
+
+          {status === "success" && (
+            <div className="bg-emerald-50 text-emerald-700 border border-emerald-100 p-3 rounded-md text-sm">
+              Check your inbox for a secure link. It expires in 1 hour.
             </div>
-          </form>
-        </CardContent>
-      </Card>
+          )}
+
+          {error && (
+            <div className="bg-red-50 text-red-600 border border-red-100 p-3 rounded-md text-sm">
+              {error}
+            </div>
+          )}
+
+          <Field>
+            <FieldLabel htmlFor="reset-email">Email address</FieldLabel>
+            <FieldDescription>
+              We&apos;ll send you instructions to reset your password.
+            </FieldDescription>
+            <Input
+              id="reset-email"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(event) => {
+                setStatus("idle")
+                setError("")
+                setEmail(event.target.value)
+              }}
+              disabled={status === "submitting"}
+              required
+            />
+          </Field>
+
+          <Field>
+            <Button disabled={status === "submitting"} type="submit" variant="gradient" className="w-full">
+              {status === "success"
+                ? "Link sent"
+                : status === "submitting"
+                  ? "Sending..."
+                  : "Send reset link"}
+              {status === "idle" && <ArrowRight className="size-4" aria-hidden="true" />}
+            </Button>
+          </Field>
+
+          <Field>
+            <FieldDescription className="px-6 text-center text-slate-700 [&>a]:no-underline [&>a:hover]:no-underline [&>a:hover]:text-sky-600">
+              Remember your password?{" "}
+              <Link href="/login" className="font-medium text-sky-500 no-underline">
+                Back to login
+              </Link>
+            </FieldDescription>
+          </Field>
+        </FieldGroup>
+      </form>
     </div>
   )
 }

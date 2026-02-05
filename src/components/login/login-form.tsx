@@ -64,9 +64,9 @@ export function LoginForm({
       <form onSubmit={onSubmit} className="flex flex-col gap-6">
         <FieldGroup>
           <div className="flex flex-col items-center gap-1 text-center">
-            <h1 className="text-2xl font-medium font-['Outfit'] leading-8">Welcome back</h1>
+            <h1 className="text-2xl font-medium font-['Outfit'] leading-8">Login to your account</h1>
             <p className="text-muted-foreground text-sm text-balance">
-              Enter your credentials to continue managing your services.
+              Enter your email and password to login to your account.
             </p>
           </div>
 
