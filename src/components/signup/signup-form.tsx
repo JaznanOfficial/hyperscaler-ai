@@ -3,7 +3,6 @@
 import { ArrowRight, Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import * as React from "react";
 import { toast } from "sonner";
 
@@ -15,6 +14,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useSignupMutations } from "@/hooks/use-auth-mutations";
 import { cn } from "@/lib/utils";
 
 export function SignupForm({
@@ -24,11 +24,14 @@ export function SignupForm({
   const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const {
+    signupMutation,
+    autoLoginMutation,
+    isSignupLoading: isLoading,
+  } = useSignupMutations();
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsLoading(true);
 
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name") as string;
@@ -38,46 +41,27 @@ export function SignupForm({
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match", { richColors: true });
-      setIsLoading(false);
       return;
     }
 
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong");
-      }
-
+      const data = await signupMutation.mutateAsync({ name, email, password });
       const successMessage =
         typeof data.message === "string"
           ? data.message
           : "Account created successfully";
       toast.success(successMessage, { richColors: true });
-
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        router.push("/login?registered=true");
-      } else {
-        router.push("/dashboard");
-        router.refresh();
-      }
+      await autoLoginMutation.mutateAsync({ email, password });
+      router.push("/dashboard");
+      router.refresh();
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Something went wrong";
       toast.error(message, { richColors: true });
-      setIsLoading(false);
+
+      if (signupMutation.isSuccess && err instanceof Error) {
+        router.push("/login?registered=true");
+      }
     }
   }
   return (

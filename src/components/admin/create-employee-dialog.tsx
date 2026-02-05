@@ -69,7 +69,7 @@ export function CreateEmployeeDialog() {
                 />
                 <button
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute inset-y-0 right-2 flex items-center text-slate-500 transition hover:text-slate-900"
+                  className="absolute inset-y-0 right-2 flex cursor-pointer items-center text-slate-500 transition hover:text-slate-900"
                   onClick={() => setShowPassword((previous) => !previous)}
                   type="button"
                 >
