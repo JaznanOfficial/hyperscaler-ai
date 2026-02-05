@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -74,7 +74,7 @@ export function CreateEmployeeDialog() {
                   type="button"
                 >
                   {showPassword ? (
-                    <EyeOff className="size-4" />
+                    <EyeClosed className="size-4" />
                   ) : (
                     <Eye className="size-4" />
                   )}

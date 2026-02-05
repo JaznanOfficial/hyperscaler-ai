@@ -1,4 +1,7 @@
-import { Lock, User } from "lucide-react";
+"use client";
+
+import { Eye, EyeClosed, Lock, User } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +16,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function ProfilePage() {
+  const [passwordVisibility, setPasswordVisibility] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
+
+  const toggleVisibility = (field: keyof typeof passwordVisibility) => {
+    setPasswordVisibility((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
   return (
     <div className="space-y-6 p-4">
       <div className="max-w-xl">
@@ -86,30 +102,78 @@ export default function ProfilePage() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="current-password">Current Password</Label>
-            <Input
-              className="bg-zinc-100"
-              id="current-password"
-              placeholder="Enter current password"
-              type="password"
-            />
+            <div className="relative">
+              <Input
+                className="bg-zinc-100 pr-12"
+                id="current-password"
+                placeholder="Enter current password"
+                type={passwordVisibility.current ? "text" : "password"}
+              />
+              <button
+                aria-label={
+                  passwordVisibility.current ? "Hide password" : "Show password"
+                }
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
+                onClick={() => toggleVisibility("current")}
+                type="button"
+              >
+                {passwordVisibility.current ? (
+                  <EyeClosed aria-hidden="true" className="size-4" />
+                ) : (
+                  <Eye aria-hidden="true" className="size-4" />
+                )}
+              </button>
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="new-password">New Password</Label>
-            <Input
-              className="bg-zinc-100"
-              id="new-password"
-              placeholder="Enter new password"
-              type="password"
-            />
+            <div className="relative">
+              <Input
+                className="bg-zinc-100 pr-12"
+                id="new-password"
+                placeholder="Enter new password"
+                type={passwordVisibility.new ? "text" : "password"}
+              />
+              <button
+                aria-label={
+                  passwordVisibility.new ? "Hide password" : "Show password"
+                }
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
+                onClick={() => toggleVisibility("new")}
+                type="button"
+              >
+                {passwordVisibility.new ? (
+                  <EyeClosed aria-hidden="true" className="size-4" />
+                ) : (
+                  <Eye aria-hidden="true" className="size-4" />
+                )}
+              </button>
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirm-password">Confirm New Password</Label>
-            <Input
-              className="bg-zinc-100"
-              id="confirm-password"
-              placeholder="Confirm new password"
-              type="password"
-            />
+            <div className="relative">
+              <Input
+                className="bg-zinc-100 pr-12"
+                id="confirm-password"
+                placeholder="Confirm new password"
+                type={passwordVisibility.confirm ? "text" : "password"}
+              />
+              <button
+                aria-label={
+                  passwordVisibility.confirm ? "Hide password" : "Show password"
+                }
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
+                onClick={() => toggleVisibility("confirm")}
+                type="button"
+              >
+                {passwordVisibility.confirm ? (
+                  <EyeClosed aria-hidden="true" className="size-4" />
+                ) : (
+                  <Eye aria-hidden="true" className="size-4" />
+                )}
+              </button>
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-end pt-6">

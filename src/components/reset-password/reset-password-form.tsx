@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Eye, EyeOff } from "lucide-react";
+import { ArrowRight, Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
@@ -126,9 +126,9 @@ export function ResetPasswordForm({
                 type="button"
               >
                 {visibleField === "password" ? (
-                  <Eye aria-hidden="true" className="size-4" />
+                  <EyeClosed aria-hidden="true" className="size-4" />
                 ) : (
-                  <EyeOff aria-hidden="true" className="size-4" />
+                  <Eye aria-hidden="true" className="size-4" />
                 )}
               </button>
             </div>
@@ -162,9 +162,9 @@ export function ResetPasswordForm({
                 type="button"
               >
                 {visibleField === "confirm" ? (
-                  <Eye aria-hidden="true" className="size-4" />
+                  <EyeClosed aria-hidden="true" className="size-4" />
                 ) : (
-                  <EyeOff aria-hidden="true" className="size-4" />
+                  <Eye aria-hidden="true" className="size-4" />
                 )}
               </button>
             </div>

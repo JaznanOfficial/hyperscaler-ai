@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Eye, EyeOff } from "lucide-react";
+import { ArrowRight, Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -140,9 +140,9 @@ export function SignupForm({
                 type="button"
               >
                 {isPasswordVisible ? (
-                  <Eye aria-hidden="true" className="size-4" />
+                  <EyeClosed aria-hidden="true" className="size-4" />
                 ) : (
-                  <EyeOff aria-hidden="true" className="size-4" />
+                  <Eye aria-hidden="true" className="size-4" />
                 )}
               </button>
             </div>
@@ -176,9 +176,9 @@ export function SignupForm({
                 type="button"
               >
                 {isConfirmVisible ? (
-                  <Eye aria-hidden="true" className="size-4" />
+                  <EyeClosed aria-hidden="true" className="size-4" />
                 ) : (
-                  <EyeOff aria-hidden="true" className="size-4" />
+                  <Eye aria-hidden="true" className="size-4" />
                 )}
               </button>
             </div>
