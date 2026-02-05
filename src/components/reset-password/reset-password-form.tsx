@@ -3,7 +3,7 @@
 import { ArrowRight, Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import * as React from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useResetPasswordMutation } from "@/hooks/use-auth-mutations";
 import { cn } from "@/lib/utils";
 
 export function ResetPasswordForm({
@@ -24,14 +25,27 @@ export function ResetPasswordForm({
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const [password, setPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("");
-  const [status, setStatus] = React.useState<
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
-  const [visibleField, setVisibleField] = React.useState<
+  const [visibleField, setVisibleField] = useState<
     "password" | "confirm" | null
   >(null);
+  const { resetPasswordMutation, isResetPasswordLoading } =
+    useResetPasswordMutation();
+  const buttonLabel = (() => {
+    if (status === "success") {
+      return "Password updated";
+    }
+
+    if (isResetPasswordLoading) {
+      return "Updating...";
+    }
+
+    return "Update password";
+  })();
 
   const passwordsMismatch =
     confirmPassword.trim().length > 0 && password !== confirmPassword;
@@ -43,7 +57,7 @@ export function ResetPasswordForm({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (status === "submitting" || !password.trim() || passwordsMismatch) {
+    if (isResetPasswordLoading || !password.trim() || passwordsMismatch) {
       return;
     }
 
@@ -56,18 +70,7 @@ export function ResetPasswordForm({
     setStatus("submitting");
 
     try {
-      const response = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong");
-      }
-
+      const data = await resetPasswordMutation.mutateAsync({ token, password });
       setStatus("success");
       const successMessage =
         typeof data.message === "string"
@@ -103,7 +106,7 @@ export function ResetPasswordForm({
             <div className="relative mt-1">
               <Input
                 className="pr-10"
-                disabled={status === "submitting"}
+                disabled={isResetPasswordLoading}
                 id="new-password"
                 minLength={8}
                 onChange={(event) => {
@@ -179,16 +182,12 @@ export function ResetPasswordForm({
             <Button
               className="w-full"
               disabled={
-                status === "submitting" || !password.trim() || passwordsMismatch
+                isResetPasswordLoading || !password.trim() || passwordsMismatch
               }
               type="submit"
               variant="gradient"
             >
-              {status === "success"
-                ? "Password updated"
-                : status === "submitting"
-                  ? "Updating..."
-                  : "Update password"}
+              {buttonLabel}
               {status === "idle" && (
                 <ArrowRight aria-hidden="true" className="size-4" />
               )}
