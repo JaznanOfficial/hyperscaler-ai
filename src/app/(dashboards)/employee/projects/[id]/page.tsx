@@ -1,9 +1,8 @@
-import { Save } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { ProjectCalendarCard } from "@/components/employee/project-calendar-card"
-import { ProjectMetricGroupCard } from "@/components/employee/project-metric-group-card"
-import { metricGroups } from "@/data/project-metric-groups"
+import { Save } from "lucide-react";
+import { ProjectCalendarCard } from "@/components/employee/project-calendar-card";
+import { ProjectMetricGroupCard } from "@/components/employee/project-metric-group-card";
+import { Button } from "@/components/ui/button";
+import { metricGroups } from "@/data/project-metric-groups";
 
 export default function ProjectDetailPage() {
   return (
@@ -11,12 +10,12 @@ export default function ProjectDetailPage() {
       <div className="order-2 flex flex-col gap-4 lg:order-1">
         <div className="space-y-4">
           {metricGroups.map((group) => (
-            <ProjectMetricGroupCard key={group.id} group={group} />
+            <ProjectMetricGroupCard group={group} key={group.id} />
           ))}
         </div>
 
         <div className="flex justify-end">
-          <Button size="lg" className="gap-2">
+          <Button className="gap-2" size="lg">
             <Save className="h-4 w-4" />
             Save metrics
           </Button>
@@ -27,5 +26,5 @@ export default function ProjectDetailPage() {
         <ProjectCalendarCard />
       </div>
     </section>
-  )
+  );
 }

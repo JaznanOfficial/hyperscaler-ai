@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/backend/config/prisma";
 import { resetPasswordSchema } from "@/backend/schemas/auth.schema";
 
@@ -9,10 +9,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { token, password } = resetPasswordSchema.parse(body);
 
-    const hashedToken = crypto
-      .createHash("sha256")
-      .update(token)
-      .digest("hex");
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
     const resetToken = await prisma.passwordResetToken.findUnique({
       where: { token: hashedToken },

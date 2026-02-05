@@ -1,5 +1,5 @@
-import type { ChatMessage } from "@/components/chat/types"
-import { AiAgentPanel } from "@/components/dashboard/ai-agent/agent-panel"
+import type { ChatMessage } from "@/components/chat/types";
+import { AiAgentPanel } from "@/components/dashboard/ai-agent/agent-panel";
 
 const employeeMessages: ChatMessage[] = [
   {
@@ -14,7 +14,8 @@ const employeeMessages: ChatMessage[] = [
     id: "2",
     role: "user",
     author: "Lana Zimmerman",
-    content: "Great. Can you highlight the blockers for the Bangalore onboarding sprint?",
+    content:
+      "Great. Can you highlight the blockers for the Bangalore onboarding sprint?",
     timestamp: "09:13 AM",
   },
   {
@@ -29,11 +30,17 @@ const employeeMessages: ChatMessage[] = [
     id: "4",
     role: "user",
     author: "Lana Zimmerman",
-    content: "Perfect. Queue up the escalation and prep a summary for the stand-up.",
+    content:
+      "Perfect. Queue up the escalation and prep a summary for the stand-up.",
     timestamp: "09:15 AM",
   },
-]
+];
 
 export default function EmployeeDashboardPage() {
-  return <AiAgentPanel messages={employeeMessages} inputPlaceholder="Ask Hyperscaler AI" />
+  return (
+    <AiAgentPanel
+      inputPlaceholder="Ask Hyperscaler AI"
+      messages={employeeMessages}
+    />
+  );
 }

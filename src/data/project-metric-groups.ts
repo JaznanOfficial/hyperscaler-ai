@@ -1,15 +1,15 @@
 export type Metric = {
-  id: string
-  label: string
-  enabled: boolean
-}
+  id: string;
+  label: string;
+  enabled: boolean;
+};
 
 export type MetricGroup = {
-  id: string
-  title: string
-  description: string
-  metrics: Metric[]
-}
+  id: string;
+  title: string;
+  description: string;
+  metrics: Metric[];
+};
 
 export const metricGroups: MetricGroup[] = [
   {
@@ -29,7 +29,11 @@ export const metricGroups: MetricGroup[] = [
       { id: "adSpend", label: "Ad Spend", enabled: true },
       { id: "roas", label: "Return on Ad Spend (ROAS)", enabled: true },
       { id: "frequency", label: "Frequency", enabled: false },
-      { id: "qualityScore", label: "Quality Score (Google Ads)", enabled: true },
+      {
+        id: "qualityScore",
+        label: "Quality Score (Google Ads)",
+        enabled: true,
+      },
       { id: "adRelevance", label: "Ad Relevance Score (Meta)", enabled: false },
     ],
   },
@@ -42,15 +46,27 @@ export const metricGroups: MetricGroup[] = [
       { id: "organicUsers", label: "Organic Users", enabled: true },
       { id: "keywordRankings", label: "Keyword Rankings", enabled: true },
       { id: "keywordChange", label: "Keyword Position Change", enabled: false },
-      { id: "organicCtr", label: "Click-Through Rate (Organic CTR)", enabled: true },
-      { id: "impressionsSearchConsole", label: "Impressions (Search Console)", enabled: true },
+      {
+        id: "organicCtr",
+        label: "Click-Through Rate (Organic CTR)",
+        enabled: true,
+      },
+      {
+        id: "impressionsSearchConsole",
+        label: "Impressions (Search Console)",
+        enabled: true,
+      },
       { id: "indexedPages", label: "Indexed Pages", enabled: false },
       { id: "backlinks", label: "Backlinks Acquired", enabled: true },
       { id: "domainAuthority", label: "Domain Authority / DR", enabled: false },
       { id: "pageSpeed", label: "Page Load Speed", enabled: true },
       { id: "coreWebVitals", label: "Core Web Vitals", enabled: false },
       { id: "bounceRate", label: "Bounce Rate", enabled: true },
-      { id: "organicConversions", label: "Conversions from Organic Traffic", enabled: true },
+      {
+        id: "organicConversions",
+        label: "Conversions from Organic Traffic",
+        enabled: true,
+      },
     ],
   },
   {
@@ -68,7 +84,11 @@ export const metricGroups: MetricGroup[] = [
       { id: "shares", label: "Shares / Saves", enabled: false },
       { id: "videoViews", label: "Video Views", enabled: true },
       { id: "watchTime", label: "Watch Time", enabled: false },
-      { id: "socialConversion", label: "Conversion Rate (Social → Lead)", enabled: true },
+      {
+        id: "socialConversion",
+        label: "Conversion Rate (Social → Lead)",
+        enabled: true,
+      },
     ],
   },
   {
@@ -85,7 +105,11 @@ export const metricGroups: MetricGroup[] = [
       { id: "bounceRateEmail", label: "Bounce Rate", enabled: true },
       { id: "spamComplaints", label: "Spam Complaint Rate", enabled: false },
       { id: "meetingsBooked", label: "Meetings Booked", enabled: true },
-      { id: "emailConversion", label: "Conversion Rate (Email → Meeting)", enabled: true },
+      {
+        id: "emailConversion",
+        label: "Conversion Rate (Email → Meeting)",
+        enabled: true,
+      },
     ],
   },
   {
@@ -93,14 +117,26 @@ export const metricGroups: MetricGroup[] = [
     title: "Cold LinkedIn Outreach",
     description: "LinkedIn prospecting funnel.",
     metrics: [
-      { id: "connectionRequests", label: "Connection Requests Sent", enabled: true },
+      {
+        id: "connectionRequests",
+        label: "Connection Requests Sent",
+        enabled: true,
+      },
       { id: "acceptanceRate", label: "Acceptance Rate", enabled: true },
       { id: "messagesSent", label: "Messages Sent", enabled: true },
       { id: "replyRateLinkedin", label: "Reply Rate", enabled: true },
-      { id: "positiveReplyRateLinkedin", label: "Positive Reply Rate", enabled: false },
+      {
+        id: "positiveReplyRateLinkedin",
+        label: "Positive Reply Rate",
+        enabled: false,
+      },
       { id: "qualifiedLeads", label: "Qualified Leads", enabled: true },
       { id: "meetingsBookedLinkedin", label: "Meetings Booked", enabled: true },
-      { id: "conversionRateLinkedin", label: "Conversion Rate (Connection → Lead)", enabled: true },
+      {
+        id: "conversionRateLinkedin",
+        label: "Conversion Rate (Connection → Lead)",
+        enabled: true,
+      },
     ],
   },
   {
@@ -111,10 +147,18 @@ export const metricGroups: MetricGroup[] = [
       { id: "callsMade", label: "Calls Made", enabled: true },
       { id: "pickupRate", label: "Pick-Up Rate", enabled: true },
       { id: "callDuration", label: "Average Call Duration", enabled: false },
-      { id: "qualifiedConversations", label: "Qualified Conversations", enabled: true },
+      {
+        id: "qualifiedConversations",
+        label: "Qualified Conversations",
+        enabled: true,
+      },
       { id: "followUps", label: "Follow-Ups Scheduled", enabled: true },
       { id: "meetingsBookedCalling", label: "Meetings Booked", enabled: true },
-      { id: "conversionRateCalling", label: "Conversion Rate (Call → Meeting)", enabled: true },
+      {
+        id: "conversionRateCalling",
+        label: "Conversion Rate (Call → Meeting)",
+        enabled: true,
+      },
     ],
   },
   {
@@ -125,11 +169,27 @@ export const metricGroups: MetricGroup[] = [
       { id: "assetsProduced", label: "Assets Produced", enabled: true },
       { id: "approvalRate", label: "Approval Rate", enabled: true },
       { id: "timeToDelivery", label: "Time to Delivery", enabled: true },
-      { id: "contentEngagement", label: "Content Engagement Rate", enabled: true },
-      { id: "contentClickRate", label: "Click Rate (from Content)", enabled: true },
-      { id: "contentConversionRate", label: "Conversion Rate (Content → Lead)", enabled: true },
+      {
+        id: "contentEngagement",
+        label: "Content Engagement Rate",
+        enabled: true,
+      },
+      {
+        id: "contentClickRate",
+        label: "Click Rate (from Content)",
+        enabled: true,
+      },
+      {
+        id: "contentConversionRate",
+        label: "Conversion Rate (Content → Lead)",
+        enabled: true,
+      },
       { id: "brandSearchVolume", label: "Brand Search Volume", enabled: false },
-      { id: "directTrafficGrowth", label: "Direct Traffic Growth", enabled: true },
+      {
+        id: "directTrafficGrowth",
+        label: "Direct Traffic Growth",
+        enabled: true,
+      },
     ],
   },
   {
@@ -140,7 +200,11 @@ export const metricGroups: MetricGroup[] = [
       { id: "tasksCompleted", label: "Tasks Completed", enabled: true },
       { id: "velocity", label: "Velocity", enabled: true },
       { id: "bugResolution", label: "Bug Resolution Rate", enabled: true },
-      { id: "deploymentSuccess", label: "Deployment Success Rate", enabled: true },
+      {
+        id: "deploymentSuccess",
+        label: "Deployment Success Rate",
+        enabled: true,
+      },
       { id: "uptime", label: "Uptime (%)", enabled: true },
       { id: "responseTime", label: "Response Time", enabled: true },
       { id: "errorRate", label: "Error Rate", enabled: true },
@@ -163,4 +227,4 @@ export const metricGroups: MetricGroup[] = [
       { id: "ttv", label: "Time to Value (TTV)", enabled: true },
     ],
   },
-]
+];

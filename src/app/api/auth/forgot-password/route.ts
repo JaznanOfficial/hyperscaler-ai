@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/backend/config/prisma";
-import { sendPasswordResetEmail } from "@/backend/utils/email";
-import { forgotPasswordSchema } from "@/backend/schemas/auth.schema";
 import crypto from "crypto";
+import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/backend/config/prisma";
+import { forgotPasswordSchema } from "@/backend/schemas/auth.schema";
+import { sendPasswordResetEmail } from "@/backend/utils/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       data: {
         email: user.email,
         token: hashedToken,
-        expires: new Date(Date.now() + 3600000),
+        expires: new Date(Date.now() + 3_600_000),
         userId: user.id,
       },
     });

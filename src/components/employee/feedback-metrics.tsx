@@ -1,6 +1,12 @@
-import { ArrowUpRight, MessageCircle, Sparkles } from "lucide-react"
+import { ArrowUpRight, MessageCircle, Sparkles } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const metricCards = [
   {
@@ -27,24 +33,27 @@ const metricCards = [
     accent: "from-emerald-200 via-emerald-100 to-transparent",
     subtitle: "Most blockers close within 3 days.",
   },
-]
+];
 
 export function FeedbackMetrics() {
   return (
     <div className="grid gap-4 md:grid-cols-3">
       {metricCards.map((metric) => (
-        <Card key={metric.label} className="relative overflow-hidden bg-white/95 shadow-sm">
+        <Card
+          className="relative overflow-hidden bg-white/95 shadow-sm"
+          key={metric.label}
+        >
           <CardHeader className="relative flex flex-row items-start justify-between">
             <div>
-              <CardDescription className="text-xs uppercase tracking-wide text-slate-400">
+              <CardDescription className="text-slate-400 text-xs uppercase tracking-wide">
                 {metric.label}
               </CardDescription>
-              <CardTitle className="mt-2 text-3xl font-semibold text-slate-900">
+              <CardTitle className="mt-2 font-semibold text-3xl text-slate-900">
                 {metric.value}
               </CardTitle>
-              <p className="text-xs text-slate-500">{metric.trendLabel}</p>
+              <p className="text-slate-500 text-xs">{metric.trendLabel}</p>
             </div>
-            <div className="bg-muted/50 text-muted-foreground flex size-10 items-center justify-center rounded-full">
+            <div className="flex size-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground">
               <metric.icon className="size-5" />
             </div>
             <div
@@ -53,10 +62,10 @@ export function FeedbackMetrics() {
             />
           </CardHeader>
           <CardContent className="relative">
-            <p className="text-sm text-slate-600">{metric.subtitle}</p>
+            <p className="text-slate-600 text-sm">{metric.subtitle}</p>
           </CardContent>
         </Card>
       ))}
     </div>
-  )
+  );
 }

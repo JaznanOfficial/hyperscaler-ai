@@ -1,10 +1,28 @@
-"use client"
+"use client";
 
-import type { CSSProperties } from "react"
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import type { CSSProperties } from "react";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 const conversionConfig = {
   coldEmail: {
@@ -23,7 +41,7 @@ const conversionConfig = {
     label: "LinkedIn Outreach",
     color: "hsl(var(--chart-3))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 const conversionData = [
   { day: 2, coldEmail: 2, paidAds: 1, socialMedia: 0.5, linkedin: 0.2 },
@@ -37,54 +55,106 @@ const conversionData = [
   { day: 24, coldEmail: 14, paidAds: 12, socialMedia: 16, linkedin: 18 },
   { day: 28, coldEmail: 15, paidAds: 13, socialMedia: 18, linkedin: 20 },
   { day: 30, coldEmail: 16, paidAds: 14, socialMedia: 19, linkedin: 22 },
-]
+];
 
 const legendItems = [
   { key: "coldEmail", label: "Cold Email Campaign" },
   { key: "paidAds", label: "Paid Ads" },
   { key: "socialMedia", label: "Social Media Marketing" },
   { key: "linkedin", label: "LinkedIn Outreach" },
-]
+];
 
 export function ConversionRateTrendsCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardHeader>
         <CardTitle>Conversion Rate Trends</CardTitle>
-        <CardDescription>30-day trend comparison across conversion rates.</CardDescription>
+        <CardDescription>
+          30-day trend comparison across conversion rates.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <ChartContainer config={conversionConfig} className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={conversionData} margin={{ left: 0, right: 24, top: 16, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.35)" />
+        <ChartContainer className="h-80" config={conversionConfig}>
+          <ResponsiveContainer height="100%" width="100%">
+            <LineChart
+              data={conversionData}
+              margin={{ left: 0, right: 24, top: 16, bottom: 8 }}
+            >
+              <CartesianGrid
+                stroke="rgba(148, 163, 184, 0.35)"
+                strokeDasharray="3 3"
+              />
               <XAxis
-                dataKey="day"
-                tickLine={false}
                 axisLine={false}
+                dataKey="day"
+                label={{
+                  value: "Day",
+                  position: "insideRight",
+                  offset: -10,
+                  fill: "#94a3b8",
+                }}
                 tick={{ fill: "#64748b", fontSize: 12 }}
-                label={{ value: "Day", position: "insideRight", offset: -10, fill: "#94a3b8" }}
+                tickLine={false}
               />
               <YAxis
-                tickLine={false}
                 axisLine={false}
+                label={{
+                  value: "Conversion Rate (%)",
+                  angle: -90,
+                  position: "insideLeft",
+                  fill: "#94a3b8",
+                }}
                 tick={{ fill: "#64748b", fontSize: 12 }}
-                label={{ value: "Conversion Rate (%)", angle: -90, position: "insideLeft", fill: "#94a3b8" }}
+                tickLine={false}
               />
-              <ChartTooltip content={<ChartTooltipContent />} cursor={{ stroke: "#cbd5f5", strokeWidth: 1 }} />
-              <Line type="monotone" dataKey="coldEmail" stroke="var(--color-coldEmail)" strokeWidth={3} dot={false} />
-              <Line type="monotone" dataKey="paidAds" stroke="var(--color-paidAds)" strokeWidth={3} dot={false} />
-              <Line type="monotone" dataKey="socialMedia" stroke="var(--color-socialMedia)" strokeWidth={3} dot={false} />
-              <Line type="monotone" dataKey="linkedin" stroke="var(--color-linkedin)" strokeWidth={3} dot={false} />
+              <ChartTooltip
+                content={<ChartTooltipContent />}
+                cursor={{ stroke: "#cbd5f5", strokeWidth: 1 }}
+              />
+              <Line
+                dataKey="coldEmail"
+                dot={false}
+                stroke="var(--color-coldEmail)"
+                strokeWidth={3}
+                type="monotone"
+              />
+              <Line
+                dataKey="paidAds"
+                dot={false}
+                stroke="var(--color-paidAds)"
+                strokeWidth={3}
+                type="monotone"
+              />
+              <Line
+                dataKey="socialMedia"
+                dot={false}
+                stroke="var(--color-socialMedia)"
+                strokeWidth={3}
+                type="monotone"
+              />
+              <Line
+                dataKey="linkedin"
+                dot={false}
+                stroke="var(--color-linkedin)"
+                strokeWidth={3}
+                type="monotone"
+              />
             </LineChart>
           </ResponsiveContainer>
         </ChartContainer>
         <div className="flex flex-wrap gap-4 text-sm">
           {legendItems.map((item) => (
-            <div key={item.key} className="inline-flex items-center gap-2 text-slate-600">
+            <div
+              className="inline-flex items-center gap-2 text-slate-600"
+              key={item.key}
+            >
               <span
                 className="size-2.5 rounded-full"
-                style={{ backgroundColor: `var(--color-${item.key})` } as CSSProperties}
+                style={
+                  {
+                    backgroundColor: `var(--color-${item.key})`,
+                  } as CSSProperties
+                }
               />
               <span>{item.label}</span>
             </div>
@@ -92,5 +162,5 @@ export function ConversionRateTrendsCard() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

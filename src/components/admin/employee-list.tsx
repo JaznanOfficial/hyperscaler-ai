@@ -1,14 +1,14 @@
-import { EmployeeListItem } from "@/components/admin/employee-list-item"
+import { EmployeeListItem } from "@/components/admin/employee-list-item";
 
 export type EmployeeItem = {
-  id: string
-  name: string
-  email: string
-  title: string
-  expertise: string
-  yearsExperience: number
-  roleLevel: "manager" | "employee"
-}
+  id: string;
+  name: string;
+  email: string;
+  title: string;
+  expertise: string;
+  yearsExperience: number;
+  roleLevel: "manager" | "employee";
+};
 
 const employeeItems: EmployeeItem[] = [
   {
@@ -38,16 +38,16 @@ const employeeItems: EmployeeItem[] = [
     yearsExperience: 5,
     roleLevel: "employee",
   },
-]
+];
 
 export function EmployeeList() {
   return (
     <div>
       <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
         {employeeItems.map((item) => (
-          <EmployeeListItem key={item.id} item={item} />
+          <EmployeeListItem item={item} key={item.id} />
         ))}
       </ul>
     </div>
-  )
+  );
 }
