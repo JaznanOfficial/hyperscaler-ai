@@ -3,8 +3,7 @@
 import { ArrowRight, Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useLoginMutation } from "@/hooks/use-auth-mutations";
 import { cn } from "@/lib/utils";
 
 export function LoginForm({
@@ -23,11 +23,11 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const registered = searchParams.get("registered");
+  const { loginMutation, isLoginLoading: isLoading } = useLoginMutation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (registered) {
       toast.success("Account created successfully. Please sign in.", {
         richColors: true,
@@ -37,25 +37,12 @@ export function LoginForm({
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsLoading(true);
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        toast.error(result.error ?? "Invalid email or password", {
-          richColors: true,
-        });
-        return;
-      }
-
+      await loginMutation.mutateAsync({ email, password });
       toast.success("Welcome back!", { richColors: true });
       router.push("/dashboard");
       router.refresh();
@@ -65,8 +52,6 @@ export function LoginForm({
           ? err.message
           : "Something went wrong. Please try again.";
       toast.error(message, { richColors: true });
-    } finally {
-      setIsLoading(false);
     }
   }
 

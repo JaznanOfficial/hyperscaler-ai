@@ -2,7 +2,7 @@
 
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import * as React from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -13,16 +13,30 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useForgotPasswordMutation } from "@/hooks/use-auth-mutations";
 import { cn } from "@/lib/utils";
 
 export function ForgotPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [email, setEmail] = React.useState("");
-  const [status, setStatus] = React.useState<
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
+  const { forgotPasswordMutation, isForgotPasswordLoading } =
+    useForgotPasswordMutation();
+  const buttonLabel = (() => {
+    if (status === "success") {
+      return "Link sent";
+    }
+
+    if (isForgotPasswordLoading) {
+      return "Sending...";
+    }
+
+    return "Send reset link";
+  })();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,18 +48,7 @@ export function ForgotPasswordForm({
     setStatus("submitting");
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong");
-      }
-
+      const data = await forgotPasswordMutation.mutateAsync({ email });
       setStatus("success");
       const successMessage =
         typeof data.message === "string"
@@ -80,7 +83,7 @@ export function ForgotPasswordForm({
               We&apos;ll send you instructions to reset your password.
             </FieldDescription>
             <Input
-              disabled={status === "submitting"}
+              disabled={isForgotPasswordLoading}
               id="reset-email"
               onChange={(event) => {
                 setStatus("idle");
@@ -96,15 +99,11 @@ export function ForgotPasswordForm({
           <Field>
             <Button
               className="w-full"
-              disabled={status === "submitting"}
+              disabled={isForgotPasswordLoading}
               type="submit"
               variant="gradient"
             >
-              {status === "success"
-                ? "Link sent"
-                : status === "submitting"
-                  ? "Sending..."
-                  : "Send reset link"}
+              {buttonLabel}
               {status === "idle" && (
                 <ArrowRight aria-hidden="true" className="size-4" />
               )}
