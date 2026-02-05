@@ -26,7 +26,7 @@ export default function ClientStatisticsPage() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <div className="space-y-3">
+        <div className="h-full space-y-3">
           <div>
             <h2 className="font-semibold text-slate-900 text-xl">
               Overall Progress
@@ -37,7 +37,17 @@ export default function ClientStatisticsPage() {
           </div>
           <OverallProgressCard />
         </div>
-        <ActiveServicesStatusCard />
+        <div className="h-full space-y-3">
+          <div>
+            <h2 className="font-semibold text-slate-900 text-xl">
+              Active Services Status
+            </h2>
+            <p className="text-slate-600 text-sm">
+              Quick highlights that show service health status.
+            </p>
+          </div>
+          <ActiveServicesStatusCard />
+        </div>
       </div>
 
       <ConversionRateTrendsCard />
