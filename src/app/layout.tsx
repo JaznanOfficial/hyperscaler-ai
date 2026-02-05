@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono, Inter, Outfit } from "next/font/google"
+import { Toaster } from "sonner"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
@@ -31,10 +32,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} antialiased`}>
         {children}
+        <Toaster richColors position="top-center" />
       </body>
     </html>
   );
