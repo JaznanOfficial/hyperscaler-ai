@@ -74,12 +74,12 @@ export function OverallProgressCard() {
   };
 
   return (
-    <Card className="rounded-3xl border border-slate-100 bg-white shadow-sm">
-      <CardContent className="flex flex-col gap-6 lg:flex-row lg:items-center">
-        <div className="flex-1">
-          <div className="w-full">
+    <Card className="min-h-76 rounded-3xl border border-slate-100 bg-white">
+      <CardContent className="flex h-full flex-col items-center justify-center gap-6 lg:flex-row">
+        <div className="h-full w-full">
+          <div className="h-full w-full">
             <ApexChart
-              height={420}
+              height={480}
               options={chartOptions}
               series={[73]}
               type="radialBar"
