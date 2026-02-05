@@ -1,18 +1,18 @@
-import type { ReactNode } from "react"
+import type { ReactNode } from "react";
 
-import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar"
+import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 const clientNavItems: AppSidebarNavItem[] = [
   {
@@ -33,12 +33,12 @@ const clientNavItems: AppSidebarNavItem[] = [
     icon: "creditCard",
     matchSubRoutes: false,
   },
-]
+];
 
 export default function ClientDashboardLayout({
   children,
 }: {
-  children: ReactNode
+  children: ReactNode;
 }) {
   return (
     <SidebarProvider>
@@ -54,8 +54,8 @@ export default function ClientDashboardLayout({
           <div className="flex w-full items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
+              className="mr-2 hidden data-[orientation=vertical]:h-4 md:flex"
               orientation="vertical"
-              className="mr-2 hidden md:flex data-[orientation=vertical]:h-4"
             />
             <Breadcrumb>
               <BreadcrumbList>
@@ -66,10 +66,10 @@ export default function ClientDashboardLayout({
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-hidden bg-[#F5F7Fa]">
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden bg-[#F5F7Fa]">
           {children}
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

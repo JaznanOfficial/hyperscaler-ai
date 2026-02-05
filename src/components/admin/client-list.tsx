@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
-import { ClientListItem } from "@/components/admin/client-list-item"
+import { ClientListItem } from "@/components/admin/client-list-item";
 
 export type ClientItem = {
-  id: string
-  name: string
-  email: string
-  requestedService: string
-  subscriptionId: string
-  status: "Approved" | "Pending" | "Cancelled"
-}
+  id: string;
+  name: string;
+  email: string;
+  requestedService: string;
+  subscriptionId: string;
+  status: "Approved" | "Pending" | "Cancelled";
+};
 
 const clientItems: ClientItem[] = [
   {
@@ -38,10 +38,10 @@ const clientItems: ClientItem[] = [
     subscriptionId: "SUB-1966",
     status: "Cancelled",
   },
-]
+];
 
 export function ClientList() {
-  const [clients, setClients] = useState(clientItems)
+  const [clients, setClients] = useState(clientItems);
 
   const handleStatusChange = (id: string, status: ClientItem["status"]) => {
     setClients((previous) =>
@@ -53,16 +53,20 @@ export function ClientList() {
             }
           : client
       )
-    )
-  }
+    );
+  };
 
   return (
     <div>
       <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
         {clients.map((item) => (
-          <ClientListItem key={item.id} item={item} onStatusChange={handleStatusChange} />
+          <ClientListItem
+            item={item}
+            key={item.id}
+            onStatusChange={handleStatusChange}
+          />
         ))}
       </ul>
     </div>
-  )
+  );
 }

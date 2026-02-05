@@ -1,21 +1,25 @@
-import Image from "next/image"
-import Link from "next/link"
+import Image from "next/image";
+import Link from "next/link";
 
-import { SignupForm } from "@/components/signup/signup-form"
+import { SignupForm } from "@/components/signup/signup-form";
 
 export default function SignupPage() {
   return (
     <div className="grid min-h-svh w-full lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center md:justify-start">
-          <Link href="/" className="flex items-center" aria-label="Hyperscaler home">
+          <Link
+            aria-label="Hyperscaler home"
+            className="flex items-center"
+            href="/"
+          >
             <Image
-              src="/logo.png"
               alt="Hyperscaler logo"
-              width={140}
-              height={32}
               className="h-8 w-auto"
+              height={32}
               priority
+              src="/logo.png"
+              width={140}
             />
             <span className="sr-only">Hyperscaler</span>
           </Link>
@@ -26,18 +30,18 @@ export default function SignupPage() {
           </div>
         </div>
       </div>
-      <div className="relative hidden lg:block pt-5 pb-5 pr-5">
+      <div className="relative hidden pt-5 pr-5 pb-5 lg:block">
         <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-2xl">
           <Image
-            src="/signup.png"
             alt="Team collaborating"
-            fill
             className="object-cover"
+            fill
             priority
             sizes="50vw"
+            src="/signup.png"
           />
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,22 +1,22 @@
-export type ClientServiceStatus = "Approved" | "Pending" | "Cancelled"
+export type ClientServiceStatus = "Approved" | "Pending" | "Cancelled";
 
 export type ClientServiceRequest = {
-  id: string
-  name: string
-  description: string
-  status: ClientServiceStatus
-  assignedEmployees: string[]
-  renewal: string
-}
+  id: string;
+  name: string;
+  description: string;
+  status: ClientServiceStatus;
+  assignedEmployees: string[];
+  renewal: string;
+};
 
 export type ClientDetail = {
-  id: string
-  name: string
-  email: string
-  subscriptionId: string
-  accountStatus: "Approved" | "Pending" | "Cancelled"
-  requestedServices: ClientServiceRequest[]
-}
+  id: string;
+  name: string;
+  email: string;
+  subscriptionId: string;
+  accountStatus: "Approved" | "Pending" | "Cancelled";
+  requestedServices: ClientServiceRequest[];
+};
 
 export const employeeDirectory = [
   "Lana Zimmerman",
@@ -25,7 +25,7 @@ export const employeeDirectory = [
   "Noah Whitfield",
   "Priya Ramesh",
   "Devon Ellis",
-]
+];
 
 export const clientDetails: ClientDetail[] = [
   {
@@ -38,7 +38,8 @@ export const clientDetails: ClientDetail[] = [
       {
         id: "srv-401",
         name: "Automation Intelligence Suite",
-        description: "Scaling revenue automation and telemetry for growth pods.",
+        description:
+          "Scaling revenue automation and telemetry for growth pods.",
         status: "Approved",
         assignedEmployees: ["Lana Zimmerman", "Arjun Patel"],
         renewal: "Renews Mar 01",
@@ -46,7 +47,8 @@ export const clientDetails: ClientDetail[] = [
       {
         id: "srv-389",
         name: "Telemetry & Risk Mesh",
-        description: "Enterprise telemetry rollout with risk escalation playbooks.",
+        description:
+          "Enterprise telemetry rollout with risk escalation playbooks.",
         status: "Pending",
         assignedEmployees: ["Maya Collins"],
         renewal: "Discovery wk 2",
@@ -63,7 +65,8 @@ export const clientDetails: ClientDetail[] = [
       {
         id: "srv-389",
         name: "Telemetry & Risk Mesh",
-        description: "Compliance instrumentation + outage war room automations.",
+        description:
+          "Compliance instrumentation + outage war room automations.",
         status: "Cancelled",
         assignedEmployees: ["Noah Whitfield"],
         renewal: "Needs legal clearance",
@@ -88,17 +91,20 @@ export const clientDetails: ClientDetail[] = [
       {
         id: "srv-376",
         name: "Revenue Autopilot",
-        description: "AI-assisted merchandising triggers and replenishment ops.",
+        description:
+          "AI-assisted merchandising triggers and replenishment ops.",
         status: "Approved",
         assignedEmployees: ["Priya Ramesh", "Maya Collins"],
         renewal: "Trial ends Mar 15",
       },
     ],
   },
-]
+];
 
 export function getClientDetail(id: string | undefined) {
-  if (!id) return undefined
-  const normalizedId = id.toUpperCase()
-  return clientDetails.find((client) => client.id.toUpperCase() === normalizedId)
+  if (!id) return undefined;
+  const normalizedId = id.toUpperCase();
+  return clientDetails.find(
+    (client) => client.id.toUpperCase() === normalizedId
+  );
 }

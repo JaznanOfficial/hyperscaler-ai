@@ -1,4 +1,4 @@
-import { FeedbackList } from "@/components/employee/feedback-list"
+import { FeedbackList } from "@/components/employee/feedback-list";
 import {
   Pagination,
   PaginationContent,
@@ -7,11 +7,11 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 
 export default function EmployeeFeedbacksPage() {
-  const totalPages: number = 5
-  const currentPage: number = 1
+  const totalPages: number = 5;
+  const currentPage: number = 1;
 
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
@@ -21,7 +21,7 @@ export default function EmployeeFeedbacksPage() {
       <Pagination className="mt-4 py-3">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="#" aria-disabled={currentPage === 1} />
+            <PaginationPrevious aria-disabled={currentPage === 1} href="#" />
           </PaginationItem>
           {[1, 2, 3].map((page) => (
             <PaginationItem key={page}>
@@ -37,10 +37,13 @@ export default function EmployeeFeedbacksPage() {
             <PaginationLink href="#">{totalPages}</PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext href="#" aria-disabled={currentPage === totalPages} />
+            <PaginationNext
+              aria-disabled={currentPage === totalPages}
+              href="#"
+            />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
     </section>
-  )
+  );
 }

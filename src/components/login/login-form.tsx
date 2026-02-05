@@ -1,77 +1,69 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { ArrowRight, Eye, EyeOff } from "lucide-react"
-import Link from "next/link"
-import { signIn } from "next-auth/react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { toast } from "sonner"
+import { ArrowRight, Eye, EyeClosed } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { useLoginMutation } from "@/hooks/use-auth-mutations";
+import { cn } from "@/lib/utils";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(false)
-  const registered = searchParams.get("registered")
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const registered = searchParams.get("registered");
+  const { loginMutation, isLoginLoading: isLoading } = useLoginMutation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (registered) {
       toast.success("Account created successfully. Please sign in.", {
         richColors: true,
-      })
+      });
     }
-  }, [registered])
+  }, [registered]);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setIsLoading(true)
-    const formData = new FormData(event.currentTarget)
-    const email = formData.get("email") as string
-    const password = formData.get("password") as string
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        toast.error(result.error ?? "Invalid email or password", { richColors: true })
-        return
-      }
-
-      toast.success("Welcome back!", { richColors: true })
-      router.push("/dashboard")
-      router.refresh()
+      await loginMutation.mutateAsync({ email, password });
+      toast.success("Welcome back!", { richColors: true });
+      router.push("/dashboard");
+      router.refresh();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Something went wrong. Please try again."
-      toast.error(message, { richColors: true })
-    } finally {
-      setIsLoading(false)
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again.";
+      toast.error(message, { richColors: true });
     }
   }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form onSubmit={onSubmit} className="flex flex-col gap-6">
+      <form className="flex flex-col gap-6" onSubmit={onSubmit}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-1 text-center">
-            <h1 className="text-2xl font-medium font-['Outfit'] leading-8">Login to your account</h1>
-            <p className="text-muted-foreground text-sm text-balance">
+            <h1 className="font-['Outfit'] font-medium text-2xl leading-8">
+              Login to your account
+            </h1>
+            <p className="text-balance text-muted-foreground text-sm">
               Enter your email and password to login to your account.
             </p>
           </div>
@@ -79,61 +71,78 @@ export function LoginForm({
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
+              disabled={isLoading}
               id="email"
+              inputMode="email"
               name="email"
-              type="email"
               placeholder="ada@lovelace.ai"
               required
-              inputMode="email"
-              disabled={isLoading}
+              type="email"
             />
           </Field>
 
           <Field>
             <div className="flex items-center">
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Link href="/forgot-password" className="ml-auto text-sm font-medium text-sky-500 no-underline hover:text-sky-600">
+              <Link
+                className="ml-auto font-medium text-sky-500 text-sm no-underline hover:text-sky-600"
+                href="/forgot-password"
+              >
                 Forgot password?
               </Link>
             </div>
             <div className="relative mt-1">
               <Input
+                className="pr-10"
+                disabled={isLoading}
                 id="password"
                 name="password"
-                type={isPasswordVisible ? "text" : "password"}
                 placeholder="********"
-                className="pr-10"
                 required
-                disabled={isLoading}
+                type={isPasswordVisible ? "text" : "password"}
               />
               <button
-                type="button"
-                aria-label={isPasswordVisible ? "Hide password" : "Show password"}
-                onClick={() => setIsPasswordVisible((prev) => !prev)}
-                className="text-muted-foreground absolute inset-y-0 right-0 flex items-center px-3 transition-colors hover:text-foreground cursor-pointer"
+                aria-label={
+                  isPasswordVisible ? "Hide password" : "Show password"
+                }
+                className="absolute inset-y-0 right-0 flex cursor-pointer items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
                 disabled={isLoading}
+                onClick={() => setIsPasswordVisible((prev) => !prev)}
+                type="button"
               >
                 {isPasswordVisible ? (
-                  <Eye className="size-4" aria-hidden="true" />
+                  <EyeClosed aria-hidden="true" className="size-4" />
                 ) : (
-                  <EyeOff className="size-4" aria-hidden="true" />
+                  <Eye aria-hidden="true" className="size-4" />
                 )}
               </button>
             </div>
-            <FieldDescription>Use at least 8 characters with a mix of letters and numbers.</FieldDescription>
+            <FieldDescription>
+              Use at least 8 characters with a mix of letters and numbers.
+            </FieldDescription>
           </Field>
 
           <Field>
-            <Button type="submit" variant="gradient" className="w-full" disabled={isLoading}>
+            <Button
+              className="w-full"
+              disabled={isLoading}
+              type="submit"
+              variant="gradient"
+            >
               {isLoading ? "Signing you in..." : "Sign in"}
-              {!isLoading && <ArrowRight className="size-4" aria-hidden="true" />}
+              {!isLoading && (
+                <ArrowRight aria-hidden="true" className="size-4" />
+              )}
             </Button>
           </Field>
 
           <Field>
-            <FieldDescription className="px-6 text-center text-slate-700 [&>a]:no-underline [&>a:hover]:no-underline [&>a:hover]:text-sky-600">
+            <FieldDescription className="px-6 text-center text-slate-700 [&>a:hover]:text-sky-600 [&>a:hover]:no-underline [&>a]:no-underline">
               Don't have an account?{" "}
-              <Link href="/signup" className="font-medium text-sky-500 no-underline">
+              <Link
+                className="font-medium text-sky-500 no-underline"
+                href="/signup"
+              >
                 Sign up
               </Link>
             </FieldDescription>
@@ -141,5 +150,5 @@ export function LoginForm({
         </FieldGroup>
       </form>
     </div>
-  )
+  );
 }

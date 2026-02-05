@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { Calendar } from "@/components/ui/calendar"
+import { Calendar } from "@/components/ui/calendar";
 
 export function ProjectCalendarCard() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   return (
     <Calendar
-      mode="single"
-      selected={date}
-      onSelect={setDate}
-      fullWidth
       className="w-full rounded-lg border"
+      fullWidth
+      mode="single"
+      onSelect={setDate}
+      selected={date}
     />
-  )
+  );
 }

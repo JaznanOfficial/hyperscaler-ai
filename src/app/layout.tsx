@@ -1,9 +1,11 @@
-import type { Metadata } from "next"
-import { Geist, Geist_Mono, Inter, Outfit } from "next/font/google"
-import { Toaster } from "sonner"
-import "./globals.css"
+import type { Metadata } from "next";
+import { Geist, Geist_Mono, Inter, Outfit } from "next/font/google";
+import { Toaster } from "sonner";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
+import { QueryProvider } from "@/components/providers/query-provider";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,7 +15,7 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-})
+});
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -31,10 +33,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} antialiased`}>
-        {children}
-        <Toaster richColors position="top-center" />
+    <html className={inter.variable} lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} antialiased`}
+      >
+        <QueryProvider>
+          {children}
+          <Toaster position="top-center" richColors />
+        </QueryProvider>
       </body>
     </html>
   );

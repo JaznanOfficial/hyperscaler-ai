@@ -4,10 +4,14 @@ export const projectSchema = z.object({
   clientId: z.string(),
   status: z.enum(["APPROVED", "PENDING", "CANCELLED"]).default("PENDING"),
   assignedEmployees: z.array(z.string()).optional(),
-  services: z.array(z.object({
-    serviceId: z.string(),
-    updates: z.any().optional(),
-  })).optional(),
+  services: z
+    .array(
+      z.object({
+        serviceId: z.string(),
+        updates: z.any().optional(),
+      })
+    )
+    .optional(),
 });
 
 export const updateProjectSchema = z.object({

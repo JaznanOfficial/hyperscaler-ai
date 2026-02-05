@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import { ChevronRight, type LucideIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -18,36 +18,36 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 export function NavMain({
   items,
 }: {
   items: {
-    title: string
-    url: string
-    icon: LucideIcon
-    isActive?: boolean
-    matchSubRoutes?: boolean
+    title: string;
+    url: string;
+    icon: LucideIcon;
+    isActive?: boolean;
+    matchSubRoutes?: boolean;
     items?: {
-      title: string
-      url: string
-    }[]
-  }[]
+      title: string;
+      url: string;
+    }[];
+  }[];
 }) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const isPathActive = (path: string, matchSubRoutes = true) => {
     if (path === "/") {
-      return pathname === "/"
+      return pathname === "/";
     }
 
     if (!matchSubRoutes) {
-      return pathname === path
+      return pathname === path;
     }
 
-    return pathname === path || pathname.startsWith(`${path}/`)
-  }
+    return pathname === path || pathname.startsWith(`${path}/`);
+  };
 
   return (
     <SidebarGroup>
@@ -59,8 +59,10 @@ export function NavMain({
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   asChild
+                  isActive={
+                    item.isActive ?? isPathActive(item.url, item.matchSubRoutes)
+                  }
                   tooltip={item.title}
-                  isActive={item.isActive ?? isPathActive(item.url, item.matchSubRoutes)}
                 >
                   <Link href={item.url}>
                     <item.icon />
@@ -68,23 +70,26 @@ export function NavMain({
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            )
+            );
           }
 
           return (
             <Collapsible
-              key={item.title}
               asChild
               className="group/collapsible"
               defaultOpen={item.isActive ?? isPathActive(item.url)}
+              key={item.title}
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
                     asChild
-                    tooltip={item.title}
                     className="data-[state=open]:bg-sidebar-accent/60"
-                    isActive={item.isActive ?? isPathActive(item.url, item.matchSubRoutes)}
+                    isActive={
+                      item.isActive ??
+                      isPathActive(item.url, item.matchSubRoutes)
+                    }
+                    tooltip={item.title}
                   >
                     <Link href={item.url}>
                       <item.icon />
@@ -97,7 +102,10 @@ export function NavMain({
                   <SidebarMenuSub>
                     {item.items.map((subItem) => (
                       <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton asChild isActive={isPathActive(subItem.url)}>
+                        <SidebarMenuSubButton
+                          asChild
+                          isActive={isPathActive(subItem.url)}
+                        >
                           <Link href={subItem.url}>
                             <span>{subItem.title}</span>
                           </Link>
@@ -108,9 +116,9 @@ export function NavMain({
                 </CollapsibleContent>
               </SidebarMenuItem>
             </Collapsible>
-          )
+          );
         })}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

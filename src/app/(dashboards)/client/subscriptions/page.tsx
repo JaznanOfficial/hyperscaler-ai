@@ -1,5 +1,4 @@
-import { ClientSubscriptionList } from "@/components/dashboard/client/subscription-list"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ClientSubscriptionList } from "@/components/dashboard/client/subscription-list";
 import {
   Pagination,
   PaginationContent,
@@ -8,7 +7,8 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ClientSubscriptionsPage() {
   return (
@@ -17,34 +17,43 @@ export default function ClientSubscriptionsPage() {
         <div className="space-y-6 p-4">
           <div className="max-w-xl">
             <h1
-              className="text-3xl font-semibold leading-10"
+              className="font-semibold text-3xl leading-10"
               style={{ fontFamily: "var(--font-outfit)" }}
             >
               <span className="inline-block bg-linear-to-r from-violet-800 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
                 Subscriptions
               </span>
             </h1>
-            <p className="text-base leading-3 text-slate-600">
+            <p className="text-base text-slate-600 leading-3">
               Track the status, billing, and lifecycle of your services
             </p>
           </div>
-          <Tabs defaultValue="all" className="w-full mt-8">
-            <TabsList className="rounded-full lg:px-2 lg:py-2 text-base lg:h-12! bg-white border border-slate-300 cursor-pointer">
-              <TabsTrigger value="all" className="rounded-full lg:px-5 lg:py-2 lg:text-lg lg:h-9 data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white cursor-pointer">
+          <Tabs className="mt-8 w-full" defaultValue="all">
+            <TabsList className="cursor-pointer rounded-full border border-slate-300 bg-white text-base lg:h-12! lg:px-2 lg:py-2">
+              <TabsTrigger
+                className="cursor-pointer rounded-full data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:px-5 lg:py-2 lg:text-lg"
+                value="all"
+              >
                 <span>All</span>
-                <span className="ml-2 flex h-4 lg:h-6 w-4 lg:w-6 items-center justify-center rounded-full bg-fuchsia-100 text-sm font-semibold text-fuchsia-700">
+                <span className="ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-fuchsia-100 font-semibold text-fuchsia-700 text-sm lg:h-6 lg:w-6">
                   5
                 </span>
               </TabsTrigger>
-              <TabsTrigger value="active" className="rounded-full lg:px-5 lg:py-2 lg:text-lg lg:h-9 data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white cursor-pointer">
+              <TabsTrigger
+                className="cursor-pointer rounded-full data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:px-5 lg:py-2 lg:text-lg"
+                value="active"
+              >
                 <span>Active</span>
-                <span className="ml-2 flex h-4 lg:h-6 w-4 lg:w-6 items-center justify-center rounded-full bg-fuchsia-100 text-sm font-semibold text-fuchsia-700">
+                <span className="ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-fuchsia-100 font-semibold text-fuchsia-700 text-sm lg:h-6 lg:w-6">
                   1
                 </span>
               </TabsTrigger>
-              <TabsTrigger value="cancelled" className="rounded-full lg:px-5 lg:py-2 lg:text-lg lg:h-9 data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white cursor-pointer">
+              <TabsTrigger
+                className="cursor-pointer rounded-full data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:px-5 lg:py-2 lg:text-lg"
+                value="cancelled"
+              >
                 <span>Cancelled</span>
-                <span className="ml-2 flex h-4 lg:h-6 w-4 lg:w-6 items-center justify-center rounded-full bg-fuchsia-100 text-sm font-semibold text-fuchsia-700">
+                <span className="ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-fuchsia-100 font-semibold text-fuchsia-700 text-sm lg:h-6 lg:w-6">
                   1
                 </span>
               </TabsTrigger>
@@ -58,7 +67,7 @@ export default function ClientSubscriptionsPage() {
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious href="#" aria-disabled={true} />
+              <PaginationPrevious aria-disabled={true} href="#" />
             </PaginationItem>
             {[1, 2, 3].map((page) => (
               <PaginationItem key={page}>
@@ -80,5 +89,5 @@ export default function ClientSubscriptionsPage() {
         </Pagination>
       </div>
     </section>
-  )
+  );
 }

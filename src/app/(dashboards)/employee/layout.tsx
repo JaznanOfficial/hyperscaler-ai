@@ -1,18 +1,18 @@
-import type { ReactNode } from "react"
+import type { ReactNode } from "react";
 
-import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar"
+import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 const employeeNavItems: AppSidebarNavItem[] = [
   {
@@ -33,12 +33,12 @@ const employeeNavItems: AppSidebarNavItem[] = [
     icon: "messageSquare",
     matchSubRoutes: false,
   },
-]
+];
 
 export default function EmployeeDashboardLayout({
   children,
 }: {
-  children: ReactNode
+  children: ReactNode;
 }) {
   return (
     <SidebarProvider>
@@ -48,8 +48,8 @@ export default function EmployeeDashboardLayout({
           <div className="flex w-full items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
+              className="mr-2 hidden data-[orientation=vertical]:h-4 md:flex"
               orientation="vertical"
-              className="mr-2 hidden md:flex data-[orientation=vertical]:h-4"
             />
             <Breadcrumb>
               <BreadcrumbList>
@@ -60,8 +60,10 @@ export default function EmployeeDashboardLayout({
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 min-h-0 flex-col gap-4 overflow-hidden p-4">{children}</div>
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden p-4">
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

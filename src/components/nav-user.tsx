@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { LogOut, UserRound } from "lucide-react"
+import { LogOut, UserRound } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 type ProfileLink = {
-  label: string
-  href: string
-}
+  label: string;
+  href: string;
+};
 
 export function NavUser({
   profileLink,
   onLogout,
 }: {
-  profileLink?: ProfileLink
-  onLogout?: () => void
+  profileLink?: ProfileLink;
+  onLogout?: () => void;
 }) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <SidebarMenu>
@@ -30,8 +30,8 @@ export function NavUser({
         <SidebarMenuItem>
           <SidebarMenuButton
             asChild
-            tooltip={profileLink.label}
             isActive={pathname === profileLink.href}
+            tooltip={profileLink.label}
           >
             <Link href={profileLink.href}>
               <UserRound />
@@ -42,14 +42,14 @@ export function NavUser({
       ) : null}
       <SidebarMenuItem>
         <SidebarMenuButton
-          type="button"
+          className="cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive"
           onClick={onLogout}
-          className="text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer"
+          type="button"
         >
           <LogOut className="text-current" />
           <span>Log out</span>
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

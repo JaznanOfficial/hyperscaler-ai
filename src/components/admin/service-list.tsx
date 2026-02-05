@@ -1,9 +1,9 @@
-import { ServiceListItem } from "@/components/admin/service-list-item"
+import { ServiceListItem } from "@/components/admin/service-list-item";
 
 export type ServiceItem = {
-  id: string
-  name: string
-}
+  id: string;
+  name: string;
+};
 
 const serviceItems: ServiceItem[] = [
   {
@@ -18,16 +18,16 @@ const serviceItems: ServiceItem[] = [
     id: "SRV-376",
     name: "Revenue Autopilot",
   },
-]
+];
 
 export function ServiceList() {
   return (
     <div>
       <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
         {serviceItems.map((item) => (
-          <ServiceListItem key={item.id} item={item} />
+          <ServiceListItem item={item} key={item.id} />
         ))}
       </ul>
     </div>
-  )
+  );
 }

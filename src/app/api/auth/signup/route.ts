@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/backend/config/prisma";
 import { signupSchema } from "@/backend/schemas/auth.schema";
 

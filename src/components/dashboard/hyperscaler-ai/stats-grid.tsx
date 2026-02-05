@@ -1,12 +1,12 @@
 type HyperscalerStat = {
-  label: string
-  value: string
+  label: string;
+  value: string;
   change: {
-    value: string
-    trend: "up" | "down"
-  }
-  helper: string
-}
+    value: string;
+    trend: "up" | "down";
+  };
+  helper: string;
+};
 
 const stats: HyperscalerStat[] = [
   {
@@ -45,17 +45,17 @@ const stats: HyperscalerStat[] = [
     },
     helper: "past 24h",
   },
-]
+];
 
 export function HyperscalerStatsGrid() {
   return (
     <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {stats.map((stat) => (
         <article
+          className="relative overflow-hidden rounded-2xl border border-border/40 bg-card p-4 text-card-foreground shadow-sm"
           key={stat.label}
-          className="border-border/40 bg-card text-card-foreground relative overflow-hidden rounded-2xl border p-4 shadow-sm"
         >
-          <div className="text-sm text-muted-foreground flex items-center justify-between">
+          <div className="flex items-center justify-between text-muted-foreground text-sm">
             <span>{stat.label}</span>
             <span
               className={
@@ -67,15 +67,15 @@ export function HyperscalerStatsGrid() {
               {stat.change.value}
             </span>
           </div>
-          <p className="mt-3 text-3xl font-semibold tracking-tight">
+          <p className="mt-3 font-semibold text-3xl tracking-tight">
             {stat.value}
           </p>
-          <p className="text-muted-foreground mt-2 text-xs uppercase tracking-wide">
+          <p className="mt-2 text-muted-foreground text-xs uppercase tracking-wide">
             {stat.helper}
           </p>
-          <div className="bg-linear-to-r from-primary/5 to-transparent absolute inset-x-4 bottom-3 h-1 rounded-full" />
+          <div className="absolute inset-x-4 bottom-3 h-1 rounded-full bg-linear-to-r from-primary/5 to-transparent" />
         </article>
       ))}
     </section>
-  )
+  );
 }

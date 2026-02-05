@@ -1,10 +1,10 @@
-import type { ServiceSection } from "@/components/admin/service-details-form"
+import type { ServiceSection } from "@/components/admin/service-details-form";
 
 export type ServiceTemplate = {
-  id: string
-  name: string
-  sections: ServiceSection[]
-}
+  id: string;
+  name: string;
+  sections: ServiceSection[];
+};
 
 export const serviceTemplates: Record<string, ServiceTemplate> = {
   "SRV-401": {
@@ -30,17 +30,21 @@ export const serviceTemplates: Record<string, ServiceTemplate> = {
     sections: [
       { id: "section-playbook", name: "Playbook name", type: "input" },
       { id: "section-budget", name: "Budget ceiling", type: "input" },
-      { id: "section-status", name: "Need executive sponsor?", type: "boolean" },
+      {
+        id: "section-status",
+        name: "Need executive sponsor?",
+        type: "boolean",
+      },
     ],
   },
-}
+};
 
 export const defaultServiceTemplate: ServiceTemplate = {
   id: "default",
   name: "Untitled service",
   sections: [{ id: "section-default", name: "Section name", type: "input" }],
-}
+};
 
 export function getServiceTemplate(id: string): ServiceTemplate {
-  return serviceTemplates[id] ?? defaultServiceTemplate
+  return serviceTemplates[id] ?? defaultServiceTemplate;
 }

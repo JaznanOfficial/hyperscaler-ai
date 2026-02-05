@@ -1,149 +1,138 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { ArrowRight, Eye, EyeOff } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
-import { toast } from "sonner"
+import { ArrowRight, Eye, EyeClosed } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import * as React from "react";
+import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { useSignupMutations } from "@/hooks/use-auth-mutations";
+import { cn } from "@/lib/utils";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const router = useRouter()
-  const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
-  const [isConfirmVisible, setIsConfirmVisible] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(false)
+  const router = useRouter();
+  const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
+  const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
+  const {
+    signupMutation,
+    autoLoginMutation,
+    isSignupLoading: isLoading,
+  } = useSignupMutations();
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setIsLoading(true)
+    event.preventDefault();
 
-    const formData = new FormData(event.currentTarget)
-    const name = formData.get("name") as string
-    const email = formData.get("email") as string
-    const password = formData.get("password") as string
-    const confirmPassword = formData.get("confirm-password") as string
+    const formData = new FormData(event.currentTarget);
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirm-password") as string;
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match", { richColors: true })
-      setIsLoading(false)
-      return
+      toast.error("Passwords do not match", { richColors: true });
+      return;
     }
 
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong")
-      }
-
-      const successMessage = typeof data.message === "string" ? data.message : "Account created successfully"
-      toast.success(successMessage, { richColors: true })
-
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        router.push("/login?registered=true")
-      } else {
-        router.push("/dashboard")
-        router.refresh()
-      }
+      const data = await signupMutation.mutateAsync({ name, email, password });
+      const successMessage =
+        typeof data.message === "string"
+          ? data.message
+          : "Account created successfully";
+      toast.success(successMessage, { richColors: true });
+      await autoLoginMutation.mutateAsync({ email, password });
+      router.push("/dashboard");
+      router.refresh();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Something went wrong"
-      toast.error(message, { richColors: true })
-      setIsLoading(false)
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      toast.error(message, { richColors: true });
+
+      if (signupMutation.isSuccess && err instanceof Error) {
+        router.push("/login?registered=true");
+      }
     }
   }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form onSubmit={onSubmit} className="flex flex-col gap-6">
+      <form className="flex flex-col gap-6" onSubmit={onSubmit}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-1 text-center">
-            <h1 className="text-2xl font-medium font-['Outfit'] leading-8">
-            Create your account
-          </h1>
-            <p className="text-muted-foreground text-sm text-balance">
+            <h1 className="font-['Outfit'] font-medium text-2xl leading-8">
+              Create your account
+            </h1>
+            <p className="text-balance text-muted-foreground text-sm">
               Enter your name, email and password to create an account.
             </p>
           </div>
           <Field>
             <FieldLabel htmlFor="full-name">Full name</FieldLabel>
             <Input
+              disabled={isLoading}
               id="full-name"
               name="name"
-              type="text"
               placeholder="Ada Lovelace"
               required
-              disabled={isLoading}
+              type="text"
             />
           </Field>
 
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
+              disabled={isLoading}
               id="email"
+              inputMode="email"
               name="email"
-              type="email"
               placeholder="ada@lovelace.ai"
               required
-              inputMode="email"
-              disabled={isLoading}
+              type="email"
             />
-            
           </Field>
 
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <div className="relative mt-1">
               <Input
-                id="password"
-                name="password"
-                type={isPasswordVisible ? "text" : "password"}
-                placeholder="********"
                 className="pr-10"
-                required
-                minLength={8}
                 disabled={isLoading}
+                id="password"
+                minLength={8}
+                name="password"
+                placeholder="********"
+                required
+                type={isPasswordVisible ? "text" : "password"}
               />
               <button
-                type="button"
-                aria-label={isPasswordVisible ? "Hide password" : "Show password"}
-                onClick={() => setIsPasswordVisible((prev) => !prev)}
-                className="text-muted-foreground absolute inset-y-0 right-0 flex items-center px-3 transition-colors hover:text-foreground cursor-pointer"
+                aria-label={
+                  isPasswordVisible ? "Hide password" : "Show password"
+                }
+                className="absolute inset-y-0 right-0 flex cursor-pointer items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
                 disabled={isLoading}
+                onClick={() => setIsPasswordVisible((prev) => !prev)}
+                type="button"
               >
                 {isPasswordVisible ? (
-                  <Eye className="size-4" aria-hidden="true" />
+                  <EyeClosed aria-hidden="true" className="size-4" />
                 ) : (
-                  <EyeOff className="size-4" aria-hidden="true" />
+                  <Eye aria-hidden="true" className="size-4" />
                 )}
               </button>
             </div>
             <FieldDescription>
-              Must be at least 8 characters with uppercase, lowercase, and a number.
+              Must be at least 8 characters with uppercase, lowercase, and a
+              number.
             </FieldDescription>
           </Field>
 
@@ -151,37 +140,48 @@ export function SignupForm({
             <FieldLabel htmlFor="confirm-password">Confirm password</FieldLabel>
             <div className="relative mt-1">
               <Input
+                className="pr-10"
+                disabled={isLoading}
                 id="confirm-password"
                 name="confirm-password"
-                type={isConfirmVisible ? "text" : "password"}
                 placeholder="********"
-                className="pr-10"
                 required
-                disabled={isLoading}
+                type={isConfirmVisible ? "text" : "password"}
               />
               <button
-                type="button"
                 aria-label={
-                  isConfirmVisible ? "Hide confirmation password" : "Show confirmation password"
+                  isConfirmVisible
+                    ? "Hide confirmation password"
+                    : "Show confirmation password"
                 }
-                onClick={() => setIsConfirmVisible((prev) => !prev)}
-                className="text-muted-foreground absolute inset-y-0 right-0 flex items-center px-3 transition-colors hover:text-foreground cursor-pointer"
+                className="absolute inset-y-0 right-0 flex cursor-pointer items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
                 disabled={isLoading}
+                onClick={() => setIsConfirmVisible((prev) => !prev)}
+                type="button"
               >
                 {isConfirmVisible ? (
-                  <Eye className="size-4" aria-hidden="true" />
+                  <EyeClosed aria-hidden="true" className="size-4" />
                 ) : (
-                  <EyeOff className="size-4" aria-hidden="true" />
+                  <Eye aria-hidden="true" className="size-4" />
                 )}
               </button>
             </div>
-            <FieldDescription>Please confirm your password matches.</FieldDescription>
+            <FieldDescription>
+              Please confirm your password matches.
+            </FieldDescription>
           </Field>
 
           <Field>
-            <Button type="submit" variant="gradient" className="w-full" disabled={isLoading}>
+            <Button
+              className="w-full"
+              disabled={isLoading}
+              type="submit"
+              variant="gradient"
+            >
               {isLoading ? "Signing you up..." : "Sign up"}
-              {!isLoading && <ArrowRight className="size-4" aria-hidden="true" />}
+              {!isLoading && (
+                <ArrowRight aria-hidden="true" className="size-4" />
+              )}
             </Button>
           </Field>
 
@@ -202,9 +202,12 @@ export function SignupForm({
               </svg>
               Sign up with GitHub
             </Button> */}
-            <FieldDescription className="px-6 text-center text-slate-700 [&>a]:no-underline [&>a:hover]:no-underline [&>a:hover]:text-sky-600">
+            <FieldDescription className="px-6 text-center text-slate-700 [&>a:hover]:text-sky-600 [&>a:hover]:no-underline [&>a]:no-underline">
               Already have an account?{" "}
-              <Link href="/login" className="font-medium text-sky-500 no-underline">
+              <Link
+                className="font-medium text-sky-500 no-underline"
+                href="/login"
+              >
                 Sign in
               </Link>
             </FieldDescription>
@@ -212,5 +215,5 @@ export function SignupForm({
         </FieldGroup>
       </form>
     </div>
-  )
+  );
 }

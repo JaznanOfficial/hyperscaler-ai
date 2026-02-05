@@ -1,13 +1,21 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import Link from "next/link"
-import type { ComponentProps } from "react"
-import type { LucideIcon } from "lucide-react"
-import { Bot, Briefcase, CreditCard, FolderKanban, Layers, MessageSquare, Users2 } from "lucide-react"
+import type { LucideIcon } from "lucide-react";
+import {
+  Bot,
+  Briefcase,
+  CreditCard,
+  FolderKanban,
+  Layers,
+  MessageSquare,
+  Users2,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import type { ComponentProps } from "react";
 
-import { NavMain } from "@/components/nav-main"
-import { NavUser } from "@/components/nav-user"
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -17,7 +25,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 const iconMap = {
   bot: Bot,
@@ -27,17 +35,17 @@ const iconMap = {
   creditCard: CreditCard,
   folderKanban: FolderKanban,
   messageSquare: MessageSquare,
-} as const
+} as const;
 
-type IconKey = keyof typeof iconMap
+type IconKey = keyof typeof iconMap;
 
 type NavItem = {
-  title: string
-  url: string
-  icon: IconKey
-  isActive?: boolean
-  matchSubRoutes?: boolean
-}
+  title: string;
+  url: string;
+  icon: IconKey;
+  isActive?: boolean;
+  matchSubRoutes?: boolean;
+};
 
 const defaultNavItems: NavItem[] = [
   {
@@ -66,38 +74,49 @@ const defaultNavItems: NavItem[] = [
     url: "/s-admin/subscriptions",
     icon: "creditCard",
   },
-]
+];
 
-export type AppSidebarNavItem = NavItem
+export type AppSidebarNavItem = NavItem;
 
 type AppSidebarProps = ComponentProps<typeof Sidebar> & {
-  navItems?: NavItem[]
+  navItems?: NavItem[];
   profileLink?: {
-    label: string
-    href: string
-  }
-}
+    label: string;
+    href: string;
+  };
+};
 
-export function AppSidebar({ navItems = defaultNavItems, profileLink, ...props }: AppSidebarProps) {
+export function AppSidebar({
+  navItems = defaultNavItems,
+  profileLink,
+  ...props
+}: AppSidebarProps) {
   const resolvedNavItems = navItems.map((item) => ({
     ...item,
     icon: iconMap[item.icon] ?? iconMap.bot,
   })) satisfies Array<{
-    title: string
-    url: string
-    icon: LucideIcon
-    isActive?: boolean
-    matchSubRoutes?: boolean
-  }>
+    title: string;
+    url: string;
+    icon: LucideIcon;
+    isActive?: boolean;
+    matchSubRoutes?: boolean;
+  }>;
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton asChild size="lg">
               <Link href="/">
-                <Image src="/logo.png" alt="Hyperscaler" width={160} height={40} className="h-10 w-auto" priority />
+                <Image
+                  alt="Hyperscaler"
+                  className="h-10 w-auto"
+                  height={40}
+                  priority
+                  src="/logo.png"
+                  width={160}
+                />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -111,5 +130,5 @@ export function AppSidebar({ navItems = defaultNavItems, profileLink, ...props }
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
