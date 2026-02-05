@@ -47,7 +47,7 @@ export default function ProfilePage() {
 
       <Card className="border-slate-200 shadow-sm">
         <CardHeader className="flex flex-row items-center gap-4">
-          <div className="inline-flex size-12 items-center justify-center rounded-full bg-linear-to-br from-violet-100 to-fuchsia-100 text-purple-600">
+          <div className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-violet-100 to-fuchsia-100 text-purple-600">
             <User className="size-6" />
           </div>
           <div>
@@ -87,7 +87,7 @@ export default function ProfilePage() {
 
       <Card className="border-slate-200 shadow-sm">
         <CardHeader className="flex flex-row items-center gap-4">
-          <div className="inline-flex size-12 items-center justify-center rounded-full bg-linear-to-br from-fuchsia-100 to-violet-100 text-purple-600">
+          <div className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-fuchsia-100 to-violet-100 text-purple-600">
             <Lock className="size-6" />
           </div>
           <div>
@@ -95,7 +95,8 @@ export default function ProfilePage() {
               Change Password
             </CardTitle>
             <CardDescription>
-              Use a strong password with at least 8 characters
+              Use a strong password with at least 8 characters with uppercase,
+              lowercase, and a number.
             </CardDescription>
           </div>
         </CardHeader>
@@ -113,7 +114,7 @@ export default function ProfilePage() {
                 aria-label={
                   passwordVisibility.current ? "Hide password" : "Show password"
                 }
-                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
+                className="absolute inset-y-0 right-0 flex cursor-pointer items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
                 onClick={() => toggleVisibility("current")}
                 type="button"
               >
@@ -138,7 +139,7 @@ export default function ProfilePage() {
                 aria-label={
                   passwordVisibility.new ? "Hide password" : "Show password"
                 }
-                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
+                className="absolute inset-y-0 right-0 flex cursor-pointer items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
                 onClick={() => toggleVisibility("new")}
                 type="button"
               >
@@ -163,7 +164,7 @@ export default function ProfilePage() {
                 aria-label={
                   passwordVisibility.confirm ? "Hide password" : "Show password"
                 }
-                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
+                className="absolute inset-y-0 right-0 flex cursor-pointer items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
                 onClick={() => toggleVisibility("confirm")}
                 type="button"
               >

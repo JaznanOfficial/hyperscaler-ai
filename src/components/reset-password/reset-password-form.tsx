@@ -121,7 +121,7 @@ export function ResetPasswordForm({
                     ? "Hide password"
                     : "Show password"
                 }
-                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
+                className="absolute inset-y-0 right-0 flex cursor-pointer items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
                 onClick={() => toggleVisibility("password")}
                 type="button"
               >
@@ -133,7 +133,7 @@ export function ResetPasswordForm({
               </button>
             </div>
             <FieldDescription>
-              Use at least 8 characters with a mix of numbers and letters.
+              Use at least 8 characters with uppercase, lowercase, and a number.
             </FieldDescription>
           </Field>
 
@@ -157,7 +157,7 @@ export function ResetPasswordForm({
                 aria-label={
                   visibleField === "confirm" ? "Hide password" : "Show password"
                 }
-                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
+                className="absolute inset-y-0 right-0 flex cursor-pointer items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
                 onClick={() => toggleVisibility("confirm")}
                 type="button"
               >
