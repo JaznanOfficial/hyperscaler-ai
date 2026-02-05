@@ -56,7 +56,8 @@ export function SignupForm({
         throw new Error(data.error || "Something went wrong")
       }
 
-      toast.success("Account created successfully", { richColors: true })
+      const successMessage = typeof data.message === "string" ? data.message : "Account created successfully"
+      toast.success(successMessage, { richColors: true })
 
       const result = await signIn("credentials", {
         email,

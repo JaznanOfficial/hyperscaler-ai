@@ -4,6 +4,7 @@ import * as React from "react"
 import { ArrowRight, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
@@ -21,7 +22,6 @@ export function ResetPasswordForm({
   const [password, setPassword] = React.useState("")
   const [confirmPassword, setConfirmPassword] = React.useState("")
   const [status, setStatus] = React.useState<"idle" | "submitting" | "success" | "error">("idle")
-  const [error, setError] = React.useState("")
   const [visibleField, setVisibleField] = React.useState<"password" | "confirm" | null>(null)
 
   const passwordsMismatch =
@@ -39,13 +39,12 @@ export function ResetPasswordForm({
     }
 
     if (!token) {
-      setError("Invalid reset token")
+      toast.error("Invalid reset token", { richColors: true })
       setStatus("error")
       return
     }
 
     setStatus("submitting")
-    setError("")
 
     try {
       const response = await fetch("/api/auth/reset-password", {
@@ -61,12 +60,14 @@ export function ResetPasswordForm({
       }
 
       setStatus("success")
+      const successMessage = typeof data.message === "string" ? data.message : "Password updated successfully"
+      toast.success(successMessage, { richColors: true })
       setTimeout(() => {
         router.push("/login")
       }, 2000)
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Something went wrong"
-      setError(message)
+      toast.error(message, { richColors: true })
       setStatus("error")
     }
   }
@@ -81,18 +82,6 @@ export function ResetPasswordForm({
               Choose a strong password you haven&apos;t used before.
             </p>
           </div>
-
-          {status === "success" && (
-            <div className="bg-emerald-50 text-emerald-700 border border-emerald-100 p-3 rounded-md text-sm">
-              Password updated. Redirecting you to login…
-            </div>
-          )}
-
-          {error && (
-            <div className="bg-red-50 text-red-600 border border-red-100 p-3 rounded-md text-sm">
-              {error}
-            </div>
-          )}
 
           <Field>
             <FieldLabel htmlFor="new-password">New password</FieldLabel>

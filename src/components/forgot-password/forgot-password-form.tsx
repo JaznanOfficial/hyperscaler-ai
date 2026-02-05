@@ -4,6 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 
 import { ArrowRight } from "lucide-react"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -21,7 +22,6 @@ export function ForgotPasswordForm({
 }: React.ComponentProps<"div">) {
   const [email, setEmail] = React.useState("")
   const [status, setStatus] = React.useState<"idle" | "submitting" | "success" | "error">("idle")
-  const [error, setError] = React.useState("")
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -31,7 +31,6 @@ export function ForgotPasswordForm({
     }
 
     setStatus("submitting")
-    setError("")
 
     try {
       const response = await fetch("/api/auth/forgot-password", {
@@ -47,9 +46,11 @@ export function ForgotPasswordForm({
       }
 
       setStatus("success")
+      const successMessage = typeof data.message === "string" ? data.message : "Reset link sent. Check your inbox."
+      toast.success(successMessage, { richColors: true })
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Something went wrong"
-      setError(message)
+      toast.error(message, { richColors: true })
       setStatus("error")
     }
   }
@@ -65,18 +66,6 @@ export function ForgotPasswordForm({
             </p>
           </div>
 
-          {status === "success" && (
-            <div className="bg-emerald-50 text-emerald-700 border border-emerald-100 p-3 rounded-md text-sm">
-              Check your inbox for a secure link. It expires in 1 hour.
-            </div>
-          )}
-
-          {error && (
-            <div className="bg-red-50 text-red-600 border border-red-100 p-3 rounded-md text-sm">
-              {error}
-            </div>
-          )}
-
           <Field>
             <FieldLabel htmlFor="reset-email">Email address</FieldLabel>
             <FieldDescription>
@@ -89,7 +78,6 @@ export function ForgotPasswordForm({
               value={email}
               onChange={(event) => {
                 setStatus("idle")
-                setError("")
                 setEmail(event.target.value)
               }}
               disabled={status === "submitting"}

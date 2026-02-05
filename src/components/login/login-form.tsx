@@ -5,6 +5,7 @@ import { ArrowRight, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -24,15 +25,19 @@ export function LoginForm({
   const searchParams = useSearchParams()
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
-  const [error, setError] = React.useState("")
-
   const registered = searchParams.get("registered")
+
+  React.useEffect(() => {
+    if (registered) {
+      toast.success("Account created successfully. Please sign in.", {
+        richColors: true,
+      })
+    }
+  }, [registered])
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsLoading(true)
-    setError("")
-
     const formData = new FormData(event.currentTarget)
     const email = formData.get("email") as string
     const password = formData.get("password") as string
@@ -45,15 +50,16 @@ export function LoginForm({
       })
 
       if (result?.error) {
-        setError("Invalid email or password")
+        toast.error(result.error ?? "Invalid email or password", { richColors: true })
         return
       }
 
+      toast.success("Welcome back!", { richColors: true })
       router.push("/dashboard")
       router.refresh()
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Something went wrong. Please try again."
-      setError(message)
+      toast.error(message, { richColors: true })
     } finally {
       setIsLoading(false)
     }
@@ -69,18 +75,6 @@ export function LoginForm({
               Enter your email and password to login to your account.
             </p>
           </div>
-
-          {registered && (
-            <div className="bg-green-50 text-green-600 border border-green-100 p-3 rounded-md text-sm">
-              Account created successfully! Please sign in.
-            </div>
-          )}
-
-          {error && (
-            <div className="bg-red-50 text-red-600 border border-red-100 p-3 rounded-md text-sm">
-              {error}
-            </div>
-          )}
 
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
