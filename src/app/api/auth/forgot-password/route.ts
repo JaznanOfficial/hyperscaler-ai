@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { message: "If the email exists, a reset link has been sent" },
+        { success: true, message: "If the email exists, a reset link has been sent" },
         { status: 200 }
       );
     }
@@ -42,19 +42,20 @@ export async function POST(req: NextRequest) {
     await sendPasswordResetEmail(user.email, resetToken);
 
     return NextResponse.json(
-      { message: "If the email exists, a reset link has been sent" },
+      { success: true, message: "If the email exists, a reset link has been sent" },
       { status: 200 }
     );
   } catch (error: any) {
     if (error.name === "ZodError") {
+      const firstError = error.errors[0];
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { success: false, message: firstError.message },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: "Internal server error" },
+      { success: false, message: "Internal server error" },
       { status: 500 }
     );
   }

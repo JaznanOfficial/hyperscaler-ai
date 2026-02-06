@@ -52,7 +52,17 @@ export function SignupForm({
           : "Account created successfully";
       toast.success(successMessage, { richColors: true });
       await autoLoginMutation.mutateAsync({ email, password });
-      router.push("/dashboard");
+      
+      const role = data.data?.role;
+      if (role === "ADMIN") {
+        router.push("/s-admin");
+      } else if (role === "CLIENT") {
+        router.push("/client");
+      } else if (role === "EMPLOYEE" || role === "MANAGER") {
+        router.push("/employee");
+      } else {
+        router.push("/");
+      }
       router.refresh();
     } catch (err: unknown) {
       const message =

@@ -9,9 +9,18 @@ export interface SignupPayload {
   password: string;
 }
 
-interface AuthMessageResponse {
-  message?: string;
-  error?: string;
+interface ApiResponse<T = any> {
+  success: boolean;
+  message: string;
+  data?: T;
+}
+
+interface SignupData {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
 }
 
 interface CredentialsPayload {
@@ -35,7 +44,7 @@ const credentialLogin = async (credentials: CredentialsPayload) => {
   });
 
   if (result?.error) {
-    throw new Error(result.error ?? "Invalid email or password");
+    throw new Error("Invalid email or password");
   }
 
   return result;
@@ -45,17 +54,17 @@ export function useSignupMutations() {
   const signupMutation = useMutation({
     mutationFn: async (
       payload: SignupPayload
-    ): Promise<AuthMessageResponse> => {
+    ): Promise<ApiResponse<SignupData>> => {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      const data = (await response.json()) as AuthMessageResponse;
+      const data = (await response.json()) as ApiResponse<SignupData>;
 
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong");
+      if (!data.success) {
+        throw new Error(data.message || "Something went wrong");
       }
 
       return data;
@@ -88,17 +97,17 @@ export function useForgotPasswordMutation() {
   const forgotPasswordMutation = useMutation({
     mutationFn: async (
       payload: ForgotPasswordPayload
-    ): Promise<AuthMessageResponse> => {
+    ): Promise<ApiResponse> => {
       const response = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      const data = (await response.json()) as AuthMessageResponse;
+      const data = (await response.json()) as ApiResponse;
 
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong");
+      if (!data.success) {
+        throw new Error(data.message || "Something went wrong");
       }
 
       return data;
@@ -115,17 +124,17 @@ export function useResetPasswordMutation() {
   const resetPasswordMutation = useMutation({
     mutationFn: async (
       payload: ResetPasswordPayload
-    ): Promise<AuthMessageResponse> => {
+    ): Promise<ApiResponse> => {
       const response = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      const data = (await response.json()) as AuthMessageResponse;
+      const data = (await response.json()) as ApiResponse;
 
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong");
+      if (!data.success) {
+        throw new Error(data.message || "Something went wrong");
       }
 
       return data;

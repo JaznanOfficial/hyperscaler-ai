@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse} from "next/server";
 import { prisma } from "@/backend/config/prisma";
 import { resetPasswordSchema } from "@/backend/schemas/auth.schema";
 
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     if (!resetToken || resetToken.expires < new Date()) {
       return NextResponse.json(
-        { error: "Invalid or expired reset token" },
+        { success: false, message: "Invalid or expired reset token" },
         { status: 400 }
       );
     }
@@ -34,19 +34,20 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { message: "Password reset successfully" },
+      { success: true, message: "Password reset successfully" },
       { status: 200 }
     );
   } catch (error: any) {
     if (error.name === "ZodError") {
+      const firstError = error.errors[0];
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { success: false, message: firstError.message },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: "Internal server error" },
+      { success: false, message: "Internal server error" },
       { status: 500 }
     );
   }
