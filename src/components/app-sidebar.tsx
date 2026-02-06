@@ -13,6 +13,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import type { ComponentProps } from "react";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -91,6 +93,8 @@ export function AppSidebar({
   profileLink,
   ...props
 }: AppSidebarProps) {
+  const router = useRouter();
+  
   const resolvedNavItems = navItems.map((item) => ({
     ...item,
     icon: iconMap[item.icon] ?? iconMap.bot,
@@ -102,6 +106,11 @@ export function AppSidebar({
     matchSubRoutes?: boolean;
   }>;
 
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push("/login");
+    router.refresh();
+  };
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -126,7 +135,7 @@ export function AppSidebar({
         <NavMain items={resolvedNavItems} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser profileLink={profileLink} />
+        <NavUser profileLink={profileLink} onLogout={handleLogout} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
