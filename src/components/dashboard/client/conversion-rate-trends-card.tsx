@@ -47,7 +47,7 @@ const legendItems = [
   { key: "paidAds", label: "Paid Ads" },
   { key: "socialMedia", label: "Social Media Marketing" },
   { key: "linkedin", label: "LinkedIn Outreach" },
-];
+] as const;
 
 const dayCategories = conversionData.map((point) => point.day);
 
@@ -84,19 +84,7 @@ const conversionChartOptions: ApexOptions = {
   },
   colors: Object.values(conversionConfig).map((config) => config.color),
   dataLabels: {
-    enabled: true,
-    offsetY: -6,
-    style: {
-      fontSize: "11px",
-      fontWeight: 600,
-      colors: ["#0f172a"],
-    },
-    background: {
-      enabled: true,
-      borderRadius: 999,
-      borderWidth: 0,
-      opacity: 0.85,
-    },
+    enabled: false,
   },
   markers: {
     size: 4,
@@ -127,7 +115,7 @@ const conversionChartOptions: ApexOptions = {
     axisBorder: { show: false },
     axisTicks: { show: false },
     labels: {
-      formatter: (value) => `${value}%`,
+      formatter: (value) => `${value}`,
       style: {
         color: "#94a3b8",
         fontSize: "12px",
@@ -135,7 +123,7 @@ const conversionChartOptions: ApexOptions = {
     },
     title: {
       text: "Conversion Rate (%)",
-      style: { color: "#94a3b8", fontWeight: 500 },
+      style: { color: "#475569", fontWeight: 500 },
     },
   },
   legend: { show: false },
@@ -150,7 +138,7 @@ const conversionChartOptions: ApexOptions = {
 export function ConversionRateTrendsCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 px-1 lg:px-5">
         <div className="h-90 w-full">
           <ApexChart
             height={360}
@@ -160,7 +148,7 @@ export function ConversionRateTrendsCard() {
             width="100%"
           />
         </div>
-        <div className="flex flex-wrap gap-4 text-sm">
+        <div className="flex flex-wrap justify-center gap-4 text-center text-sm">
           {legendItems.map((item) => (
             <div
               className="inline-flex items-center gap-2 text-slate-600"
@@ -170,7 +158,7 @@ export function ConversionRateTrendsCard() {
                 className="size-2.5 rounded-full"
                 style={
                   {
-                    backgroundColor: `var(--color-${item.key})`,
+                    backgroundColor: conversionConfig[item.key].color,
                   } as CSSProperties
                 }
               />
