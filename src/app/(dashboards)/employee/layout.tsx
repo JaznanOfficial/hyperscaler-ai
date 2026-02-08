@@ -44,8 +44,8 @@ export default async function EmployeeDashboardLayout({
 }) {
   const session = await auth();
 
-  // Only EMPLOYEE, MANAGER, and ADMIN can access this area
-  const allowedRoles = ["EMPLOYEE", "MANAGER", "ADMIN"];
+  // Only EMPLOYEE and MANAGER can access this area
+  const allowedRoles = ["EMPLOYEE", "MANAGER"];
   if (!session?.user || !allowedRoles.includes(session.user.role)) {
     redirect("/login");
   }

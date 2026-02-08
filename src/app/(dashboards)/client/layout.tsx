@@ -44,8 +44,8 @@ export default async function ClientDashboardLayout({
 }) {
   const session = await auth();
 
-  // Only CLIENT and ADMIN can access this area
-  const allowedRoles = ["CLIENT", "ADMIN"];
+  // Only CLIENT can access this area
+  const allowedRoles = ["CLIENT"];
   if (!session?.user || !allowedRoles.includes(session.user.role)) {
     redirect("/login");
   }
