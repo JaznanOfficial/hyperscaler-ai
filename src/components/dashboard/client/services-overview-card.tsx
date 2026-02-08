@@ -25,6 +25,8 @@ import { cn } from "@/lib/utils";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
+type MetricFilter = "all" | "email" | "reply" | "meetings";
+
 const weeklyPerformance = [
   { day: "Sun", emailSent: 40, replies: 8, meetings: 1 },
   { day: "Mon", emailSent: 80, replies: 20, meetings: 4 },
@@ -45,15 +47,21 @@ const timelineCategories = weeklyPerformance.map((point) => point.day);
 
 const timelineSeries = [
   {
+    key: "email" as const,
     name: performanceConfig.emailSent.label,
+    color: performanceConfig.emailSent.color,
     data: weeklyPerformance.map((point) => point.emailSent),
   },
   {
+    key: "reply" as const,
     name: performanceConfig.replies.label,
+    color: performanceConfig.replies.color,
     data: weeklyPerformance.map((point) => point.replies),
   },
   {
+    key: "meetings" as const,
     name: performanceConfig.meetings.label,
+    color: performanceConfig.meetings.color,
     data: weeklyPerformance.map((point) => point.meetings),
   },
 ];
@@ -70,7 +78,7 @@ const timelineChartOptions: ApexOptions = {
     curve: "smooth",
     width: 3,
   },
-  colors: Object.values(performanceConfig).map((config) => config.color),
+  colors: timelineSeries.map((series) => series.color),
   dataLabels: { enabled: false },
   markers: {
     size: 4,
@@ -154,7 +162,19 @@ const insights = [
 ];
 
 export function ServicesOverviewCard() {
-  const [selectedMetric, setSelectedMetric] = useState("all");
+  const [selectedMetric, setSelectedMetric] = useState<MetricFilter>("all");
+
+  const activeSeries =
+    selectedMetric === "all"
+      ? timelineSeries
+      : timelineSeries.filter((series) => series.key === selectedMetric);
+
+  const chartSeries = activeSeries.map(({ name, data }) => ({ name, data }));
+
+  const chartOptions: ApexOptions = {
+    ...timelineChartOptions,
+    colors: activeSeries.map((series) => series.color),
+  };
 
   return (
     <Card className="border-none bg-white shadow-sm">
@@ -221,23 +241,23 @@ export function ServicesOverviewCard() {
           <div className="h-72 w-full">
             <ApexChart
               height={288}
-              options={timelineChartOptions}
-              series={timelineSeries}
+              options={chartOptions}
+              series={chartSeries}
               type="line"
               width="100%"
             />
           </div>
           <div className="flex flex-wrap justify-center gap-4 text-center text-sm">
-            {Object.entries(performanceConfig).map(([key, config]) => (
+            {activeSeries.map((series) => (
               <div
                 className="inline-flex items-center gap-2 text-slate-600"
-                key={key}
+                key={series.key}
               >
                 <span
                   className="size-2.5 rounded-full"
-                  style={{ backgroundColor: config.color }}
+                  style={{ backgroundColor: series.color }}
                 />
-                <span>{config.label}</span>
+                <span>{series.name}</span>
               </div>
             ))}
           </div>
