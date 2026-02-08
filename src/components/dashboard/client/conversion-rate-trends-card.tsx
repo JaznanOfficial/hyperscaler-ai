@@ -1,45 +1,30 @@
 "use client";
 
+import type { ApexOptions } from "apexcharts";
+import dynamic from "next/dynamic";
 import type { CSSProperties } from "react";
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { Card, CardContent } from "@/components/ui/card";
+import type { ChartConfig } from "@/components/ui/chart";
+
+const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const conversionConfig = {
   coldEmail: {
     label: "Cold Email Campaign",
-    color: "hsl(var(--chart-1))",
+    color: "#7c3aed",
   },
   paidAds: {
     label: "Paid Ads",
-    color: "hsl(var(--chart-2))",
+    color: "#0ea5e9",
   },
   socialMedia: {
     label: "Social Media Marketing",
-    color: "hsl(var(--chart-4))",
+    color: "#f97316",
   },
   linkedin: {
     label: "LinkedIn Outreach",
-    color: "hsl(var(--chart-3))",
+    color: "#22c55e",
   },
 } satisfies ChartConfig;
 
@@ -64,84 +49,117 @@ const legendItems = [
   { key: "linkedin", label: "LinkedIn Outreach" },
 ];
 
+const dayCategories = conversionData.map((point) => point.day);
+
+const conversionSeries = [
+  {
+    name: conversionConfig.coldEmail.label,
+    data: conversionData.map((point) => point.coldEmail),
+  },
+  {
+    name: conversionConfig.paidAds.label,
+    data: conversionData.map((point) => point.paidAds),
+  },
+  {
+    name: conversionConfig.socialMedia.label,
+    data: conversionData.map((point) => point.socialMedia),
+  },
+  {
+    name: conversionConfig.linkedin.label,
+    data: conversionData.map((point) => point.linkedin),
+  },
+];
+
+const conversionChartOptions: ApexOptions = {
+  chart: {
+    id: "conversion-rate-trends",
+    type: "line",
+    toolbar: { show: false },
+    zoom: { enabled: false },
+    fontFamily: "var(--font-outfit, 'Inter', sans-serif)",
+  },
+  stroke: {
+    curve: "smooth",
+    width: 3,
+  },
+  colors: Object.values(conversionConfig).map((config) => config.color),
+  dataLabels: {
+    enabled: true,
+    offsetY: -6,
+    style: {
+      fontSize: "11px",
+      fontWeight: 600,
+      colors: ["#0f172a"],
+    },
+    background: {
+      enabled: true,
+      borderRadius: 999,
+      borderWidth: 0,
+      opacity: 0.85,
+    },
+  },
+  markers: {
+    size: 4,
+    strokeWidth: 2,
+    strokeColors: "#ffffff",
+  },
+  grid: {
+    borderColor: "#e2e8f0",
+    strokeDashArray: 4,
+  },
+  xaxis: {
+    categories: dayCategories,
+    axisBorder: { show: false },
+    axisTicks: { show: false },
+    labels: {
+      style: {
+        colors: new Array(dayCategories.length).fill("#94a3b8"),
+        fontSize: "12px",
+      },
+    },
+    title: {
+      text: "Day",
+      offsetY: 60,
+      style: { color: "#94a3b8", fontWeight: 500 },
+    },
+  },
+  yaxis: {
+    axisBorder: { show: false },
+    axisTicks: { show: false },
+    labels: {
+      formatter: (value) => `${value}%`,
+      style: {
+        color: "#94a3b8",
+        fontSize: "12px",
+      },
+    },
+    title: {
+      text: "Conversion Rate (%)",
+      style: { color: "#94a3b8", fontWeight: 500 },
+    },
+  },
+  legend: { show: false },
+  tooltip: {
+    theme: "light",
+    y: {
+      formatter: (value) => `${value}%`,
+    },
+  },
+};
+
 export function ConversionRateTrendsCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
-      <CardHeader>
-        <CardTitle>Conversion Rate Trends</CardTitle>
-        <CardDescription>
-          30-day trend comparison across conversion rates.
-        </CardDescription>
-      </CardHeader>
       <CardContent className="space-y-6">
-        <ChartContainer className="h-80" config={conversionConfig}>
-          <ResponsiveContainer height="100%" width="100%">
-            <LineChart
-              data={conversionData}
-              margin={{ left: 0, right: 24, top: 16, bottom: 8 }}
-            >
-              <CartesianGrid
-                stroke="rgba(148, 163, 184, 0.35)"
-                strokeDasharray="3 3"
-              />
-              <XAxis
-                axisLine={false}
-                dataKey="day"
-                label={{
-                  value: "Day",
-                  position: "insideRight",
-                  offset: -10,
-                  fill: "#94a3b8",
-                }}
-                tick={{ fill: "#64748b", fontSize: 12 }}
-                tickLine={false}
-              />
-              <YAxis
-                axisLine={false}
-                label={{
-                  value: "Conversion Rate (%)",
-                  angle: -90,
-                  position: "insideLeft",
-                  fill: "#94a3b8",
-                }}
-                tick={{ fill: "#64748b", fontSize: 12 }}
-                tickLine={false}
-              />
-              <ChartTooltip
-                content={<ChartTooltipContent />}
-                cursor={{ stroke: "#cbd5f5", strokeWidth: 1 }}
-              />
-              <Line
-                dataKey="coldEmail"
-                dot={false}
-                stroke="var(--color-coldEmail)"
-                strokeWidth={3}
-                type="monotone"
-              />
-              <Line
-                dataKey="paidAds"
-                dot={false}
-                stroke="var(--color-paidAds)"
-                strokeWidth={3}
-                type="monotone"
-              />
-              <Line
-                dataKey="socialMedia"
-                dot={false}
-                stroke="var(--color-socialMedia)"
-                strokeWidth={3}
-                type="monotone"
-              />
-              <Line
-                dataKey="linkedin"
-                dot={false}
-                stroke="var(--color-linkedin)"
-                strokeWidth={3}
-                type="monotone"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </ChartContainer>
+        <div className="h-90 w-full">
+          <ApexChart
+            height={360}
+            options={conversionChartOptions}
+            series={conversionSeries}
+            type="line"
+            width="100%"
+          />
+        </div>
         <div className="flex flex-wrap gap-4 text-sm">
           {legendItems.map((item) => (
             <div

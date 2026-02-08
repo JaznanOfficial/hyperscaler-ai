@@ -50,9 +50,29 @@ export default function ClientStatisticsPage() {
         </div>
       </div>
 
-      <ConversionRateTrendsCard />
+      <div className="space-y-3">
+        <div>
+          <h2 className="font-semibold text-slate-900 text-xl">
+            Conversion Rate Trends
+          </h2>
+          <p className="text-slate-600 text-sm">
+            30-day trend comparison across conversion rates.
+          </p>
+        </div>
+        <ConversionRateTrendsCard />
+      </div>
 
-      <ServicesOverviewCard />
+      <div className="space-y-3">
+        <div>
+          <h2 className="font-semibold text-slate-900 text-xl">
+            Services Overview
+          </h2>
+          <p className="text-slate-600 text-sm">
+            Individual performance of each subscribed service.
+          </p>
+        </div>
+        <ServicesOverviewCard />
+      </div>
 
       <PaidAdsPerformanceCard />
 

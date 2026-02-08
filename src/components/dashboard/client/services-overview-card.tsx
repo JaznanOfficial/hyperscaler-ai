@@ -12,13 +12,7 @@ import {
   YAxis,
 } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
@@ -82,48 +76,45 @@ const insights = [
 export function ServicesOverviewCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
-      <CardHeader className="space-y-4">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <CardTitle>Services Overview</CardTitle>
-            <CardDescription>
-              Individual performance of each subscribed service.
-            </CardDescription>
-          </div>
-          <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/80 px-3 py-1 font-semibold text-emerald-700 text-xs">
-            <span aria-hidden className="size-2 rounded-full bg-emerald-500" />
-            On Track
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-4 text-slate-500 text-sm">
-          <div>
-            <p className="text-slate-400 text-xs uppercase tracking-wide">
-              Primary service
-            </p>
-            <p className="font-semibold text-base text-slate-900">
-              Cold Email Campaign
-            </p>
-            <p>Outbound prospecting</p>
-          </div>
-          <div className="ml-auto flex flex-wrap gap-4 text-center font-semibold text-base text-slate-900">
-            {[
-              { label: "Drafts Sent", value: "12,450" },
-              { label: "Open Rate", value: "34.2%" },
-              { label: "Reply Rate", value: "8.5%" },
-              { label: "Meetings", value: "12" },
-              { label: "Conversion", value: "12%" },
-            ].map((metric) => (
-              <div className="min-w-22.5" key={metric.label}>
-                <p>{metric.value}</p>
-                <p className="font-normal text-slate-500 text-xs">
-                  {metric.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </CardHeader>
       <CardContent className="space-y-8">
+        <div className="space-y-4">
+          <div className="flex justify-end">
+            <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/80 px-3 py-1 font-semibold text-emerald-700 text-xs">
+              <span
+                aria-hidden
+                className="size-2 rounded-full bg-emerald-500"
+              />
+              On Track
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-4 text-slate-500 text-sm">
+            <div>
+              <p className="text-slate-400 text-xs uppercase tracking-wide">
+                Primary service
+              </p>
+              <p className="font-semibold text-base text-slate-900">
+                Cold Email Campaign
+              </p>
+              <p>Outbound prospecting</p>
+            </div>
+            <div className="ml-auto flex flex-wrap gap-4 text-center font-semibold text-base text-slate-900">
+              {[
+                { label: "Drafts Sent", value: "12,450" },
+                { label: "Open Rate", value: "34.2%" },
+                { label: "Reply Rate", value: "8.5%" },
+                { label: "Meetings", value: "12" },
+                { label: "Conversion", value: "12%" },
+              ].map((metric) => (
+                <div className="min-w-22.5" key={metric.label}>
+                  <p>{metric.value}</p>
+                  <p className="font-normal text-slate-500 text-xs">
+                    {metric.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         <section className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
