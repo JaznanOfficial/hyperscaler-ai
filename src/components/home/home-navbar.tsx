@@ -23,7 +23,7 @@ export function HomeNavbar() {
             <Image alt="Hyperscaler" height={40} src="/logo.png" width={140} />
           </Link>
 
-          <nav className="hidden items-center gap-6 sm:flex">
+          <nav className="hidden items-center gap-6 lg:flex">
             <Link
               className={` ${
                 pathname === "/" ? activeLinkClass : inactiveLinkClass
@@ -56,16 +56,20 @@ export function HomeNavbar() {
               <ShoppingCart className="h-5 w-5" strokeWidth={1.8} />
             </button>
 
-            <Button className="max-sm:hidden" size={"sm"}>
+            <Button className="hidden lg:inline-flex" size="sm">
               Login <ArrowRight className="size-4" />
             </Button>
-            <Button className="max-sm:hidden" size={"sm"} variant="outline">
+            <Button
+              className="hidden lg:inline-flex"
+              size="sm"
+              variant="outline"
+            >
               Contact us
             </Button>
 
             <button
               aria-label="Menu"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 shadow-sm hover:bg-zinc-50 sm:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 shadow-sm hover:bg-zinc-50 lg:hidden"
               onClick={() => setMobileMenuOpen((v) => !v)}
               type="button"
             >
@@ -79,49 +83,58 @@ export function HomeNavbar() {
         </div>
       </header>
 
-      {mobileMenuOpen && (
-        <div className="sm:hidden">
-          <div className="absolute top-20 right-0 left-0 z-40 px-3 pb-3">
-            <div className="rounded-2xl border border-zinc-200 bg-white shadow-black/5 shadow-xl">
-              <nav className="flex flex-col gap-3 px-4 py-4 font-medium text-sm text-zinc-700">
-                <Link
-                  className={`flex items-center justify-between rounded-xl px-3 py-2 hover:bg-zinc-50 ${
-                    pathname === "/" ? activeLinkClass : "text-zinc-800"
-                  }`}
-                  href="/"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span>Home</span>
-                </Link>
-                <Link
-                  className={`flex items-center justify-between rounded-xl px-3 py-2 hover:bg-zinc-50 ${
-                    pathname?.startsWith("/services")
-                      ? activeLinkClass
-                      : "text-zinc-800"
-                  }`}
-                  href="/services"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span>Services</span>
-                </Link>
+      <div className="lg:hidden">
+        <div
+          aria-hidden={!mobileMenuOpen}
+          className={`absolute right-0 left-0 z-40 px-3 pb-3 transition-all duration-300 ease-out ${
+            mobileMenuOpen
+              ? "pointer-events-auto top-20 opacity-100"
+              : "pointer-events-none top-16 opacity-0"
+          }`}
+        >
+          <div
+            className={`rounded-2xl border border-zinc-200 bg-white shadow-black/5 shadow-xl transition-all duration-300 ease-out ${
+              mobileMenuOpen ? "translate-y-0" : "translate-y-2"
+            }`}
+          >
+            <nav className="flex flex-col gap-3 px-4 py-4 font-medium text-sm text-zinc-700">
+              <Link
+                className={`flex items-center justify-between rounded-xl px-3 py-2 hover:bg-zinc-50 ${
+                  pathname === "/" ? activeLinkClass : "text-zinc-800"
+                }`}
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span>Home</span>
+              </Link>
+              <Link
+                className={`flex items-center justify-between rounded-xl px-3 py-2 hover:bg-zinc-50 ${
+                  pathname?.startsWith("/services")
+                    ? activeLinkClass
+                    : "text-zinc-800"
+                }`}
+                href="/services"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span>Services</span>
+              </Link>
 
-                <div className="mt-2 flex flex-col gap-2 border-zinc-100 border-t pt-3">
-                  <Button onClick={() => setMobileMenuOpen(false)} size="sm">
-                    Login <ArrowRight className="size-4" />
-                  </Button>
-                  <Button
-                    onClick={() => setMobileMenuOpen(false)}
-                    size="sm"
-                    variant="outline"
-                  >
-                    Contact us
-                  </Button>
-                </div>
-              </nav>
-            </div>
+              <div className="mt-2 flex flex-col gap-2 border-zinc-100 border-t pt-3">
+                <Button onClick={() => setMobileMenuOpen(false)} size="sm">
+                  Login <ArrowRight className="size-4" />
+                </Button>
+                <Button
+                  onClick={() => setMobileMenuOpen(false)}
+                  size="sm"
+                  variant="outline"
+                >
+                  Contact us
+                </Button>
+              </div>
+            </nav>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }
