@@ -1,10 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
+import { auth } from "@/backend/config/auth";
 
 import { LoginForm } from "@/components/login/login-form";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await auth();
+
+  if (session?.user) {
+    switch (session.user.role) {
+      case "ADMIN":
+        redirect("/s-admin");
+      case "MANAGER":
+      case "EMPLOYEE":
+        redirect("/employee");
+      case "CLIENT":
+        redirect("/client");
+    }
+  }
   return (
     <div className="grid min-h-svh w-full lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
