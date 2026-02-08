@@ -39,13 +39,13 @@ const iconMap = {
 
 type IconKey = keyof typeof iconMap;
 
-type NavItem = {
+interface NavItem {
   title: string;
   url: string;
   icon: IconKey;
   isActive?: boolean;
   matchSubRoutes?: boolean;
-};
+}
 
 const defaultNavItems: NavItem[] = [
   {
@@ -73,6 +73,12 @@ const defaultNavItems: NavItem[] = [
     title: "Subscriptions",
     url: "/s-admin/subscriptions",
     icon: "creditCard",
+  },
+  {
+    title: "Feedbacks",
+    url: "/s-admin/feedbacks",
+    icon: "messageSquare",
+    matchSubRoutes: false,
   },
 ];
 
