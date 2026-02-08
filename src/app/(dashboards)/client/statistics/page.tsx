@@ -16,7 +16,7 @@ export default function ClientStatisticsPage() {
           className="font-semibold text-3xl leading-10"
           style={{ fontFamily: "var(--font-outfit)" }}
         >
-          <span className="inline-block bg-linear-to-r from-violet-800 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
+          <span className="inline-block bg-linear-to-r from-violet-800 to-fuchsia-500 bg-clip-text text-transparent">
             Statistics
           </span>
         </h1>
