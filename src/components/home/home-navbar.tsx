@@ -18,7 +18,7 @@ export function HomeNavbar() {
   return (
     <>
       <header className="sticky top-0 z-40 border-zinc-200 border-b bg-[#FBF5FF] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] backdrop-blur supports-backdrop-filter:bg-[#FBF5FF]">
-        <div className="mx-auto flex max-w-10/12 items-center justify-between py-3 sm:py-4">
+        <div className="mx-auto flex w-11/12 items-center justify-between py-3 sm:py-4 lg:w-10/12">
           <Link className="flex items-center gap-2" href="/">
             <Image alt="Hyperscaler" height={40} src="/logo.png" width={140} />
           </Link>
