@@ -1,4 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { SiteService } from "@/data/site-services";
@@ -52,8 +53,8 @@ export function ServicesGrid({ services }: { services: SiteService[] }) {
               <Button className="flex-1" variant="gradient">
                 Add to Cart
               </Button>
-              <Button className="flex-1" variant="outline">
-                View Details
+              <Button asChild className="flex-1" variant="outline">
+                <Link href={`/services/${service.id}`}>View Details</Link>
               </Button>
             </div>
           </div>

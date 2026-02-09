@@ -100,7 +100,6 @@ export const marketingServices: SiteService[] = [
     badge: "New",
   },
 ];
-
 export const softwareServices: SiteService[] = [
   {
     id: "ai-automation",
