@@ -30,17 +30,15 @@ export default function ForgotPasswordPage() {
           </div>
         </div>
       </div>
-      <div className="relative hidden pt-5 pr-5 pb-5 lg:block">
-        <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-2xl">
-          <Image
-            alt="Team collaborating"
-            className="object-cover"
-            fill
-            priority
-            sizes="50vw"
-            src="/signup.png"
-          />
-        </div>
+      <div className="relative mt-5 mr-5 hidden lg:block">
+        <Image
+          alt="Team collaborating"
+          className="object-fit"
+          fill
+          priority
+          sizes="50vw"
+          src="/signup.png"
+        />
       </div>
     </div>
   );

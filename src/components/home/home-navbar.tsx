@@ -55,10 +55,11 @@ export function HomeNavbar() {
               </span>
               <ShoppingCart className="h-5 w-5" strokeWidth={1.8} />
             </button>
-
-            <Button className="hidden lg:inline-flex" size="sm">
-              Login <ArrowRight className="size-4" />
-            </Button>
+            <Link href="/login">
+              <Button className="hidden lg:inline-flex" size="sm">
+                Login <ArrowRight className="size-4" />
+              </Button>
+            </Link>
             <Button
               className="hidden lg:inline-flex"
               size="sm"
