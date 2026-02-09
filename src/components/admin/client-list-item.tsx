@@ -32,10 +32,17 @@ export function ClientListItem({ item, onStatusChange }: ClientListItemProps) {
 
   return (
     <li className="px-4 py-4">
-      <button
+      <div
         className="flex w-full cursor-pointer flex-col gap-3 rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 sm:flex-row sm:items-center sm:justify-between"
         onClick={goToDetail}
-        type="button"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            goToDetail();
+          }
+        }}
+        role="button"
+        tabIndex={0}
       >
         <div className="flex flex-1 flex-col">
           <p className="font-semibold text-lg text-slate-900">{item.name}</p>
@@ -104,7 +111,7 @@ export function ClientListItem({ item, onStatusChange }: ClientListItemProps) {
             </DropdownMenu>
           </div>
         </div>
-      </button>
+      </div>
     </li>
   );
 }

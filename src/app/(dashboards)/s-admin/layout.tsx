@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
+import { auth } from "@/backend/config/auth";
 
 import { AppSidebar } from "@/components/app-sidebar";
 import {
@@ -14,11 +16,17 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-export default function SDashboardLayout({
+export default async function SDashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
+  const session = await auth();
+
+  // Only ADMIN can access this area
+  if (!session?.user || session.user.role !== "ADMIN") {
+    redirect("/login");
+  }
   return (
     <SidebarProvider>
       <AppSidebar />

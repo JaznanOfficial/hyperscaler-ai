@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "User with this email already exists" },
+        { success: false, message: "User with this email already exists" },
         { status: 400 }
       );
     }
@@ -39,19 +39,20 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { message: "User created successfully", user },
+      { success: true, message: "Account created successfully", data: user },
       { status: 201 }
     );
   } catch (error: any) {
     if (error.name === "ZodError") {
+      const firstError = error.errors[0];
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { success: false, message: firstError.message },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: "Internal server error" },
+      { success: false, message: "Internal server error" },
       { status: 500 }
     );
   }
