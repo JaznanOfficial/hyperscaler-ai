@@ -4,6 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Bot,
   Briefcase,
+  ChartColumn,
   CreditCard,
   FolderKanban,
   Layers,
@@ -37,6 +38,7 @@ const iconMap = {
   creditCard: CreditCard,
   folderKanban: FolderKanban,
   messageSquare: MessageSquare,
+  chartColumn: ChartColumn,
 } as const;
 
 type IconKey = keyof typeof iconMap;
