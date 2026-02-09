@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
+import { auth } from "@/backend/config/auth";
 
 import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar";
 import {
@@ -35,11 +37,18 @@ const employeeNavItems: AppSidebarNavItem[] = [
   },
 ];
 
-export default function EmployeeDashboardLayout({
+export default async function EmployeeDashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
+  const session = await auth();
+
+  // Only EMPLOYEE and MANAGER can access this area
+  const allowedRoles = ["EMPLOYEE", "MANAGER"];
+  if (!session?.user || !allowedRoles.includes(session.user.role)) {
+    redirect("/login");
+  }
   return (
     <SidebarProvider>
       <AppSidebar navItems={employeeNavItems} />

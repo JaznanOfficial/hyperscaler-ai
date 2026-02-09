@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
+import { auth } from "@/backend/config/auth";
 
 import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar";
 import {
@@ -35,11 +37,18 @@ const clientNavItems: AppSidebarNavItem[] = [
   },
 ];
 
-export default function ClientDashboardLayout({
+export default async function ClientDashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
+  const session = await auth();
+
+  // Only CLIENT can access this area
+  const allowedRoles = ["CLIENT"];
+  if (!session?.user || !allowedRoles.includes(session.user.role)) {
+    redirect("/login");
+  }
   return (
     <SidebarProvider>
       <AppSidebar
