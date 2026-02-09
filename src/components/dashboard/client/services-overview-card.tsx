@@ -1,5 +1,13 @@
 "use client";
 
+import type { LucideIcon } from "lucide-react";
+import {
+  AlertTriangle,
+  CircleCheckBig,
+  Signal,
+  TrendingUp,
+} from "lucide-react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ConversionFunnelSection } from "./conversion-funnel-section";
@@ -7,26 +15,47 @@ import { InsightsDrawer } from "./insights-drawer";
 import { PerformanceTimelineSection } from "./performance-timeline-section";
 import { ResponseQualitySection } from "./response-quality-section";
 
-const insights = [
+type Insight = {
+  label: string;
+  detail: string;
+  icon: LucideIcon;
+  iconBg: string;
+  iconColor: string;
+  detailColor: string;
+};
+
+const insights: Insight[] = [
   {
     label: "Reply quality improving",
     detail: "+5% vs last period",
-    color: "from-emerald-500/15 to-emerald-500/5",
+    icon: TrendingUp,
+    iconBg: "bg-emerald-50",
+    iconColor: "text-emerald-600",
+    detailColor: "text-emerald-600",
   },
   {
     label: "Deliverability needs attention",
-    detail: "32% bounce rate (target < 5%)",
-    color: "from-amber-500/15 to-amber-500/5",
+    detail: "32% bounce rate (Target < 5%)",
+    icon: AlertTriangle,
+    iconBg: "bg-amber-50",
+    iconColor: "text-amber-600",
+    detailColor: "text-amber-600",
   },
   {
     label: "Inbox reputation healthy",
-    detail: "0.5% complaint rate (industry <1%)",
-    color: "from-sky-500/15 to-sky-500/5",
+    detail: "0.5% complaint rate (Industry < 1%)",
+    icon: CircleCheckBig,
+    iconBg: "bg-emerald-50",
+    iconColor: "text-emerald-600",
+    detailColor: "text-slate-600",
   },
   {
     label: "Conversion Rate strong",
     detail: "2% email-to-meeting conversion",
-    color: "from-purple-500/15 to-purple-500/5",
+    icon: Signal,
+    iconBg: "bg-sky-50",
+    iconColor: "text-sky-600",
+    detailColor: "text-sky-600",
   },
 ];
 
@@ -100,20 +129,28 @@ export function ServicesOverviewCard() {
           <p className="mb-4 font-semibold text-slate-900 text-sm">
             Key Insights
           </p>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-2 space-y-3 lg:grid-cols-4">
             {insights.map((insight) => (
-              <div
-                className={cn(
-                  "rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-sm",
-                  "bg-linear-to-r",
-                  insight.color
-                )}
-                key={insight.label}
-              >
-                <p className="font-semibold text-slate-900 text-sm">
-                  {insight.label}
-                </p>
-                <p className="text-slate-600 text-xs">{insight.detail}</p>
+              <div className="flex items-center gap-4" key={insight.label}>
+                <div
+                  className={cn(
+                    "flex size-12 items-center justify-center rounded-lg",
+                    insight.iconBg
+                  )}
+                >
+                  <insight.icon
+                    aria-hidden
+                    className={cn("size-5", insight.iconColor)}
+                  />
+                </div>
+                <div className="space-y-0.5">
+                  <p className="font-semibold text-slate-900 text-sm leading-tight">
+                    {insight.label}
+                  </p>
+                  <p className={cn("font-medium text-sm", insight.detailColor)}>
+                    {insight.detail}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
