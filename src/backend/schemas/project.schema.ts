@@ -20,5 +20,16 @@ export const updateProjectSchema = z.object({
   assignedEmployees: z.array(z.string()).optional(),
 });
 
+export const updateProjectServicesSchema = z.object({
+  services: z.array(
+    z.object({
+      serviceId: z.string(),
+      serviceName: z.string().optional(),
+      updates: z.any().optional(),
+    })
+  ),
+});
+
 export type ProjectInput = z.infer<typeof projectSchema>;
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
+export type UpdateProjectServicesInput = z.infer<typeof updateProjectServicesSchema>;

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +26,7 @@ export type ServiceSection = {
 export type ServiceDetailsFormProps = {
   initialServiceName: string;
   initialSections: ServiceSection[];
+  serviceId?: string;
 };
 
 const sectionTypeLabels: Record<ServiceSectionType, string> = {
@@ -38,13 +41,16 @@ const generateSectionId = () =>
 export function ServiceDetailsForm({
   initialServiceName,
   initialSections,
+  serviceId,
 }: ServiceDetailsFormProps) {
+  const router = useRouter();
   const [serviceName, setServiceName] = useState(initialServiceName);
   const [sections, setSections] = useState<ServiceSection[]>(
     initialSections.length
       ? initialSections
       : [{ id: generateSectionId(), name: "", type: "input" }]
   );
+  const [saving, setSaving] = useState(false);
 
   const handleSectionChange = (id: string, patch: Partial<ServiceSection>) => {
     setSections((previous) =>
@@ -69,8 +75,52 @@ export function ServiceDetailsForm({
     );
   };
 
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    
+    if (!serviceName.trim()) {
+      toast.error("Please enter a service name");
+      return;
+    }
+
+    if (sections.some((s) => !s.name.trim())) {
+      toast.error("Please fill in all section names");
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      const url = serviceId
+        ? `/api/admin/services/${serviceId}`
+        : "/api/admin/services";
+      const method = serviceId ? "PATCH" : "POST";
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          serviceName,
+          sections,
+        }),
+      });
+
+      if (response.ok) {
+        toast.success("Service saved successfully!");
+        router.push("/s-admin/services");
+      } else {
+        const error = await response.json();
+        toast.error(error.error || "Failed to save service");
+      }
+    } catch (error) {
+      toast.error("Failed to save service");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
-    <form className="space-y-6" onSubmit={(event) => event.preventDefault()}>
+    <form className="space-y-6" onSubmit={handleSubmit}>
       <div className="space-y-2">
         <Label htmlFor="service-name">Service name</Label>
         <Input
@@ -78,6 +128,7 @@ export function ServiceDetailsForm({
           onChange={(event) => setServiceName(event.target.value)}
           placeholder="e.g. LinkedIn Outreach"
           value={serviceName}
+          required
         />
       </div>
 
@@ -125,6 +176,7 @@ export function ServiceDetailsForm({
                     }
                     placeholder="e.g. Target audience"
                     value={section.name}
+                    required
                   />
                 </div>
                 <div className="space-y-2">
@@ -162,10 +214,15 @@ export function ServiceDetailsForm({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button className="cursor-pointer" type="submit">
-          Save changes
+        <Button className="cursor-pointer" type="submit" disabled={saving}>
+          {saving ? "Saving..." : "Save changes"}
         </Button>
-        <Button className="cursor-pointer" type="button" variant="outline">
+        <Button
+          className="cursor-pointer"
+          type="button"
+          variant="outline"
+          onClick={() => router.back()}
+        >
           Cancel
         </Button>
       </div>
