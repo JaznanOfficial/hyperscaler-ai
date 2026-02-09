@@ -8,8 +8,13 @@ export type ServiceItem = {
   name: string;
 };
 
-async function fetchServices() {
-  const response = await fetch("/api/admin/services", {
+type ServiceListProps = {
+  page: number;
+  onPaginationChange?: (page: number, totalPages: number) => void;
+};
+
+async function fetchServices(page: number) {
+  const response = await fetch(`/api/admin/services?page=${page}&limit=10`, {
     cache: "no-store",
   });
   if (!response.ok) {
@@ -18,12 +23,25 @@ async function fetchServices() {
   return response.json();
 }
 
-export function ServiceList() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["services"],
-    queryFn: fetchServices,
-    staleTime: 0,
+export function ServiceList({ page, onPaginationChange }: ServiceListProps) {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["services", page],
+    queryFn: () => fetchServices(page),
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
+
+  if (data?.pagination && onPaginationChange) {
+    onPaginationChange(data.pagination.page, data.pagination.totalPages);
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
+        <p className="text-red-600">Failed to load services. Please try again.</p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

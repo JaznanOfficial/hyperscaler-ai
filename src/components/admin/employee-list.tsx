@@ -29,14 +29,23 @@ async function fetchEmployees(page: number) {
 }
 
 export function EmployeeList({ page, onPaginationChange }: EmployeeListProps) {
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["employees", page],
     queryFn: () => fetchEmployees(page),
-    staleTime: 0,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   if (data?.pagination && onPaginationChange) {
     onPaginationChange(data.pagination.page, data.pagination.totalPages);
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
+        <p className="text-red-600">Failed to load employees. Please try again.</p>
+      </div>
+    );
   }
 
   if (isLoading) {

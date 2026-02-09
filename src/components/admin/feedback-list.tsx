@@ -1,48 +1,76 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 import { AdminFeedbackListItem } from "@/components/admin/feedback-list-item";
 
 export interface AdminFeedbackItem {
   id: string;
-  title: string;
-  summary: string;
+  projectId: string;
+  employeeId: string;
+  heading: string;
   details: string;
-  recipients: string[];
+  read: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-const adminFeedbackItems: AdminFeedbackItem[] = [
-  {
-    id: "SA-FB-2301",
-    title: "Compliance report export failing",
-    summary:
-      "Bulk export job times out for European tenant cluster during nightly run.",
-    details:
-      "Nightly compliance export targeting eu-central-1 clusters has regressed after the latest IAM patch. Security needs visibility before the board review. Suggested next step: roll back IAM change on reporting worker nodes while cloud team re-validates policies.",
-    recipients: ["Lana Zimmerman", "Arjun Patel"],
-  },
-  {
-    id: "SA-FB-2294",
-    title: "Seat allocations drifting",
-    summary:
-      "Regional pods are over-allocating AI copilots vs. approved budget tiers.",
-    details:
-      "Finance Ops observed that LATAM and APAC pods added 18 more AI copilots than their forecast. Recommendation: enforce the new automation SKU guardrail in provisioning workflow and send summary to GTM leadership.",
-    recipients: ["Maya Collins", "Noah Whitfield", "Priya Ramesh"],
-  },
-  {
-    id: "SA-FB-2280",
-    title: "Need clearer SOC-2 narrative",
-    summary:
-      "Draft renewal pack lacks executive-ready storyline for controls automation.",
-    details:
-      "Customer Trust wants the SOC-2 renewal memo to highlight how Hyperscaler AI reduced manual touch points by 63%. They shared an outline but need Super Admin enablement to finalize. Suggested next step: attach automation heatmap and short Loom walkthrough.",
-    recipients: ["Devon Ellis", "Priya Ramesh"],
-  },
-];
+type AdminFeedbackListProps = {
+  page: number;
+  onPaginationChange?: (page: number, totalPages: number) => void;
+};
 
-export function AdminFeedbackList() {
+async function fetchFeedbacks(page: number) {
+  const response = await fetch(`/api/admin/feedbacks?page=${page}&limit=10`, {
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch feedbacks");
+  }
+  return response.json();
+}
+
+export function AdminFeedbackList({ page, onPaginationChange }: AdminFeedbackListProps) {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["admin-feedbacks", page],
+    queryFn: () => fetchFeedbacks(page),
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+
+  if (data?.pagination && onPaginationChange) {
+    onPaginationChange(data.pagination.page, data.pagination.totalPages);
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
+        <p className="text-red-600">Failed to load feedbacks. Please try again.</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <p className="text-slate-500">Loading feedbacks...</p>
+      </div>
+    );
+  }
+
+  const feedbacks: AdminFeedbackItem[] = data?.feedbacks || [];
+
+  if (feedbacks.length === 0) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <p className="text-slate-500">No feedbacks yet</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <ul className="list-none divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white p-0">
-        {adminFeedbackItems.map((item) => (
+        {feedbacks.map((item) => (
           <AdminFeedbackListItem item={item} key={item.id} />
         ))}
       </ul>

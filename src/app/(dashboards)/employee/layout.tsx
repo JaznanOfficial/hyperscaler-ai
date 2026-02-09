@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@/backend/config/auth";
 
-import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar";
+import { EmployeeSidebarWrapper } from "@/components/employee/employee-sidebar-wrapper";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,27 +15,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
-const employeeNavItems: AppSidebarNavItem[] = [
-  {
-    title: "Hyperscaler AI",
-    url: "/employee",
-    icon: "bot",
-    matchSubRoutes: false,
-  },
-  {
-    title: "Projects",
-    url: "/employee/projects",
-    icon: "folderKanban",
-    matchSubRoutes: true,
-  },
-  {
-    title: "Feedbacks",
-    url: "/employee/feedbacks",
-    icon: "messageSquare",
-    matchSubRoutes: false,
-  },
-];
 
 function getRoleBasedRedirect(role: string): string {
   switch (role) {
@@ -66,10 +45,10 @@ export default async function EmployeeDashboardLayout({
   if (!allowedRoles.includes(session.user.role)) {
     redirect(getRoleBasedRedirect(session.user.role));
   }
-  // Note: Access control is handled by proxy.ts middleware
+
   return (
     <SidebarProvider>
-      <AppSidebar navItems={employeeNavItems} />
+      <EmployeeSidebarWrapper />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex w-full items-center gap-2 px-4">

@@ -29,6 +29,7 @@ export function NavMain({
     icon: LucideIcon;
     isActive?: boolean;
     matchSubRoutes?: boolean;
+    badge?: number;
     items?: {
       title: string;
       url: string;
@@ -67,6 +68,11 @@ export function NavMain({
                   <Link href={item.url}>
                     <item.icon />
                     <span>{item.title}</span>
+                    {item.badge && item.badge > 0 && (
+                      <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-semibold">
+                        {item.badge > 9 ? "9+" : item.badge}
+                      </span>
+                    )}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

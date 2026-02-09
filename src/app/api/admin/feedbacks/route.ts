@@ -2,16 +2,13 @@ import { NextResponse } from "next/server";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
 import { z } from "zod";
+import { feedbackEvents } from "@/lib/feedback-events";
 
-const createServiceSchema = z.object({
-  serviceName: z.string().min(1, "Service name is required"),
-  sections: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      type: z.enum(["input", "textarea", "boolean"]),
-    })
-  ),
+const createFeedbackSchema = z.object({
+  projectId: z.string(),
+  employeeId: z.string(),
+  heading: z.string().min(1, "Heading is required"),
+  details: z.string().min(1, "Details are required"),
 });
 
 export async function POST(request: Request) {
@@ -27,16 +24,21 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const validatedData = createServiceSchema.parse(body);
+    const validatedData = createFeedbackSchema.parse(body);
 
-    const service = await prisma.service.create({
+    const feedback = await prisma.feedback.create({
       data: {
-        serviceName: validatedData.serviceName,
-        sections: validatedData.sections as any,
+        projectId: validatedData.projectId,
+        employeeId: validatedData.employeeId,
+        heading: validatedData.heading,
+        details: validatedData.details,
+        read: false,
       },
     });
 
-    return NextResponse.json({ service }, { status: 201 });
+    feedbackEvents.notifyNewFeedback(validatedData.employeeId);
+
+    return NextResponse.json({ feedback }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -44,9 +46,9 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    console.error("Error creating service:", error);
+    console.error("Error creating feedback:", error);
     return NextResponse.json(
-      { error: "Failed to create service" },
+      { error: "Failed to create feedback" },
       { status: 500 }
     );
   }
@@ -69,19 +71,19 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get("limit") || "10");
     const skip = (page - 1) * limit;
 
-    const [services, total] = await Promise.all([
-      prisma.service.findMany({
+    const [feedbacks, total] = await Promise.all([
+      prisma.feedback.findMany({
         orderBy: {
           createdAt: "desc",
         },
         skip,
         take: limit,
       }),
-      prisma.service.count(),
+      prisma.feedback.count(),
     ]);
 
     return NextResponse.json({
-      services,
+      feedbacks,
       pagination: {
         page,
         limit,
@@ -90,9 +92,9 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error("Error fetching services:", error);
+    console.error("Error fetching feedbacks:", error);
     return NextResponse.json(
-      { error: "Failed to fetch services" },
+      { error: "Failed to fetch feedbacks" },
       { status: 500 }
     );
   }

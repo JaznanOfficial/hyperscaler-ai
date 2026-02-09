@@ -57,68 +57,66 @@ export default function SuperAdminEmployeesPage() {
       <div className="mt-4 flex-1 overflow-y-auto">
         <EmployeeList page={currentPage} onPaginationChange={handlePaginationChange} />
       </div>
-      {totalPages > 1 && (
-        <Pagination className="mt-4 py-3">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
+      <Pagination className="mt-4 py-3">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage > 1) handlePageClick(currentPage - 1);
+              }}
+              aria-disabled={currentPage === 1}
+              className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+            />
+          </PaginationItem>
+          {getPageNumbers().map((page) => (
+            <PaginationItem key={page}>
+              <PaginationLink
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  if (currentPage > 1) handlePageClick(currentPage - 1);
+                  handlePageClick(page);
                 }}
-                aria-disabled={currentPage === 1}
-                className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-              />
+                isActive={currentPage === page}
+                className="cursor-pointer"
+              >
+                {page}
+              </PaginationLink>
             </PaginationItem>
-            {getPageNumbers().map((page) => (
-              <PaginationItem key={page}>
+          ))}
+          {totalPages > 5 && currentPage < totalPages - 2 && (
+            <>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
                 <PaginationLink
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    handlePageClick(page);
+                    handlePageClick(totalPages);
                   }}
-                  isActive={currentPage === page}
                   className="cursor-pointer"
                 >
-                  {page}
+                  {totalPages}
                 </PaginationLink>
               </PaginationItem>
-            ))}
-            {totalPages > 5 && currentPage < totalPages - 2 && (
-              <>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageClick(totalPages);
-                    }}
-                    className="cursor-pointer"
-                  >
-                    {totalPages}
-                  </PaginationLink>
-                </PaginationItem>
-              </>
-            )}
-            <PaginationItem>
-              <PaginationNext
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (currentPage < totalPages) handlePageClick(currentPage + 1);
-                }}
-                aria-disabled={currentPage === totalPages}
-                className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      )}
+            </>
+          )}
+          <PaginationItem>
+            <PaginationNext
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) handlePageClick(currentPage + 1);
+              }}
+              aria-disabled={currentPage === totalPages}
+              className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </section>
   );
 }

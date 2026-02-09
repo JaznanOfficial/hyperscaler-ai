@@ -49,6 +49,7 @@ interface NavItem {
   icon: IconKey;
   isActive?: boolean;
   matchSubRoutes?: boolean;
+  badge?: number;
 }
 
 const defaultNavItems: NavItem[] = [
@@ -112,6 +113,7 @@ export function AppSidebar({
     icon: LucideIcon;
     isActive?: boolean;
     matchSubRoutes?: boolean;
+    badge?: number;
   }>;
 
   const handleLogout = async () => {

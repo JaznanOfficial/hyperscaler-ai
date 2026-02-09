@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
 import { ServiceList } from "@/components/admin/service-list";
@@ -13,8 +16,34 @@ import {
 } from "@/components/ui/pagination";
 
 export default function SuperAdminServicesPage() {
-  const totalPages: number = 5;
-  const currentPage: number = 1;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const handlePaginationChange = (page: number, total: number) => {
+    setTotalPages(total);
+  };
+
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(currentPage - 1, currentPage, currentPage + 1);
+      }
+    }
+    return pages;
+  };
 
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
@@ -30,30 +59,64 @@ export default function SuperAdminServicesPage() {
         </Button>
       </div>
       <div className="mt-4 flex-1 overflow-y-auto">
-        <ServiceList />
+        <ServiceList page={currentPage} onPaginationChange={handlePaginationChange} />
       </div>
       <Pagination className="mt-4 py-3">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious aria-disabled={currentPage === 1} href="#" />
+            <PaginationPrevious
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage > 1) handlePageClick(currentPage - 1);
+              }}
+              aria-disabled={currentPage === 1}
+              className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+            />
           </PaginationItem>
-          {[1, 2, 3].map((page) => (
+          {getPageNumbers().map((page) => (
             <PaginationItem key={page}>
-              <PaginationLink href="#" isActive={currentPage === page}>
+              <PaginationLink
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageClick(page);
+                }}
+                isActive={currentPage === page}
+                className="cursor-pointer"
+              >
                 {page}
               </PaginationLink>
             </PaginationItem>
           ))}
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">{totalPages}</PaginationLink>
-          </PaginationItem>
+          {totalPages > 5 && currentPage < totalPages - 2 && (
+            <>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageClick(totalPages);
+                  }}
+                  className="cursor-pointer"
+                >
+                  {totalPages}
+                </PaginationLink>
+              </PaginationItem>
+            </>
+          )}
           <PaginationItem>
             <PaginationNext
-              aria-disabled={currentPage === totalPages}
               href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) handlePageClick(currentPage + 1);
+              }}
+              aria-disabled={currentPage === totalPages}
+              className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
             />
           </PaginationItem>
         </PaginationContent>
