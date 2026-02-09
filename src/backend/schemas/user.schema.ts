@@ -12,6 +12,21 @@ export const userSchema = z.object({
   generalInfo: z.any().optional(),
 });
 
+export const createEmployeeSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  role: z.enum(["EMPLOYEE", "MANAGER"]),
+});
+
+export const updateEmployeeSchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  password: z.string().min(6).optional(),
+  role: z.enum(["EMPLOYEE", "MANAGER"]).optional(),
+  generalInfo: z.any().optional(),
+});
+
 export const updateUserSchema = z.object({
   name: z.string().min(2).optional(),
   email: z.string().email().optional(),
@@ -20,4 +35,6 @@ export const updateUserSchema = z.object({
 });
 
 export type UserInput = z.infer<typeof userSchema>;
+export type CreateEmployeeInput = z.infer<typeof createEmployeeSchema>;
+export type UpdateEmployeeInput = z.infer<typeof updateEmployeeSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;

@@ -1,52 +1,36 @@
-import { NextResponse } from "next/server";
-import { auth } from "@/backend/config/auth";
-import { prisma } from "@/backend/config/prisma";
 import { z } from "zod";
-
-const updateServiceSchema = z.object({
-  serviceName: z.string().min(1).optional(),
-  sections: z
-    .array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        type: z.enum(["input", "textarea", "boolean"]),
-      })
-    )
-    .optional(),
-});
+import { serviceService } from "@/backend/services/service.service";
+import { AuthGuard } from "@/backend/utils/auth-guard";
+import { ApiResponse } from "@/backend/utils/api-response";
+import { updateServiceSchema } from "@/backend/schemas/service.schema";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await AuthGuard.requireAdmin();
+
     const { id } = await params;
-    const session = await auth();
 
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    const service = await prisma.service.findUnique({
-      where: { id },
-    });
+    const service = await serviceService.getServiceById(id);
 
     if (!service) {
-      return NextResponse.json({ error: "Service not found" }, { status: 404 });
+      return ApiResponse.error("Service not found", 404);
     }
 
-    return NextResponse.json({ service });
+    return ApiResponse.success({ service });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Unauthorized") {
+        return ApiResponse.unauthorized();
+      }
+      if (error.message === "Forbidden") {
+        return ApiResponse.forbidden();
+      }
+    }
     console.error("Error fetching service:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch service" },
-      { status: 500 }
-    );
+    return ApiResponse.error("Failed to fetch service");
   }
 }
 
@@ -55,42 +39,29 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await AuthGuard.requireAdmin();
+
     const { id } = await params;
-    const session = await auth();
-
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
     const body = await request.json();
     const validatedData = updateServiceSchema.parse(body);
 
-    const service = await prisma.service.update({
-      where: { id },
-      data: {
-        ...(validatedData.serviceName && { serviceName: validatedData.serviceName }),
-        ...(validatedData.sections && { sections: validatedData.sections as any }),
-        updatedAt: new Date(),
-      },
-    });
+    const service = await serviceService.updateService(id, validatedData);
 
-    return NextResponse.json({ service });
+    return ApiResponse.success({ service });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid request data", details: error.issues },
-        { status: 400 }
-      );
+      return ApiResponse.validationError(error);
+    }
+    if (error instanceof Error) {
+      if (error.message === "Unauthorized") {
+        return ApiResponse.unauthorized();
+      }
+      if (error.message === "Forbidden") {
+        return ApiResponse.forbidden();
+      }
     }
     console.error("Error updating service:", error);
-    return NextResponse.json(
-      { error: "Failed to update service" },
-      { status: 500 }
-    );
+    return ApiResponse.error("Failed to update service");
   }
 }
 
@@ -99,27 +70,23 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await AuthGuard.requireAdmin();
+
     const { id } = await params;
-    const session = await auth();
 
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    await serviceService.deleteService(id);
 
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    await prisma.service.delete({
-      where: { id },
-    });
-
-    return NextResponse.json({ message: "Service deleted successfully" });
+    return ApiResponse.success({ message: "Service deleted successfully" });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Unauthorized") {
+        return ApiResponse.unauthorized();
+      }
+      if (error.message === "Forbidden") {
+        return ApiResponse.forbidden();
+      }
+    }
     console.error("Error deleting service:", error);
-    return NextResponse.json(
-      { error: "Failed to delete service" },
-      { status: 500 }
-    );
+    return ApiResponse.error("Failed to delete service");
   }
 }

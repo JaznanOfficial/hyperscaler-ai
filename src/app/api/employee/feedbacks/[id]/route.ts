@@ -1,50 +1,40 @@
-import { NextResponse } from "next/server";
-import { auth } from "@/backend/config/auth";
-import { prisma } from "@/backend/config/prisma";
+import { feedbackService } from "@/backend/services/feedback.service";
+import { feedbackRepository } from "@/backend/repositories/feedback.repository";
+import { AuthGuard } from "@/backend/utils/auth-guard";
+import { ApiResponse } from "@/backend/utils/api-response";
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (session.user.role !== "EMPLOYEE" && session.user.role !== "MANAGER") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+    const session = await AuthGuard.requireEmployee();
 
     const { id } = await params;
 
-    const feedback = await prisma.feedback.findUnique({
-      where: { id },
-    });
+    const feedback = await feedbackRepository.findById(id);
 
     if (!feedback) {
-      return NextResponse.json({ error: "Feedback not found" }, { status: 404 });
+      return ApiResponse.error("Feedback not found", 404);
     }
 
     if (feedback.employeeId !== session.user.id) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      return ApiResponse.forbidden();
     }
 
-    const updatedFeedback = await prisma.feedback.update({
-      where: { id },
-      data: {
-        read: true,
-        updatedAt: new Date(),
-      },
-    });
+    const updatedFeedback = await feedbackService.markAsRead(id);
 
-    return NextResponse.json({ feedback: updatedFeedback });
+    return ApiResponse.success({ feedback: updatedFeedback });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Unauthorized") {
+        return ApiResponse.unauthorized();
+      }
+      if (error.message === "Forbidden") {
+        return ApiResponse.forbidden();
+      }
+    }
     console.error("Error marking feedback as read:", error);
-    return NextResponse.json(
-      { error: "Failed to mark feedback as read" },
-      { status: 500 }
-    );
+    return ApiResponse.error("Failed to mark feedback as read");
   }
 }

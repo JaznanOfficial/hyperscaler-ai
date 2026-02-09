@@ -1,5 +1,5 @@
-import { auth } from "@/backend/config/auth";
-import { prisma } from "@/backend/config/prisma";
+import { feedbackService } from "@/backend/services/feedback.service";
+import { AuthGuard } from "@/backend/utils/auth-guard";
 import { feedbackEvents } from "@/lib/feedback-events";
 
 export const dynamic = "force-dynamic";
@@ -7,15 +7,7 @@ export const runtime = "nodejs";
 
 export async function GET() {
   try {
-    const session = await auth();
-
-    if (!session?.user) {
-      return new Response("Unauthorized", { status: 401 });
-    }
-
-    if (session.user.role !== "EMPLOYEE" && session.user.role !== "MANAGER") {
-      return new Response("Forbidden", { status: 403 });
-    }
+    const session = await AuthGuard.requireEmployee();
 
     const encoder = new TextEncoder();
     let isClosed = false;
@@ -26,12 +18,7 @@ export async function GET() {
           if (isClosed) return;
           
           try {
-            const unreadCount = await prisma.feedback.count({
-              where: {
-                employeeId: session.user.id,
-                read: false,
-              },
-            });
+            const unreadCount = await feedbackService.getUnreadCount(session.user.id);
 
             const data = `data: ${JSON.stringify({ unreadCount })}\n\n`;
             controller.enqueue(encoder.encode(data));

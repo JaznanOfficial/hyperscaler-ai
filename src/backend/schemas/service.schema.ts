@@ -1,22 +1,21 @@
 import { z } from "zod";
 
 export const serviceSectionSchema = z.object({
-  sectionName: z.string(),
-  sectionType: z.enum(["text", "boolean", "textarea", "number", "date"]),
-  required: z.boolean().optional().default(false),
-  placeholder: z.string().optional(),
+  id: z.string(),
+  name: z.string(),
+  type: z.enum(["input", "textarea", "boolean"]),
 });
 
-export const serviceSchema = z.object({
-  serviceName: z.string().min(2, "Service name must be at least 2 characters"),
+export const createServiceSchema = z.object({
+  serviceName: z.string().min(1, "Service name is required"),
   sections: z.array(serviceSectionSchema),
 });
 
 export const updateServiceSchema = z.object({
-  serviceName: z.string().min(2).optional(),
+  serviceName: z.string().min(1).optional(),
   sections: z.array(serviceSectionSchema).optional(),
 });
 
 export type ServiceSectionInput = z.infer<typeof serviceSectionSchema>;
-export type ServiceInput = z.infer<typeof serviceSchema>;
+export type CreateServiceInput = z.infer<typeof createServiceSchema>;
 export type UpdateServiceInput = z.infer<typeof updateServiceSchema>;

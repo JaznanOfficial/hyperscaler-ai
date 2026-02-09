@@ -1,99 +1,57 @@
-import { NextResponse } from "next/server";
-import { auth } from "@/backend/config/auth";
-import { prisma } from "@/backend/config/prisma";
 import { z } from "zod";
-
-const createServiceSchema = z.object({
-  serviceName: z.string().min(1, "Service name is required"),
-  sections: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      type: z.enum(["input", "textarea", "boolean"]),
-    })
-  ),
-});
+import { serviceService } from "@/backend/services/service.service";
+import { AuthGuard } from "@/backend/utils/auth-guard";
+import { ApiResponse } from "@/backend/utils/api-response";
+import { createServiceSchema } from "@/backend/schemas/service.schema";
 
 export async function POST(request: Request) {
   try {
-    const session = await auth();
-
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+    await AuthGuard.requireAdmin();
 
     const body = await request.json();
     const validatedData = createServiceSchema.parse(body);
 
-    const service = await prisma.service.create({
-      data: {
-        serviceName: validatedData.serviceName,
-        sections: validatedData.sections as any,
-      },
-    });
+    const service = await serviceService.createService(validatedData);
 
-    return NextResponse.json({ service }, { status: 201 });
+    return ApiResponse.success({ service }, 201);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid request data", details: error.issues },
-        { status: 400 }
-      );
+      return ApiResponse.validationError(error);
+    }
+    if (error instanceof Error) {
+      if (error.message === "Unauthorized") {
+        return ApiResponse.unauthorized();
+      }
+      if (error.message === "Forbidden") {
+        return ApiResponse.forbidden();
+      }
     }
     console.error("Error creating service:", error);
-    return NextResponse.json(
-      { error: "Failed to create service" },
-      { status: 500 }
-    );
+    return ApiResponse.error("Failed to create service");
   }
 }
 
 export async function GET(request: Request) {
   try {
-    const session = await auth();
-
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+    await AuthGuard.requireAdmin();
 
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
-    const skip = (page - 1) * limit;
 
-    const [services, total] = await Promise.all([
-      prisma.service.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
-        skip,
-        take: limit,
-      }),
-      prisma.service.count(),
-    ]);
+    const result = await serviceService.getServices(page, limit);
 
-    return NextResponse.json({
-      services,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
+    return ApiResponse.success(result);
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "Unauthorized") {
+        return ApiResponse.unauthorized();
+      }
+      if (error.message === "Forbidden") {
+        return ApiResponse.forbidden();
+      }
+    }
     console.error("Error fetching services:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch services" },
-      { status: 500 }
-    );
+    return ApiResponse.error("Failed to fetch services");
   }
 }
