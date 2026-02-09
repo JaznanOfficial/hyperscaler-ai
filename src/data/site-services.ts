@@ -100,6 +100,7 @@ export const marketingServices: SiteService[] = [
     badge: "New",
   },
 ];
+
 export const softwareServices: SiteService[] = [
   {
     id: "ai-automation",
@@ -192,3 +193,14 @@ export const softwareServices: SiteService[] = [
     badge: "New",
   },
 ];
+
+const allSiteServices: SiteService[] = [
+  ...marketingServices,
+  ...softwareServices,
+];
+
+export const defaultSiteService: SiteService = marketingServices[0];
+
+export function getSiteService(id: string): SiteService | undefined {
+  return allSiteServices.find((service) => service.id === id);
+}
