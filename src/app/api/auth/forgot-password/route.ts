@@ -15,7 +15,10 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { success: true, message: "If the email exists, a reset link has been sent" },
+        {
+          success: true,
+          message: "If the email exists, a reset link has been sent",
+        },
         { status: 200 }
       );
     }
@@ -42,7 +45,10 @@ export async function POST(req: NextRequest) {
     await sendPasswordResetEmail(user.email, resetToken);
 
     return NextResponse.json(
-      { success: true, message: "If the email exists, a reset link has been sent" },
+      {
+        success: true,
+        message: "If the email exists, a reset link has been sent",
+      },
       { status: 200 }
     );
   } catch (error: any) {

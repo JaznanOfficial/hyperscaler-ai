@@ -122,9 +122,7 @@ export function useForgotPasswordMutation() {
 
 export function useResetPasswordMutation() {
   const resetPasswordMutation = useMutation({
-    mutationFn: async (
-      payload: ResetPasswordPayload
-    ): Promise<ApiResponse> => {
+    mutationFn: async (payload: ResetPasswordPayload): Promise<ApiResponse> => {
       const response = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

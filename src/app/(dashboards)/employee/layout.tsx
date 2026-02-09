@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
+import type { ReactNode } from "react";
 import { auth } from "@/backend/config/auth";
 
 import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar";
@@ -46,7 +46,7 @@ export default async function EmployeeDashboardLayout({
 
   // Only EMPLOYEE and MANAGER can access this area
   const allowedRoles = ["EMPLOYEE", "MANAGER"];
-  if (!session?.user || !allowedRoles.includes(session.user.role)) {
+  if (!(session?.user && allowedRoles.includes(session.user.role))) {
     redirect("/login");
   }
   return (
