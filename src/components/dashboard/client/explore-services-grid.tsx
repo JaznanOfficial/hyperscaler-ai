@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -73,8 +75,10 @@ export function ExploreServicesGrid() {
                 <Button className="flex-1" variant="gradient">
                   Add to Cart
                 </Button>
-                <Button className="flex-1" variant="outline">
-                  View Details
+                <Button asChild className="flex-1" variant="outline">
+                  <Link href={`/client/services/${service.id}`}>
+                    View Details
+                  </Link>
                 </Button>
               </div>
             </div>
