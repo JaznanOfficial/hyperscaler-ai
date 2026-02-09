@@ -29,7 +29,7 @@ const recommendedServices = [
 
 export function RecommendedServices() {
   return (
-    <section className="space-y-4">
+    <section className="mt-20">
       <div className="space-y-1">
         <p className="font-['Outfit'] font-semibold text-gray-900 text-xl leading-7">
           Recommended for you
@@ -39,7 +39,7 @@ export function RecommendedServices() {
         </p>
       </div>
 
-      <div className="mt-10 grid gap-4 lg:grid-cols-2">
+      <div className="mt-10 grid gap-6 lg:grid-cols-2">
         {recommendedServices.map((service) => (
           <Card
             className="relative overflow-visible border border-slate-200 bg-white p-5 shadow-sm"

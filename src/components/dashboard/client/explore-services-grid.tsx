@@ -1,6 +1,5 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -14,6 +13,7 @@ const recommendedServices = [
       "Complements your social media marketing subscription for a full funnel approach",
     price: "$500",
     cadence: "/month",
+    status: "New",
   },
   {
     id: "pipeline-accelerator",
@@ -24,12 +24,13 @@ const recommendedServices = [
       "Pairs with your Hyperscaler AI workspace for 2x faster activation",
     price: "$800",
     cadence: "/month",
+    status: "New",
   },
 ];
 
 export function ExploreServicesGrid() {
   return (
-    <section className="space-y-4">
+    <section className="mt-20">
       <div className="space-y-1">
         <p className="font-['Outfit'] font-semibold text-gray-900 text-xl leading-7">
           Explore More Services
@@ -39,24 +40,26 @@ export function ExploreServicesGrid() {
         </p>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {recommendedServices.map((service) => (
           <Card
             className="relative overflow-visible border border-slate-200 bg-white p-5 shadow-sm"
             key={service.id}
           >
             <div className="space-y-5">
-              <h3 className="font-['Outfit'] font-medium text-lg text-slate-900 leading-6">
-                {service.title}
-              </h3>
+              <div className="flex w-full flex-wrap items-center justify-between gap-2">
+                <h3 className="font-['Outfit'] font-medium text-lg text-slate-900 leading-6">
+                  {service.title}
+                </h3>
+                {service.status ? (
+                  <span className="inline-flex items-center rounded-md bg-sky-100 px-2.5 py-0.5 font-semibold text-sky-700 text-xs">
+                    {service.status}
+                  </span>
+                ) : null}
+              </div>
               <p className="text-base text-slate-700 leading-6">
                 {service.description}
               </p>
-            </div>
-
-            <div className="inline-flex items-center gap-2 rounded-lg bg-fuchsia-50 px-4 py-2 font-normal text-fuchsia-700 text-sm">
-              <Sparkles className="size-4" />
-              {service.highlight}
             </div>
 
             <div className="flex w-full flex-col gap-4 pt-4">
