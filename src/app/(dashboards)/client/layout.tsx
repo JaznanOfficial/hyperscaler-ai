@@ -26,13 +26,19 @@ const clientNavItems: AppSidebarNavItem[] = [
   {
     title: "Statistics",
     url: "/client/statistics",
-    icon: "layers",
+    icon: "chartColumn",
     matchSubRoutes: false,
   },
   {
     title: "Subscriptions",
     url: "/client/subscriptions",
     icon: "creditCard",
+    matchSubRoutes: false,
+  },
+  {
+    title: "Services",
+    url: "/client/services",
+    icon: "layers",
     matchSubRoutes: false,
   },
 ];
