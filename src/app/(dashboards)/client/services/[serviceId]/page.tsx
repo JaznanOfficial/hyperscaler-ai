@@ -63,7 +63,7 @@ export default function ClientServiceDetailsPage({
           <div className="grid gap-3 lg:grid-cols-2">
             {detail.features.map((feature) => (
               <div
-                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3"
                 key={feature}
               >
                 <BadgeCheck className="size-4 text-emerald-500" />
@@ -83,7 +83,7 @@ export default function ClientServiceDetailsPage({
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             {detail.metrics.map((metric) => (
               <div
-                className="rounded-2xl border border-slate-200 bg-white px-4 py-4"
+                className="rounded-lg border border-slate-200 bg-white px-4 py-4"
                 key={metric.title}
               >
                 <p className="font-semibold text-slate-900 text-sm">
