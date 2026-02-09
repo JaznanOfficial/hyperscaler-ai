@@ -6,15 +6,11 @@ export default function ServicesPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="text-center">
-        <p className="font-semibold text-fuchsia-600 text-sm uppercase tracking-wide">
-          Browse Services
-        </p>
         <h1 className="mt-2 font-['Outfit'] font-semibold text-4xl text-slate-900">
-          Choose a service and track everything in one dashboard
+          Browse Services
         </h1>
-        <p className="mt-3 text-base text-slate-600">
-          Flexible managed services to help marketing and product teams move
-          faster.
+        <p className="mt-5 font-normal text-slate-700 text-xl leading-7">
+          Choose a service and track everything in one dashboard
         </p>
       </div>
 
