@@ -1,141 +1,11 @@
 "use client";
 
-import type { ApexOptions } from "apexcharts";
-import dynamic from "next/dynamic";
-import { useState } from "react";
-
-import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { ConversionFunnelSection } from "./conversion-funnel-section";
 import { InsightsDrawer } from "./insights-drawer";
-
-const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-type MetricFilter = "all" | "email" | "reply" | "meetings";
-
-const weeklyPerformance = [
-  { day: "Sun", emailSent: 40, replies: 8, meetings: 1 },
-  { day: "Mon", emailSent: 80, replies: 20, meetings: 4 },
-  { day: "Tue", emailSent: 110, replies: 32, meetings: 6 },
-  { day: "Wed", emailSent: 140, replies: 56, meetings: 8 },
-  { day: "Thu", emailSent: 160, replies: 70, meetings: 10 },
-  { day: "Fri", emailSent: 180, replies: 85, meetings: 12 },
-  { day: "Sat", emailSent: 190, replies: 92, meetings: 14 },
-];
-
-const performanceConfig = {
-  emailSent: { label: "Email Sent", color: "#7c3aed" },
-  replies: { label: "Reply Generated", color: "#0ea5e9" },
-  meetings: { label: "Meetings Booked", color: "#22c55e" },
-} satisfies ChartConfig;
-
-const timelineCategories = weeklyPerformance.map((point) => point.day);
-
-const timelineSeries = [
-  {
-    key: "email" as const,
-    name: performanceConfig.emailSent.label,
-    color: performanceConfig.emailSent.color,
-    data: weeklyPerformance.map((point) => point.emailSent),
-  },
-  {
-    key: "reply" as const,
-    name: performanceConfig.replies.label,
-    color: performanceConfig.replies.color,
-    data: weeklyPerformance.map((point) => point.replies),
-  },
-  {
-    key: "meetings" as const,
-    name: performanceConfig.meetings.label,
-    color: performanceConfig.meetings.color,
-    data: weeklyPerformance.map((point) => point.meetings),
-  },
-];
-
-const timelineChartOptions: ApexOptions = {
-  chart: {
-    id: "performance-timeline",
-    type: "line",
-    toolbar: { show: false },
-    zoom: { enabled: false },
-    fontFamily: "var(--font-outfit, 'Inter', sans-serif)",
-  },
-  stroke: {
-    curve: "smooth",
-    width: 3,
-  },
-  colors: timelineSeries.map((series) => series.color),
-  dataLabels: { enabled: false },
-  markers: {
-    size: 4,
-    strokeWidth: 2,
-    strokeColors: "#ffffff",
-  },
-  grid: {
-    borderColor: "#e2e8f0",
-    strokeDashArray: 4,
-  },
-  xaxis: {
-    categories: timelineCategories,
-    axisBorder: { show: false },
-    axisTicks: { show: false },
-    labels: {
-      style: {
-        colors: new Array(timelineCategories.length).fill("#94a3b8"),
-        fontSize: "12px",
-      },
-    },
-    title: {
-      text: "Day",
-      offsetY: 60,
-      style: { color: "#94a3b8", fontWeight: 500 },
-    },
-  },
-  yaxis: {
-    axisBorder: { show: false },
-    axisTicks: { show: false },
-    labels: {
-      style: {
-        colors: ["#94a3b8"],
-        fontSize: "12px",
-      },
-    },
-    title: {
-      text: "Volume",
-      style: { color: "#475569", fontWeight: 500 },
-    },
-  },
-  legend: { show: false },
-  tooltip: {
-    theme: "light",
-  },
-};
-
-const funnelStages = [
-  { label: "Email Sent Rate", value: "100% (5,000 sent)", width: "100%" },
-  { label: "Delivery Rate", value: "68% (3,400 delivered)", width: "78%" },
-  { label: "Open Rate", value: "22% (1,100 opened)", width: "56%" },
-  { label: "Reply Rate", value: "5% (250 replied)", width: "34%" },
-  { label: "Meetings", value: "2% (100 meetings)", width: "20%" },
-];
-
-const responseQualityData = [
-  { name: "Positive", value: 70, color: "hsl(var(--chart-2))" },
-  { name: "Negative", value: 30, color: "hsl(var(--chart-5))" },
-];
+import { PerformanceTimelineSection } from "./performance-timeline-section";
+import { ResponseQualitySection } from "./response-quality-section";
 
 const insights = [
   {
@@ -161,20 +31,6 @@ const insights = [
 ];
 
 export function ServicesOverviewCard() {
-  const [selectedMetric, setSelectedMetric] = useState<MetricFilter>("all");
-
-  const activeSeries =
-    selectedMetric === "all"
-      ? timelineSeries
-      : timelineSeries.filter((series) => series.key === selectedMetric);
-
-  const chartSeries = activeSeries.map(({ name, data }) => ({ name, data }));
-
-  const chartOptions: ApexOptions = {
-    ...timelineChartOptions,
-    colors: activeSeries.map((series) => series.color),
-  };
-
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardContent className="space-y-8">
@@ -213,61 +69,31 @@ export function ServicesOverviewCard() {
           ))}
         </div>
 
-        <section className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="font-semibold text-slate-900 text-sm">
-                Performance Timeline
-              </p>
-              <p className="text-slate-500 text-xs">
-                7-day trend comparison across key metrics.
-              </p>
-            </div>
-            <Select
-              onValueChange={(value) =>
-                setSelectedMetric(value as MetricFilter)
-              }
-              value={selectedMetric}
-            >
-              <SelectTrigger className="border-slate-200 px-3 py-1 font-medium text-slate-700 text-xs shadow-sm">
-                <SelectValue placeholder="All key metrics" />
-              </SelectTrigger>
-              <SelectContent align="end">
-                <SelectItem value="all">All key metrics</SelectItem>
-                <SelectItem value="email">Email Sent</SelectItem>
-                <SelectItem value="reply">Reply Generated</SelectItem>
-                <SelectItem value="meetings">Meetings Booked</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="h-72 w-full">
-            <ApexChart
-              height={288}
-              options={chartOptions}
-              series={chartSeries}
-              type="line"
-              width="100%"
-            />
-          </div>
-          <div className="flex flex-wrap justify-center gap-4 text-center text-sm">
-            {activeSeries.map((series) => (
-              <div
-                className="inline-flex items-center gap-2 text-slate-600"
-                key={series.key}
-              >
-                <span
-                  className="size-2.5 rounded-full"
-                  style={{ backgroundColor: series.color }}
-                />
-                <span>{series.name}</span>
-              </div>
-            ))}
-          </div>
-        </section>
+        <PerformanceTimelineSection />
 
         <section className="grid gap-6 lg:grid-cols-2">
-          <FunnelPanel />
-          <ResponseQualityPanel />
+          <div className="space-y-4 lg:col-span-1">
+            <div>
+              <p className="font-semibold text-slate-900 text-sm">
+                Conversion Funnel
+              </p>
+              <p className="text-slate-500 text-xs">
+                Track how prospects move from outreach to booked meetings.
+              </p>
+            </div>
+            <ConversionFunnelSection />
+          </div>
+          <div className="space-y-4 lg:col-span-1">
+            <div>
+              <p className="font-semibold text-slate-900 text-sm">
+                Response Quality Breakdown
+              </p>
+              <p className="text-slate-500 text-xs">
+                Quality of response based on positive and negative responses
+              </p>
+            </div>
+            <ResponseQualitySection />
+          </div>
         </section>
 
         <section>
@@ -294,97 +120,5 @@ export function ServicesOverviewCard() {
         </section>
       </CardContent>
     </Card>
-  );
-}
-
-function FunnelPanel() {
-  return (
-    <div className="space-y-4 rounded-2xl border border-slate-100 p-4">
-      <div>
-        <p className="font-semibold text-slate-900 text-sm">
-          Conversion Funnel
-        </p>
-        <p className="text-slate-500 text-xs">
-          Track how prospects move from outreach to booked meetings.
-        </p>
-      </div>
-      <div className="space-y-3">
-        {funnelStages.map((stage) => (
-          <div className="space-y-1" key={stage.label}>
-            <div className="flex items-center justify-between font-medium text-slate-500 text-xs">
-              <span>{stage.label}</span>
-              <span>{stage.value}</span>
-            </div>
-            <div className="h-4 rounded-full bg-slate-100">
-              <div
-                aria-hidden
-                className="h-full rounded-full bg-linear-to-r from-violet-600 to-fuchsia-500"
-                style={{ width: stage.width }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ResponseQualityPanel() {
-  return (
-    <div className="space-y-4 rounded-2xl border border-slate-100 p-4">
-      <div>
-        <p className="font-semibold text-slate-900 text-sm">
-          Response Quality Breakdown
-        </p>
-        <p className="text-slate-500 text-xs">
-          Share of positive vs negative replies.
-        </p>
-      </div>
-      <ChartContainer
-        className="mx-auto h-56 max-w-xs"
-        config={{
-          positive: { label: "Positive", color: "hsl(var(--chart-2))" },
-        }}
-      >
-        <ResponsiveContainer height="100%" width="100%">
-          <PieChart>
-            <Pie
-              data={responseQualityData}
-              dataKey="value"
-              innerRadius={70}
-              outerRadius={90}
-              paddingAngle={2}
-              strokeWidth={0}
-            >
-              {responseQualityData.map((entry) => (
-                <Cell fill={entry.color} key={entry.name} />
-              ))}
-            </Pie>
-            <ChartTooltip content={<ChartTooltipContent />} />
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="font-semibold text-3xl text-slate-900">70%</span>
-          <span className="text-slate-500 text-xs">Positive Response</span>
-        </div>
-      </ChartContainer>
-      <div className="space-y-2 text-sm">
-        {responseQualityData.map((item) => (
-          <div
-            className="flex items-center justify-between text-slate-600"
-            key={item.name}
-          >
-            <div className="flex items-center gap-2">
-              <span
-                className="size-2.5 rounded-full"
-                style={{ backgroundColor: item.color }}
-              />
-              {item.name} Response
-            </div>
-            <span className="font-semibold text-slate-900">{item.value}%</span>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
