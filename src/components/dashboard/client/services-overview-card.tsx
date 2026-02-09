@@ -1,31 +1,31 @@
 "use client";
 
-import {
-  CartesianGrid,
-  Cell,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
+import type { ApexOptions } from "apexcharts";
+import { Sparkles } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useState } from "react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+
+const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
+type MetricFilter = "all" | "email" | "reply" | "meetings";
 
 const weeklyPerformance = [
   { day: "Sun", emailSent: 40, replies: 8, meetings: 1 },
@@ -38,10 +38,92 @@ const weeklyPerformance = [
 ];
 
 const performanceConfig = {
-  emailSent: { label: "Email Sent", color: "hsl(var(--chart-1))" },
-  replies: { label: "Reply Generated", color: "hsl(var(--chart-3))" },
-  meetings: { label: "Meetings Booked", color: "hsl(var(--chart-4))" },
+  emailSent: { label: "Email Sent", color: "#7c3aed" },
+  replies: { label: "Reply Generated", color: "#0ea5e9" },
+  meetings: { label: "Meetings Booked", color: "#22c55e" },
 } satisfies ChartConfig;
+
+const timelineCategories = weeklyPerformance.map((point) => point.day);
+
+const timelineSeries = [
+  {
+    key: "email" as const,
+    name: performanceConfig.emailSent.label,
+    color: performanceConfig.emailSent.color,
+    data: weeklyPerformance.map((point) => point.emailSent),
+  },
+  {
+    key: "reply" as const,
+    name: performanceConfig.replies.label,
+    color: performanceConfig.replies.color,
+    data: weeklyPerformance.map((point) => point.replies),
+  },
+  {
+    key: "meetings" as const,
+    name: performanceConfig.meetings.label,
+    color: performanceConfig.meetings.color,
+    data: weeklyPerformance.map((point) => point.meetings),
+  },
+];
+
+const timelineChartOptions: ApexOptions = {
+  chart: {
+    id: "performance-timeline",
+    type: "line",
+    toolbar: { show: false },
+    zoom: { enabled: false },
+    fontFamily: "var(--font-outfit, 'Inter', sans-serif)",
+  },
+  stroke: {
+    curve: "smooth",
+    width: 3,
+  },
+  colors: timelineSeries.map((series) => series.color),
+  dataLabels: { enabled: false },
+  markers: {
+    size: 4,
+    strokeWidth: 2,
+    strokeColors: "#ffffff",
+  },
+  grid: {
+    borderColor: "#e2e8f0",
+    strokeDashArray: 4,
+  },
+  xaxis: {
+    categories: timelineCategories,
+    axisBorder: { show: false },
+    axisTicks: { show: false },
+    labels: {
+      style: {
+        colors: new Array(timelineCategories.length).fill("#94a3b8"),
+        fontSize: "12px",
+      },
+    },
+    title: {
+      text: "Day",
+      offsetY: 60,
+      style: { color: "#94a3b8", fontWeight: 500 },
+    },
+  },
+  yaxis: {
+    axisBorder: { show: false },
+    axisTicks: { show: false },
+    labels: {
+      style: {
+        color: "#94a3b8",
+        fontSize: "12px",
+      },
+    },
+    title: {
+      text: "Volume",
+      style: { color: "#475569", fontWeight: 500 },
+    },
+  },
+  legend: { show: false },
+  tooltip: {
+    theme: "light",
+  },
+};
 
 const funnelStages = [
   { label: "Email Sent Rate", value: "100% (5,000 sent)", width: "100%" },
@@ -80,50 +162,60 @@ const insights = [
 ];
 
 export function ServicesOverviewCard() {
+  const [selectedMetric, setSelectedMetric] = useState<MetricFilter>("all");
+
+  const activeSeries =
+    selectedMetric === "all"
+      ? timelineSeries
+      : timelineSeries.filter((series) => series.key === selectedMetric);
+
+  const chartSeries = activeSeries.map(({ name, data }) => ({ name, data }));
+
+  const chartOptions: ApexOptions = {
+    ...timelineChartOptions,
+    colors: activeSeries.map((series) => series.color),
+  };
+
   return (
     <Card className="border-none bg-white shadow-sm">
-      <CardHeader className="space-y-4">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <CardTitle>Services Overview</CardTitle>
-            <CardDescription>
-              Individual performance of each subscribed service.
-            </CardDescription>
-          </div>
-          <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/80 px-3 py-1 font-semibold text-emerald-700 text-xs">
-            <span aria-hidden className="size-2 rounded-full bg-emerald-500" />
-            On Track
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-4 text-slate-500 text-sm">
-          <div>
-            <p className="text-slate-400 text-xs uppercase tracking-wide">
-              Primary service
-            </p>
-            <p className="font-semibold text-base text-slate-900">
-              Cold Email Campaign
-            </p>
-            <p>Outbound prospecting</p>
-          </div>
-          <div className="ml-auto flex flex-wrap gap-4 text-center font-semibold text-base text-slate-900">
-            {[
-              { label: "Drafts Sent", value: "12,450" },
-              { label: "Open Rate", value: "34.2%" },
-              { label: "Reply Rate", value: "8.5%" },
-              { label: "Meetings", value: "12" },
-              { label: "Conversion", value: "12%" },
-            ].map((metric) => (
-              <div className="min-w-22.5" key={metric.label}>
-                <p>{metric.value}</p>
-                <p className="font-normal text-slate-500 text-xs">
-                  {metric.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </CardHeader>
       <CardContent className="space-y-8">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="font-semibold text-lg text-slate-900">
+                Cold Email Campaign
+              </p>
+              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700 text-xs">
+                <span
+                  aria-hidden
+                  className="size-2 rounded-full bg-emerald-500"
+                />
+                On Track
+              </span>
+            </div>
+            <p className="text-slate-500 text-sm">Outbound prospecting</p>
+          </div>
+          <Button size={"icon"} variant={"gradient"}>
+            <Sparkles className="size-5" />
+          </Button>
+        </div>
+        <div className="mt-6 grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-5">
+          {[
+            { label: "Emails Sent", value: "12,450" },
+            { label: "Open Rate", value: "34.2%" },
+            { label: "Reply Rate", value: "8.5%" },
+            { label: "Meetings", value: "12" },
+            { label: "Conversion", value: "12%" },
+          ].map((metric) => (
+            <div className="space-y-1 text-left" key={metric.label}>
+              <p className="font-medium text-gray-600 text-xs">
+                {metric.label}
+              </p>
+              <p className="font-semibold text-lg leading-5">{metric.value}</p>
+            </div>
+          ))}
+        </div>
+
         <section className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
@@ -134,73 +226,38 @@ export function ServicesOverviewCard() {
                 7-day trend comparison across key metrics.
               </p>
             </div>
-            <button
-              className="rounded-xl border border-slate-200 px-3 py-1 font-medium text-slate-600 text-xs shadow-sm"
-              type="button"
-            >
-              All key metrics
-            </button>
+            <Select onValueChange={setSelectedMetric} value={selectedMetric}>
+              <SelectTrigger className="border-slate-200 px-3 py-1 font-medium text-slate-700 text-xs shadow-sm">
+                <SelectValue placeholder="All key metrics" />
+              </SelectTrigger>
+              <SelectContent align="end">
+                <SelectItem value="all">All key metrics</SelectItem>
+                <SelectItem value="email">Email Sent</SelectItem>
+                <SelectItem value="reply">Reply Generated</SelectItem>
+                <SelectItem value="meetings">Meetings Booked</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <ChartContainer className="h-72" config={performanceConfig}>
-            <ResponsiveContainer height="100%" width="100%">
-              <LineChart
-                data={weeklyPerformance}
-                margin={{ left: 0, right: 24, top: 16, bottom: 8 }}
-              >
-                <CartesianGrid
-                  stroke="rgba(148, 163, 184, 0.35)"
-                  strokeDasharray="3 3"
-                />
-                <XAxis
-                  axisLine={false}
-                  dataKey="day"
-                  tick={{ fill: "#94a3b8", fontSize: 12 }}
-                  tickLine={false}
-                />
-                <YAxis
-                  axisLine={false}
-                  tick={{ fill: "#94a3b8", fontSize: 12 }}
-                  tickLine={false}
-                />
-                <ChartTooltip
-                  content={<ChartTooltipContent />}
-                  cursor={{ stroke: "#cbd5f5", strokeWidth: 1 }}
-                />
-                <Line
-                  dataKey="emailSent"
-                  dot={false}
-                  stroke="var(--color-emailSent)"
-                  strokeWidth={3}
-                  type="monotone"
-                />
-                <Line
-                  dataKey="replies"
-                  dot={false}
-                  stroke="var(--color-replies)"
-                  strokeWidth={3}
-                  type="monotone"
-                />
-                <Line
-                  dataKey="meetings"
-                  dot={false}
-                  stroke="var(--color-meetings)"
-                  strokeWidth={3}
-                  type="monotone"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-          <div className="flex flex-wrap gap-4 text-sm">
-            {Object.entries(performanceConfig).map(([key, config]) => (
+          <div className="h-72 w-full">
+            <ApexChart
+              height={288}
+              options={chartOptions}
+              series={chartSeries}
+              type="line"
+              width="100%"
+            />
+          </div>
+          <div className="flex flex-wrap justify-center gap-4 text-center text-sm">
+            {activeSeries.map((series) => (
               <div
                 className="inline-flex items-center gap-2 text-slate-600"
-                key={key}
+                key={series.key}
               >
                 <span
                   className="size-2.5 rounded-full"
-                  style={{ backgroundColor: config.color }}
+                  style={{ backgroundColor: series.color }}
                 />
-                <span>{config.label}</span>
+                <span>{series.name}</span>
               </div>
             ))}
           </div>

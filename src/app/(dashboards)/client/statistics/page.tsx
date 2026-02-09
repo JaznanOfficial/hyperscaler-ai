@@ -16,7 +16,7 @@ export default function ClientStatisticsPage() {
           className="font-semibold text-3xl leading-10"
           style={{ fontFamily: "var(--font-outfit)" }}
         >
-          <span className="inline-block bg-linear-to-r from-violet-800 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
+          <span className="inline-block bg-linear-to-r from-violet-800 to-fuchsia-500 bg-clip-text text-transparent">
             Statistics
           </span>
         </h1>
@@ -50,9 +50,29 @@ export default function ClientStatisticsPage() {
         </div>
       </div>
 
-      <ConversionRateTrendsCard />
+      <div className="space-y-3">
+        <div>
+          <h2 className="font-semibold text-slate-900 text-xl">
+            Conversion Rate Trends
+          </h2>
+          <p className="text-slate-600 text-sm">
+            30-day trend comparison across conversion rates.
+          </p>
+        </div>
+        <ConversionRateTrendsCard />
+      </div>
 
-      <ServicesOverviewCard />
+      <div className="space-y-3">
+        <div>
+          <h2 className="font-semibold text-slate-900 text-xl">
+            Services Overview
+          </h2>
+          <p className="text-slate-600 text-sm">
+            Individual performance of each subscribed service.
+          </p>
+        </div>
+        <ServicesOverviewCard />
+      </div>
 
       <PaidAdsPerformanceCard />
 

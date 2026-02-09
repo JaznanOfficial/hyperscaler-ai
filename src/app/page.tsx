@@ -1,5 +1,12 @@
-import { redirect } from "next/navigation";
+import { HomeNavbar } from "@/components/home/home-navbar";
 
 export default function Page() {
-  redirect("/login");
-}
+  return (
+    <div className="min-h-screen bg-muted/20">
+      <HomeNavbar />
+      <main className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+        
+      </main>
+    </div>
+  );
+
