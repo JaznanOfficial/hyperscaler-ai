@@ -13,16 +13,16 @@ export const userSchema = z.object({
 });
 
 export const createEmployeeSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email"),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["EMPLOYEE", "MANAGER"]),
 });
 
 export const updateEmployeeSchema = z.object({
-  name: z.string().min(1).optional(),
-  email: z.string().email().optional(),
-  password: z.string().min(6).optional(),
+  name: z.string().min(2, "Name must be at least 2 characters").optional(),
+  email: z.string().email("Invalid email address").optional(),
+  password: z.string().min(6, "Password must be at least 6 characters").optional(),
   role: z.enum(["EMPLOYEE", "MANAGER"]).optional(),
   generalInfo: z.any().optional(),
 });
