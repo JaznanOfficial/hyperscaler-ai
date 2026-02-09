@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { type NextRequest, NextResponse} from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/backend/config/prisma";
 import { resetPasswordSchema } from "@/backend/schemas/auth.schema";
 

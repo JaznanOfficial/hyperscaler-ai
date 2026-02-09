@@ -52,7 +52,7 @@ export function SignupForm({
           : "Account created successfully";
       toast.success(successMessage, { richColors: true });
       await autoLoginMutation.mutateAsync({ email, password });
-      
+
       const role = data.data?.role;
       if (role === "ADMIN") {
         router.push("/s-admin");

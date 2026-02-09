@@ -1,7 +1,12 @@
-import { auth } from "@/backend/config/auth";
 import { NextResponse } from "next/server";
+import { auth } from "@/backend/config/auth";
 
-const publicRoutes = ["/login", "/signup", "/forgot-password", "/reset-password"];
+const publicRoutes = [
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/reset-password",
+];
 const authRoutes = ["/login", "/signup", "/forgot-password", "/reset-password"];
 
 type UserRole = "ADMIN" | "EMPLOYEE" | "MANAGER" | "CLIENT";
@@ -37,7 +42,9 @@ export default auth((req) => {
 
   // Redirect authenticated users away from auth pages
   if (isAuthRoute && isLoggedIn && userRole) {
-    return NextResponse.redirect(new URL(getRoleBasedRedirect(userRole), nextUrl));
+    return NextResponse.redirect(
+      new URL(getRoleBasedRedirect(userRole), nextUrl)
+    );
   }
 
   // Allow public routes
@@ -55,11 +62,14 @@ export default auth((req) => {
   // Check role-based access for dashboard routes
   if (isLoggedIn && userRole) {
     for (const [route, allowedRoles] of Object.entries(ROUTE_ACCESS)) {
-      if (nextUrl.pathname.startsWith(route)) {
-        if (!allowedRoles.includes(userRole)) {
-          // Redirect to appropriate dashboard based on role
-          return NextResponse.redirect(new URL(getRoleBasedRedirect(userRole), nextUrl));
-        }
+      if (
+        nextUrl.pathname.startsWith(route) &&
+        !allowedRoles.includes(userRole)
+      ) {
+        // Redirect to appropriate dashboard based on role
+        return NextResponse.redirect(
+          new URL(getRoleBasedRedirect(userRole), nextUrl)
+        );
       }
     }
   }

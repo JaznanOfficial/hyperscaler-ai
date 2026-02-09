@@ -1,5 +1,5 @@
-import { auth } from "@/backend/config/auth";
 import { redirect } from "next/navigation";
+import { auth } from "@/backend/config/auth";
 
 export type UserRole = "ADMIN" | "MANAGER" | "EMPLOYEE" | "CLIENT";
 

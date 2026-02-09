@@ -44,11 +44,11 @@ export function LoginForm({
     try {
       await loginMutation.mutateAsync({ email, password });
       toast.success("Welcome back!", { richColors: true });
-      
+
       const response = await fetch("/api/auth/session");
       const session = await response.json();
       const role = session?.user?.role;
-      
+
       if (role === "ADMIN") {
         router.push("/s-admin");
       } else if (role === "CLIENT") {

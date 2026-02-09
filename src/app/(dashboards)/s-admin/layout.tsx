@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
+import type { ReactNode } from "react";
 import { auth } from "@/backend/config/auth";
 
 import { AppSidebar } from "@/components/app-sidebar";

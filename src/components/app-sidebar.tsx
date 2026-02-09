@@ -12,9 +12,9 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import type { ComponentProps } from "react";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import type { ComponentProps } from "react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -100,7 +100,7 @@ export function AppSidebar({
   ...props
 }: AppSidebarProps) {
   const router = useRouter();
-  
+
   const resolvedNavItems = navItems.map((item) => ({
     ...item,
     icon: iconMap[item.icon] ?? iconMap.bot,
@@ -141,7 +141,7 @@ export function AppSidebar({
         <NavMain items={resolvedNavItems} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser profileLink={profileLink} onLogout={handleLogout} />
+        <NavUser onLogout={handleLogout} profileLink={profileLink} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
