@@ -46,14 +46,14 @@ export function AgentGPanel({
   const showConversation = hasConversationStarted && conversation.length > 0;
 
   return (
-    <section className="relative flex w-full flex-1 flex-col overflow-visible p-4 sm:p-6 lg:h-[calc(100vh)] lg:max-h-[calc(100vh)] lg:min-h-112 lg:overflow-hidden">
+    <section className="relative flex h-[calc(90vh)] w-full flex-1 flex-col overflow-visible p-4 sm:p-6 lg:overflow-hidden">
       <div
         aria-hidden
         className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       >
         <div className="h-80 w-96 rounded-full bg-linear-to-l from-fuchsia-500 to-violet-800 opacity-75 blur-[350px]" />
       </div>
-      <div className="flex h-full min-h-128 flex-1 flex-col overflow-visible lg:min-h-0 lg:overflow-hidden">
+      <div className="mx-auto flex h-full min-h-128 w-full max-w-6xl flex-1 flex-col overflow-visible lg:min-h-0 lg:overflow-hidden">
         <div
           aria-live="polite"
           className="min-h-0 flex-1 space-y-6 overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"

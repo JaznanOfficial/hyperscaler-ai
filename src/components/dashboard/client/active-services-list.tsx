@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -67,8 +69,8 @@ export function ActiveServicesList() {
                     <ExternalLink className="size-3.5" />
                   </span>
                 </Button> */}
-                <Button className="flex-1" variant="outline">
-                  View
+                <Button asChild className="flex-1" variant="outline">
+                  <Link href="/client/statistics">View</Link>
                 </Button>
               </div>
             </div>
