@@ -1,12 +1,10 @@
 "use client";
 
 import type { ApexOptions } from "apexcharts";
-import { Sparkles } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   type ChartConfig,
@@ -22,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { InsightsDrawer } from "./insights-drawer";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -195,9 +194,7 @@ export function ServicesOverviewCard() {
             </div>
             <p className="text-slate-500 text-sm">Outbound prospecting</p>
           </div>
-          <Button size={"icon"} variant={"gradient"}>
-            <Sparkles className="size-5" />
-          </Button>
+          <InsightsDrawer />
         </div>
         <div className="mt-6 grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-5">
           {[
