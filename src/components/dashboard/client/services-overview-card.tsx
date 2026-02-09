@@ -110,7 +110,7 @@ const timelineChartOptions: ApexOptions = {
     axisTicks: { show: false },
     labels: {
       style: {
-        color: "#94a3b8",
+        colors: ["#94a3b8"],
         fontSize: "12px",
       },
     },
@@ -226,7 +226,12 @@ export function ServicesOverviewCard() {
                 7-day trend comparison across key metrics.
               </p>
             </div>
-            <Select onValueChange={setSelectedMetric} value={selectedMetric}>
+            <Select
+              onValueChange={(value) =>
+                setSelectedMetric(value as MetricFilter)
+              }
+              value={selectedMetric}
+            >
               <SelectTrigger className="border-slate-200 px-3 py-1 font-medium text-slate-700 text-xs shadow-sm">
                 <SelectValue placeholder="All key metrics" />
               </SelectTrigger>

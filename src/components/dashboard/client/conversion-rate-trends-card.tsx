@@ -117,7 +117,7 @@ const conversionChartOptions: ApexOptions = {
     labels: {
       formatter: (value) => `${value}`,
       style: {
-        color: "#94a3b8",
+        colors: ["#94a3b8"],
         fontSize: "12px",
       },
     },
