@@ -45,16 +45,16 @@ export function HomeNavbar() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <button
+            <Link
               aria-label="Cart"
-              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 shadow-sm hover:bg-zinc-50"
-              type="button"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 shadow-sm transition hover:bg-zinc-50"
+              href="/cart"
             >
               <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#9E32DD] px-1 font-semibold text-[11px] text-white">
                 2
               </span>
               <ShoppingCart className="h-5 w-5" strokeWidth={1.8} />
-            </button>
+            </Link>
             <Link href="/login">
               <Button className="hidden lg:inline-flex" size="sm">
                 Login <ArrowRight className="size-4" />
