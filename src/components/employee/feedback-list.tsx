@@ -1,52 +1,79 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { useFeedbackStream } from "@/hooks/use-feedback-stream";
 import { FeedbackListItem } from "@/components/employee/feedback-list-item";
 
 export type FeedbackItem = {
   id: string;
-  title: string;
-  owner: string;
-  updated: string;
-  summary: string;
+  projectId: string;
+  employeeId: string;
+  heading: string;
   details: string;
+  read: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
 
-const feedbackItems: FeedbackItem[] = [
-  {
-    id: "FB-8724",
-    title: "Vendor sandbox still offline",
-    owner: "Platform",
-    updated: "18m ago",
-    summary:
-      "Engineers are blocked from validating the onboarding playbook due to missing sandbox access.",
-    details:
-      "The Bangalore onboarding sprint cannot complete the QA checklist until the vendor sandbox credentials are provisioned. Ops escalated yesterday but has not received an ETA. Suggested next step: draft exec note and copy vendor success manager.",
-  },
-  {
-    id: "FB-8719",
-    title: "Async huddles cut stand-up time",
-    owner: "Design Systems",
-    updated: "1h ago",
-    summary:
-      "Team reports faster handoffs after switching to async Loom huddles over the weekend.",
-    details:
-      "Design leaders noted that the async Loom format kept context tight and prevented repeat blockers from resurfacing. They want to package the ritual as a playbook for other pods. Hyperscaler AI already has draft prompts ready to summarize highlights.",
-  },
-  {
-    id: "FB-8715",
-    title: "Need sharper brief for AI adoption kit",
-    owner: "Automation",
-    updated: "3h ago",
-    summary:
-      "Enablement team is confused about success metrics for the pilot kit and is requesting clarification.",
-    details:
-      'Marcus indicated that the adoption kit talks about "activation" but never defines what qualifies as a successful pilot. Recommendation: add a "definition of done" block plus three measurable outcomes (SLA reduction, headcount saved, manual touch drop).',
-  },
-];
+type FeedbackListProps = {
+  page: number;
+  onPaginationChange?: (page: number, totalPages: number) => void;
+};
 
-export function FeedbackList() {
+async function fetchFeedbacks(page: number) {
+  const response = await fetch(`/api/employee/feedbacks?page=${page}&limit=10`, {
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch feedbacks");
+  }
+  return response.json();
+}
+
+export function FeedbackList({ page, onPaginationChange }: FeedbackListProps) {
+  useFeedbackStream();
+  
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["employee-feedbacks", page],
+    queryFn: () => fetchFeedbacks(page),
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+
+  if (data?.pagination && onPaginationChange) {
+    onPaginationChange(data.pagination.page, data.pagination.totalPages);
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
+        <p className="text-red-600">Failed to load feedbacks. Please try again.</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <p className="text-slate-500">Loading feedbacks...</p>
+      </div>
+    );
+  }
+
+  const feedbacks: FeedbackItem[] = data?.feedbacks || [];
+
+  if (feedbacks.length === 0) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <p className="text-slate-500">No feedbacks yet</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <ul className="list-none divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white p-0">
-        {feedbackItems.map((item) => (
+        {feedbacks.map((item) => (
           <FeedbackListItem item={item} key={item.id} />
         ))}
       </ul>

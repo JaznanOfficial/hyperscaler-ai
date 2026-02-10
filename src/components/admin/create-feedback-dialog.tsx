@@ -1,8 +1,8 @@
 "use client";
 
-import { Check, Users2, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,64 +13,81 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { employeeDirectory } from "@/data/clients";
-import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+async function fetchEmployees() {
+  const response = await fetch("/api/admin/employees");
+  if (!response.ok) {
+    throw new Error("Failed to fetch employees");
+  }
+  return response.json();
+}
+
+async function createFeedback(data: any) {
+  const response = await fetch("/api/admin/feedbacks", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "Failed to create feedback");
+  }
+
+  return response.json();
+}
 
 export function CreateFeedbackDialog() {
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState("");
-  const [details, setDetails] = useState("");
-  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [formData, setFormData] = useState({
+    heading: "",
+    details: "",
+    employeeId: "",
+    projectId: "default-project",
+  });
 
-  const employees = useMemo(
-    () => [...employeeDirectory].sort((a, b) => a.localeCompare(b)),
-    []
-  );
+  const queryClient = useQueryClient();
 
-  const toggleEmployee = (employee: string) => {
-    setSelectedEmployees((previous) =>
-      previous.includes(employee)
-        ? previous.filter((name) => name !== employee)
-        : [...previous, employee]
-    );
-  };
+  const { data: employeesData } = useQuery({
+    queryKey: ["employees"],
+    queryFn: fetchEmployees,
+  });
 
-  const removeEmployee = (employee: string) => {
-    setSelectedEmployees((previous) =>
-      previous.filter((name) => name !== employee)
-    );
-  };
-
-  const resetForm = () => {
-    setTitle("");
-    setDetails("");
-    setSelectedEmployees([]);
-  };
+  const mutation = useMutation({
+    mutationFn: createFeedback,
+    onSuccess: () => {
+      toast.success("Feedback created successfully");
+      setFormData({ heading: "", details: "", employeeId: "", projectId: "default-project" });
+      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["admin-feedbacks"] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    toast.success("Feedback logged", {
-      description: "We captured your notes for the selected teammates.",
-    });
-    resetForm();
-    setOpen(false);
+    
+    if (!formData.heading || !formData.details || !formData.employeeId) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    mutation.mutate(formData);
   };
 
-  const selectedLabel = selectedEmployees.length
-    ? `${selectedEmployees.length} teammate${selectedEmployees.length > 1 ? "s" : ""} selected`
-    : "Select employees";
+  const employees = employeesData?.employees || [];
 
   return (
     <Dialog onOpenChange={setOpen} open={open}>
@@ -79,98 +96,58 @@ export function CreateFeedbackDialog() {
       </DialogTrigger>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Log pod feedback</DialogTitle>
+          <DialogTitle>Create Feedback</DialogTitle>
           <DialogDescription>
-            Capture escalations or kudos and notify the right Hyperscaler crew.
+            Send feedback to an employee about their work.
           </DialogDescription>
         </DialogHeader>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-2">
-            <Label htmlFor="feedback-title">Title</Label>
+            <Label htmlFor="feedback-heading">Heading</Label>
             <Input
-              id="feedback-title"
-              onChange={(event) => setTitle(event.currentTarget.value)}
-              placeholder="e.g. Async standups unlocked blockers"
-              value={title}
+              id="feedback-heading"
+              onChange={(event) => setFormData({ ...formData, heading: event.target.value })}
+              placeholder="e.g. Great work on the project"
+              value={formData.heading}
+              required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="feedback-details">Feedback details</Label>
+            <Label htmlFor="feedback-details">Details</Label>
             <Textarea
               id="feedback-details"
-              onChange={(event) => setDetails(event.currentTarget.value)}
-              placeholder="Add context, links, or requests for this feedback"
+              onChange={(event) => setFormData({ ...formData, details: event.target.value })}
+              placeholder="Add detailed feedback..."
               rows={4}
-              value={details}
+              value={formData.details}
+              required
             />
           </div>
-          <div className="space-y-3">
-            <Label>Assign employees</Label>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  className="w-full justify-between gap-2 truncate border border-slate-200 bg-white text-left font-normal text-slate-600 hover:bg-slate-50"
-                  type="button"
-                  variant="outline"
-                >
-                  <span className="flex items-center gap-2 truncate">
-                    <Users2 className="size-4 text-slate-400" />
-                    <span className="truncate">{selectedLabel}</span>
-                  </span>
-                  <Check aria-hidden className="invisible size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-72">
-                <DropdownMenuLabel>Available teammates</DropdownMenuLabel>
-                <DropdownMenuGroup className="max-h-64 overflow-y-auto">
-                  {employees.map((employee) => (
-                    <DropdownMenuCheckboxItem
-                      checked={selectedEmployees.includes(employee)}
-                      className="cursor-pointer"
-                      key={employee}
-                      onCheckedChange={() => toggleEmployee(employee)}
-                      onSelect={(event) => event.preventDefault()}
-                    >
-                      {employee}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <div className="px-2 py-1 text-muted-foreground text-xs">
-                  You can assign multiple employees at once.
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {selectedEmployees.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {selectedEmployees.map((employee) => (
-                  <button
-                    className={cn(
-                      "flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-700 text-xs",
-                      "transition hover:bg-slate-200"
-                    )}
-                    key={employee}
-                    onClick={() => removeEmployee(employee)}
-                    type="button"
-                  >
-                    {employee}
-                    <X aria-hidden className="size-3.5" />
-                    <span className="sr-only">Remove {employee}</span>
-                  </button>
+          <div className="space-y-2">
+            <Label>Select Employee</Label>
+            <Select
+              value={formData.employeeId}
+              onValueChange={(value) => setFormData({ ...formData, employeeId: value })}
+            >
+              <SelectTrigger className="cursor-pointer">
+                <SelectValue placeholder="Choose an employee" />
+              </SelectTrigger>
+              <SelectContent>
+                {employees.map((emp: any) => (
+                  <SelectItem key={emp.id} value={emp.id} className="cursor-pointer">
+                    {emp.name} ({emp.email})
+                  </SelectItem>
                 ))}
-              </div>
-            )}
+              </SelectContent>
+            </Select>
           </div>
           <DialogFooter>
             <Button
               className="cursor-pointer"
-              disabled={
-                !(title.trim() && details.trim()) ||
-                selectedEmployees.length === 0
-              }
+              disabled={mutation.isPending}
               type="submit"
             >
-              Submit feedback
+              {mutation.isPending ? "Creating..." : "Create Feedback"}
             </Button>
           </DialogFooter>
         </form>
