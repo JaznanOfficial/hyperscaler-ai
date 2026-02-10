@@ -4,7 +4,7 @@ import { marketingServices, softwareServices } from "@/data/site-services";
 
 export default function ServicesPage() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="mx-auto w-11/12 py-12 lg:w-10/12">
       <div className="text-center">
         <h1 className="mt-2 font-['Outfit'] font-semibold text-4xl text-slate-900">
           Browse Services
