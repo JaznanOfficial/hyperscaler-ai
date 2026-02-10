@@ -42,6 +42,16 @@ export function HomeNavbar() {
             >
               Services
             </Link>
+            <Link
+              className={` ${
+                pathname?.startsWith("/portfolio")
+                  ? activeLinkClass
+                  : inactiveLinkClass
+              }`}
+              href="/portfolio"
+            >
+              Portfolio
+            </Link>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -118,6 +128,17 @@ export function HomeNavbar() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <span>Services</span>
+              </Link>
+              <Link
+                className={`flex items-center justify-between rounded-xl px-3 py-2 hover:bg-zinc-50 ${
+                  pathname?.startsWith("/portfolio")
+                    ? activeLinkClass
+                    : "text-zinc-800"
+                }`}
+                href="/portfolio"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span>Portfolio</span>
               </Link>
 
               <div className="mt-2 flex flex-col gap-2 border-zinc-100 border-t pt-3">
