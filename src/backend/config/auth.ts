@@ -5,6 +5,7 @@ import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/backend/config/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {

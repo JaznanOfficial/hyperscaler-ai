@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
 import { auth } from "@/backend/config/auth";
 
 import { AppSidebar } from "@/components/app-sidebar";
@@ -16,6 +16,20 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
+function getRoleBasedRedirect(role: string): string {
+  switch (role) {
+    case "ADMIN":
+      return "/s-admin";
+    case "MANAGER":
+    case "EMPLOYEE":
+      return "/employee";
+    case "CLIENT":
+      return "/client";
+    default:
+      return "/login";
+  }
+}
+
 export default async function SDashboardLayout({
   children,
 }: {
@@ -23,10 +37,14 @@ export default async function SDashboardLayout({
 }) {
   const session = await auth();
 
-  // Only ADMIN can access this area
-  if (!session?.user || session.user.role !== "ADMIN") {
+  if (!session?.user) {
     redirect("/login");
   }
+
+  if (session.user.role !== "ADMIN") {
+    redirect(getRoleBasedRedirect(session.user.role));
+  }
+  // Note: Access control is handled by proxy.ts middleware
   return (
     <SidebarProvider>
       <AppSidebar />

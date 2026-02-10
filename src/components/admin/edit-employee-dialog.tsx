@@ -2,6 +2,8 @@
 
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { EmployeeItem } from "@/components/admin/employee-list";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,15 +26,75 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
+async function updateEmployee(id: string, data: any) {
+  const response = await fetch(`/api/admin/employees/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "Failed to update employee");
+  }
+
+  return response.json();
+}
+
 export type EditEmployeeDialogProps = {
   employee: EmployeeItem;
 };
 
 export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: employee.name,
+    email: employee.email,
+    password: "",
+    role: employee.roleLevel === "manager" ? "MANAGER" : "EMPLOYEE",
+    title: employee.title,
+    expertise: employee.expertise,
+    yearsExperience: employee.yearsExperience,
+  });
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (data: any) => updateEmployee(employee.id, data),
+    onSuccess: () => {
+      toast.success("Employee updated successfully");
+      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const updateData: any = {
+      name: formData.name,
+      email: formData.email,
+      role: formData.role,
+      generalInfo: {
+        title: formData.title,
+        expertise: formData.expertise,
+        yearsExperience: formData.yearsExperience,
+      },
+    };
+
+    if (formData.password) {
+      updateData.password = formData.password;
+    }
+
+    mutation.mutate(updateData);
+  };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="cursor-pointer" size="sm" variant="outline">
           Edit profile
@@ -45,18 +107,17 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
             Update profile details and access permissions.
           </DialogDescription>
         </DialogHeader>
-        <form
-          className="space-y-4"
-          onSubmit={(event) => event.preventDefault()}
-        >
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor={`employee-name-${employee.id}`}>
                 Employee name
               </Label>
               <Input
-                defaultValue={employee.name}
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 id={`employee-name-${employee.id}`}
+                required
               />
             </div>
             <div className="space-y-2">
@@ -64,9 +125,11 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                 Employee email
               </Label>
               <Input
-                defaultValue={employee.email}
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 id={`employee-email-${employee.id}`}
                 type="email"
+                required
               />
             </div>
           </div>
@@ -81,6 +144,8 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                   id={`employee-password-${employee.id}`}
                   placeholder="New password"
                   type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
                 <button
                   aria-label={showPassword ? "Hide password" : "Show password"}
@@ -104,7 +169,8 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                 Employee title
               </Label>
               <Input
-                defaultValue={employee.title}
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 id={`employee-title-${employee.id}`}
               />
             </div>
@@ -114,7 +180,8 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
               Employee expertise lists
             </Label>
             <Textarea
-              defaultValue={employee.expertise}
+              value={formData.expertise}
+              onChange={(e) => setFormData({ ...formData, expertise: e.target.value })}
               id={`employee-expertise-${employee.id}`}
               placeholder="Summarize expertise areas"
               rows={3}
@@ -126,7 +193,8 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                 Employee years of experiences
               </Label>
               <Input
-                defaultValue={employee.yearsExperience}
+                value={formData.yearsExperience}
+                onChange={(e) => setFormData({ ...formData, yearsExperience: Number(e.target.value) })}
                 id={`employee-years-${employee.id}`}
                 min={0}
                 placeholder="e.g. 6"
@@ -135,15 +203,18 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
             </div>
             <div className="space-y-2">
               <Label>Employee role</Label>
-              <Select defaultValue={employee.roleLevel}>
+              <Select
+                value={formData.role}
+                onValueChange={(value) => setFormData({ ...formData, role: value as "EMPLOYEE" | "MANAGER" })}
+              >
                 <SelectTrigger className="cursor-pointer">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem className="cursor-pointer" value="manager">
+                  <SelectItem className="cursor-pointer" value="MANAGER">
                     Manager
                   </SelectItem>
-                  <SelectItem className="cursor-pointer" value="employee">
+                  <SelectItem className="cursor-pointer" value="EMPLOYEE">
                     Employee
                   </SelectItem>
                 </SelectContent>
@@ -151,8 +222,8 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button className="cursor-pointer" type="submit">
-              Save changes
+            <Button className="cursor-pointer" type="submit" disabled={mutation.isPending}>
+              {mutation.isPending ? "Saving..." : "Save changes"}
             </Button>
           </DialogFooter>
         </form>

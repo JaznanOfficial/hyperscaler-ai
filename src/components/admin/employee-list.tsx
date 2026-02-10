@@ -1,3 +1,6 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 import { EmployeeListItem } from "@/components/admin/employee-list-item";
 
 export type EmployeeItem = {
@@ -10,41 +13,71 @@ export type EmployeeItem = {
   roleLevel: "manager" | "employee";
 };
 
-const employeeItems: EmployeeItem[] = [
-  {
-    id: "EMP-2093",
-    name: "Lana Zimmerman",
-    email: "lana@hyperscaler.io",
-    title: "Product Lead",
-    expertise: "Revenue playbooks, demand gen, GTM automation",
-    yearsExperience: 9,
-    roleLevel: "manager",
-  },
-  {
-    id: "EMP-1988",
-    name: "Arjun Patel",
-    email: "arjun@hyperscaler.io",
-    title: "Automation Architect",
-    expertise: "Workflow orchestration, AI integrations, RevOps infra",
-    yearsExperience: 7,
-    roleLevel: "employee",
-  },
-  {
-    id: "EMP-1842",
-    name: "Maya Collins",
-    email: "maya@hyperscaler.io",
-    title: "Solutions Engineer",
-    expertise: "Client onboarding, telemetry, experimentation",
-    yearsExperience: 5,
-    roleLevel: "employee",
-  },
-];
+type EmployeeListProps = {
+  page: number;
+  onPaginationChange?: (page: number, totalPages: number) => void;
+};
 
-export function EmployeeList() {
+async function fetchEmployees(page: number) {
+  const response = await fetch(`/api/admin/employees?page=${page}&limit=10`, {
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch employees");
+  }
+  return response.json();
+}
+
+export function EmployeeList({ page, onPaginationChange }: EmployeeListProps) {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["employees", page],
+    queryFn: () => fetchEmployees(page),
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+
+  if (data?.pagination && onPaginationChange) {
+    onPaginationChange(data.pagination.page, data.pagination.totalPages);
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
+        <p className="text-red-600">Failed to load employees. Please try again.</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <p className="text-slate-500">Loading employees...</p>
+      </div>
+    );
+  }
+
+  const employees: EmployeeItem[] = data?.employees.map((emp: any) => ({
+    id: emp.id,
+    name: emp.name,
+    email: emp.email,
+    title: emp.generalInfo?.title || (emp.role === "MANAGER" ? "Manager" : "Employee"),
+    expertise: emp.generalInfo?.expertise || "N/A",
+    yearsExperience: emp.generalInfo?.yearsExperience || 0,
+    roleLevel: emp.role === "MANAGER" ? "manager" : "employee",
+  })) || [];
+
+  if (employees.length === 0) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
+        <p className="text-slate-500">No employees yet</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
-        {employeeItems.map((item) => (
+        {employees.map((item) => (
           <EmployeeListItem item={item} key={item.id} />
         ))}
       </ul>
