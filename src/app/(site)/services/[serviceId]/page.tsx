@@ -1,10 +1,38 @@
-import { CheckCircle2, ChevronLeft, Sparkles } from "lucide-react";
+import { BadgeCheck, ChevronLeft, Lock } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { defaultSiteService, getSiteService } from "@/data/site-services";
 import { cn } from "@/lib/utils";
+
+const siteServiceMetrics: Record<
+  string,
+  { title: string; description: string }[]
+> = {
+  "paid-ads": [
+    { title: "Impressions", description: "Total times ads were shown" },
+    { title: "Reach", description: "Unique users who saw your ads" },
+    { title: "Clicks", description: "Total number of clicks" },
+    {
+      title: "Click-Through Rate (CTR)",
+      description: "Clicks divided by impressions",
+    },
+    {
+      title: "Cost per Click (CPC)",
+      description: "Average cost you pay per click",
+    },
+    {
+      title: "Conversion Rate",
+      description: "Rate of completed desired action",
+    },
+    { title: "Ad Spend", description: "Total campaign spend" },
+    {
+      title: "Return on Ad Spend (ROAS)",
+      description: "Revenue for every dollar spent",
+    },
+  ],
+};
 
 interface SiteServiceDetailsPageProps {
   params: { serviceId: string };
@@ -14,76 +42,31 @@ export default function SiteServiceDetailsPage({
   params,
 }: SiteServiceDetailsPageProps) {
   const service = getSiteService(params.serviceId) ?? defaultSiteService;
+  const metrics = siteServiceMetrics[service.id] ?? [];
 
   return (
-    <section
-      className={cn(
-        "mx-auto",
-        "flex",
-        "min-h-[calc(90vh)]",
-        "flex-col",
-        "bg-muted/20",
-        "py-10"
-      )}
-    >
-      <div className={cn("w-11/12", "max-w-5xl", "space-y-10")}>
+    <section className="bg-muted/20 py-10">
+      <div className="mx-auto w-11/12 space-y-8 lg:w-10/12">
         <Link
-          className={cn(
-            "inline-flex",
-            "items-center",
-            "gap-2",
-            "font-medium",
-            "text-slate-600",
-            "text-sm",
-            "transition",
-            "hover:text-violet-700"
-          )}
+          className="inline-flex items-center gap-2 font-medium text-slate-600 text-sm transition hover:text-violet-700"
           href="/services"
         >
           <ChevronLeft className="size-4" /> Back to Services
         </Link>
 
-        <Card
-          className={cn(
-            "border",
-            "border-slate-200",
-            "bg-white",
-            "space-y-6",
-            "p-6"
-          )}
-        >
-          <div
-            className={cn(
-              "flex",
-              "flex-col",
-              "gap-6",
-              "lg:flex-row",
-              "lg:items-start",
-              "lg:justify-between"
-            )}
-          >
-            <div className="space-y-4">
+        <Card className="space-y-6 border border-slate-200 bg-white p-6">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-3">
-                <h1
-                  className={cn(
-                    "font-['Outfit']",
-                    "font-semibold",
-                    "text-4xl",
-                    "text-slate-900"
-                  )}
-                >
+                <h1 className="font-['Outfit'] font-semibold text-3xl text-slate-900">
                   {service.title}
                 </h1>
                 {service.badge ? (
                   <span
                     className={cn(
-                      "rounded-full",
-                      "px-3",
-                      "py-1",
-                      "font-semibold",
-                      "text-xs",
+                      "rounded-full px-3 py-1 font-semibold text-xs",
                       service.badge === "Popular"
-                        ? "bg-amber-100 text-amber-800"
+                        ? "bg-amber-100 text-amber-700"
                         : "bg-sky-100 text-sky-700"
                     )}
                   >
@@ -91,135 +74,65 @@ export default function SiteServiceDetailsPage({
                   </span>
                 ) : null}
               </div>
-              <p className={cn("text-lg", "text-slate-600", "leading-7")}>
-                {service.description}
-              </p>
+              <p className="text-base text-slate-600">{service.description}</p>
             </div>
-            <div
-              className={cn(
-                "rounded-2xl",
-                "bg-linear-to-r",
-                "from-violet-800",
-                "via-fuchsia-600",
-                "to-pink-500",
-                "p-1",
-                "text-white"
-              )}
-            >
-              <div
-                className={cn(
-                  "flex",
-                  "flex-col",
-                  "gap-3",
-                  "rounded-2xl",
-                  "bg-white/5",
-                  "px-6",
-                  "py-5"
-                )}
-              >
-                <p
-                  className={cn(
-                    "text-sm",
-                    "uppercase",
-                    "tracking-[0.2em]",
-                    "text-white/80"
-                  )}
-                >
-                  Starts at
-                </p>
-                <p
-                  className={cn("font-['Outfit']", "font-semibold", "text-4xl")}
-                >
-                  {service.price}
-                  <span
-                    className={cn(
-                      "ml-2",
-                      "font-medium",
-                      "text-base",
-                      "text-white/80"
-                    )}
-                  >
-                    {service.cadence}
-                  </span>
-                </p>
-                <div className={cn("text-sm", "text-white/90")}>
-                  Includes onboarding, reporting, and dedicated experts.
-                </div>
-                <Button className={cn("w-full")} variant="gradient">
-                  Add to Cart
-                </Button>
-              </div>
+            <div className="flex flex-col items-end gap-3">
+              <p className="font-['Outfit'] font-bold text-3xl text-slate-900">
+                {service.price}
+                <span className="ml-1 font-medium text-base text-slate-500">
+                  {service.cadence}
+                </span>
+              </p>
+              <Button className="min-w-40" variant="gradient">
+                Add to Cart
+              </Button>
             </div>
           </div>
         </Card>
 
-        <section className={cn("grid", "gap-6", "lg:grid-cols-[2fr,1fr]")}>
-          <Card
-            className={cn(
-              "border",
-              "border-slate-200",
-              "bg-white",
-              "space-y-5",
-              "p-6"
-            )}
-          >
-            <div
-              className={cn(
-                "flex",
-                "items-center",
-                "gap-2",
-                "font-semibold",
-                "text-fuchsia-700",
-                "text-sm"
-              )}
-            >
-              <Sparkles className="size-4" /> What you'll get
-            </div>
-            <div className={cn("grid", "gap-3", "md:grid-cols-2")}>
-              {service.bullets.map((bullet) => (
-                <div
-                  className={cn(
-                    "flex",
-                    "items-start",
-                    "gap-3",
-                    "rounded-2xl",
-                    "border",
-                    "border-slate-100",
-                    "bg-slate-50/80",
-                    "px-4",
-                    "py-3"
-                  )}
-                  key={bullet}
-                >
-                  <CheckCircle2
-                    className={cn("mt-0.5", "size-5", "text-emerald-500")}
-                  />
-                  <p className={cn("text-sm", "text-slate-700")}>{bullet}</p>
-                </div>
-              ))}
-            </div>
-          </Card>
+        <section className="space-y-4">
+          <h2 className="font-semibold text-lg text-slate-900">
+            What’s included
+          </h2>
+          <div className="grid gap-3 lg:grid-cols-2">
+            {service.bullets.map((bullet) => (
+              <div
+                className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3"
+                key={bullet}
+              >
+                <BadgeCheck className="size-4 text-emerald-500" />
+                <p className="text-slate-700 text-sm">{bullet}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
-          <Card
-            className={cn(
-              "border",
-              "border-slate-200",
-              "bg-white",
-              "space-y-4",
-              "p-6"
-            )}
-          >
-            <p className={cn("font-semibold", "text-base", "text-slate-900")}>
-              Need something custom?
+        <section className="space-y-4">
+          <div className="flex items-center gap-2">
+            <h2 className="font-semibold text-lg text-slate-900">
+              Metrics you can track
+            </h2>
+            <Lock className="size-4 text-rose-500" />
+          </div>
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+            {metrics.map((metric) => (
+              <div
+                className="rounded-lg border border-slate-200 bg-white px-4 py-4"
+                key={metric.title}
+              >
+                <p className="font-semibold text-slate-900 text-sm">
+                  {metric.title}
+                </p>
+                <p className="text-slate-500 text-sm">{metric.description}</p>
+              </div>
+            ))}
+          </div>
+          {metrics.length ? (
+            <p className="flex items-center gap-2 font-medium text-rose-600 text-sm">
+              <Lock className="size-4" /> All metrics unlock after subscribing
+              to the service.
             </p>
-            <p className={cn("text-slate-600", "text-sm")}>
-              Layer this service with automations, analytics, or white-glove
-              delivery from Hyperscaler experts.
-            </p>
-            <Button asChild variant="outline">
-              <Link href="mailto:hello@hyperscaler.ai">Talk to sales</Link>
-            </Button>
-          </Card>
+          ) : null}
         </section>
       </div>
     </section>
