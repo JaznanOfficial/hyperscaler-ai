@@ -72,16 +72,18 @@ export default function CartPage() {
               <span>Total per month</span>
               <span>{totalDisplay}</span>
             </div>
-            <Button
-              className="w-full gap-2 font-semibold text-base"
-              size="lg"
-              variant="gradient"
-            >
-              Proceed to Checkout <ArrowRight className="size-4" />
-            </Button>
-            <Button className="w-full" size="lg" variant="outline">
-              Continue Browsing
-            </Button>
+            <div className="space-y-2">
+              <Button
+                className="w-full gap-2 font-semibold text-base"
+                size="lg"
+                variant="gradient"
+              >
+                Proceed to Checkout <ArrowRight className="size-4" />
+              </Button>
+              <Button className="w-full" size="lg" variant="outline">
+                Continue Browsing
+              </Button>
+            </div>
           </Card>
         </div>
       </div>

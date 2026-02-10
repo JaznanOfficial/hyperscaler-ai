@@ -37,19 +37,18 @@ export function CartItemCard({ item }: CartItemCardProps) {
         <p className="text-slate-600 text-sm">{item.description}</p>
       </div>
 
-      <div className="flex items-center justify-end gap-4 self-stretch">
-        <div className="text-right">
+      <div className="flex w-full items-center justify-between gap-4 self-stretch md:justify-end">
+        <div className="text-left md:text-right">
           <p className="font-['Outfit'] font-semibold text-2xl text-slate-900">
             {formatCurrency(displayPrice)}
             <span className="ml-2 font-medium text-base text-slate-500">
               {item.cadence}
             </span>
           </p>
-          <p className="font-medium text-slate-500 text-xs">Billed monthly</p>
         </div>
         <Button
           aria-label="Remove service from cart"
-          className="h-10 w-10 rounded-full border border-slate-200 text-slate-400 transition hover:border-slate-300 hover:text-slate-900"
+          className="h-10 w-10 rounded-md border border-slate-200 text-slate-400 transition hover:border-slate-300 hover:text-red-500"
           size="icon"
           variant="outline"
         >
