@@ -28,21 +28,18 @@ const callQualityMetrics = [
     label: "Average call duration",
     change: "↑ 18% vs last period",
     detail: "4:32 minutes",
-    valueText: "Ideal: 3–5 mins",
     percent: 72,
   },
   {
     label: "Qualified Conversions",
     change: "↑ 8% vs last period",
     detail: "246 (76% of pick-ups)",
-    valueText: "Goal: 250",
     percent: 76,
   },
   {
     label: "Follow-Up Scheduled",
     change: "↑ 8% vs last period",
     detail: "153 (62% of qualified)",
-    valueText: "Goal: 65%",
     percent: 62,
   },
 ];
@@ -127,23 +124,22 @@ export function ColdCallingPerformanceCard() {
             <div className="space-y-4">
               {callQualityMetrics.map((metric) => (
                 <div className="space-y-2" key={metric.label}>
-                  <div className="flex flex-wrap items-center justify-between font-semibold text-slate-900 text-sm">
-                    <span>{metric.label}</span>
-                    <span className="font-medium text-slate-500">
+                  <p className="font-semibold text-slate-900 text-sm">
+                    {metric.label}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <Progress
+                      className="h-3 flex-1 rounded-full bg-slate-200"
+                      indicatorClassName="rounded-full bg-[#68A1F1]"
+                      value={metric.percent}
+                    />
+                    <span className="font-medium text-slate-500 text-xs">
                       {metric.detail}
                     </span>
                   </div>
-                  <Progress
-                    className="h-3 rounded-full bg-slate-200"
-                    indicatorClassName="rounded-full bg-sky-500"
-                    value={metric.percent}
-                  />
-                  <div className="flex flex-wrap items-center justify-between text-slate-500 text-xs">
+                  <div className="font-medium text-emerald-600 text-xs">
                     <span className="font-medium text-emerald-600">
                       {metric.change}
-                    </span>
-                    <span className="font-medium text-slate-600">
-                      {metric.valueText}
                     </span>
                   </div>
                 </div>
