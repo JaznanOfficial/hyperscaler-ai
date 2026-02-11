@@ -1,9 +1,9 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -67,8 +67,8 @@ export function CreateEmployeeDialog() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.name || !formData.email || !formData.password) {
+
+    if (!(formData.name && formData.email && formData.password)) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -77,7 +77,7 @@ export function CreateEmployeeDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
         <Button className="cursor-pointer">Create employee profile</Button>
       </DialogTrigger>
@@ -94,21 +94,25 @@ export function CreateEmployeeDialog() {
               <Label htmlFor="employee-name">Employee name</Label>
               <Input
                 id="employee-name"
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="e.g. Nia Alvarez"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
+                value={formData.name}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="employee-email">Employee email</Label>
               <Input
                 id="employee-email"
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 placeholder="name@company.com"
+                required
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
               />
             </div>
           </div>
@@ -119,11 +123,13 @@ export function CreateEmployeeDialog() {
                 <Input
                   className="pr-10"
                   id="employee-password"
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   placeholder="Password"
+                  required
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  required
                 />
                 <button
                   aria-label={showPassword ? "Hide password" : "Show password"}
@@ -145,8 +151,13 @@ export function CreateEmployeeDialog() {
             <div className="space-y-2">
               <Label>Employee role</Label>
               <Select
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    role: value as "EMPLOYEE" | "MANAGER",
+                  })
+                }
                 value={formData.role}
-                onValueChange={(value) => setFormData({ ...formData, role: value as "EMPLOYEE" | "MANAGER" })}
               >
                 <SelectTrigger className="cursor-pointer">
                   <SelectValue placeholder="Select a role" />
@@ -163,7 +174,11 @@ export function CreateEmployeeDialog() {
             </div>
           </div>
           <DialogFooter>
-            <Button className="cursor-pointer" type="submit" disabled={mutation.isPending}>
+            <Button
+              className="cursor-pointer"
+              disabled={mutation.isPending}
+              type="submit"
+            >
               {mutation.isPending ? "Creating..." : "Create profile"}
             </Button>
           </DialogFooter>

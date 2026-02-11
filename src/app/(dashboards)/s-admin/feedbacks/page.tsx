@@ -31,14 +31,12 @@ export default function SuperAdminFeedbacksPage() {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
+    } else if (currentPage <= 3) {
+      pages.push(1, 2, 3);
+    } else if (currentPage >= totalPages - 2) {
+      pages.push(totalPages - 2, totalPages - 1, totalPages);
     } else {
-      if (currentPage <= 3) {
-        pages.push(1, 2, 3);
-      } else if (currentPage >= totalPages - 2) {
-        pages.push(totalPages - 2, totalPages - 1, totalPages);
-      } else {
-        pages.push(currentPage - 1, currentPage, currentPage + 1);
-      }
+      pages.push(currentPage - 1, currentPage, currentPage + 1);
     }
     return pages;
   };
@@ -55,31 +53,38 @@ export default function SuperAdminFeedbacksPage() {
         <CreateFeedbackDialog />
       </div>
       <div className="mt-4 flex-1 overflow-y-auto">
-        <AdminFeedbackList page={currentPage} onPaginationChange={handlePaginationChange} />
+        <AdminFeedbackList
+          onPaginationChange={handlePaginationChange}
+          page={currentPage}
+        />
       </div>
       <Pagination className="mt-4 py-3">
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
+              aria-disabled={currentPage === 1}
+              className={
+                currentPage === 1
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer"
+              }
               href="#"
               onClick={(e) => {
                 e.preventDefault();
                 if (currentPage > 1) handlePageClick(currentPage - 1);
               }}
-              aria-disabled={currentPage === 1}
-              className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
             />
           </PaginationItem>
           {getPageNumbers().map((page) => (
             <PaginationItem key={page}>
               <PaginationLink
+                className="cursor-pointer"
                 href="#"
+                isActive={currentPage === page}
                 onClick={(e) => {
                   e.preventDefault();
                   handlePageClick(page);
                 }}
-                isActive={currentPage === page}
-                className="cursor-pointer"
               >
                 {page}
               </PaginationLink>
@@ -92,12 +97,12 @@ export default function SuperAdminFeedbacksPage() {
               </PaginationItem>
               <PaginationItem>
                 <PaginationLink
+                  className="cursor-pointer"
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
                     handlePageClick(totalPages);
                   }}
-                  className="cursor-pointer"
                 >
                   {totalPages}
                 </PaginationLink>
@@ -106,13 +111,17 @@ export default function SuperAdminFeedbacksPage() {
           )}
           <PaginationItem>
             <PaginationNext
+              aria-disabled={currentPage === totalPages}
+              className={
+                currentPage === totalPages
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer"
+              }
               href="#"
               onClick={(e) => {
                 e.preventDefault();
                 if (currentPage < totalPages) handlePageClick(currentPage + 1);
               }}
-              aria-disabled={currentPage === totalPages}
-              className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
             />
           </PaginationItem>
         </PaginationContent>

@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { userService } from "@/backend/services/user.service";
-import { AuthGuard } from "@/backend/utils/auth-guard";
-import { ApiResponse } from "@/backend/utils/api-response";
 import { createEmployeeSchema } from "@/backend/schemas/user.schema";
+import { userService } from "@/backend/services/user.service";
+import { ApiResponse } from "@/backend/utils/api-response";
+import { AuthGuard } from "@/backend/utils/auth-guard";
 
 export async function POST(request: Request) {
   try {
@@ -39,8 +39,8 @@ export async function GET(request: Request) {
     await AuthGuard.requireAdmin();
 
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
+    const page = Number.parseInt(searchParams.get("page") || "1");
+    const limit = Number.parseInt(searchParams.get("limit") || "10");
 
     const result = await userService.getEmployees(page, limit);
 

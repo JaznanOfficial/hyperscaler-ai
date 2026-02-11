@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { userService } from "@/backend/services/user.service";
-import { AuthGuard } from "@/backend/utils/auth-guard";
-import { ApiResponse } from "@/backend/utils/api-response";
 import { updateEmployeeSchema } from "@/backend/schemas/user.schema";
+import { userService } from "@/backend/services/user.service";
+import { ApiResponse } from "@/backend/utils/api-response";
+import { AuthGuard } from "@/backend/utils/auth-guard";
 
 export async function DELETE(
   request: Request,

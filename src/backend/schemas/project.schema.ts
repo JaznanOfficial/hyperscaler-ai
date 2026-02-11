@@ -32,4 +32,6 @@ export const updateProjectServicesSchema = z.object({
 
 export type ProjectInput = z.infer<typeof projectSchema>;
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
-export type UpdateProjectServicesInput = z.infer<typeof updateProjectServicesSchema>;
+export type UpdateProjectServicesInput = z.infer<
+  typeof updateProjectServicesSchema
+>;

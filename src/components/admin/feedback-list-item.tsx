@@ -1,7 +1,6 @@
 "use client";
 
 import type { AdminFeedbackItem } from "@/components/admin/feedback-list";
-import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -11,15 +10,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 
 export function AdminFeedbackListItem({ item }: { item: AdminFeedbackItem }) {
   const timeAgo = (date: string) => {
     const now = new Date();
     const past = new Date(date);
     const diffMs = now.getTime() - past.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
+    const diffMins = Math.floor(diffMs / 60_000);
+    const diffHours = Math.floor(diffMs / 3_600_000);
+    const diffDays = Math.floor(diffMs / 86_400_000);
 
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
@@ -45,7 +45,9 @@ export function AdminFeedbackListItem({ item }: { item: AdminFeedbackItem }) {
                   <Badge className="bg-amber-100 text-amber-700">Unread</Badge>
                 )}
               </div>
-              <p className="text-slate-500 text-sm line-clamp-2">{item.details}</p>
+              <p className="line-clamp-2 text-slate-500 text-sm">
+                {item.details}
+              </p>
               <p className="text-slate-400 text-xs uppercase tracking-wide">
                 Employee ID: {item.employeeId} • {timeAgo(item.createdAt)}
               </p>
@@ -63,19 +65,27 @@ export function AdminFeedbackListItem({ item }: { item: AdminFeedbackItem }) {
             <div className="rounded-lg bg-slate-50 px-3 py-2 text-slate-500 text-xs">
               <div className="flex flex-col gap-1">
                 <div>
-                  <span className="font-semibold text-slate-600">Employee ID:&nbsp;</span>
+                  <span className="font-semibold text-slate-600">
+                    Employee ID:&nbsp;
+                  </span>
                   {item.employeeId}
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-600">Project ID:&nbsp;</span>
+                  <span className="font-semibold text-slate-600">
+                    Project ID:&nbsp;
+                  </span>
                   {item.projectId}
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-600">Status:&nbsp;</span>
+                  <span className="font-semibold text-slate-600">
+                    Status:&nbsp;
+                  </span>
                   {item.read ? "Read" : "Unread"}
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-600">Created:&nbsp;</span>
+                  <span className="font-semibold text-slate-600">
+                    Created:&nbsp;
+                  </span>
                   {new Date(item.createdAt).toLocaleString()}
                 </div>
               </div>

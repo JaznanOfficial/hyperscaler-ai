@@ -1,14 +1,14 @@
 import { feedbackService } from "@/backend/services/feedback.service";
-import { AuthGuard } from "@/backend/utils/auth-guard";
 import { ApiResponse } from "@/backend/utils/api-response";
+import { AuthGuard } from "@/backend/utils/auth-guard";
 
 export async function GET(request: Request) {
   try {
     const session = await AuthGuard.requireEmployee();
 
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
+    const page = Number.parseInt(searchParams.get("page") || "1");
+    const limit = Number.parseInt(searchParams.get("limit") || "10");
 
     const result = await feedbackService.getEmployeeFeedbacks(
       session.user.id,

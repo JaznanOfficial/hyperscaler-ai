@@ -1,8 +1,8 @@
 "use client";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -23,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 async function fetchEmployees() {
   const response = await fetch("/api/admin/employees");
@@ -67,7 +67,12 @@ export function CreateFeedbackDialog() {
     mutationFn: createFeedback,
     onSuccess: () => {
       toast.success("Feedback created successfully");
-      setFormData({ heading: "", details: "", employeeId: "", projectId: "default-project" });
+      setFormData({
+        heading: "",
+        details: "",
+        employeeId: "",
+        projectId: "default-project",
+      });
       setOpen(false);
       queryClient.invalidateQueries({ queryKey: ["admin-feedbacks"] });
     },
@@ -78,8 +83,8 @@ export function CreateFeedbackDialog() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
-    if (!formData.heading || !formData.details || !formData.employeeId) {
+
+    if (!(formData.heading && formData.details && formData.employeeId)) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -106,35 +111,45 @@ export function CreateFeedbackDialog() {
             <Label htmlFor="feedback-heading">Heading</Label>
             <Input
               id="feedback-heading"
-              onChange={(event) => setFormData({ ...formData, heading: event.target.value })}
+              onChange={(event) =>
+                setFormData({ ...formData, heading: event.target.value })
+              }
               placeholder="e.g. Great work on the project"
-              value={formData.heading}
               required
+              value={formData.heading}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="feedback-details">Details</Label>
             <Textarea
               id="feedback-details"
-              onChange={(event) => setFormData({ ...formData, details: event.target.value })}
+              onChange={(event) =>
+                setFormData({ ...formData, details: event.target.value })
+              }
               placeholder="Add detailed feedback..."
+              required
               rows={4}
               value={formData.details}
-              required
             />
           </div>
           <div className="space-y-2">
             <Label>Select Employee</Label>
             <Select
+              onValueChange={(value) =>
+                setFormData({ ...formData, employeeId: value })
+              }
               value={formData.employeeId}
-              onValueChange={(value) => setFormData({ ...formData, employeeId: value })}
             >
               <SelectTrigger className="cursor-pointer">
                 <SelectValue placeholder="Choose an employee" />
               </SelectTrigger>
               <SelectContent>
                 {employees.map((emp: any) => (
-                  <SelectItem key={emp.id} value={emp.id} className="cursor-pointer">
+                  <SelectItem
+                    className="cursor-pointer"
+                    key={emp.id}
+                    value={emp.id}
+                  >
                     {emp.name} ({emp.email})
                   </SelectItem>
                 ))}

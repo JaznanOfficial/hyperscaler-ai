@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
+import type { z } from "zod";
 
 export class ApiResponse {
   static success(data: any, status = 200) {

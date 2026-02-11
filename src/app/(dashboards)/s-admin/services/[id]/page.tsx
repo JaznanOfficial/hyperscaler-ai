@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { ServiceDetailsForm } from "@/components/admin/service-details-form";
+import { useEffect, useState } from "react";
 import type { ServiceSection } from "@/components/admin/service-details-form";
+import { ServiceDetailsForm } from "@/components/admin/service-details-form";
 
 export default function SuperAdminServiceDetailsPage() {
   const params = useParams();

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
-import { z } from "zod";
 
 const createProjectSchema = z.object({
   clientId: z.string(),

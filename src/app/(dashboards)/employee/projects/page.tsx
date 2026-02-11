@@ -28,15 +28,22 @@ export default function EmployeeProjectsPage() {
           throw new Error("Failed to fetch projects");
         }
         const data = await response.json();
-        
-        const formattedProjects: EmployeeProjectItem[] = data.projects.map((project: any) => ({
-          id: project.id,
-          name: `Project ${project.id.slice(0, 8)}`,
-          owner: project.clientId.slice(0, 8),
-          updated: new Date(project.updatedAt).toLocaleDateString(),
-          status: project.status === "APPROVED" ? "On-going" : project.status === "CANCELLED" ? "Cancelled" : "On-going",
-        }));
-        
+
+        const formattedProjects: EmployeeProjectItem[] = data.projects.map(
+          (project: any) => ({
+            id: project.id,
+            name: `Project ${project.id.slice(0, 8)}`,
+            owner: project.clientId.slice(0, 8),
+            updated: new Date(project.updatedAt).toLocaleDateString(),
+            status:
+              project.status === "APPROVED"
+                ? "On-going"
+                : project.status === "CANCELLED"
+                  ? "Cancelled"
+                  : "On-going",
+          })
+        );
+
         setProjects(formattedProjects);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
@@ -51,7 +58,7 @@ export default function EmployeeProjectsPage() {
   if (loading) {
     return (
       <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-1 items-center justify-center">
           <p className="text-slate-500">Loading projects...</p>
         </div>
       </section>
@@ -61,7 +68,7 @@ export default function EmployeeProjectsPage() {
   if (error) {
     return (
       <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-1 items-center justify-center">
           <p className="text-red-500">Error: {error}</p>
         </div>
       </section>
@@ -71,7 +78,7 @@ export default function EmployeeProjectsPage() {
   if (projects.length === 0) {
     return (
       <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-1 items-center justify-center">
           <p className="text-slate-500">No projects assigned yet</p>
         </div>
       </section>

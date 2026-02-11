@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -77,7 +77,7 @@ export function ServiceDetailsForm({
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     if (!serviceName.trim()) {
       toast.error("Please enter a service name");
       return;
@@ -127,8 +127,8 @@ export function ServiceDetailsForm({
           id="service-name"
           onChange={(event) => setServiceName(event.target.value)}
           placeholder="e.g. LinkedIn Outreach"
-          value={serviceName}
           required
+          value={serviceName}
         />
       </div>
 
@@ -175,8 +175,8 @@ export function ServiceDetailsForm({
                       })
                     }
                     placeholder="e.g. Target audience"
-                    value={section.name}
                     required
+                    value={section.name}
                   />
                 </div>
                 <div className="space-y-2">
@@ -214,14 +214,14 @@ export function ServiceDetailsForm({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button className="cursor-pointer" type="submit" disabled={saving}>
+        <Button className="cursor-pointer" disabled={saving} type="submit">
           {saving ? "Saving..." : "Save changes"}
         </Button>
         <Button
           className="cursor-pointer"
+          onClick={() => router.back()}
           type="button"
           variant="outline"
-          onClick={() => router.back()}
         >
           Cancel
         </Button>

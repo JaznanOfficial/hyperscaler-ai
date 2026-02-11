@@ -26,6 +26,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
+import { InsightsDrawer } from "./insights-drawer";
 
 const brandingMetrics = [
   { label: "Assets Produced", value: "42" },
@@ -79,26 +80,34 @@ const brandingInsights = [
 export function BrandingContentPerformanceCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
-      <CardHeader className="space-y-4">
+      <CardHeader className="space-y-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <CardTitle>Branding & Content Creation</CardTitle>
-            <CardDescription>
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <CardTitle className="font-semibold text-lg text-slate-900">
+                Branding & Content Creation
+              </CardTitle>
+              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700 text-xs">
+                <span
+                  aria-hidden
+                  className="size-2 rounded-full bg-emerald-500"
+                />
+                On Track
+              </span>
+            </div>
+            <CardDescription className="text-slate-500 text-sm">
               Voice-based outreach performance snapshot.
             </CardDescription>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/80 px-3 py-1 font-semibold text-emerald-700 text-xs">
-            <span aria-hidden className="size-2 rounded-full bg-emerald-500" />
-            On Track
-          </div>
+          <InsightsDrawer defaultService="branding" />
         </div>
-        <div className="flex flex-wrap gap-6 text-center font-semibold text-base text-slate-900">
+        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-4">
           {brandingMetrics.map((metric) => (
-            <div className="min-w-24" key={metric.label}>
-              <p>{metric.value}</p>
-              <p className="font-normal text-slate-500 text-xs">
+            <div className="space-y-1 text-left" key={metric.label}>
+              <p className="font-medium text-gray-600 text-xs">
                 {metric.label}
               </p>
+              <p className="font-semibold text-lg leading-5">{metric.value}</p>
             </div>
           ))}
         </div>

@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { serviceService } from "@/backend/services/service.service";
-import { AuthGuard } from "@/backend/utils/auth-guard";
-import { ApiResponse } from "@/backend/utils/api-response";
 import { updateServiceSchema } from "@/backend/schemas/service.schema";
+import { serviceService } from "@/backend/services/service.service";
+import { ApiResponse } from "@/backend/utils/api-response";
+import { AuthGuard } from "@/backend/utils/auth-guard";
 
 export async function GET(
   request: Request,
