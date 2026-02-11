@@ -34,7 +34,7 @@ export default function ServicesPage() {
           <ServicesGrid services={marketingServices} />
         </TabsContent>
         <TabsContent className="mt-10" value="software">
-          <ServicesGrid services={softwareServices} />
+          <ServicesGrid ctaType="talk" services={softwareServices} />
         </TabsContent>
       </Tabs>
     </div>
