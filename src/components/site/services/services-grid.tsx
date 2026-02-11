@@ -1,5 +1,6 @@
-import { CheckCircle2, PhoneCall, ShoppingCart } from "lucide-react";
+import { CheckCircle2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { SiteService } from "@/data/site-services";
@@ -58,19 +59,14 @@ export function ServicesGrid({
               </span>
             </p>
             <div className="flex w-full flex-col gap-3">
-              <Button className="flex-1" variant="gradient">
-                {ctaType === "talk" ? (
-                  <>
-                    <PhoneCall className="size-4" />
-                    Talk to Us
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="size-4" />
-                    Add to Cart
-                  </>
-                )}
-              </Button>
+              {ctaType === "talk" ? (
+                <TalkToSalesDrawer buttonClassName="flex-1" />
+              ) : (
+                <Button className="flex-1" variant="gradient">
+                  <ShoppingCart className="size-4" />
+                  Add to Cart
+                </Button>
+              )}
               <Button asChild className="flex-1" variant="outline">
                 <Link href={`/services/${service.id}`}>View Details</Link>
               </Button>
