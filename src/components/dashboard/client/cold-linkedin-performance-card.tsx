@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 import {
   Card,
@@ -20,12 +10,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
+import { ColdLinkedinConversionChart } from "./cold-linkedin-conversion-chart";
 import { InsightsDrawer } from "./insights-drawer";
 
 const linkedinMetrics = [
@@ -34,19 +24,6 @@ const linkedinMetrics = [
   { label: "Positive Reply Rates", value: "6%" },
   { label: "Meetings Booked", value: "7" },
 ];
-
-const conversionTrend = [
-  { day: "Day 5", value: 4 },
-  { day: "Day 10", value: 9 },
-  { day: "Day 15", value: 13 },
-  { day: "Day 20", value: 16 },
-  { day: "Day 25", value: 19 },
-  { day: "Day 30", value: 27 },
-];
-
-const conversionConfig = {
-  value: { label: "Conversion Rate", color: "hsl(var(--chart-1))" },
-} satisfies ChartConfig;
 
 const clickRateData = [
   { name: "Accepted Requests", value: 46, color: "hsl(var(--chart-2))" },
@@ -122,61 +99,7 @@ export function ColdLinkedinPerformanceCard() {
                 Last 30 days connection to lead conversion trend.
               </p>
             </div>
-            <ChartContainer className="h-64" config={conversionConfig}>
-              <ResponsiveContainer height="100%" width="100%">
-                <AreaChart
-                  data={conversionTrend}
-                  margin={{ left: 0, right: 16, top: 16, bottom: 8 }}
-                >
-                  <defs>
-                    <linearGradient
-                      id="linkedinConversion"
-                      x1="0"
-                      x2="0"
-                      y1="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor="hsl(var(--chart-1))"
-                        stopOpacity={0.4}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="hsl(var(--chart-1))"
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    stroke="rgba(148, 163, 184, 0.25)"
-                    strokeDasharray="3 3"
-                  />
-                  <XAxis
-                    axisLine={false}
-                    dataKey="day"
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <ChartTooltip
-                    content={<ChartTooltipContent />}
-                    cursor={{ stroke: "#cbd5f5", strokeWidth: 1 }}
-                  />
-                  <Area
-                    dataKey="value"
-                    fill="url(#linkedinConversion)"
-                    stroke="var(--color-value)"
-                    strokeWidth={3}
-                    type="monotone"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <ColdLinkedinConversionChart />
             <p className="font-semibold text-emerald-600 text-sm">
               ↑ 12% vs last month
             </p>
@@ -190,19 +113,14 @@ export function ColdLinkedinPerformanceCard() {
                 How effectively outreach drives responses.
               </p>
             </div>
-            <ChartContainer
-              className="mx-auto h-64 max-w-xs"
-              config={{
-                acceptance: { label: "Accepted", color: "hsl(var(--chart-2))" },
-              }}
-            >
+            <ChartContainer className="mx-auto h-72 max-w-sm" config={{}}>
               <ResponsiveContainer height="100%" width="100%">
                 <PieChart>
                   <Pie
                     data={clickRateData}
                     dataKey="value"
-                    innerRadius={70}
-                    outerRadius={90}
+                    innerRadius={90}
+                    outerRadius={120}
                     paddingAngle={2}
                     strokeWidth={0}
                   >

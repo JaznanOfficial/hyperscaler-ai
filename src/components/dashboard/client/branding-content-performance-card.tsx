@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 import {
   Card,
@@ -20,12 +10,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
+import { BrandingContentEngagementChart } from "./branding-content-engagement-chart";
 import { InsightsDrawer } from "./insights-drawer";
 
 const brandingMetrics = [
@@ -34,20 +24,6 @@ const brandingMetrics = [
   { label: "Content Engagement", value: "6.9%" },
   { label: "Brand Search Volume", value: "+18%" },
 ];
-
-const engagementData = [
-  { day: "Mon", value: 42 },
-  { day: "Tue", value: 23 },
-  { day: "Wed", value: 24 },
-  { day: "Thu", value: 30 },
-  { day: "Fri", value: 38 },
-  { day: "Sat", value: 26 },
-  { day: "Sun", value: 25 },
-];
-
-const engagementConfig = {
-  value: { label: "Engagement", color: "hsl(var(--chart-4))" },
-} satisfies ChartConfig;
 
 const clickRateData = [
   { name: "Clicked", value: 46, color: "hsl(var(--chart-2))" },
@@ -123,40 +99,7 @@ export function BrandingContentPerformanceCard() {
                 Weekly performance comparison.
               </p>
             </div>
-            <ChartContainer className="h-64" config={engagementConfig}>
-              <ResponsiveContainer height="100%" width="100%">
-                <BarChart
-                  data={engagementData}
-                  margin={{ left: 0, right: 16, top: 16, bottom: 8 }}
-                >
-                  <CartesianGrid
-                    stroke="rgba(148, 163, 184, 0.35)"
-                    strokeDasharray="3 3"
-                  />
-                  <XAxis
-                    axisLine={false}
-                    dataKey="day"
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickFormatter={(value) => `${value}%`}
-                    tickLine={false}
-                  />
-                  <ChartTooltip
-                    content={<ChartTooltipContent />}
-                    cursor={{ fill: "rgba(148, 163, 184, 0.12)" }}
-                  />
-                  <Bar
-                    dataKey="value"
-                    fill="var(--color-value)"
-                    radius={[8, 8, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <BrandingContentEngagementChart />
           </div>
           <div className="space-y-4 rounded-2xl border border-slate-100 p-4">
             <div>
@@ -167,19 +110,14 @@ export function BrandingContentPerformanceCard() {
                 How effectively content drives user clicks.
               </p>
             </div>
-            <ChartContainer
-              className="mx-auto h-64 max-w-xs"
-              config={{
-                click: { label: "Clicked", color: "hsl(var(--chart-2))" },
-              }}
-            >
+            <ChartContainer className="mx-auto h-72 max-w-sm" config={{}}>
               <ResponsiveContainer height="100%" width="100%">
                 <PieChart>
                   <Pie
                     data={clickRateData}
                     dataKey="value"
-                    innerRadius={70}
-                    outerRadius={90}
+                    innerRadius={90}
+                    outerRadius={120}
                     paddingAngle={2}
                     strokeWidth={0}
                   >

@@ -1,56 +1,19 @@
 "use client";
 
 import {
-  Area,
-  AreaChart,
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
-
-import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
 import { InsightsDrawer } from "./insights-drawer";
-
-const engagementData = [
-  { day: "Mon", engagement: 420, impressions: 500, reach: 460 },
-  { day: "Tue", engagement: 310, impressions: 380, reach: 340 },
-  { day: "Wed", engagement: 365, impressions: 420, reach: 370 },
-  { day: "Thu", engagement: 450, impressions: 520, reach: 480 },
-  { day: "Fri", engagement: 470, impressions: 540, reach: 500 },
-  { day: "Sat", engagement: 510, impressions: 600, reach: 560 },
-  { day: "Sun", engagement: 330, impressions: 360, reach: 320 },
-];
-
-const engagementConfig = {
-  engagement: { label: "Engagement", color: "hsl(var(--chart-1))" },
-  impressions: { label: "Impressions", color: "hsl(var(--chart-2))" },
-  reach: { label: "Reach", color: "hsl(var(--chart-4))" },
-} satisfies ChartConfig;
-
-const followerGrowth = [
-  { day: "Day 5", value: 3 },
-  { day: "Day 10", value: 8 },
-  { day: "Day 15", value: 13 },
-  { day: "Day 20", value: 17 },
-  { day: "Day 25", value: 22 },
-  { day: "Day 30", value: 30 },
-];
+import {
+  SocialMediaEngagementChart,
+  socialEngagementLegend,
+} from "./social-media-engagement-chart";
+import { SocialMediaFollowerGrowthChart } from "./social-media-follower-growth-chart";
 
 const socialMetrics = [
   { label: "Impressions", value: "1.2M" },
@@ -130,60 +93,18 @@ export function SocialMediaPerformanceCard() {
                 Weekly totals across all platforms.
               </p>
             </div>
-            <ChartContainer className="h-64" config={engagementConfig}>
-              <ResponsiveContainer height="100%" width="100%">
-                <BarChart
-                  data={engagementData}
-                  margin={{ left: 0, right: 16, top: 16, bottom: 8 }}
-                >
-                  <CartesianGrid
-                    stroke="rgba(148, 163, 184, 0.35)"
-                    strokeDasharray="3 3"
-                  />
-                  <XAxis
-                    axisLine={false}
-                    dataKey="day"
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <ChartTooltip
-                    content={<ChartTooltipContent />}
-                    cursor={{ fill: "rgba(148, 163, 184, 0.12)" }}
-                  />
-                  <Bar
-                    dataKey="engagement"
-                    fill="var(--color-engagement)"
-                    radius={[6, 6, 0, 0]}
-                  />
-                  <Bar
-                    dataKey="impressions"
-                    fill="var(--color-impressions)"
-                    radius={[6, 6, 0, 0]}
-                  />
-                  <Bar
-                    dataKey="reach"
-                    fill="var(--color-reach)"
-                    radius={[6, 6, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <SocialMediaEngagementChart />
             <div className="flex flex-wrap gap-4 text-sm">
-              {Object.entries(engagementConfig).map(([key, config]) => (
+              {socialEngagementLegend.map((entry) => (
                 <div
                   className="inline-flex items-center gap-2 text-slate-600"
-                  key={key}
+                  key={entry.label}
                 >
                   <span
                     className="size-2.5 rounded-full"
-                    style={{ backgroundColor: config.color }}
+                    style={{ backgroundColor: entry.color }}
                   />
-                  <span>{config.label}</span>
+                  <span>{entry.label}</span>
                 </div>
               ))}
             </div>
@@ -197,66 +118,7 @@ export function SocialMediaPerformanceCard() {
                 Last 30 days growth trend.
               </p>
             </div>
-            <ChartContainer
-              className="h-64"
-              config={{
-                growth: { label: "Growth", color: "hsl(var(--chart-3))" },
-              }}
-            >
-              <ResponsiveContainer height="100%" width="100%">
-                <AreaChart
-                  data={followerGrowth}
-                  margin={{ left: 0, right: 16, top: 16, bottom: 8 }}
-                >
-                  <defs>
-                    <linearGradient
-                      id="growthGradient"
-                      x1="0"
-                      x2="0"
-                      y1="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor="hsl(var(--chart-3))"
-                        stopOpacity={0.4}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="hsl(var(--chart-3))"
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    stroke="rgba(148, 163, 184, 0.25)"
-                    strokeDasharray="3 3"
-                  />
-                  <XAxis
-                    axisLine={false}
-                    dataKey="day"
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <ChartTooltip
-                    content={<ChartTooltipContent />}
-                    cursor={{ stroke: "#cbd5f5", strokeWidth: 1 }}
-                  />
-                  <Area
-                    dataKey="value"
-                    fill="url(#growthGradient)"
-                    stroke="var(--color-growth)"
-                    strokeWidth={3}
-                    type="monotone"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <SocialMediaFollowerGrowthChart />
             <p className="font-semibold text-emerald-600 text-sm">
               ↑ 12% vs last month
             </p>

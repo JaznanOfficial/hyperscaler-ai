@@ -1,28 +1,18 @@
 "use client";
 
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
-
-import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import {
+  ColdCallingCallMeetingChart,
+  callMeetingLegend,
+} from "./cold-calling-call-meeting-chart";
 import { InsightsDrawer } from "./insights-drawer";
 
 const coldMetrics = [
@@ -55,24 +45,6 @@ const callQualityMetrics = [
     percent: 62,
   },
 ];
-
-const callMeetingData = [
-  { week: "Week 1", meetings: 90, noConversion: 120 },
-  { week: "Week 2", meetings: 60, noConversion: 100 },
-  { week: "Week 3", meetings: 110, noConversion: 120 },
-  { week: "Week 4", meetings: 95, noConversion: 105 },
-];
-
-const callMeetingConfig = {
-  meetings: {
-    label: "Calls that resulted in meetings",
-    color: "hsl(var(--chart-4))",
-  },
-  noConversion: {
-    label: "Calls that didn't convert",
-    color: "hsl(var(--chart-5))",
-  },
-} satisfies ChartConfig;
 
 const callInsights = [
   {
@@ -145,21 +117,25 @@ export function ColdCallingPerformanceCard() {
             </div>
             <div className="space-y-4">
               {callQualityMetrics.map((metric) => (
-                <div className="space-y-1" key={metric.label}>
-                  <div className="flex flex-wrap items-center justify-between font-medium text-slate-600 text-sm">
+                <div className="space-y-2" key={metric.label}>
+                  <div className="flex flex-wrap items-center justify-between font-semibold text-slate-900 text-sm">
                     <span>{metric.label}</span>
-                    <span className="text-slate-500">{metric.detail}</span>
+                    <span className="font-medium text-slate-500">
+                      {metric.detail}
+                    </span>
                   </div>
-                  <div className="h-3 rounded-full bg-slate-100">
-                    <div
-                      aria-hidden
-                      className="h-full rounded-full bg-linear-to-r from-violet-700 to-fuchsia-500"
-                      style={{ width: `${metric.percent}%` }}
-                    />
-                  </div>
+                  <Progress
+                    className="h-3 rounded-full bg-slate-200"
+                    indicatorClassName="rounded-full bg-sky-500"
+                    value={metric.percent}
+                  />
                   <div className="flex flex-wrap items-center justify-between text-slate-500 text-xs">
-                    <span>{metric.change}</span>
-                    <span>{metric.valueText}</span>
+                    <span className="font-medium text-emerald-600">
+                      {metric.change}
+                    </span>
+                    <span className="font-medium text-slate-600">
+                      {metric.valueText}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -174,57 +150,18 @@ export function ColdCallingPerformanceCard() {
                 Weekly performance comparison.
               </p>
             </div>
-            <ChartContainer className="h-64" config={callMeetingConfig}>
-              <ResponsiveContainer height="100%" width="100%">
-                <BarChart
-                  data={callMeetingData}
-                  margin={{ left: 0, right: 16, top: 16, bottom: 8 }}
-                >
-                  <CartesianGrid
-                    stroke="rgba(148, 163, 184, 0.35)"
-                    strokeDasharray="3 3"
-                  />
-                  <XAxis
-                    axisLine={false}
-                    dataKey="week"
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <ChartTooltip
-                    content={<ChartTooltipContent />}
-                    cursor={{ fill: "rgba(148, 163, 184, 0.12)" }}
-                  />
-                  <Bar
-                    dataKey="meetings"
-                    fill="var(--color-meetings)"
-                    radius={[6, 6, 0, 0]}
-                    stackId="a"
-                  />
-                  <Bar
-                    dataKey="noConversion"
-                    fill="var(--color-noConversion)"
-                    radius={[6, 6, 0, 0]}
-                    stackId="a"
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <ColdCallingCallMeetingChart />
             <div className="flex flex-wrap gap-4 text-sm">
-              {Object.entries(callMeetingConfig).map(([key, config]) => (
+              {callMeetingLegend.map((legend) => (
                 <div
                   className="inline-flex items-center gap-2 text-slate-600"
-                  key={key}
+                  key={legend.label}
                 >
                   <span
                     className="size-2.5 rounded-full"
-                    style={{ backgroundColor: config.color }}
+                    style={{ backgroundColor: legend.color }}
                   />
-                  <span>{config.label}</span>
+                  <span>{legend.label}</span>
                 </div>
               ))}
             </div>
