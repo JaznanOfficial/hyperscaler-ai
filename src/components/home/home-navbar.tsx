@@ -66,16 +66,27 @@ export function HomeNavbar() {
               <ShoppingCart className="h-5 w-5" strokeWidth={1.8} />
             </Link>
             <Link href="/login">
-              <Button className="hidden lg:inline-flex" size="sm">
+              <Button
+                className="hidden lg:inline-flex"
+                size="sm"
+                variant="gradient"
+              >
                 Login <ArrowRight className="size-4" />
               </Button>
             </Link>
             <Button
+              asChild
               className="hidden lg:inline-flex"
               size="sm"
               variant="outline"
             >
-              Contact us
+              <Link
+                href="https://calendly.com/ujjwalroy1/ai-implementation"
+                rel="noreferrer noopener"
+                target="_blank"
+              >
+                Contact us
+              </Link>
             </Button>
 
             <button
@@ -145,12 +156,14 @@ export function HomeNavbar() {
                 <Button onClick={() => setMobileMenuOpen(false)} size="sm">
                   Login <ArrowRight className="size-4" />
                 </Button>
-                <Button
-                  onClick={() => setMobileMenuOpen(false)}
-                  size="sm"
-                  variant="outline"
-                >
-                  Contact us
+                <Button asChild size="sm" variant="outline">
+                  <Link
+                    href="https://calendly.com/ujjwalroy1/ai-implementation"
+                    rel="noreferrer noopener"
+                    target="_blank"
+                  >
+                    Contact us
+                  </Link>
                 </Button>
               </div>
             </nav>
