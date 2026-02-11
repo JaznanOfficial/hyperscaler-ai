@@ -5,20 +5,16 @@ import dynamic from "next/dynamic";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const engagementCategories = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const categories = ["Week 1", "Week 2", "Week 3", "Week 4"];
 
-const engagementSeries = [
+const series = [
   {
-    name: "Engagement",
-    data: [420, 310, 365, 450, 470, 510, 330],
+    name: "Delivered",
+    data: [16, 10, 13, 12],
   },
   {
-    name: "Impressions",
-    data: [500, 380, 420, 520, 540, 600, 360],
-  },
-  {
-    name: "Reach",
-    data: [460, 340, 370, 480, 500, 560, 320],
+    name: "Planned",
+    data: [18, 12, 15, 8],
   },
 ];
 
@@ -33,10 +29,8 @@ const chartOptions: ApexOptions = {
       columnWidth: "45%",
     },
   },
-  colors: ["#125899", "#1E92FF", "#A5D3FF"],
-  dataLabels: {
-    enabled: false,
-  },
+  colors: ["#1E92FF", "#A5D3FF"],
+  dataLabels: { enabled: false },
   stroke: {
     show: true,
     colors: ["transparent"],
@@ -45,16 +39,13 @@ const chartOptions: ApexOptions = {
     borderColor: "#e2e8f0",
     strokeDashArray: 4,
   },
-  legend: {
-    show: false,
-  },
   xaxis: {
-    categories: engagementCategories,
+    categories,
     axisBorder: { show: false },
     axisTicks: { show: false },
     labels: {
       style: {
-        colors: new Array(engagementCategories.length).fill("#94a3b8"),
+        colors: new Array(categories.length).fill("#94a3b8"),
         fontSize: "12px",
       },
     },
@@ -69,28 +60,27 @@ const chartOptions: ApexOptions = {
       },
     },
     title: {
-      text: "Volume",
+      text: "Features",
       style: { color: "#475569", fontWeight: 500 },
     },
+  },
+  legend: {
+    show: true,
+    fontSize: "12px",
+    labels: { colors: "#475569" },
   },
   tooltip: {
     theme: "light",
   },
 };
 
-export const socialEngagementLegend = [
-  { label: "Engagement", color: "#125899" },
-  { label: "Impressions", color: "#1E92FF" },
-  { label: "Reach", color: "#A5D3FF" },
-] as const;
-
-export function SocialMediaEngagementChart() {
+export function SoftwareFeaturesDeliveredChart() {
   return (
     <div className="h-64 w-full">
       <ApexChart
         height={256}
         options={chartOptions}
-        series={engagementSeries}
+        series={series}
         type="bar"
         width="100%"
       />

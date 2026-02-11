@@ -5,56 +5,48 @@ import dynamic from "next/dynamic";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const engagementCategories = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const categories = ["Week 1", "Week 2", "Week 3", "Week 4"];
 
-const engagementSeries = [
+const series = [
   {
-    name: "Engagement",
-    data: [420, 310, 365, 450, 470, 510, 330],
+    name: "Opened",
+    data: [12, 16, 10, 11],
   },
   {
-    name: "Impressions",
-    data: [500, 380, 420, 520, 540, 600, 360],
-  },
-  {
-    name: "Reach",
-    data: [460, 340, 370, 480, 500, 560, 320],
+    name: "Closed",
+    data: [9, 11, 12, 13],
   },
 ];
 
 const chartOptions: ApexOptions = {
   chart: {
-    type: "bar",
+    type: "line",
     toolbar: { show: false },
+    zoom: { enabled: false },
     fontFamily: "var(--font-outfit, 'Inter', sans-serif)",
   },
-  plotOptions: {
-    bar: {
-      columnWidth: "45%",
-    },
-  },
-  colors: ["#125899", "#1E92FF", "#A5D3FF"],
-  dataLabels: {
-    enabled: false,
-  },
   stroke: {
-    show: true,
-    colors: ["transparent"],
+    curve: "smooth",
+    width: 3,
+  },
+  colors: ["#ef4444", "#22c55e"],
+  dataLabels: { enabled: false },
+  markers: {
+    size: 4,
+    strokeWidth: 2,
+    strokeColors: "#ffffff",
   },
   grid: {
     borderColor: "#e2e8f0",
     strokeDashArray: 4,
   },
-  legend: {
-    show: false,
-  },
   xaxis: {
-    categories: engagementCategories,
+    categories,
     axisBorder: { show: false },
     axisTicks: { show: false },
     labels: {
       style: {
-        colors: new Array(engagementCategories.length).fill("#94a3b8"),
+        colors: new Array(categories.length).fill("#94a3b8"),
         fontSize: "12px",
       },
     },
@@ -69,29 +61,28 @@ const chartOptions: ApexOptions = {
       },
     },
     title: {
-      text: "Volume",
+      text: "Bugs",
       style: { color: "#475569", fontWeight: 500 },
     },
+  },
+  legend: {
+    show: true,
+    fontSize: "12px",
+    labels: { colors: "#475569" },
   },
   tooltip: {
     theme: "light",
   },
 };
 
-export const socialEngagementLegend = [
-  { label: "Engagement", color: "#125899" },
-  { label: "Impressions", color: "#1E92FF" },
-  { label: "Reach", color: "#A5D3FF" },
-] as const;
-
-export function SocialMediaEngagementChart() {
+export function SoftwareBugTrendChart() {
   return (
     <div className="h-64 w-full">
       <ApexChart
         height={256}
         options={chartOptions}
-        series={engagementSeries}
-        type="bar"
+        series={series}
+        type="line"
         width="100%"
       />
     </div>

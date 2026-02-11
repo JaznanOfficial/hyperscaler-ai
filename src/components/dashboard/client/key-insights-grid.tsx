@@ -14,7 +14,7 @@ type KeyInsight = {
 };
 
 type KeyInsightsGridProps = {
-  insights: KeyInsight[];
+  insights: ReadonlyArray<KeyInsight>;
 };
 
 export function KeyInsightsGrid({ insights }: KeyInsightsGridProps) {

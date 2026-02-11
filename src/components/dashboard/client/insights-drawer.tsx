@@ -95,6 +95,10 @@ export function InsightsDrawer({
     setSelectedService(defaultService);
   };
 
+  const handleServiceChange = (value: string) => {
+    setSelectedService(value as ServiceValue);
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -114,7 +118,7 @@ export function InsightsDrawer({
             <SheetDescription asChild>
               <div className="flex flex-wrap items-center gap-3">
                 <Select
-                  onValueChange={setSelectedService}
+                  onValueChange={handleServiceChange}
                   value={selectedService}
                 >
                   <SelectTrigger className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 font-medium text-slate-700 text-sm shadow-sm">
