@@ -9,11 +9,11 @@ const categories = ["Week 1", "Week 2", "Week 3", "Week 4"];
 
 const series = [
   {
-    name: "Meetings",
+    name: "Calls that resulted in meetings",
     data: [90, 60, 110, 95],
   },
   {
-    name: "No Conversion",
+    name: "Calls that didn't convert",
     data: [120, 100, 120, 105],
   },
 ];
@@ -32,7 +32,7 @@ const chartOptions: ApexOptions = {
       borderRadius: 6,
     },
   },
-  colors: ["#10b981", "#94a3b8"],
+  colors: ["#9E32DD", "#D8ADF1"],
   dataLabels: {
     enabled: false,
   },
@@ -82,8 +82,8 @@ const chartOptions: ApexOptions = {
 };
 
 export const callMeetingLegend = [
-  { label: "Meetings", color: "#10b981" },
-  { label: "No Conversion", color: "#94a3b8" },
+  { label: "Calls that resulted in meetings", color: "#9E32DD" },
+  { label: "Calls that didn't convert", color: "#D8ADF1" },
 ] as const;
 
 export function ColdCallingCallMeetingChart() {

@@ -1,14 +1,20 @@
 "use client";
 
 import {
+  AlertTriangle,
+  MousePointerClick,
+  TrendingUp,
+  UserPlus,
+} from "lucide-react";
+import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { InsightsDrawer } from "./insights-drawer";
+import { KeyInsightsGrid } from "./key-insights-grid";
 import {
   SocialMediaEngagementChart,
   socialEngagementLegend,
@@ -21,6 +27,7 @@ const socialMetrics = [
   { label: "Followers Gained", value: "24.5K" },
   { label: "Profile Visits", value: "2,500" },
   { label: "Shares / Saves", value: "3K" },
+  { label: "Links Clicked", value: "8.1K" },
   { label: "Conversion Rate", value: "18.2%" },
 ];
 
@@ -28,22 +35,30 @@ const socialInsights = [
   {
     label: "Audience engagement rising",
     detail: "+11% vs last week",
-    color: "from-emerald-500/15 to-emerald-500/5",
+    icon: TrendingUp,
+    iconBg: "bg-emerald-50",
+    iconColor: "text-emerald-600",
   },
   {
-    label: "Cost per engagement is optimal",
-    detail: "$0.75 CPE (Target: <$1.00)",
-    color: "from-amber-500/15 to-amber-500/5",
+    label: "Cost per engagement optimal",
+    detail: "$0.75 CPE (Target <$1.00)",
+    icon: AlertTriangle,
+    iconBg: "bg-amber-50",
+    iconColor: "text-amber-600",
   },
   {
     label: "Profile traffic consistent",
-    detail: "2,500 profile visits (Target: >2,000)",
-    color: "from-sky-500/15 to-sky-500/5",
+    detail: "2,500 profile visits (Target >2,000)",
+    icon: MousePointerClick,
+    iconBg: "bg-sky-50",
+    iconColor: "text-sky-600",
   },
   {
     label: "Follower growth accelerating",
     detail: "450 new followers this month",
-    color: "from-purple-500/15 to-purple-500/5",
+    icon: UserPlus,
+    iconBg: "bg-purple-50",
+    iconColor: "text-purple-600",
   },
 ];
 
@@ -71,7 +86,7 @@ export function SocialMediaPerformanceCard() {
           </div>
           <InsightsDrawer defaultService="social-media" />
         </div>
-        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-6">
+        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-3 lg:grid-cols-7">
           {socialMetrics.map((metric) => (
             <div className="space-y-1 text-left" key={metric.label}>
               <p className="font-medium text-gray-600 text-xs">
@@ -129,23 +144,7 @@ export function SocialMediaPerformanceCard() {
           <p className="mb-4 font-semibold text-slate-900 text-sm">
             Key Insights
           </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {socialInsights.map((insight) => (
-              <div
-                className={cn(
-                  "rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-sm",
-                  "bg-linear-to-r",
-                  insight.color
-                )}
-                key={insight.label}
-              >
-                <p className="font-semibold text-slate-900 text-sm">
-                  {insight.label}
-                </p>
-                <p className="text-slate-600 text-xs">{insight.detail}</p>
-              </div>
-            ))}
-          </div>
+          <KeyInsightsGrid insights={socialInsights} />
         </section>
       </CardContent>
     </Card>

@@ -1,7 +1,7 @@
 "use client";
 
+import { Activity, AlertTriangle, Target, TrendingUp } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -14,8 +14,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { cn } from "@/lib/utils";
 import { InsightsDrawer } from "./insights-drawer";
+import { KeyInsightsGrid } from "./key-insights-grid";
 import { PaidAdsRoasTrendChart } from "./paid-ads-roas-trend-chart";
 
 const spendDistribution = [
@@ -25,33 +25,43 @@ const spendDistribution = [
 
 const paidMetrics = [
   { label: "Impressions", value: "1.2M" },
-  { label: "Ad Spend", value: "$5,000" },
   { label: "Clicks", value: "24.5K" },
-  { label: "CTR", value: "2.4%" },
-  { label: "ROAS", value: "3.2x" },
-  { label: "Conversion", value: "18.2%" },
+  { label: "Reach", value: "21K" },
+  { label: "Cost-per-click (CPC)", value: "$0.10" },
+  { label: "Cost-per-lead (CPL)", value: "$10" },
+  { label: "Click-Through Rate (CTR)", value: "2.4%" },
+  { label: "Conversion Rate", value: "18.2%" },
 ];
 
 const paidInsights = [
   {
     label: "Ad relevance improving",
     detail: "+8% vs last period",
-    color: "from-emerald-500/15 to-emerald-500/5",
+    icon: TrendingUp,
+    iconBg: "bg-emerald-50",
+    iconColor: "text-emerald-600",
   },
   {
     label: "Cost per click is high",
-    detail: "$3.20 CPC (Target: <$2.50)",
-    color: "from-amber-500/15 to-amber-500/5",
+    detail: "$3.20 CPC (Target <$2.50)",
+    icon: AlertTriangle,
+    iconBg: "bg-amber-50",
+    iconColor: "text-amber-600",
+    detailColor: "text-amber-600",
   },
   {
     label: "ROAS is healthy",
     detail: "3.5x return on ad spend",
-    color: "from-sky-500/15 to-sky-500/5",
+    icon: Activity,
+    iconBg: "bg-sky-50",
+    iconColor: "text-sky-600",
   },
   {
     label: "Conversion Rate strong",
     detail: "18.2% conversion rate",
-    color: "from-purple-500/15 to-purple-500/5",
+    icon: Target,
+    iconBg: "bg-purple-50",
+    iconColor: "text-purple-600",
   },
 ];
 
@@ -79,7 +89,7 @@ export function PaidAdsPerformanceCard() {
           </div>
           <InsightsDrawer defaultService="paid-ads" />
         </div>
-        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-6">
+        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-3 lg:grid-cols-7">
           {paidMetrics.map((metric) => (
             <div className="space-y-1 text-left" key={metric.label}>
               <p className="font-medium text-gray-600 text-xs">
@@ -164,23 +174,7 @@ export function PaidAdsPerformanceCard() {
           <p className="mb-4 font-semibold text-slate-900 text-sm">
             Key Insights
           </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {paidInsights.map((insight) => (
-              <div
-                className={cn(
-                  "rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-sm",
-                  "bg-linear-to-r",
-                  insight.color
-                )}
-                key={insight.label}
-              >
-                <p className="font-semibold text-slate-900 text-sm">
-                  {insight.label}
-                </p>
-                <p className="text-slate-600 text-xs">{insight.detail}</p>
-              </div>
-            ))}
-          </div>
+          <KeyInsightsGrid insights={paidInsights} />
         </section>
       </CardContent>
     </Card>

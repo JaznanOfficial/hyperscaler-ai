@@ -1,5 +1,6 @@
 "use client";
 
+import { AlertTriangle, PhoneCall, TrendingUp, UsersRound } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -8,12 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
 import {
   ColdCallingCallMeetingChart,
   callMeetingLegend,
 } from "./cold-calling-call-meeting-chart";
 import { InsightsDrawer } from "./insights-drawer";
+import { KeyInsightsGrid } from "./key-insights-grid";
 
 const coldMetrics = [
   { label: "Calls Made", value: "240" },
@@ -50,22 +51,30 @@ const callInsights = [
   {
     label: "Call activity steady",
     detail: "+8% vs last week",
-    color: "from-emerald-500/15 to-emerald-500/5",
+    icon: TrendingUp,
+    iconBg: "bg-emerald-50",
+    iconColor: "text-emerald-600",
   },
   {
     label: "Call duration optimal",
-    detail: "3.6 mins avg (Ideal: 3–5 mins)",
-    color: "from-amber-500/15 to-amber-500/5",
+    detail: "3.6 mins avg",
+    icon: AlertTriangle,
+    iconBg: "bg-amber-50",
+    iconColor: "text-amber-600",
   },
   {
     label: "Pick-up rate healthy",
-    detail: "22% pick-up rate (Target: >20%)",
-    color: "from-sky-500/15 to-sky-500/5",
+    detail: "22% pick-up rate",
+    icon: PhoneCall,
+    iconBg: "bg-sky-50",
+    iconColor: "text-sky-600",
   },
   {
     label: "Conversions qualifying well",
-    detail: "48 qualified conversations identified",
-    color: "from-purple-500/15 to-purple-500/5",
+    detail: "48 qualified calls",
+    icon: UsersRound,
+    iconBg: "bg-purple-50",
+    iconColor: "text-purple-600",
   },
 ];
 
@@ -93,7 +102,7 @@ export function ColdCallingPerformanceCard() {
           </div>
           <InsightsDrawer defaultService="cold-calling" />
         </div>
-        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-4">
+        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-4 lg:grid-cols-4">
           {coldMetrics.map((metric) => (
             <div className="space-y-1 text-left" key={metric.label}>
               <p className="font-medium text-gray-600 text-xs">
@@ -172,23 +181,7 @@ export function ColdCallingPerformanceCard() {
           <p className="mb-4 font-semibold text-slate-900 text-sm">
             Key Insights
           </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {callInsights.map((insight) => (
-              <div
-                className={cn(
-                  "rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-sm",
-                  "bg-linear-to-r",
-                  insight.color
-                )}
-                key={insight.label}
-              >
-                <p className="font-semibold text-slate-900 text-sm">
-                  {insight.label}
-                </p>
-                <p className="text-slate-600 text-xs">{insight.detail}</p>
-              </div>
-            ))}
-          </div>
+          <KeyInsightsGrid insights={callInsights} />
         </section>
       </CardContent>
     </Card>

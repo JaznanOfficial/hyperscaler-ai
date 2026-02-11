@@ -1,7 +1,7 @@
 "use client";
 
+import { AlertTriangle, TrendingUp, UsersRound } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -14,42 +14,52 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { cn } from "@/lib/utils";
 import { BrandingContentEngagementChart } from "./branding-content-engagement-chart";
 import { InsightsDrawer } from "./insights-drawer";
+import { KeyInsightsGrid } from "./key-insights-grid";
 
 const brandingMetrics = [
   { label: "Assets Produced", value: "42" },
   { label: "Approval Rate", value: "95.5%" },
   { label: "Content Engagement", value: "6.9%" },
   { label: "Brand Search Volume", value: "+18%" },
+  { label: "Conversion Rate", value: "18.2%" },
 ];
 
 const clickRateData = [
-  { name: "Clicked", value: 46, color: "hsl(var(--chart-2))" },
-  { name: "Not Clicked", value: 54, color: "#cbd5f5" },
+  { name: "Clicked", value: 46, color: "#147638" },
+  { name: "Not Clicked", value: 54, color: "#979CA3" },
 ];
 
 const brandingInsights = [
   {
     label: "Content driving leads",
     detail: "2.6% Content ➜ Lead conversion rate",
-    color: "from-emerald-500/15 to-emerald-500/5",
+    icon: TrendingUp,
+    iconBg: "bg-emerald-50",
+    iconColor: "text-emerald-600",
   },
   {
     label: "Delivery timelines at risk",
-    detail: "3.3 days avg time to delivery (Target: <3 days)",
-    color: "from-amber-500/15 to-amber-500/5",
+    detail: "3.3 days avg delivery",
+    icon: AlertTriangle,
+    iconBg: "bg-amber-50",
+    iconColor: "text-amber-600",
+    detailColor: "text-amber-600",
   },
   {
     label: "Brand interest increasing",
-    detail: "+18% brand search volume growth",
-    color: "from-sky-500/15 to-sky-500/5",
+    detail: "+18% brand search volume",
+    icon: TrendingUp,
+    iconBg: "bg-sky-50",
+    iconColor: "text-sky-600",
   },
   {
     label: "Direct traffic accelerating",
-    detail: "+21% growth in direct visits",
-    color: "from-purple-500/15 to-purple-500/5",
+    detail: "+21% direct visits",
+    icon: UsersRound,
+    iconBg: "bg-purple-50",
+    iconColor: "text-purple-600",
   },
 ];
 
@@ -77,7 +87,7 @@ export function BrandingContentPerformanceCard() {
           </div>
           <InsightsDrawer defaultService="branding" />
         </div>
-        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-4">
+        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-4 lg:grid-cols-5">
           {brandingMetrics.map((metric) => (
             <div className="space-y-1 text-left" key={metric.label}>
               <p className="font-medium text-gray-600 text-xs">
@@ -161,23 +171,7 @@ export function BrandingContentPerformanceCard() {
           <p className="mb-4 font-semibold text-slate-900 text-sm">
             Key Insights
           </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {brandingInsights.map((insight) => (
-              <div
-                className={cn(
-                  "rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-sm",
-                  "bg-linear-to-r",
-                  insight.color
-                )}
-                key={insight.label}
-              >
-                <p className="font-semibold text-slate-900 text-sm">
-                  {insight.label}
-                </p>
-                <p className="text-slate-600 text-xs">{insight.detail}</p>
-              </div>
-            ))}
-          </div>
+          <KeyInsightsGrid insights={brandingInsights} />
         </section>
       </CardContent>
     </Card>

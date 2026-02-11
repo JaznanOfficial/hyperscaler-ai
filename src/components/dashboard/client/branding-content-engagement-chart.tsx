@@ -26,7 +26,7 @@ const chartOptions: ApexOptions = {
       borderRadius: 8,
     },
   },
-  colors: ["#7c3aed"],
+  colors: ["#9E32DD"],
   dataLabels: { enabled: false },
   grid: {
     borderColor: "#e2e8f0",

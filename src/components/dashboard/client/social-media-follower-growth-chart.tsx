@@ -34,13 +34,15 @@ const chartOptions: ApexOptions = {
   fill: {
     type: "gradient",
     gradient: {
-      shadeIntensity: 0.5,
-      opacityFrom: 0.35,
-      opacityTo: 0,
-      stops: [0, 90, 100],
+      type: "vertical",
+      shadeIntensity: 0.75,
+      gradientToColors: ["#ECD6F8"],
+      opacityFrom: 0.85,
+      opacityTo: 0.1,
+      stops: [0, 100],
     },
   },
-  colors: ["#0ea5e9"],
+  colors: ["#9E32DD"],
   dataLabels: {
     enabled: false,
   },
