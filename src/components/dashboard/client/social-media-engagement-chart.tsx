@@ -34,7 +34,7 @@ const chartOptions: ApexOptions = {
       endingShape: "rounded",
     },
   },
-  colors: ["#7c3aed", "#0ea5e9", "#1d4ed8"],
+  colors: ["#125899", "#1E92FF", "#A5D3FF"],
   dataLabels: {
     enabled: false,
   },
@@ -80,9 +80,9 @@ const chartOptions: ApexOptions = {
 };
 
 export const socialEngagementLegend = [
-  { label: "Engagement", color: "#7c3aed" },
-  { label: "Impressions", color: "#0ea5e9" },
-  { label: "Reach", color: "#1d4ed8" },
+  { label: "Engagement", color: "#125899" },
+  { label: "Impressions", color: "#1E92FF" },
+  { label: "Reach", color: "#A5D3FF" },
 ] as const;
 
 export function SocialMediaEngagementChart() {

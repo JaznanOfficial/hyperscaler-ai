@@ -6,12 +6,12 @@ import dynamic from "next/dynamic";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const roasTrendData = [
-  { day: "Day 5", actual: 1.4, target: 3 },
-  { day: "Day 10", actual: 1.9, target: 3 },
-  { day: "Day 15", actual: 2.6, target: 3 },
-  { day: "Day 20", actual: 3.3, target: 3 },
-  { day: "Day 25", actual: 3.1, target: 3 },
-  { day: "Day 30", actual: 2.7, target: 3 },
+  { day: "Day 5", actual: 1.4 },
+  { day: "Day 10", actual: 1.9 },
+  { day: "Day 15", actual: 2.6 },
+  { day: "Day 20", actual: 3.3 },
+  { day: "Day 25", actual: 3.1 },
+  { day: "Day 30", actual: 2.7 },
 ];
 
 const categories = roasTrendData.map((point) => point.day);
@@ -20,10 +20,6 @@ const series = [
   {
     name: "Actual ROAS",
     data: roasTrendData.map((point) => point.actual),
-  },
-  {
-    name: "Target ROAS",
-    data: roasTrendData.map((point) => point.target),
   },
 ];
 
@@ -39,7 +35,7 @@ const chartOptions: ApexOptions = {
     curve: "smooth",
     width: 3,
   },
-  colors: ["#0ea5e9", "#94a3b8"],
+  colors: ["#0ea5e9"],
   dataLabels: { enabled: false },
   markers: {
     size: 4,
