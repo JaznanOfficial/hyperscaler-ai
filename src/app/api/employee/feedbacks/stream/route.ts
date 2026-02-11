@@ -11,21 +11,27 @@ export async function GET() {
 
     const encoder = new TextEncoder();
     let isClosed = false;
-    
+
     const stream = new ReadableStream({
       async start(controller) {
         const sendUpdate = async () => {
           if (isClosed) return;
-          
+
           try {
-            const unreadCount = await feedbackService.getUnreadCount(session.user.id);
+            const unreadCount = await feedbackService.getUnreadCount(
+              session.user.id
+            );
 
             const data = `data: ${JSON.stringify({ unreadCount })}\n\n`;
             controller.enqueue(encoder.encode(data));
           } catch (error) {
             console.error("Error fetching unread count:", error);
             if (!isClosed) {
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ unreadCount: 0 })}\n\n`));
+              controller.enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({ unreadCount: 0 })}\n\n`
+                )
+              );
             }
           }
         };
@@ -48,7 +54,7 @@ export async function GET() {
               clearInterval(keepAlive);
             }
           }
-        }, 30000);
+        }, 30_000);
 
         return () => {
           isClosed = true;
@@ -70,7 +76,7 @@ export async function GET() {
       headers: {
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache, no-transform",
-        "Connection": "keep-alive",
+        Connection: "keep-alive",
         "X-Accel-Buffering": "no",
       },
     });

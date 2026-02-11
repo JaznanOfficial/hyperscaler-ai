@@ -29,12 +29,15 @@ async function fetchFeedbacks(page: number) {
   return response.json();
 }
 
-export function AdminFeedbackList({ page, onPaginationChange }: AdminFeedbackListProps) {
+export function AdminFeedbackList({
+  page,
+  onPaginationChange,
+}: AdminFeedbackListProps) {
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-feedbacks", page],
     queryFn: () => fetchFeedbacks(page),
     retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30_000),
   });
 
   if (data?.pagination && onPaginationChange) {
@@ -44,7 +47,9 @@ export function AdminFeedbackList({ page, onPaginationChange }: AdminFeedbackLis
   if (error) {
     return (
       <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-        <p className="text-red-600">Failed to load feedbacks. Please try again.</p>
+        <p className="text-red-600">
+          Failed to load feedbacks. Please try again.
+        </p>
       </div>
     );
   }

@@ -1,5 +1,5 @@
-import { prisma } from "@/backend/config/prisma";
 import type { Prisma } from "@prisma/client";
+import { prisma } from "@/backend/config/prisma";
 
 export class FeedbackRepository {
   async findById(id: string) {

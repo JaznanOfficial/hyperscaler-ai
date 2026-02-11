@@ -33,7 +33,7 @@ export function EmployeeList({ page, onPaginationChange }: EmployeeListProps) {
     queryKey: ["employees", page],
     queryFn: () => fetchEmployees(page),
     retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30_000),
   });
 
   if (data?.pagination && onPaginationChange) {
@@ -43,7 +43,9 @@ export function EmployeeList({ page, onPaginationChange }: EmployeeListProps) {
   if (error) {
     return (
       <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-        <p className="text-red-600">Failed to load employees. Please try again.</p>
+        <p className="text-red-600">
+          Failed to load employees. Please try again.
+        </p>
       </div>
     );
   }
@@ -56,15 +58,18 @@ export function EmployeeList({ page, onPaginationChange }: EmployeeListProps) {
     );
   }
 
-  const employees: EmployeeItem[] = data?.employees.map((emp: any) => ({
-    id: emp.id,
-    name: emp.name,
-    email: emp.email,
-    title: emp.generalInfo?.title || (emp.role === "MANAGER" ? "Manager" : "Employee"),
-    expertise: emp.generalInfo?.expertise || "N/A",
-    yearsExperience: emp.generalInfo?.yearsExperience || 0,
-    roleLevel: emp.role === "MANAGER" ? "manager" : "employee",
-  })) || [];
+  const employees: EmployeeItem[] =
+    data?.employees.map((emp: any) => ({
+      id: emp.id,
+      name: emp.name,
+      email: emp.email,
+      title:
+        emp.generalInfo?.title ||
+        (emp.role === "MANAGER" ? "Manager" : "Employee"),
+      expertise: emp.generalInfo?.expertise || "N/A",
+      yearsExperience: emp.generalInfo?.yearsExperience || 0,
+      roleLevel: emp.role === "MANAGER" ? "manager" : "employee",
+    })) || [];
 
   if (employees.length === 0) {
     return (

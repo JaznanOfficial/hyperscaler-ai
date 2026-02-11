@@ -1,9 +1,9 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { EmployeeItem } from "@/components/admin/employee-list";
 import { Button } from "@/components/ui/button";
 import {
@@ -94,7 +94,7 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
         <Button className="cursor-pointer" size="sm" variant="outline">
           Edit profile
@@ -114,10 +114,12 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                 Employee name
               </Label>
               <Input
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 id={`employee-name-${employee.id}`}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 required
+                value={formData.name}
               />
             </div>
             <div className="space-y-2">
@@ -125,11 +127,13 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                 Employee email
               </Label>
               <Input
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 id={`employee-email-${employee.id}`}
-                type="email"
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 required
+                type="email"
+                value={formData.email}
               />
             </div>
           </div>
@@ -142,10 +146,12 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                 <Input
                   className="pr-10"
                   id={`employee-password-${employee.id}`}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   placeholder="New password"
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
                 <button
                   aria-label={showPassword ? "Hide password" : "Show password"}
@@ -169,9 +175,11 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                 Employee title
               </Label>
               <Input
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 id={`employee-title-${employee.id}`}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                value={formData.title}
               />
             </div>
           </div>
@@ -180,11 +188,13 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
               Employee expertise lists
             </Label>
             <Textarea
-              value={formData.expertise}
-              onChange={(e) => setFormData({ ...formData, expertise: e.target.value })}
               id={`employee-expertise-${employee.id}`}
+              onChange={(e) =>
+                setFormData({ ...formData, expertise: e.target.value })
+              }
               placeholder="Summarize expertise areas"
               rows={3}
+              value={formData.expertise}
             />
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -193,19 +203,29 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                 Employee years of experiences
               </Label>
               <Input
-                value={formData.yearsExperience}
-                onChange={(e) => setFormData({ ...formData, yearsExperience: Number(e.target.value) })}
                 id={`employee-years-${employee.id}`}
                 min={0}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    yearsExperience: Number(e.target.value),
+                  })
+                }
                 placeholder="e.g. 6"
                 type="number"
+                value={formData.yearsExperience}
               />
             </div>
             <div className="space-y-2">
               <Label>Employee role</Label>
               <Select
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    role: value as "EMPLOYEE" | "MANAGER",
+                  })
+                }
                 value={formData.role}
-                onValueChange={(value) => setFormData({ ...formData, role: value as "EMPLOYEE" | "MANAGER" })}
               >
                 <SelectTrigger className="cursor-pointer">
                   <SelectValue placeholder="Select a role" />
@@ -222,7 +242,11 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button className="cursor-pointer" type="submit" disabled={mutation.isPending}>
+            <Button
+              className="cursor-pointer"
+              disabled={mutation.isPending}
+              type="submit"
+            >
               {mutation.isPending ? "Saving..." : "Save changes"}
             </Button>
           </DialogFooter>

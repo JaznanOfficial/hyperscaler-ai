@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 
 export function useFeedbackStream() {
   const [unreadCount, setUnreadCount] = useState(0);
@@ -29,10 +29,12 @@ export function useFeedbackStream() {
           try {
             const data = JSON.parse(event.data);
             const newCount = data.unreadCount || 0;
-            
+
             setUnreadCount((prevCount) => {
               if (newCount > prevCount) {
-                queryClient.invalidateQueries({ queryKey: ["employee-feedbacks"] });
+                queryClient.invalidateQueries({
+                  queryKey: ["employee-feedbacks"],
+                });
               }
               return newCount;
             });
@@ -46,9 +48,12 @@ export function useFeedbackStream() {
           eventSourceRef.current = null;
 
           if (reconnectAttemptsRef.current < maxReconnectAttempts) {
-            const delay = Math.min(1000 * Math.pow(2, reconnectAttemptsRef.current), 30000);
+            const delay = Math.min(
+              1000 * 2 ** reconnectAttemptsRef.current,
+              30_000
+            );
             reconnectAttemptsRef.current++;
-            
+
             reconnectTimeoutRef.current = setTimeout(() => {
               connect();
             }, delay);

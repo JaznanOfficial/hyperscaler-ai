@@ -7,6 +7,7 @@ import { OverallProgressCard } from "@/components/dashboard/client/overall-progr
 import { PaidAdsPerformanceCard } from "@/components/dashboard/client/paid-ads-performance-card";
 import { ServicesOverviewCard } from "@/components/dashboard/client/services-overview-card";
 import { SocialMediaPerformanceCard } from "@/components/dashboard/client/social-media-performance-card";
+import { SoftwareDevelopmentStatusCard } from "@/components/dashboard/client/software-development-status-card";
 
 export default function ClientStatisticsPage() {
   return (
@@ -83,6 +84,8 @@ export default function ClientStatisticsPage() {
       <BrandingContentPerformanceCard />
 
       <ColdLinkedinPerformanceCard />
+
+      <SoftwareDevelopmentStatusCard />
     </div>
   );
 }

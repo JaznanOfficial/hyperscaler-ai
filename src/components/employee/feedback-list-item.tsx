@@ -46,9 +46,9 @@ export function FeedbackListItem({ item }: { item: FeedbackItem }) {
     const now = new Date();
     const past = new Date(date);
     const diffMs = now.getTime() - past.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
+    const diffMins = Math.floor(diffMs / 60_000);
+    const diffHours = Math.floor(diffMs / 3_600_000);
+    const diffDays = Math.floor(diffMs / 86_400_000);
 
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
@@ -72,7 +72,7 @@ export function FeedbackListItem({ item }: { item: FeedbackItem }) {
                   <Badge className="bg-blue-100 text-blue-700">New</Badge>
                 )}
               </div>
-              <p className="mt-1 text-slate-500 text-sm line-clamp-2">
+              <p className="mt-1 line-clamp-2 text-slate-500 text-sm">
                 {item.details}
               </p>
             </div>
@@ -99,10 +99,14 @@ export function FeedbackListItem({ item }: { item: FeedbackItem }) {
             </AlertDialogCancel>
             <AlertDialogAction
               className="cursor-pointer"
-              onClick={() => mutation.mutate()}
               disabled={mutation.isPending || item.read}
+              onClick={() => mutation.mutate()}
             >
-              {mutation.isPending ? "Marking..." : item.read ? "Already Read" : "Mark as Read"}
+              {mutation.isPending
+                ? "Marking..."
+                : item.read
+                  ? "Already Read"
+                  : "Mark as Read"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

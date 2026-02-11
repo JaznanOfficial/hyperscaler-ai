@@ -1,17 +1,7 @@
 "use client";
 
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
-
+import { AlertTriangle, Presentation, Target, TrendingUp } from "lucide-react";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import {
   Card,
   CardContent,
@@ -20,82 +10,90 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { cn } from "@/lib/utils";
+import { ColdLinkedinConversionChart } from "./cold-linkedin-conversion-chart";
+import { InsightsDrawer } from "./insights-drawer";
+import { KeyInsightsGrid } from "./key-insights-grid";
 
 const linkedinMetrics = [
   { label: "Connection Request Sent", value: "42" },
   { label: "Messages Sent", value: "38" },
+  { label: "Reply Rate", value: "14%" },
   { label: "Positive Reply Rates", value: "6%" },
+  { label: "Qualified Leads", value: "9" },
   { label: "Meetings Booked", value: "7" },
 ];
 
-const conversionTrend = [
-  { day: "Day 5", value: 4 },
-  { day: "Day 10", value: 9 },
-  { day: "Day 15", value: 13 },
-  { day: "Day 20", value: 16 },
-  { day: "Day 25", value: 19 },
-  { day: "Day 30", value: 27 },
-];
-
-const conversionConfig = {
-  value: { label: "Conversion Rate", color: "hsl(var(--chart-1))" },
-} satisfies ChartConfig;
-
 const clickRateData = [
-  { name: "Accepted Requests", value: 46, color: "hsl(var(--chart-2))" },
-  { name: "Ignored Requests", value: 54, color: "#cfd8df" },
+  { name: "Accepted Requests", value: 46, color: "#147638" },
+  { name: "Ignored Requests", value: 54, color: "#979CA3" },
 ];
 
 const linkedinInsights = [
   {
     label: "Engaging social media posts",
-    detail: "3.1% Engagement ➜ Lead conversion rate",
-    color: "from-emerald-500/15 to-emerald-500/5",
+    detail: "3.1% Engagement ➜ Lead",
+    icon: TrendingUp,
+    iconBg: "bg-emerald-50",
+    iconColor: "text-emerald-600",
   },
   {
     label: "Personalized email campaigns",
-    detail: "4.5% Email ➜ Lead conversion rate",
-    color: "from-amber-500/15 to-amber-500/5",
+    detail: "4.5% Email ➜ Lead",
+    icon: AlertTriangle,
+    iconBg: "bg-amber-50",
+    iconColor: "text-amber-600",
   },
   {
     label: "Informative webinars",
-    detail: "5.0% Webinar ➜ Lead conversion rate",
-    color: "from-sky-500/15 to-sky-500/5",
+    detail: "5.0% Webinar ➜ Lead",
+    icon: Presentation,
+    iconBg: "bg-sky-50",
+    iconColor: "text-sky-600",
   },
   {
     label: "Targeted online ads",
-    detail: "3.8% Ad ➜ Lead conversion rate",
-    color: "from-purple-500/15 to-purple-500/5",
+    detail: "3.8% Ads ➜ Lead",
+    icon: Target,
+    iconBg: "bg-purple-50",
+    iconColor: "text-purple-600",
   },
 ];
 
 export function ColdLinkedinPerformanceCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
-      <CardHeader className="space-y-4">
+      <CardHeader className="space-y-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <CardTitle>Cold LinkedIn Outreach</CardTitle>
-            <CardDescription>Voice-based outreach performance.</CardDescription>
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <CardTitle className="font-semibold text-lg text-slate-900">
+                Cold LinkedIn Outreach
+              </CardTitle>
+              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700 text-xs">
+                <span
+                  aria-hidden
+                  className="size-2 rounded-full bg-emerald-500"
+                />
+                On Track
+              </span>
+            </div>
+            <CardDescription className="text-slate-500 text-sm">
+              Voice-based outreach performance.
+            </CardDescription>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/80 px-3 py-1 font-semibold text-emerald-700 text-xs">
-            <span aria-hidden className="size-2 rounded-full bg-emerald-500" />
-            On Track
-          </div>
+          <InsightsDrawer defaultService="cold-linkedin" />
         </div>
-        <div className="flex flex-wrap gap-6 text-center font-semibold text-base text-slate-900">
+        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-3 lg:grid-cols-6">
           {linkedinMetrics.map((metric) => (
-            <div className="min-w-24" key={metric.label}>
-              <p>{metric.value}</p>
-              <p className="font-normal text-slate-500 text-xs">
+            <div className="space-y-1 text-left" key={metric.label}>
+              <p className="font-medium text-gray-600 text-xs">
                 {metric.label}
               </p>
+              <p className="font-semibold text-lg leading-5">{metric.value}</p>
             </div>
           ))}
         </div>
@@ -111,61 +109,7 @@ export function ColdLinkedinPerformanceCard() {
                 Last 30 days connection to lead conversion trend.
               </p>
             </div>
-            <ChartContainer className="h-64" config={conversionConfig}>
-              <ResponsiveContainer height="100%" width="100%">
-                <AreaChart
-                  data={conversionTrend}
-                  margin={{ left: 0, right: 16, top: 16, bottom: 8 }}
-                >
-                  <defs>
-                    <linearGradient
-                      id="linkedinConversion"
-                      x1="0"
-                      x2="0"
-                      y1="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor="hsl(var(--chart-1))"
-                        stopOpacity={0.4}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="hsl(var(--chart-1))"
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    stroke="rgba(148, 163, 184, 0.25)"
-                    strokeDasharray="3 3"
-                  />
-                  <XAxis
-                    axisLine={false}
-                    dataKey="day"
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <ChartTooltip
-                    content={<ChartTooltipContent />}
-                    cursor={{ stroke: "#cbd5f5", strokeWidth: 1 }}
-                  />
-                  <Area
-                    dataKey="value"
-                    fill="url(#linkedinConversion)"
-                    stroke="var(--color-value)"
-                    strokeWidth={3}
-                    type="monotone"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <ColdLinkedinConversionChart />
             <p className="font-semibold text-emerald-600 text-sm">
               ↑ 12% vs last month
             </p>
@@ -179,19 +123,14 @@ export function ColdLinkedinPerformanceCard() {
                 How effectively outreach drives responses.
               </p>
             </div>
-            <ChartContainer
-              className="mx-auto h-64 max-w-xs"
-              config={{
-                acceptance: { label: "Accepted", color: "hsl(var(--chart-2))" },
-              }}
-            >
+            <ChartContainer className="mx-auto h-72 max-w-sm" config={{}}>
               <ResponsiveContainer height="100%" width="100%">
                 <PieChart>
                   <Pie
                     data={clickRateData}
                     dataKey="value"
-                    innerRadius={70}
-                    outerRadius={90}
+                    innerRadius={90}
+                    outerRadius={120}
                     paddingAngle={2}
                     strokeWidth={0}
                   >
@@ -235,23 +174,7 @@ export function ColdLinkedinPerformanceCard() {
           <p className="mb-4 font-semibold text-slate-900 text-sm">
             Key Insights
           </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {linkedinInsights.map((insight) => (
-              <div
-                className={cn(
-                  "rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-sm",
-                  "bg-linear-to-r",
-                  insight.color
-                )}
-                key={insight.label}
-              >
-                <p className="font-semibold text-slate-900 text-sm">
-                  {insight.label}
-                </p>
-                <p className="text-slate-600 text-xs">{insight.detail}</p>
-              </div>
-            ))}
-          </div>
+          <KeyInsightsGrid insights={linkedinInsights} />
         </section>
       </CardContent>
     </Card>

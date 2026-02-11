@@ -1,18 +1,7 @@
 "use client";
 
-import {
-  CartesianGrid,
-  Cell,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  ReferenceLine,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
-
+import { Activity, AlertTriangle, Target, TrendingUp } from "lucide-react";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import {
   Card,
   CardContent,
@@ -21,88 +10,92 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { cn } from "@/lib/utils";
-
-const roasData = [
-  { day: "Day 5", actual: 1.2, target: 3 },
-  { day: "Day 10", actual: 1.6, target: 3 },
-  { day: "Day 15", actual: 2.4, target: 3 },
-  { day: "Day 20", actual: 3.1, target: 3 },
-  { day: "Day 25", actual: 2.8, target: 3 },
-  { day: "Day 30", actual: 2.1, target: 3 },
-];
-
-const roasConfig = {
-  actual: { label: "Actual", color: "hsl(var(--chart-4))" },
-  target: { label: "Target", color: "hsl(var(--chart-5))" },
-} satisfies ChartConfig;
+import { InsightsDrawer } from "./insights-drawer";
+import { KeyInsightsGrid } from "./key-insights-grid";
+import { PaidAdsRoasTrendChart } from "./paid-ads-roas-trend-chart";
 
 const spendDistribution = [
-  { name: "Google Ads", value: 3000, color: "hsl(var(--chart-2))" },
-  { name: "Meta Ads", value: 2000, color: "hsl(var(--chart-3))" },
+  { name: "Google Ads", value: 3000, color: "#1e3a8a" },
+  { name: "Meta Ads", value: 2000, color: "#6b21a8" },
 ];
 
 const paidMetrics = [
   { label: "Impressions", value: "1.2M" },
-  { label: "Ad Spend", value: "$5,000" },
   { label: "Clicks", value: "24.5K" },
-  { label: "CTR", value: "2.4%" },
-  { label: "ROAS", value: "3.2x" },
-  { label: "Conversion", value: "18.2%" },
+  { label: "Reach", value: "21K" },
+  { label: "Cost-per-click (CPC)", value: "$0.10" },
+  { label: "Cost-per-lead (CPL)", value: "$10" },
+  { label: "Click-Through Rate (CTR)", value: "2.4%" },
+  { label: "Conversion Rate", value: "18.2%" },
 ];
 
 const paidInsights = [
   {
     label: "Ad relevance improving",
     detail: "+8% vs last period",
-    color: "from-emerald-500/15 to-emerald-500/5",
+    icon: TrendingUp,
+    iconBg: "bg-emerald-50",
+    iconColor: "text-emerald-600",
   },
   {
     label: "Cost per click is high",
-    detail: "$3.20 CPC (Target: <$2.50)",
-    color: "from-amber-500/15 to-amber-500/5",
+    detail: "$3.20 CPC (Target <$2.50)",
+    icon: AlertTriangle,
+    iconBg: "bg-amber-50",
+    iconColor: "text-amber-600",
+    detailColor: "text-amber-600",
   },
   {
     label: "ROAS is healthy",
     detail: "3.5x return on ad spend",
-    color: "from-sky-500/15 to-sky-500/5",
+    icon: Activity,
+    iconBg: "bg-sky-50",
+    iconColor: "text-sky-600",
   },
   {
     label: "Conversion Rate strong",
     detail: "18.2% conversion rate",
-    color: "from-purple-500/15 to-purple-500/5",
+    icon: Target,
+    iconBg: "bg-purple-50",
+    iconColor: "text-purple-600",
   },
 ];
 
 export function PaidAdsPerformanceCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
-      <CardHeader className="space-y-4">
+      <CardHeader className="space-y-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <CardTitle>Paid Ads</CardTitle>
-            <CardDescription>
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <CardTitle className="font-semibold text-lg text-slate-900">
+                Paid Ads
+              </CardTitle>
+              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700 text-xs">
+                <span
+                  aria-hidden
+                  className="size-2 rounded-full bg-emerald-500"
+                />
+                On Track
+              </span>
+            </div>
+            <CardDescription className="text-slate-500 text-sm">
               Google & Meta Ads performance snapshot.
             </CardDescription>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/80 px-3 py-1 font-semibold text-emerald-700 text-xs">
-            <span aria-hidden className="size-2 rounded-full bg-emerald-500" />
-            On Track
-          </div>
+          <InsightsDrawer defaultService="paid-ads" />
         </div>
-        <div className="w-full border-slate-100 border-t" />
-        <div className="flex flex-wrap gap-4 text-center font-semibold text-base text-slate-900">
+        <div className="grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-3 lg:grid-cols-7">
           {paidMetrics.map((metric) => (
-            <div className="min-w-24" key={metric.label}>
-              <p>{metric.value}</p>
-              <p className="font-normal text-slate-500 text-xs">
+            <div className="space-y-1 text-left" key={metric.label}>
+              <p className="font-medium text-gray-600 text-xs">
                 {metric.label}
               </p>
+              <p className="font-semibold text-lg leading-5">{metric.value}</p>
             </div>
           ))}
         </div>
@@ -118,61 +111,7 @@ export function PaidAdsPerformanceCard() {
                 30-day performance vs target (3.0x).
               </p>
             </div>
-            <ChartContainer className="h-64" config={roasConfig}>
-              <ResponsiveContainer height="100%" width="100%">
-                <LineChart
-                  data={roasData}
-                  margin={{ top: 16, right: 16, bottom: 8, left: 8 }}
-                >
-                  <CartesianGrid
-                    stroke="rgba(148, 163, 184, 0.35)"
-                    strokeDasharray="3 3"
-                  />
-                  <XAxis
-                    axisLine={false}
-                    dataKey="day"
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    domain={[0, 6]}
-                    label={{
-                      value: "ROAS",
-                      angle: -90,
-                      position: "insideLeft",
-                      fill: "#94a3b8",
-                    }}
-                    tick={{ fill: "#94a3b8", fontSize: 12 }}
-                    tickLine={false}
-                  />
-                  <ReferenceLine
-                    stroke="var(--color-target)"
-                    strokeDasharray="4 4"
-                    y={3}
-                  />
-                  <ChartTooltip
-                    content={<ChartTooltipContent />}
-                    cursor={{ stroke: "#cbd5f5", strokeWidth: 1 }}
-                  />
-                  <Line
-                    dataKey="actual"
-                    dot={false}
-                    stroke="var(--color-actual)"
-                    strokeWidth={3}
-                    type="monotone"
-                  />
-                  <Line
-                    dataKey="target"
-                    dot={false}
-                    stroke="var(--color-target)"
-                    strokeDasharray="6 6"
-                    strokeWidth={2}
-                    type="monotone"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <PaidAdsRoasTrendChart />
           </div>
           <div className="space-y-4 rounded-2xl border border-slate-100 p-4">
             <div>
@@ -183,17 +122,14 @@ export function PaidAdsPerformanceCard() {
                 Total spend across channels.
               </p>
             </div>
-            <ChartContainer
-              className="mx-auto h-64 max-w-xs"
-              config={{ spend: { color: "hsl(var(--chart-4))" } }}
-            >
+            <ChartContainer className="mx-auto h-72 max-w-sm" config={{}}>
               <ResponsiveContainer height="100%" width="100%">
                 <PieChart>
                   <Pie
                     data={spendDistribution}
                     dataKey="value"
-                    innerRadius={70}
-                    outerRadius={90}
+                    innerRadius={90}
+                    outerRadius={120}
                     paddingAngle={2}
                     strokeWidth={0}
                   >
@@ -238,23 +174,7 @@ export function PaidAdsPerformanceCard() {
           <p className="mb-4 font-semibold text-slate-900 text-sm">
             Key Insights
           </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {paidInsights.map((insight) => (
-              <div
-                className={cn(
-                  "rounded-2xl border border-slate-100 bg-white/90 p-4 shadow-sm",
-                  "bg-linear-to-r",
-                  insight.color
-                )}
-                key={insight.label}
-              >
-                <p className="font-semibold text-slate-900 text-sm">
-                  {insight.label}
-                </p>
-                <p className="text-slate-600 text-xs">{insight.detail}</p>
-              </div>
-            ))}
-          </div>
+          <KeyInsightsGrid insights={paidInsights} />
         </section>
       </CardContent>
     </Card>

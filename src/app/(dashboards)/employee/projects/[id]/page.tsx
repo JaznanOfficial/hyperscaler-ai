@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Save } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ProjectCalendarCard } from "@/components/employee/project-calendar-card";
 import { ProjectMetricGroupCard } from "@/components/employee/project-metric-group-card";
@@ -32,7 +32,7 @@ export default function ProjectDetailPage() {
         }
         const data = await response.json();
         setProject(data.project);
-        
+
         if (data.project.services && Array.isArray(data.project.services)) {
           setMetricGroups(data.project.services);
         }
@@ -103,7 +103,9 @@ export default function ProjectDetailPage() {
       <div className="order-2 flex flex-col gap-4 lg:order-1">
         {metricGroups.length === 0 ? (
           <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
-            <p className="text-slate-500">No services assigned to this project yet</p>
+            <p className="text-slate-500">
+              No services assigned to this project yet
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -115,11 +117,11 @@ export default function ProjectDetailPage() {
 
         {metricGroups.length > 0 && (
           <div className="flex justify-end">
-            <Button 
-              className="gap-2" 
-              size="lg"
-              onClick={handleSave}
+            <Button
+              className="gap-2"
               disabled={saving}
+              onClick={handleSave}
+              size="lg"
             >
               <Save className="h-4 w-4" />
               {saving ? "Saving..." : "Save metrics"}

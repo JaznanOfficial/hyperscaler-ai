@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
 import type { ServiceItem } from "@/components/admin/service-list";
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 async function deleteService(id: string) {
   const response = await fetch(`/api/admin/services/${id}`, {
@@ -68,9 +68,13 @@ export function ServiceListItem({ item }: { item: ServiceItem }) {
           >
             <Link href={`/s-admin/services/${item.id}`}>View</Link>
           </Button>
-          <AlertDialog open={open} onOpenChange={setOpen}>
+          <AlertDialog onOpenChange={setOpen} open={open}>
             <AlertDialogTrigger asChild>
-              <Button className="cursor-pointer" size="sm" variant="destructive">
+              <Button
+                className="cursor-pointer"
+                size="sm"
+                variant="destructive"
+              >
                 Delete
               </Button>
             </AlertDialogTrigger>
@@ -78,15 +82,16 @@ export function ServiceListItem({ item }: { item: ServiceItem }) {
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Service</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete {item.name}? This action cannot be undone.
+                  Are you sure you want to delete {item.name}? This action
+                  cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => mutation.mutate()}
-                  disabled={mutation.isPending}
                   className="bg-red-600 hover:bg-red-700"
+                  disabled={mutation.isPending}
+                  onClick={() => mutation.mutate()}
                 >
                   {mutation.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>

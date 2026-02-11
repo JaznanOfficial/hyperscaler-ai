@@ -42,14 +42,9 @@ const funnelChartOptions: ApexOptions = {
     },
   },
   grid: { show: false },
-  colors: ["#a855f7"],
+  colors: ["#9518DD", "#AA3FE8", "#BC68ED", "#C887ED", "#D5AEEB"],
   fill: {
-    type: "gradient",
-    gradient: {
-      shade: "light",
-      gradientToColors: ["#ec4899"],
-      stops: [0, 100],
-    },
+    type: "solid",
   },
   dataLabels: {
     enabled: true,

@@ -28,7 +28,7 @@ export function ServiceList({ page, onPaginationChange }: ServiceListProps) {
     queryKey: ["services", page],
     queryFn: () => fetchServices(page),
     retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30_000),
   });
 
   if (data?.pagination && onPaginationChange) {
@@ -38,7 +38,9 @@ export function ServiceList({ page, onPaginationChange }: ServiceListProps) {
   if (error) {
     return (
       <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-        <p className="text-red-600">Failed to load services. Please try again.</p>
+        <p className="text-red-600">
+          Failed to load services. Please try again.
+        </p>
       </div>
     );
   }
@@ -51,10 +53,11 @@ export function ServiceList({ page, onPaginationChange }: ServiceListProps) {
     );
   }
 
-  const services: ServiceItem[] = data?.services.map((service: any) => ({
-    id: service.id,
-    name: service.serviceName,
-  })) || [];
+  const services: ServiceItem[] =
+    data?.services.map((service: any) => ({
+      id: service.id,
+      name: service.serviceName,
+    })) || [];
 
   if (services.length === 0) {
     return (

@@ -1,11 +1,10 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { EditEmployeeDialog } from "@/components/admin/edit-employee-dialog";
 import type { EmployeeItem } from "@/components/admin/employee-list";
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 async function deleteEmployee(id: string) {
   const response = await fetch(`/api/admin/employees/${id}`, {
@@ -62,9 +62,13 @@ export function EmployeeListItem({ item }: { item: EmployeeItem }) {
       <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
         <div className="flex flex-wrap items-center gap-2">
           <EditEmployeeDialog employee={item} />
-          <AlertDialog open={open} onOpenChange={setOpen}>
+          <AlertDialog onOpenChange={setOpen} open={open}>
             <AlertDialogTrigger asChild>
-              <Button className="cursor-pointer" size="sm" variant="destructive">
+              <Button
+                className="cursor-pointer"
+                size="sm"
+                variant="destructive"
+              >
                 Delete
               </Button>
             </AlertDialogTrigger>
@@ -72,15 +76,16 @@ export function EmployeeListItem({ item }: { item: EmployeeItem }) {
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Employee</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete {item.name}? This action cannot be undone.
+                  Are you sure you want to delete {item.name}? This action
+                  cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => mutation.mutate()}
-                  disabled={mutation.isPending}
                   className="bg-red-600 hover:bg-red-700"
+                  disabled={mutation.isPending}
+                  onClick={() => mutation.mutate()}
                 >
                   {mutation.isPending ? "Deleting..." : "Delete"}
                 </AlertDialogAction>

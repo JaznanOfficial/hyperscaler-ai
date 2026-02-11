@@ -69,7 +69,7 @@ export function NavMain({
                     <item.icon />
                     <span>{item.title}</span>
                     {item.badge && item.badge > 0 && (
-                      <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white text-xs font-semibold">
+                      <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-500 font-semibold text-white text-xs">
                         {item.badge > 9 ? "9+" : item.badge}
                       </span>
                     )}

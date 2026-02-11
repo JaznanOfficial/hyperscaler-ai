@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useFeedbackStream } from "@/hooks/use-feedback-stream";
 import { FeedbackListItem } from "@/components/employee/feedback-list-item";
+import { useFeedbackStream } from "@/hooks/use-feedback-stream";
 
 export type FeedbackItem = {
   id: string;
@@ -21,9 +21,12 @@ type FeedbackListProps = {
 };
 
 async function fetchFeedbacks(page: number) {
-  const response = await fetch(`/api/employee/feedbacks?page=${page}&limit=10`, {
-    cache: "no-store",
-  });
+  const response = await fetch(
+    `/api/employee/feedbacks?page=${page}&limit=10`,
+    {
+      cache: "no-store",
+    }
+  );
   if (!response.ok) {
     throw new Error("Failed to fetch feedbacks");
   }
@@ -32,12 +35,12 @@ async function fetchFeedbacks(page: number) {
 
 export function FeedbackList({ page, onPaginationChange }: FeedbackListProps) {
   useFeedbackStream();
-  
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["employee-feedbacks", page],
     queryFn: () => fetchFeedbacks(page),
     retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30_000),
   });
 
   if (data?.pagination && onPaginationChange) {
@@ -47,7 +50,9 @@ export function FeedbackList({ page, onPaginationChange }: FeedbackListProps) {
   if (error) {
     return (
       <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-        <p className="text-red-600">Failed to load feedbacks. Please try again.</p>
+        <p className="text-red-600">
+          Failed to load feedbacks. Please try again.
+        </p>
       </div>
     );
   }

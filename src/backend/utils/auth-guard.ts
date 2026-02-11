@@ -1,5 +1,5 @@
-import { auth } from "@/backend/config/auth";
 import type { UserRole } from "@prisma/client";
+import { auth } from "@/backend/config/auth";
 
 export class AuthGuard {
   static async requireAuth() {
@@ -13,7 +13,7 @@ export class AuthGuard {
   }
 
   static async requireRole(allowedRoles: UserRole[]) {
-    const session = await this.requireAuth();
+    const session = await AuthGuard.requireAuth();
 
     if (!allowedRoles.includes(session.user.role as UserRole)) {
       throw new Error("Forbidden");
@@ -23,14 +23,14 @@ export class AuthGuard {
   }
 
   static async requireAdmin() {
-    return this.requireRole(["ADMIN"]);
+    return AuthGuard.requireRole(["ADMIN"]);
   }
 
   static async requireEmployee() {
-    return this.requireRole(["EMPLOYEE", "MANAGER"]);
+    return AuthGuard.requireRole(["EMPLOYEE", "MANAGER"]);
   }
 
   static async requireClient() {
-    return this.requireRole(["CLIENT"]);
+    return AuthGuard.requireRole(["CLIENT"]);
   }
 }

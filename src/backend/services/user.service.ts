@@ -1,6 +1,6 @@
+import type { UserRole } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { userRepository } from "@/backend/repositories/user.repository";
-import type { UserRole } from "@prisma/client";
 
 export class UserService {
   async createEmployee(data: {
@@ -54,7 +54,10 @@ export class UserService {
   }
 
   async getEmployees(page: number, limit: number) {
-    const { employees, total } = await userRepository.findEmployees(page, limit);
+    const { employees, total } = await userRepository.findEmployees(
+      page,
+      limit
+    );
 
     return {
       employees,

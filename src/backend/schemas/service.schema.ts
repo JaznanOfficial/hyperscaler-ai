@@ -12,7 +12,10 @@ export const createServiceSchema = z.object({
 });
 
 export const updateServiceSchema = z.object({
-  serviceName: z.string().min(2, "Service name must be at least 2 characters").optional(),
+  serviceName: z
+    .string()
+    .min(2, "Service name must be at least 2 characters")
+    .optional(),
   sections: z.array(serviceSectionSchema).optional(),
 });
 

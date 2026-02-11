@@ -9,9 +9,9 @@ import {
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { ConversionFunnelSection } from "./conversion-funnel-section";
 import { InsightsDrawer } from "./insights-drawer";
+import { KeyInsightsGrid } from "./key-insights-grid";
 import { PerformanceTimelineSection } from "./performance-timeline-section";
 import { ResponseQualitySection } from "./response-quality-section";
 
@@ -59,6 +59,15 @@ const insights: Insight[] = [
   },
 ];
 
+const coldEmailMetrics = [
+  { label: "Emails Sent", value: "12,450" },
+  { label: "Open Rate", value: "34.2%" },
+  { label: "Reply Rate", value: "8.5%" },
+  { label: "Bounce Rate", value: "2%" },
+  { label: "Spam Rate", value: "3%" },
+  { label: "Conversion Rate", value: "12%" },
+];
+
 export function ServicesOverviewCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
@@ -81,14 +90,8 @@ export function ServicesOverviewCard() {
           </div>
           <InsightsDrawer />
         </div>
-        <div className="mt-6 grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-5">
-          {[
-            { label: "Emails Sent", value: "12,450" },
-            { label: "Open Rate", value: "34.2%" },
-            { label: "Reply Rate", value: "8.5%" },
-            { label: "Meetings", value: "12" },
-            { label: "Conversion", value: "12%" },
-          ].map((metric) => (
+        <div className="mt-6 grid gap-4 border-slate-200 border-b pb-6 text-base text-slate-900 md:grid-cols-3 lg:grid-cols-6">
+          {coldEmailMetrics.map((metric) => (
             <div className="space-y-1 text-left" key={metric.label}>
               <p className="font-medium text-gray-600 text-xs">
                 {metric.label}
@@ -129,31 +132,7 @@ export function ServicesOverviewCard() {
           <p className="mb-4 font-semibold text-slate-900 text-sm">
             Key Insights
           </p>
-          <div className="grid grid-cols-2 space-y-3 lg:grid-cols-4">
-            {insights.map((insight) => (
-              <div className="flex items-center gap-4" key={insight.label}>
-                <div
-                  className={cn(
-                    "flex size-12 items-center justify-center rounded-lg",
-                    insight.iconBg
-                  )}
-                >
-                  <insight.icon
-                    aria-hidden
-                    className={cn("size-5", insight.iconColor)}
-                  />
-                </div>
-                <div className="space-y-0.5">
-                  <p className="font-semibold text-slate-900 text-sm leading-tight">
-                    {insight.label}
-                  </p>
-                  <p className={cn("font-medium text-sm", insight.detailColor)}>
-                    {insight.detail}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <KeyInsightsGrid insights={insights} />
         </section>
       </CardContent>
     </Card>

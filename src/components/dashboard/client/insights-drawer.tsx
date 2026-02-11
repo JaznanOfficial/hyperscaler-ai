@@ -20,9 +20,24 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export function InsightsDrawer() {
+type ServiceValue =
+  | "cold-email"
+  | "paid-ads"
+  | "social-media"
+  | "cold-calling"
+  | "branding"
+  | "cold-linkedin";
+
+type InsightsDrawerProps = {
+  defaultService?: ServiceValue;
+};
+
+export function InsightsDrawer({
+  defaultService = "cold-email",
+}: InsightsDrawerProps) {
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [selectedService, setSelectedService] = useState("cold-email");
+  const [selectedService, setSelectedService] =
+    useState<ServiceValue>(defaultService);
   const observations = [
     "Open rates dropped 5% this week — likely due to subject line fatigue",
     "Best send time: Tuesday 10am EST shows 32% higher engagement",
@@ -36,30 +51,39 @@ export function InsightsDrawer() {
   ];
 
   const services = useMemo(
-    () => [
-      {
-        label: "Cold Email Campaign",
-        value: "cold-email",
-        color: "bg-emerald-500",
-      },
-      { label: "Paid Ads", value: "paid-ads", color: "bg-sky-500" },
-      {
-        label: "Social Media Marketing",
-        value: "social-media",
-        color: "bg-orange-400",
-      },
-      { label: "Cold Calling", value: "cold-calling", color: "bg-fuchsia-500" },
-      {
-        label: "Branding & Content Creation",
-        value: "branding",
-        color: "bg-rose-500",
-      },
-      {
-        label: "Cold LinkedIn Outreach",
-        value: "cold-linkedin",
-        color: "bg-indigo-500",
-      },
-    ],
+    () =>
+      [
+        {
+          label: "Cold Email Campaign",
+          value: "cold-email",
+          color: "bg-emerald-500",
+        },
+        { label: "Paid Ads", value: "paid-ads", color: "bg-sky-500" },
+        {
+          label: "Social Media Marketing",
+          value: "social-media",
+          color: "bg-orange-400",
+        },
+        {
+          label: "Cold Calling",
+          value: "cold-calling",
+          color: "bg-fuchsia-500",
+        },
+        {
+          label: "Branding & Content Creation",
+          value: "branding",
+          color: "bg-rose-500",
+        },
+        {
+          label: "Cold LinkedIn Outreach",
+          value: "cold-linkedin",
+          color: "bg-indigo-500",
+        },
+      ] satisfies {
+        label: string;
+        value: ServiceValue;
+        color: string;
+      }[],
     []
   );
 
@@ -67,10 +91,18 @@ export function InsightsDrawer() {
     (service) => service.value === selectedService
   );
 
+  const handleTriggerClick = () => {
+    setSelectedService(defaultService);
+  };
+
+  const handleServiceChange = (value: string) => {
+    setSelectedService(value as ServiceValue);
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size="icon" variant={"gradient"}>
+        <Button onClick={handleTriggerClick} size="icon" variant={"gradient"}>
           <Sparkles className="size-5" />
         </Button>
       </SheetTrigger>
@@ -86,7 +118,7 @@ export function InsightsDrawer() {
             <SheetDescription asChild>
               <div className="flex flex-wrap items-center gap-3">
                 <Select
-                  onValueChange={setSelectedService}
+                  onValueChange={handleServiceChange}
                   value={selectedService}
                 >
                   <SelectTrigger className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 font-medium text-slate-700 text-sm shadow-sm">

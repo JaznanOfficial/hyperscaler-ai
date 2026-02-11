@@ -1,5 +1,5 @@
-import { projectRepository } from "@/backend/repositories/project.repository";
 import type { ProjectStatus } from "@prisma/client";
+import { projectRepository } from "@/backend/repositories/project.repository";
 
 export class ProjectService {
   async createProject(data: {

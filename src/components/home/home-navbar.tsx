@@ -4,12 +4,17 @@ import { ArrowRight, Menu, ShoppingCart, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export function HomeNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { status } = useSession();
   const pathname = usePathname();
+  const isAuthenticated = status === "authenticated";
+  const primaryCtaHref = isAuthenticated ? "/client" : "/login";
+  const primaryCtaLabel = isAuthenticated ? "Dashboard" : "Login";
 
   const activeLinkClass =
     "font-bold bg-linear-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent hover:to-violet-600 hover:from-fuchsia-500";
@@ -65,17 +70,28 @@ export function HomeNavbar() {
               </span>
               <ShoppingCart className="h-5 w-5" strokeWidth={1.8} />
             </Link>
-            <Link href="/login">
-              <Button className="hidden lg:inline-flex" size="sm">
-                Login <ArrowRight className="size-4" />
+            <Link href={primaryCtaHref}>
+              <Button
+                className="hidden lg:inline-flex"
+                size="sm"
+                variant="gradient"
+              >
+                {primaryCtaLabel} <ArrowRight className="size-4" />
               </Button>
             </Link>
             <Button
+              asChild
               className="hidden lg:inline-flex"
               size="sm"
               variant="outline"
             >
-              Contact us
+              <Link
+                href="https://calendly.com/ujjwalroy1/ai-implementation"
+                rel="noreferrer noopener"
+                target="_blank"
+              >
+                Contact us
+              </Link>
             </Button>
 
             <button
@@ -142,15 +158,22 @@ export function HomeNavbar() {
               </Link>
 
               <div className="mt-2 flex flex-col gap-2 border-zinc-100 border-t pt-3">
-                <Button onClick={() => setMobileMenuOpen(false)} size="sm">
-                  Login <ArrowRight className="size-4" />
+                <Button asChild size="sm" variant="gradient">
+                  <Link
+                    href={primaryCtaHref}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {primaryCtaLabel} <ArrowRight className="size-4" />
+                  </Link>
                 </Button>
-                <Button
-                  onClick={() => setMobileMenuOpen(false)}
-                  size="sm"
-                  variant="outline"
-                >
-                  Contact us
+                <Button asChild size="sm" variant="outline">
+                  <Link
+                    href="https://calendly.com/ujjwalroy1/ai-implementation"
+                    rel="noreferrer noopener"
+                    target="_blank"
+                  >
+                    Contact us
+                  </Link>
                 </Button>
               </div>
             </nav>

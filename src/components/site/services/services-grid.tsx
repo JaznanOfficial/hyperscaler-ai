@@ -1,10 +1,19 @@
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { SiteService } from "@/data/site-services";
 
-export function ServicesGrid({ services }: { services: SiteService[] }) {
+interface ServicesGridProps {
+  services: SiteService[];
+  ctaType?: "cart" | "talk";
+}
+
+export function ServicesGrid({
+  services,
+  ctaType = "cart",
+}: ServicesGridProps) {
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
       {services.map((service) => (
@@ -49,10 +58,15 @@ export function ServicesGrid({ services }: { services: SiteService[] }) {
                 {service.cadence}
               </span>
             </p>
-            <div className="flex w-full flex-col gap-3 sm:flex-row">
-              <Button className="flex-1" variant="gradient">
-                Add to Cart
-              </Button>
+            <div className="flex w-full flex-col gap-3">
+              {ctaType === "talk" ? (
+                <TalkToSalesDrawer buttonClassName="flex-1" />
+              ) : (
+                <Button className="flex-1" variant="gradient">
+                  <ShoppingCart className="size-4" />
+                  Add to Cart
+                </Button>
+              )}
               <Button asChild className="flex-1" variant="outline">
                 <Link href={`/services/${service.id}`}>View Details</Link>
               </Button>
