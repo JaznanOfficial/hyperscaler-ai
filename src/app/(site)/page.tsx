@@ -1,4 +1,5 @@
 import BuildAndScale from "@/components/home/build-and-scale/build-and-scale";
+import CallToAction from "@/components/home/call-to-action/call-to-action";
 import ControlGrowth from "@/components/home/control-growth/control-growth";
 import FAQ from "@/components/home/FAQ/FAQ";
 import { Hero } from "@/components/home/hero/hero";
@@ -20,6 +21,7 @@ export default function Page() {
       <Portfolio />
       <Pricing />
       <FAQ />
+      <CallToAction />
     </>
   );
 }

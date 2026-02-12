@@ -5,7 +5,7 @@ import Link from "next/link";
 export function Footer() {
   return (
     <footer className="bg-[#190624]">
-      <div className="my-container flex flex-col items-center justify-center gap-8 pt-10 pb-10 md:gap-10 md:pt-12 lg:gap-[52px] lg:pt-16">
+      <div className="mx-auto flex w-11/12 flex-col items-center justify-center gap-8 pt-10 pb-10 md:gap-10 md:pt-12 lg:w-10/12 lg:gap-13 lg:pt-16">
         <div className="grid w-full grid-cols-1 gap-8 text-white sm:grid-cols-2 lg:grid-cols-4">
           {/* Logo & branding */}
           <div className="flex flex-col items-start">
@@ -13,7 +13,7 @@ export function Footer() {
               <Image
                 alt="Hyperscaler logo"
                 height={30}
-                src="/hyperscaler-logo.png"
+                src="/logo-without-text.png"
                 width={54}
               />
               <span className="font-semibold text-lg text-white">
