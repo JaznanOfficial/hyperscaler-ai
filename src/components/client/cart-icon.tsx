@@ -11,7 +11,7 @@ export function CartIcon() {
 
   return (
     <Button asChild variant="ghost" size="sm" className="relative">
-      <Link href="/client/cart">
+      <Link href="/cart">
         <ShoppingCart className="size-5" />
         {itemCount > 0 && (
           <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-violet-600 font-semibold text-white text-xs">
