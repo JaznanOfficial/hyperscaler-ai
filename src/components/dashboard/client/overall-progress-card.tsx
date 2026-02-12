@@ -1,6 +1,7 @@
 "use client";
 
 import type { ApexOptions } from "apexcharts";
+import { Clock } from "lucide-react";
 import dynamic from "next/dynamic";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -110,6 +111,22 @@ export function OverallProgressCard() {
               </span>
             </div>
           ))}
+
+          <div className="rounded-lg border border-fuchsia-200/70 bg-fuchsia-50/80 p-3">
+            <div className="flex items-start gap-3">
+              {/* <div className="flex h-9 w-9 items-center justify-center rounded-lg text-fuchsia-600"> */}
+              <Clock className="size-6 text-fuchsia-600" />
+              {/* </div> */}
+              <div className="space-y-1">
+                <p className="font-['Inter'] font-medium text-slate-900 text-xs">
+                  Time Saved due to AI
+                </p>
+                <p className="font-['Inter'] font-semibold text-[#9E32DD] text-sm">
+                  28 hrs/week
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
