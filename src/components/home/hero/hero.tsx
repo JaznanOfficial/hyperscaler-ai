@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -111,10 +112,11 @@ export function Hero() {
             </button>
           ))}
         </div>
-
-        <Button className="w-full sm:w-fit" variant={"gradient"}>
-          <Package className="size-4" /> Browse Services
-        </Button>
+        <Link href={"/services"}>
+          <Button className="w-full sm:w-fit" variant={"gradient"}>
+            <Package className="size-4" /> Browse Services
+          </Button>
+        </Link>
       </div>
     </section>
   );

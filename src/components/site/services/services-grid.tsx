@@ -52,12 +52,14 @@ export function ServicesGrid({
           </div>
 
           <div className="mt-6 space-y-4">
-            <p className="font-['Outfit'] font-bold text-3xl text-slate-900">
-              {service.price}
-              <span className="ml-1 font-medium text-base text-slate-500">
-                {service.cadence}
-              </span>
-            </p>
+            {ctaType !== "talk" && (
+              <p className="font-['Outfit'] font-bold text-3xl text-slate-900">
+                {service.price}
+                <span className="ml-1 font-medium text-base text-slate-500">
+                  {service.cadence}
+                </span>
+              </p>
+            )}
             <div className="flex w-full flex-col gap-3">
               {ctaType === "talk" ? (
                 <TalkToSalesDrawer buttonClassName="flex-1" />

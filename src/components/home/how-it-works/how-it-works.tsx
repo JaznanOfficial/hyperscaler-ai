@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { SectionHeader } from "@/components/shared/section-header";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -63,10 +64,11 @@ const HowItWorks = () => {
         ))}
         <div className="pointer-events-none absolute inset-0 z-0 hidden h-1 w-3/4 -translate-x-1/2 -translate-y-1/3 rounded-full bg-purple-500 lg:top-1/3 lg:left-1/2 lg:block" />
       </div>
-
-      <Button className="w-fit" variant={"gradient"}>
-        Get Started <ArrowRight className="size-4" />
-      </Button>
+      <Link href={"/services"}>
+        <Button className="w-fit" variant={"gradient"}>
+          Get Started <ArrowRight className="size-4" />
+        </Button>
+      </Link>
 
       {/* designs */}
       <div className="absolute top-24 right-0 aspect-square size-[200px] rounded-full bg-linear-to-r from-[#5B21B6] to-[#D946EF] opacity-20 blur-[160px] md:opacity-40 lg:opacity-70" />

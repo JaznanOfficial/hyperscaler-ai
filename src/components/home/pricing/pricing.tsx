@@ -1,6 +1,7 @@
 import { ArrowRight, Building2, Check } from "lucide-react";
 import Link from "next/link";
 import { SectionHeader } from "@/components/shared/section-header";
+import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -92,17 +93,22 @@ const Pricing = () => {
               ))}
             </div>
 
-            <Link
-              className={cn(
-                buttonVariants(
-                  index === 0 ? { variant: "gradient" } : { variant: "outline" }
-                ),
-                "w-full"
-              )}
-              href={item.link.href}
-            >
-              {item.link.label} <ArrowRight className="size-4" />
-            </Link>
+            {index === 0 ? (
+              <Link
+                className={cn(
+                  buttonVariants({ variant: "gradient" }),
+                  "w-full"
+                )}
+                href={item.link.href}
+              >
+                {item.link.label} <ArrowRight className="size-4" />
+              </Link>
+            ) : (
+              <TalkToSalesDrawer
+                buttonClassName="w-full"
+                buttonVariant="outline"
+              />
+            )}
             {index === 0 && (
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-[#D946EF] bg-[#9E32DD] px-3 py-1.5 text-[10px] text-white md:px-4 md:text-xs">
                 Most Popular

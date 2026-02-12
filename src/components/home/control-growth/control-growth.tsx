@@ -1,7 +1,6 @@
-import { Phone } from "lucide-react";
 import Image from "next/image";
 import { SectionHeader } from "@/components/shared/section-header";
-import { Button } from "@/components/ui/button";
+import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 
 const ControlGrowth = () => {
   return (
@@ -23,9 +22,7 @@ const ControlGrowth = () => {
         />
       </div>
 
-      <Button className="relative z-10 w-fit" variant={"gradient"}>
-        <Phone className="size-4" /> Talk to Us
-      </Button>
+      <TalkToSalesDrawer />
 
       {/* designs */}
       <div className="absolute top-40 left-10 aspect-square size-[308px] rounded-full bg-linear-to-r from-[#5B21B6] to-[#D946EF] opacity-20 blur-[140px] sm:left-16 md:left-20 md:opacity-40 lg:opacity-70" />

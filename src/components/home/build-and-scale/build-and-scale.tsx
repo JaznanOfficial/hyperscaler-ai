@@ -122,7 +122,7 @@ const BuildAndScale = () => {
             </div>
             <Link
               className="flex items-center gap-2 font-semibold text-[#9E32DD] underline-offset-2 hover:underline"
-              href="#"
+              href="/services"
             >
               View all services <ArrowRight className="size-4" />
             </Link>
@@ -181,7 +181,7 @@ const BuildAndScale = () => {
             </div>
             <Link
               className="flex items-center gap-2 font-semibold text-[#9E32DD] underline-offset-2 hover:underline"
-              href="#"
+              href="/services"
             >
               View all services <ArrowRight className="size-4" />
             </Link>

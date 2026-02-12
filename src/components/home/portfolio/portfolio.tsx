@@ -39,7 +39,7 @@ const Portfolio = () => {
               "font-medium text-2xl md:text-[32px]"
             )}
           >
-            My Portfolio
+            Our Portfolio
           </h3>
           <p className="text-[#515A65]">
             Explore projects we&apos;ve designed and built for our clients
@@ -49,7 +49,7 @@ const Portfolio = () => {
           className="flex items-center gap-2 font-semibold text-[#9E32DD] underline-offset-2 hover:underline"
           href="/portfolio"
         >
-          View all projects <ArrowRight className="size-4" />
+          View Our Portfolio <ArrowRight className="size-4" />
         </Link>
       </div>
 

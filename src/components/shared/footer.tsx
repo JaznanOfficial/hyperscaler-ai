@@ -2,6 +2,14 @@ import { Github, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+function PlaceholderLink({ children }: { children: React.ReactNode }) {
+  return <Link href="/#">{children}</Link>;
+}
+
+function PlaceholderAnchor({ children }: { children: React.ReactNode }) {
+  return <a href="/#">{children}</a>;
+}
+
 export function Footer() {
   return (
     <footer className="bg-[#190624]">
@@ -9,17 +17,19 @@ export function Footer() {
         <div className="grid w-full grid-cols-1 gap-8 text-white sm:grid-cols-2 lg:grid-cols-4">
           {/* Logo & branding */}
           <div className="flex flex-col items-start">
-            <Link className="flex items-center gap-2" href="/">
-              <Image
-                alt="Hyperscaler logo"
-                height={30}
-                src="/logo-without-text.png"
-                width={54}
-              />
-              <span className="font-semibold text-lg text-white">
-                Hyperscaler
+            <PlaceholderLink>
+              <span className="flex items-center gap-2">
+                <Image
+                  alt="Hyperscaler logo"
+                  height={30}
+                  src="/logo-without-text.png"
+                  width={54}
+                />
+                <span className="font-semibold text-lg text-white">
+                  Hyperscaler
+                </span>
               </span>
-            </Link>
+            </PlaceholderLink>
             <p className="mt-4 max-w-xs text-[#9CA3AF] text-sm leading-relaxed">
               Scale your business with AI-driven services. Simple, powerful, and
               built for growth.
@@ -31,36 +41,16 @@ export function Footer() {
             <h4 className="font-semibold text-base text-white">Product</h4>
             <ul className="mt-4 space-y-3 text-[#9CA3AF] text-sm">
               <li>
-                <Link
-                  className="transition-colors hover:text-white"
-                  href="/services"
-                >
-                  Services
-                </Link>
+                <PlaceholderLink>Services</PlaceholderLink>
               </li>
               <li>
-                <Link
-                  className="transition-colors hover:text-white"
-                  href="/pricing"
-                >
-                  Pricing
-                </Link>
+                <PlaceholderLink>Pricing</PlaceholderLink>
               </li>
               <li>
-                <Link
-                  className="transition-colors hover:text-white"
-                  href="/faq"
-                >
-                  FAQs
-                </Link>
+                <PlaceholderLink>FAQs</PlaceholderLink>
               </li>
               <li>
-                <Link
-                  className="transition-colors hover:text-white"
-                  href="/cart"
-                >
-                  Cart
-                </Link>
+                <PlaceholderLink>Cart</PlaceholderLink>
               </li>
             </ul>
           </div>
@@ -70,28 +60,13 @@ export function Footer() {
             <h4 className="font-semibold text-base text-white">Legal</h4>
             <ul className="mt-4 space-y-3 text-[#9CA3AF] text-sm">
               <li>
-                <Link
-                  className="transition-colors hover:text-white"
-                  href="/privacy"
-                >
-                  Privacy Policy
-                </Link>
+                <PlaceholderLink>Privacy Policy</PlaceholderLink>
               </li>
               <li>
-                <Link
-                  className="transition-colors hover:text-white"
-                  href="/terms"
-                >
-                  Terms of Service
-                </Link>
+                <PlaceholderLink>Terms of Service</PlaceholderLink>
               </li>
               <li>
-                <Link
-                  className="transition-colors hover:text-white"
-                  href="/cookie"
-                >
-                  Cookie Policy
-                </Link>
+                <PlaceholderLink>Cookie Policy</PlaceholderLink>
               </li>
             </ul>
           </div>
@@ -104,12 +79,9 @@ export function Footer() {
             <ul className="mt-4 space-y-3 text-[#9CA3AF] text-sm">
               <li className="flex items-center gap-2">
                 <Mail className="size-4 shrink-0" />
-                <a
-                  className="transition-colors hover:text-white"
-                  href="mailto:Hyperscaler@Scalebuild.com"
-                >
+                <PlaceholderAnchor>
                   Hyperscaler@Scalebuild.com
-                </a>
+                </PlaceholderAnchor>
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="size-4 shrink-0" />
@@ -117,12 +89,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="size-4 shrink-0" />
-                <a
-                  className="transition-colors hover:text-white"
-                  href="tel:+980909032"
-                >
-                  +980909032
-                </a>
+                <PlaceholderAnchor>+980909032</PlaceholderAnchor>
               </li>
             </ul>
           </div>
@@ -131,27 +98,21 @@ export function Footer() {
         {/* Socials + copyright */}
         <div className="flex w-full flex-col items-center gap-4 border-[#374151] border-t pt-16">
           <div className="mb-2 flex gap-3">
-            <a
-              aria-label="Twitter"
-              className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200"
-              href="#"
-            >
-              <Twitter className="size-5" />
-            </a>
-            <a
-              aria-label="LinkedIn"
-              className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200"
-              href="#"
-            >
-              <Linkedin className="size-5" />
-            </a>
-            <a
-              aria-label="GitHub"
-              className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200"
-              href="#"
-            >
-              <Github className="size-5" />
-            </a>
+            <PlaceholderAnchor>
+              <span className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200">
+                <Twitter className="size-5" />
+              </span>
+            </PlaceholderAnchor>
+            <PlaceholderAnchor>
+              <span className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200">
+                <Linkedin className="size-5" />
+              </span>
+            </PlaceholderAnchor>
+            <PlaceholderAnchor>
+              <span className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200">
+                <Github className="size-5" />
+              </span>
+            </PlaceholderAnchor>
           </div>
 
           <p className="text-[#9CA3AF] text-sm">

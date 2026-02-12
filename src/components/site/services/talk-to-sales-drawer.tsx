@@ -8,6 +8,7 @@ import {
   PhoneOutgoing,
 } from "lucide-react";
 import Link from "next/link";
+import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -19,40 +20,49 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
+type ButtonVariant = ComponentProps<typeof Button>["variant"];
+
 interface TalkToSalesDrawerProps {
   buttonClassName?: string;
+  buttonVariant?: ButtonVariant;
 }
 
 const contactOptions = [
   {
-    title: "Schedule a call",
-    description:
-      "Book a 1:1 call with our team to discuss your idea, scope, and next steps.",
-    ctaLabel: "Book a Call",
-    href: "#schedule-call",
+    title: "Call now",
+    description: "Speak directly with our team for immediate support.",
+    ctaLabel: "Call Now",
+    href: "tel:+19195766153",
     icon: PhoneOutgoing,
   },
   {
     title: "Book via Calendly",
     description: "Pick a time that works for you using our Calendly link.",
     ctaLabel: "Open Calendly",
-    href: "#calendly",
+    href: "https://calendly.com/ujjwalroy1/ai-implementation",
     icon: CalendarDays,
   },
   {
     title: "Chat on Whatsapp",
-    description: "Get quick answers and guidance directly on WhatsApp.",
-    ctaLabel: "Start Chat",
-    href: "#whatsapp",
+    description:
+      "Message us on WhatsApp at +1 (919) 576-6153 for quick answers and guidance.",
+    ctaLabel: "Chat on WhatsApp",
+    href: "https://wa.me/19195766153",
     icon: MessageCircle,
   },
 ];
 
-export function TalkToSalesDrawer({ buttonClassName }: TalkToSalesDrawerProps) {
+export function TalkToSalesDrawer({
+  buttonClassName,
+  buttonVariant = "gradient",
+}: TalkToSalesDrawerProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className={cn("flex-1", buttonClassName)} variant="gradient">
+        <Button
+          className={cn("flex-1", buttonClassName)}
+          variant={buttonVariant}
+        >
           <PhoneCall className="mr-1.5 size-4" />
           Talk to Us
         </Button>

@@ -1,5 +1,7 @@
 import { ArrowRight, Sparkles } from "lucide-react";
+import Link from "next/link";
 import { SectionHeader } from "@/components/shared/section-header";
+import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 import { Button } from "@/components/ui/button";
 
 const CallToAction = () => {
@@ -15,10 +17,12 @@ const CallToAction = () => {
         />
 
         <div className="mt-4 flex items-center justify-center gap-5">
-          <Button variant={"gradient"}>
-            Get Stated <ArrowRight className="size-4" />
-          </Button>
-          <Button variant="outline">Contact Us</Button>
+          <Link href={"/login"}>
+            <Button variant={"gradient"}>
+              Get Stated <ArrowRight className="size-4" />
+            </Button>
+          </Link>
+          <TalkToSalesDrawer buttonVariant={"outline"} />
         </div>
       </div>
 
