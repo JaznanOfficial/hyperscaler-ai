@@ -1,36 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { AddToCartButton } from "@/components/client/add-to-cart-button";
 
-const recommendedServices = [
-  {
-    id: "brand-content",
-    title: "Brand & Content Creation",
-    description:
-      "Strategic content creation that positions you as an industry thought leader.",
-    highlight:
-      "Complements your social media marketing subscription for a full funnel approach",
-    price: "$500",
-    cadence: "/month",
-    status: "New",
-  },
-  {
-    id: "pipeline-accelerator",
-    title: "Pipeline Accelerator",
-    description:
-      "Outbound orchestration focused on high-intent accounts ready to convert now.",
-    highlight:
-      "Pairs with your Hyperscaler AI workspace for 2x faster activation",
-    price: "$800",
-    cadence: "/month",
-    status: "New",
-  },
-];
+interface Service {
+  id: string;
+  serviceName: string;
+}
 
 export function ExploreServicesGrid() {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/services")
+      .then((res) => res.json())
+      .then((data) => {
+        setServices(data.services || []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   return (
     <section className="mt-20">
       <div className="space-y-1">
@@ -42,49 +37,55 @@ export function ExploreServicesGrid() {
         </p>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-        {recommendedServices.map((service) => (
-          <Card
-            className="relative overflow-visible border border-slate-200 bg-white p-5 shadow-sm"
-            key={service.id}
-          >
-            <div className="space-y-5">
-              <div className="flex w-full flex-wrap items-center justify-between gap-2">
-                <h3 className="font-['Outfit'] font-medium text-lg text-slate-900 leading-6">
-                  {service.title}
-                </h3>
-                {service.status ? (
+      {loading ? (
+        <p className="mt-10 text-center text-slate-600">Loading services...</p>
+      ) : services.length === 0 ? (
+        <p className="mt-10 text-center text-slate-600">No services available</p>
+      ) : (
+        <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+          {services.map((service) => (
+            <Card
+              className="relative overflow-visible border border-slate-200 bg-white p-5 shadow-sm"
+              key={service.id}
+            >
+              <div className="space-y-5">
+                <div className="flex w-full flex-wrap items-center justify-between gap-2">
+                  <h3 className="font-['Outfit'] font-medium text-lg text-slate-900 leading-6">
+                    {service.serviceName}
+                  </h3>
                   <span className="inline-flex items-center rounded-md bg-sky-100 px-2.5 py-0.5 font-semibold text-sky-700 text-xs">
-                    {service.status}
+                    New
                   </span>
-                ) : null}
+                </div>
+                <p className="text-base text-slate-700 leading-6">
+                  Strategic service to help grow your business
+                </p>
               </div>
-              <p className="text-base text-slate-700 leading-6">
-                {service.description}
-              </p>
-            </div>
 
-            <div className="flex w-full flex-col gap-4 pt-4">
-              <p className="font-['Outfit'] font-bold text-2xl text-slate-900 leading-8">
-                {service.price}
-                <span className="font-medium text-slate-500 text-sm leading-5">
-                  {service.cadence}
-                </span>
-              </p>
-              <div className="flex w-full flex-col gap-3 min-[450px]:flex-row">
-                <Button className="flex-1" variant="gradient">
-                  Add to Cart
-                </Button>
-                <Button asChild className="flex-1" variant="outline">
-                  <Link href={`/client/services/${service.id}`}>
-                    View Details
-                  </Link>
-                </Button>
+              <div className="flex w-full flex-col gap-4 pt-4">
+                <p className="font-['Outfit'] font-bold text-2xl text-slate-900 leading-8">
+                  $TBD
+                  <span className="font-medium text-slate-500 text-sm leading-5">
+                    /month
+                  </span>
+                </p>
+                <div className="flex w-full flex-col gap-3 min-[450px]:flex-row">
+                  <AddToCartButton
+                    serviceId={service.id}
+                    serviceName={service.serviceName}
+                    price="$TBD"
+                  />
+                  <Button asChild className="flex-1" variant="outline">
+                    <Link href={`/client/services/${service.id}`}>
+                      View Details
+                    </Link>
+                  </Button>
+                </div>
               </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+            </Card>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

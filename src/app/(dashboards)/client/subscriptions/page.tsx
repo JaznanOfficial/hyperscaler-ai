@@ -1,16 +1,35 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { ClientSubscriptionList } from "@/components/dashboard/client/subscription-list";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+interface Project {
+  id: string;
+  status: string;
+  services: any[];
+  createdAt: string;
+}
+
 export default function ClientSubscriptionsPage() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/client/projects")
+      .then((res) => res.json())
+      .then((data) => {
+        setProjects(data.projects || []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const allCount = projects.length;
+  const approvedCount = projects.filter((p) => p.status === "APPROVED").length;
+  const pendingCount = projects.filter((p) => p.status === "PENDING").length;
+  const cancelledCount = projects.filter((p) => p.status === "CANCELLED").length;
+
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto">
@@ -36,16 +55,25 @@ export default function ClientSubscriptionsPage() {
               >
                 <span>All</span>
                 <span className="ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-fuchsia-100 font-semibold text-fuchsia-700 text-sm lg:h-6 lg:w-6">
-                  5
+                  {allCount}
                 </span>
               </TabsTrigger>
               <TabsTrigger
                 className="cursor-pointer rounded-full data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:px-5 lg:py-2 lg:text-lg"
-                value="active"
+                value="approved"
               >
-                <span>Active</span>
+                <span>Approved</span>
                 <span className="ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-fuchsia-100 font-semibold text-fuchsia-700 text-sm lg:h-6 lg:w-6">
-                  1
+                  {approvedCount}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger
+                className="cursor-pointer rounded-full data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:px-5 lg:py-2 lg:text-lg"
+                value="pending"
+              >
+                <span>Pending</span>
+                <span className="ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-fuchsia-100 font-semibold text-fuchsia-700 text-sm lg:h-6 lg:w-6">
+                  {pendingCount}
                 </span>
               </TabsTrigger>
               <TabsTrigger
@@ -54,39 +82,17 @@ export default function ClientSubscriptionsPage() {
               >
                 <span>Cancelled</span>
                 <span className="ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-fuchsia-100 font-semibold text-fuchsia-700 text-sm lg:h-6 lg:w-6">
-                  1
+                  {cancelledCount}
                 </span>
               </TabsTrigger>
             </TabsList>
           </Tabs>
-          <ClientSubscriptionList />
+          {loading ? (
+            <p className="text-center text-slate-600">Loading...</p>
+          ) : (
+            <ClientSubscriptionList projects={projects} />
+          )}
         </div>
-      </div>
-
-      <div className="flex items-end justify-center pb-6">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious aria-disabled={true} href="#" />
-            </PaginationItem>
-            {[1, 2, 3].map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink href="#" isActive={page === 1}>
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">5</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
       </div>
     </section>
   );

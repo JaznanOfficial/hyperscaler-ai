@@ -8,14 +8,15 @@ import {
 } from "@/data/client-service-details";
 
 interface ClientServiceDetailsPageProps {
-  params: { serviceId: string };
+  params: Promise<{ serviceId: string }>;
 }
 
-export default function ClientServiceDetailsPage({
+export default async function ClientServiceDetailsPage({
   params,
 }: ClientServiceDetailsPageProps) {
+  const { serviceId } = await params;
   const detail =
-    getClientServiceDetail(params.serviceId) ?? defaultClientServiceDetail;
+    getClientServiceDetail(serviceId) ?? defaultClientServiceDetail;
 
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-y-auto">
@@ -58,7 +59,7 @@ export default function ClientServiceDetailsPage({
 
         <section className="space-y-4">
           <h2 className="font-semibold text-lg text-slate-900">
-            What’s included
+            What's included
           </h2>
           <div className="grid gap-3 lg:grid-cols-2">
             {detail.features.map((feature) => (

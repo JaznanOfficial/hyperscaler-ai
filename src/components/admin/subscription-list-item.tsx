@@ -1,3 +1,5 @@
+"use client";
+
 import type { SubscriptionItem } from "@/components/admin/subscription-list";
 import {
   AlertDialog,
@@ -10,14 +12,29 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const statusStyles: Record<SubscriptionItem["status"], string> = {
-  Active: "bg-emerald-100 text-emerald-700",
-  Paused: "bg-amber-100 text-amber-700",
-  Trial: "bg-slate-100 text-slate-600",
+const statusStyles: Record<string, string> = {
+  APPROVED: "bg-emerald-100 text-emerald-700",
+  PENDING: "bg-amber-100 text-amber-700",
+  CANCELLED: "bg-rose-100 text-rose-700",
 };
 
-export function SubscriptionListItem({ item }: { item: SubscriptionItem }) {
+interface SubscriptionListItemProps {
+  item: SubscriptionItem;
+  onStatusChange: (id: string, status: string) => void;
+}
+
+export function SubscriptionListItem({
+  item,
+  onStatusChange,
+}: SubscriptionListItemProps) {
   return (
     <li className="relative">
       <AlertDialog>
@@ -28,9 +45,11 @@ export function SubscriptionListItem({ item }: { item: SubscriptionItem }) {
           >
             <div>
               <p className="font-semibold text-lg text-slate-900">
-                {item.subscriber}
+                Project #{item.id.slice(0, 8)}
               </p>
-              <p className="text-slate-500 text-sm">{item.service}</p>
+              <p className="text-slate-500 text-sm">
+                {item.services.length} service(s) requested
+              </p>
             </div>
             <div className="mt-2 flex flex-wrap items-center gap-3 sm:mt-0">
               <Badge
@@ -39,34 +58,56 @@ export function SubscriptionListItem({ item }: { item: SubscriptionItem }) {
               >
                 {item.status}
               </Badge>
-              <span className="font-semibold text-slate-900 text-xs">
-                {item.amount}
+              <span className="text-slate-500 text-xs">
+                {new Date(item.createdAt).toLocaleDateString()}
               </span>
-              <span className="text-slate-500 text-xs">{item.renewal}</span>
             </div>
           </button>
         </AlertDialogTrigger>
         <AlertDialogContent size="default">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-left font-semibold text-lg text-slate-900">
-              {item.subscriber}
+              Project Details
             </AlertDialogTitle>
           </AlertDialogHeader>
-          <div className="space-y-2 text-slate-600 text-sm">
-            <p className="font-medium text-slate-900">{item.service}</p>
-            <p>
-              Subscription ID {item.id} · {item.amount}
-            </p>
-            <p>Status: {item.status}</p>
-            <p>{item.notes}</p>
+          <div className="space-y-4 text-slate-600 text-sm">
+            <div>
+              <p className="font-medium text-slate-900">Project ID</p>
+              <p>{item.id}</p>
+            </div>
+            <div>
+              <p className="font-medium text-slate-900">Services Requested</p>
+              <ul className="mt-2 space-y-1">
+                {item.services.map((service: any, index: number) => (
+                  <li key={index}>• {service.serviceName || "Service"}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="font-medium text-slate-900">Status</p>
+              <Select
+                value={item.status}
+                onValueChange={(value) => onStatusChange(item.id, value)}
+              >
+                <SelectTrigger className="mt-2 w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="PENDING">Pending</SelectItem>
+                  <SelectItem value="APPROVED">Approved</SelectItem>
+                  <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <p className="font-medium text-slate-900">Created</p>
+              <p>{new Date(item.createdAt).toLocaleString()}</p>
+            </div>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel className="cursor-pointer">
               Close
             </AlertDialogCancel>
-            <AlertDialogAction className="cursor-pointer">
-              Mark as reviewed
-            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

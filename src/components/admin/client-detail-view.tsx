@@ -1,7 +1,8 @@
 "use client";
 
 import { UserPlus, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { ClientDetail, ClientServiceStatus } from "@/data/clients";
-import { employeeDirectory } from "@/data/clients";
 
 const accountStatusStyles: Record<ClientDetail["accountStatus"], string> = {
   Approved: "bg-emerald-100 text-emerald-700",
@@ -50,48 +50,89 @@ const serviceStatusStyles: Record<ClientServiceStatus, string> = {
 
 export function ClientDetailView({ client }: { client: ClientDetail }) {
   const [services, setServices] = useState(client.requestedServices);
+  const [employees, setEmployees] = useState<Array<{ id: string; name: string }>>([]);
 
-  const availableEmployees = useMemo(() => [...employeeDirectory].sort(), []);
+  useEffect(() => {
+    fetch("/api/admin/employees")
+      .then((res) => res.json())
+      .then((data) => {
+        setEmployees(data.employees || []);
+      })
+      .catch(() => {});
+  }, []);
 
-  const handleServiceStatusChange = (
+  const availableEmployees = useMemo(
+    () => employees.map((e) => e.name).sort(),
+    [employees]
+  );
+
+  const handleServiceStatusChange = async (
     serviceId: string,
     status: ClientServiceStatus
   ) => {
-    setServices((prev) =>
-      prev.map((service) =>
-        service.id === serviceId ? { ...service, status } : service
-      )
-    );
+    try {
+      const response = await fetch(`/api/admin/projects/${serviceId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: status === "Approved" ? "APPROVED" : status === "Cancelled" ? "CANCELLED" : "PENDING",
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update");
+
+      setServices((prev) =>
+        prev.map((service) =>
+          service.id === serviceId ? { ...service, status } : service
+        )
+      );
+
+      toast.success("Status updated");
+    } catch (error) {
+      toast.error("Failed to update status");
+    }
   };
 
-  const toggleEmployeeAssignment = (serviceId: string, employee: string) => {
-    setServices((prev) =>
-      prev.map((service) => {
-        if (service.id !== serviceId) return service;
-        const assigned = service.assignedEmployees.includes(employee);
-        return {
-          ...service,
-          assignedEmployees: assigned
-            ? service.assignedEmployees.filter((name) => name !== employee)
-            : [...service.assignedEmployees, employee],
-        };
-      })
-    );
+  const toggleEmployeeAssignment = async (serviceId: string, employeeName: string) => {
+    const service = services.find((s) => s.id === serviceId);
+    if (!service) return;
+
+    const employee = employees.find((e) => e.name === employeeName);
+    if (!employee) return;
+
+    const isAssigned = service.assignedEmployees.includes(employee.id);
+    const newAssignedEmployees = isAssigned
+      ? service.assignedEmployees.filter((id) => id !== employee.id)
+      : [...service.assignedEmployees, employee.id];
+
+    try {
+      const response = await fetch(`/api/admin/projects/${serviceId}/assign`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ employeeIds: newAssignedEmployees }),
+      });
+
+      if (!response.ok) throw new Error("Failed to assign");
+
+      setServices((prev) =>
+        prev.map((s) =>
+          s.id === serviceId
+            ? { ...s, assignedEmployees: newAssignedEmployees }
+            : s
+        )
+      );
+
+      toast.success(isAssigned ? "Employee removed" : "Employee assigned");
+    } catch (error) {
+      toast.error("Failed to update assignment");
+    }
   };
 
-  const removeEmployee = (serviceId: string, employee: string) => {
-    setServices((prev) =>
-      prev.map((service) =>
-        service.id === serviceId
-          ? {
-              ...service,
-              assignedEmployees: service.assignedEmployees.filter(
-                (name) => name !== employee
-              ),
-            }
-          : service
-      )
-    );
+  const removeEmployee = (serviceId: string, employeeId: string) => {
+    const employee = employees.find((e) => e.id === employeeId);
+    if (employee) {
+      toggleEmployeeAssignment(serviceId, employee.name);
+    }
   };
 
   return (
@@ -203,42 +244,46 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
                       <DropdownMenuContent align="start" className="min-w-56">
                         <DropdownMenuLabel>Assign teammates</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        {availableEmployees.map((employee) => (
-                          <DropdownMenuCheckboxItem
-                            checked={service.assignedEmployees.includes(
-                              employee
-                            )}
-                            className="cursor-pointer"
-                            key={employee}
-                            onCheckedChange={() =>
-                              toggleEmployeeAssignment(service.id, employee)
-                            }
-                          >
-                            {employee}
-                          </DropdownMenuCheckboxItem>
-                        ))}
+                        {availableEmployees.map((employeeName) => {
+                          const employee = employees.find((e) => e.name === employeeName);
+                          return (
+                            <DropdownMenuCheckboxItem
+                              checked={service.assignedEmployees.includes(employee?.id || "")}
+                              className="cursor-pointer"
+                              key={employeeName}
+                              onCheckedChange={() =>
+                                toggleEmployeeAssignment(service.id, employeeName)
+                              }
+                            >
+                              {employeeName}
+                            </DropdownMenuCheckboxItem>
+                          );
+                        })}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {service.assignedEmployees.length ? (
-                      service.assignedEmployees.map((employee) => (
-                        <Badge
-                          className="flex items-center gap-1 rounded-full px-3 py-1 text-[11px]"
-                          key={employee}
-                          variant="secondary"
-                        >
-                          {employee}
-                          <button
-                            aria-label={`Remove ${employee}`}
-                            className="cursor-pointer text-slate-500 transition hover:text-slate-900"
-                            onClick={() => removeEmployee(service.id, employee)}
-                            type="button"
+                      service.assignedEmployees.map((employeeId) => {
+                        const employee = employees.find((e) => e.id === employeeId);
+                        return (
+                          <Badge
+                            className="flex items-center gap-1 rounded-full px-3 py-1 text-[11px]"
+                            key={employeeId}
+                            variant="secondary"
                           >
-                            <X className="size-3" />
-                          </button>
-                        </Badge>
-                      ))
+                            {employee?.name || "Unknown"}
+                            <button
+                              aria-label={`Remove ${employee?.name}`}
+                              className="cursor-pointer text-slate-500 transition hover:text-slate-900"
+                              onClick={() => removeEmployee(service.id, employeeId)}
+                              type="button"
+                            >
+                              <X className="size-3" />
+                            </button>
+                          </Badge>
+                        );
+                      })
                     ) : (
                       <p className="text-slate-500 text-sm">
                         No teammates assigned yet.

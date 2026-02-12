@@ -4,28 +4,12 @@ import { useRouter } from "next/navigation";
 import type { ClientItem } from "@/components/admin/client-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-const statusStyles: Record<ClientItem["status"], string> = {
-  Approved: "bg-emerald-50 text-emerald-700",
-  Pending: "bg-amber-50 text-amber-700",
-  Cancelled: "bg-rose-50 text-rose-700",
-};
 
 export type ClientListItemProps = {
   item: ClientItem;
-  onStatusChange: (id: string, status: ClientItem["status"]) => void;
 };
 
-export function ClientListItem({ item, onStatusChange }: ClientListItemProps) {
+export function ClientListItem({ item }: ClientListItemProps) {
   const router = useRouter();
 
   const goToDetail = () => router.push(`/s-admin/clients/${item.id}`);
@@ -48,19 +32,22 @@ export function ClientListItem({ item, onStatusChange }: ClientListItemProps) {
           <p className="font-semibold text-lg text-slate-900">{item.name}</p>
           <p className="text-slate-500 text-sm">{item.email}</p>
           <p className="text-slate-500 text-sm">
-            Service: {item.requestedService}
+            Member since {new Date(item.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+            })}
           </p>
         </div>
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <div className="flex flex-wrap items-center gap-3">
             <Badge
-              className={`rounded-full px-3 py-1 font-semibold text-[11px] ${statusStyles[item.status]}`}
+              className="rounded-full bg-emerald-50 px-3 py-1 font-semibold text-[11px] text-emerald-700"
               variant="secondary"
             >
-              {item.status}
+              Active
             </Badge>
             <span className="font-semibold text-slate-900 text-xs">
-              {item.subscriptionId}
+              CL-{item.id.slice(0, 4).toUpperCase()}
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -75,40 +62,6 @@ export function ClientListItem({ item, onStatusChange }: ClientListItemProps) {
             >
               View
             </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  className="cursor-pointer"
-                  onClick={(event) => event.stopPropagation()}
-                  size="sm"
-                  variant="secondary"
-                >
-                  Update status
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="min-w-48"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <DropdownMenuLabel>Set status</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup
-                  onValueChange={(value) =>
-                    onStatusChange(item.id, value as ClientItem["status"])
-                  }
-                  value={item.status}
-                >
-                  {(["Approved", "Pending", "Cancelled"] as const).map(
-                    (status) => (
-                      <DropdownMenuRadioItem key={status} value={status}>
-                        {status}
-                      </DropdownMenuRadioItem>
-                    )
-                  )}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
       </div>
