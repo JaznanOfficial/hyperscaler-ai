@@ -97,7 +97,19 @@ export const projectTimeline = [
   },
 ] as const;
 
-export const blockers = [
+type BlockerRiskLevel = "Low Risk" | "Medium Risk" | "High Risk";
+
+interface Blocker {
+  title: string;
+  riskLabel: BlockerRiskLevel;
+  riskBg: string;
+  riskDot: string;
+  riskText: string;
+  description: string;
+  waitingOn: string;
+}
+
+export const blockers: Blocker[] = [
   {
     title: "Frontend Development",
     riskLabel: "Medium Risk",
@@ -116,7 +128,7 @@ export const blockers = [
     description: "Content structuring pending",
     waitingOn: "Content Writer",
   },
-] as const;
+];
 
 export const softwareInsights = [
   {
