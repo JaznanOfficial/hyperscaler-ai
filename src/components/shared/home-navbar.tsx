@@ -28,7 +28,7 @@ export function HomeNavbar() {
             <Image alt="Hyperscaler" height={40} src="/logo.png" width={140} />
           </Link>
 
-          <nav className="hidden items-center gap-6 lg:flex">
+          <nav className="hidden items-center gap-6 lg:ml-32 lg:flex">
             <Link
               className={` ${
                 pathname === "/" ? activeLinkClass : inactiveLinkClass
