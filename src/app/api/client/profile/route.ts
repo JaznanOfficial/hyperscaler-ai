@@ -1,7 +1,7 @@
+import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
-import bcrypt from "bcryptjs";
 
 export async function GET() {
   try {

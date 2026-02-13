@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -27,7 +26,9 @@ const statusLabels: Record<string, string> = {
   CANCELLED: "Cancelled",
 };
 
-export function ClientSubscriptionList({ projects }: ClientSubscriptionListProps) {
+export function ClientSubscriptionList({
+  projects,
+}: ClientSubscriptionListProps) {
   if (projects.length === 0) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center">
@@ -40,9 +41,10 @@ export function ClientSubscriptionList({ projects }: ClientSubscriptionListProps
     <div className="rounded-2xl border border-slate-200 bg-white">
       <ul className="divide-y divide-slate-200">
         {projects.map((project) => {
-          const serviceName = project.services[0]?.serviceName || "Service Package";
+          const serviceName =
+            project.services[0]?.serviceName || "Service Package";
           const serviceCount = project.services.length;
-          
+
           return (
             <li className="px-4 py-4" key={project.id}>
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -77,10 +79,13 @@ export function ClientSubscriptionList({ projects }: ClientSubscriptionListProps
                           : "Requested:"}
                       </span>
                       <span className="font-semibold text-slate-900">
-                        {new Date(project.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                        })}
+                        {new Date(project.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                          }
+                        )}
                       </span>
                     </div>
                   </div>

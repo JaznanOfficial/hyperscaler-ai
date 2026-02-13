@@ -29,14 +29,14 @@ export async function GET(
     // Enrich services - optimized with single query
     const services = Array.isArray(project.services) ? project.services : [];
     const serviceIds = services.map((s: any) => s.serviceId).filter(Boolean);
-    
+
     const fullServices = await prisma.service.findMany({
       where: { id: { in: serviceIds } },
       select: { id: true, serviceName: true, sections: true },
     });
-    
-    const serviceMap = new Map(fullServices.map(s => [s.id, s]));
-    
+
+    const serviceMap = new Map(fullServices.map((s) => [s.id, s]));
+
     const enrichedServices = services.map((service: any) => {
       const fullService = serviceMap.get(service.serviceId);
       if (fullService) {

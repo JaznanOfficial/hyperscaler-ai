@@ -28,7 +28,9 @@ export default function ClientSubscriptionsPage() {
   const allCount = projects.length;
   const approvedCount = projects.filter((p) => p.status === "APPROVED").length;
   const pendingCount = projects.filter((p) => p.status === "PENDING").length;
-  const cancelledCount = projects.filter((p) => p.status === "CANCELLED").length;
+  const cancelledCount = projects.filter(
+    (p) => p.status === "CANCELLED"
+  ).length;
 
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">

@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
 interface Service {
@@ -16,7 +22,9 @@ interface Project {
 }
 
 export function ServiceMetricsView() {
-  const [allServices, setAllServices] = useState<Array<{ projectId: string; service: Service }>>([]);
+  const [allServices, setAllServices] = useState<
+    Array<{ projectId: string; service: Service }>
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,15 +32,17 @@ export function ServiceMetricsView() {
       .then((res) => res.json())
       .then((data) => {
         const projects: Project[] = data.projects || [];
-        const approvedProjects = projects.filter((p) => p.status === "APPROVED");
-        
+        const approvedProjects = projects.filter(
+          (p) => p.status === "APPROVED"
+        );
+
         const allServicesData = approvedProjects.flatMap((project) =>
           (project.services || []).map((service) => ({
             projectId: project.id,
             service,
           }))
         );
-        
+
         setAllServices(allServicesData);
         setLoading(false);
       })
@@ -46,11 +56,17 @@ export function ServiceMetricsView() {
   return (
     <>
       {allServices.map(({ projectId, service }, index) => {
-        const updates = service.updates && typeof service.updates === "object" ? service.updates : {};
+        const updates =
+          service.updates && typeof service.updates === "object"
+            ? service.updates
+            : {};
         const metrics = Object.entries(updates);
 
         return (
-          <Card className="border-none bg-white shadow-sm" key={`${projectId}-${index}`}>
+          <Card
+            className="border-none bg-white shadow-sm"
+            key={`${projectId}-${index}`}
+          >
             <CardHeader className="space-y-6">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="space-y-2">
@@ -78,7 +94,9 @@ export function ServiceMetricsView() {
                       <p className="font-medium text-gray-600 text-xs capitalize">
                         {key.replace(/_/g, " ")}
                       </p>
-                      <p className="font-semibold text-lg leading-5">{String(value)}</p>
+                      <p className="font-semibold text-lg leading-5">
+                        {String(value)}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -97,11 +115,14 @@ export function ServiceMetricsView() {
                   </div>
                   <div className="space-y-4">
                     {metrics.map(([key, value]) => {
-                      const numValue = typeof value === 'number' ? value : parseFloat(String(value)) || 0;
+                      const numValue =
+                        typeof value === "number"
+                          ? value
+                          : Number.parseFloat(String(value)) || 0;
                       const progress = Math.min(Math.max(numValue, 0), 100);
-                      
+
                       return (
-                        <div key={key} className="space-y-2">
+                        <div className="space-y-2" key={key}>
                           <div className="flex items-center justify-between">
                             <p className="font-medium text-slate-900 text-sm capitalize">
                               {key.replace(/_/g, " ")}
@@ -110,10 +131,7 @@ export function ServiceMetricsView() {
                               {String(value)}
                             </p>
                           </div>
-                          <Progress 
-                            value={progress} 
-                            className="h-2"
-                          />
+                          <Progress className="h-2" value={progress} />
                         </div>
                       );
                     })}

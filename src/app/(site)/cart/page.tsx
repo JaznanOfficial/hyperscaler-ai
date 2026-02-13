@@ -78,16 +78,16 @@ export default function CartPage() {
         <div className="grid items-start gap-6 md:grid-cols-[2fr_1fr]">
           <div className="space-y-5">
             {items.map((item) => (
-              <CartItemCard 
+              <CartItemCard
                 item={{
                   id: item.serviceId,
                   title: item.serviceName,
                   description: "AI-powered service to help grow your business",
                   price: 500,
                   cadence: "/month",
-                  badge: "Popular"
-                }} 
-                key={item.serviceId} 
+                  badge: "Popular",
+                }}
+                key={item.serviceId}
               />
             ))}
           </div>
@@ -108,9 +108,7 @@ export default function CartPage() {
               </div>
               <div className="flex items-center justify-between">
                 <span>Extra Charge/Discount</span>
-                <span className="font-semibold text-slate-900">
-                  $10
-                </span>
+                <span className="font-semibold text-slate-900">$10</span>
               </div>
             </div>
             <Separator className="border-slate-100" />
@@ -126,7 +124,8 @@ export default function CartPage() {
                 size="lg"
                 variant="gradient"
               >
-                {isCheckingOut ? "Processing..." : "Proceed to Checkout"} <ArrowRight className="size-4" />
+                {isCheckingOut ? "Processing..." : "Proceed to Checkout"}{" "}
+                <ArrowRight className="size-4" />
               </Button>
               <Button asChild className="w-full" size="lg" variant="outline">
                 <Link href="/services">Continue Browsing</Link>

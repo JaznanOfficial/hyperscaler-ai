@@ -3,7 +3,6 @@
 import type { SubscriptionItem } from "@/components/admin/subscription-list";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
@@ -86,8 +85,8 @@ export function SubscriptionListItem({
             <div>
               <p className="font-medium text-slate-900">Status</p>
               <Select
-                value={item.status}
                 onValueChange={(value) => onStatusChange(item.id, value)}
+                value={item.status}
               >
                 <SelectTrigger className="mt-2 w-full">
                   <SelectValue />

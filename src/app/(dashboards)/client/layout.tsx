@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { auth } from "@/backend/config/auth";
 
 import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar";
+import { CartIcon } from "@/components/client/cart-icon";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,7 +16,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { CartIcon } from "@/components/client/cart-icon";
 
 const clientNavItems: AppSidebarNavItem[] = [
   {

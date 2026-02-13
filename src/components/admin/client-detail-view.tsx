@@ -50,7 +50,9 @@ const serviceStatusStyles: Record<ClientServiceStatus, string> = {
 
 export function ClientDetailView({ client }: { client: ClientDetail }) {
   const [services, setServices] = useState(client.requestedServices);
-  const [employees, setEmployees] = useState<Array<{ id: string; name: string }>>([]);
+  const [employees, setEmployees] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
 
   useEffect(() => {
     fetch("/api/admin/employees")
@@ -75,7 +77,12 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          status: status === "Approved" ? "APPROVED" : status === "Cancelled" ? "CANCELLED" : "PENDING",
+          status:
+            status === "Approved"
+              ? "APPROVED"
+              : status === "Cancelled"
+                ? "CANCELLED"
+                : "PENDING",
         }),
       });
 
@@ -93,7 +100,10 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
     }
   };
 
-  const toggleEmployeeAssignment = async (serviceId: string, employeeName: string) => {
+  const toggleEmployeeAssignment = async (
+    serviceId: string,
+    employeeName: string
+  ) => {
     const service = services.find((s) => s.id === serviceId);
     if (!service) return;
 
@@ -245,14 +255,21 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
                         <DropdownMenuLabel>Assign teammates</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         {availableEmployees.map((employeeName) => {
-                          const employee = employees.find((e) => e.name === employeeName);
+                          const employee = employees.find(
+                            (e) => e.name === employeeName
+                          );
                           return (
                             <DropdownMenuCheckboxItem
-                              checked={service.assignedEmployees.includes(employee?.id || "")}
+                              checked={service.assignedEmployees.includes(
+                                employee?.id || ""
+                              )}
                               className="cursor-pointer"
                               key={employeeName}
                               onCheckedChange={() =>
-                                toggleEmployeeAssignment(service.id, employeeName)
+                                toggleEmployeeAssignment(
+                                  service.id,
+                                  employeeName
+                                )
                               }
                             >
                               {employeeName}
@@ -265,7 +282,9 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
                   <div className="flex flex-wrap gap-2">
                     {service.assignedEmployees.length ? (
                       service.assignedEmployees.map((employeeId) => {
-                        const employee = employees.find((e) => e.id === employeeId);
+                        const employee = employees.find(
+                          (e) => e.id === employeeId
+                        );
                         return (
                           <Badge
                             className="flex items-center gap-1 rounded-full px-3 py-1 text-[11px]"
@@ -276,7 +295,9 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
                             <button
                               aria-label={`Remove ${employee?.name}`}
                               className="cursor-pointer text-slate-500 transition hover:text-slate-900"
-                              onClick={() => removeEmployee(service.id, employeeId)}
+                              onClick={() =>
+                                removeEmployee(service.id, employeeId)
+                              }
                               type="button"
                             >
                               <X className="size-3" />

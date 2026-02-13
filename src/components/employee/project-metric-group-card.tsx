@@ -13,7 +13,10 @@ type ProjectMetricGroupCardProps = {
   onMetricChange?: (metricId: string, value: string | boolean) => void;
 };
 
-export function ProjectMetricGroupCard({ group, onMetricChange }: ProjectMetricGroupCardProps) {
+export function ProjectMetricGroupCard({
+  group,
+  onMetricChange,
+}: ProjectMetricGroupCardProps) {
   const activeMetrics = group.metrics.filter((metric) => metric.enabled);
   if (!activeMetrics.length) return null;
 
@@ -33,9 +36,9 @@ export function ProjectMetricGroupCard({ group, onMetricChange }: ProjectMetricG
               id={inputId}
               key={metric.id}
               label={metric.label}
-              value={value}
-              type={type}
               onChange={(newValue) => onMetricChange?.(metric.id, newValue)}
+              type={type}
+              value={value}
             />
           );
         })}

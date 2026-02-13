@@ -56,12 +56,17 @@ export function SoftwareDevelopmentTimelineSection() {
                 <p className="font-semibold text-slate-900 text-sm">
                   {blocker.title}
                 </p>
-                <span
-                  className={`inline-flex items-center gap-2 rounded-full px-3 py-1 font-semibold text-xs ${blocker.riskBg} ${blocker.riskText}`}
-                >
-                  <span className={`size-2 rounded-full ${blocker.riskDot}`} />
-                  {blocker.riskLabel}
-                </span>
+                {blocker.riskLabel !== "Medium Risk" &&
+                  blocker.riskLabel !== "Low Risk" && (
+                    <span
+                      className={`inline-flex items-center gap-2 rounded-full px-3 py-1 font-semibold text-xs ${blocker.riskBg} ${blocker.riskText}`}
+                    >
+                      <span
+                        className={`size-2 rounded-full ${blocker.riskDot}`}
+                      />
+                      {blocker.riskLabel}
+                    </span>
+                  )}
               </div>
               <p className="mt-2 text-slate-600 text-sm">
                 {blocker.description}

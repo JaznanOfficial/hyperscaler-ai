@@ -24,7 +24,7 @@ export default function ProfilePage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  
+
   const [passwordVisibility, setPasswordVisibility] = useState({
     current: false,
     new: false,
@@ -55,7 +55,7 @@ export default function ProfilePage() {
   };
 
   const handleSaveProfile = async () => {
-    if (!name.trim() || !email.trim()) {
+    if (!(name.trim() && email.trim())) {
       toast.error("Name and email are required");
       return;
     }
@@ -76,14 +76,16 @@ export default function ProfilePage() {
 
       toast.success("Profile updated successfully!");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to update profile");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update profile"
+      );
     } finally {
       setSaving(false);
     }
   };
 
   const handleChangePassword = async () => {
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (!(currentPassword && newPassword && confirmPassword)) {
       toast.error("All password fields are required");
       return;
     }
@@ -117,7 +119,9 @@ export default function ProfilePage() {
       setNewPassword("");
       setConfirmPassword("");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to update password");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update password"
+      );
     } finally {
       setSaving(false);
     }
@@ -164,30 +168,30 @@ export default function ProfilePage() {
             <Label htmlFor="full-name">Full Name</Label>
             <Input
               className="bg-zinc-100"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               id="full-name"
+              onChange={(e) => setName(e.target.value)}
               placeholder="Enter your full name"
+              value={name}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
               className="bg-zinc-100"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               id="email"
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               type="email"
+              value={email}
             />
           </div>
         </CardContent>
         <CardFooter className="flex justify-end pt-6">
-          <Button 
-            className="px-6" 
-            variant="gradient"
-            onClick={handleSaveProfile}
+          <Button
+            className="px-6"
             disabled={saving}
+            onClick={handleSaveProfile}
+            variant="gradient"
           >
             {saving ? "Saving..." : "Save Changes"}
           </Button>
@@ -216,10 +220,10 @@ export default function ProfilePage() {
               <Input
                 className="bg-zinc-100 pr-12"
                 id="current-password"
+                onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Enter current password"
                 type={passwordVisibility.current ? "text" : "password"}
                 value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
               />
               <button
                 aria-label={
@@ -243,10 +247,10 @@ export default function ProfilePage() {
               <Input
                 className="bg-zinc-100 pr-12"
                 id="new-password"
+                onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
                 type={passwordVisibility.new ? "text" : "password"}
                 value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
               />
               <button
                 aria-label={
@@ -270,10 +274,10 @@ export default function ProfilePage() {
               <Input
                 className="bg-zinc-100 pr-12"
                 id="confirm-password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
                 type={passwordVisibility.confirm ? "text" : "password"}
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
               />
               <button
                 aria-label={
@@ -293,11 +297,11 @@ export default function ProfilePage() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-end pt-6">
-          <Button 
-            className="px-6" 
-            variant="gradient"
-            onClick={handleChangePassword}
+          <Button
+            className="px-6"
             disabled={saving}
+            onClick={handleChangePassword}
+            variant="gradient"
           >
             {saving ? "Updating..." : "Update Password"}
           </Button>

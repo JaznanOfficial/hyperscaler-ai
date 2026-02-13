@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-
+import { useEffect, useState } from "react";
+import { AddToCartButton } from "@/components/client/add-to-cart-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { AddToCartButton } from "@/components/client/add-to-cart-button";
 
 interface Service {
   id: string;
@@ -40,7 +39,9 @@ export function ExploreServicesGrid() {
       {loading ? (
         <p className="mt-10 text-center text-slate-600">Loading services...</p>
       ) : services.length === 0 ? (
-        <p className="mt-10 text-center text-slate-600">No services available</p>
+        <p className="mt-10 text-center text-slate-600">
+          No services available
+        </p>
       ) : (
         <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {services.map((service) => (
@@ -71,9 +72,9 @@ export function ExploreServicesGrid() {
                 </p>
                 <div className="flex w-full flex-col gap-3 min-[450px]:flex-row">
                   <AddToCartButton
+                    price="$TBD"
                     serviceId={service.id}
                     serviceName={service.serviceName}
-                    price="$TBD"
                   />
                   <Button asChild className="flex-1" variant="outline">
                     <Link href={`/client/services/${service.id}`}>

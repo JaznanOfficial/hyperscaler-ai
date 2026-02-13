@@ -32,7 +32,8 @@ export function ClientListItem({ item }: ClientListItemProps) {
           <p className="font-semibold text-lg text-slate-900">{item.name}</p>
           <p className="text-slate-500 text-sm">{item.email}</p>
           <p className="text-slate-500 text-sm">
-            Member since {new Date(item.createdAt).toLocaleDateString("en-US", {
+            Member since{" "}
+            {new Date(item.createdAt).toLocaleDateString("en-US", {
               month: "short",
               year: "numeric",
             })}

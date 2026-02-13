@@ -39,9 +39,9 @@ export function AddToCartButton({
   return (
     <Button
       className="min-w-[160px]"
-      variant={isInCart ? "outline" : "gradient"}
-      onClick={handleAddToCart}
       disabled={isInCart}
+      onClick={handleAddToCart}
+      variant={isInCart ? "outline" : "gradient"}
     >
       <ShoppingCart className="mr-2 size-4" />
       {isInCart ? "In Cart" : "Add to Cart"}
