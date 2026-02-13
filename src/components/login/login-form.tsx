@@ -98,7 +98,7 @@ export function LoginForm({
             <div className="flex items-center">
               <FieldLabel htmlFor="password">Password</FieldLabel>
               <Link
-                className="ml-auto font-medium text-sky-500 text-sm no-underline hover:text-sky-600"
+                className="ml-auto font-medium text-purple-500 text-sm no-underline hover:text-purple-600"
                 href="/forgot-password"
               >
                 Forgot password?
@@ -150,10 +150,10 @@ export function LoginForm({
           </Field>
 
           <Field>
-            <FieldDescription className="px-6 text-center text-slate-700 [&>a:hover]:text-sky-600 [&>a:hover]:no-underline [&>a]:no-underline">
+            <FieldDescription className="px-6 text-center text-slate-700 [&>a:hover]:text-purple-600 [&>a:hover]:no-underline [&>a]:no-underline">
               Don't have an account?{" "}
               <Link
-                className="font-medium text-sky-500 no-underline"
+                className="font-medium text-purple-500 no-underline"
                 href="/signup"
               >
                 Sign up

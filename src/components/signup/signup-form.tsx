@@ -212,10 +212,10 @@ export function SignupForm({
               </svg>
               Sign up with GitHub
             </Button> */}
-            <FieldDescription className="px-6 text-center text-slate-700 [&>a:hover]:text-sky-600 [&>a:hover]:no-underline [&>a]:no-underline">
+            <FieldDescription className="px-6 text-center text-slate-700 [&>a:hover]:text-purple-600 [&>a:hover]:no-underline [&>a]:no-underline">
               Already have an account?{" "}
               <Link
-                className="font-medium text-sky-500 no-underline"
+                className="font-medium text-purple-500 no-underline"
                 href="/login"
               >
                 Sign in
