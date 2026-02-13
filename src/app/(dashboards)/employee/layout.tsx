@@ -21,6 +21,7 @@ function getRoleBasedRedirect(role: string): string {
     case "ADMIN":
       return "/s-admin";
     case "MANAGER":
+      return "/s-admin";
     case "EMPLOYEE":
       return "/employee";
     case "CLIENT":

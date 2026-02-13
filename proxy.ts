@@ -12,7 +12,7 @@ const authRoutes = ["/login", "/signup", "/forgot-password", "/reset-password"];
 type UserRole = "ADMIN" | "EMPLOYEE" | "MANAGER" | "CLIENT";
 
 const ROUTE_ACCESS: Record<string, UserRole[]> = {
-  "/s-admin": ["ADMIN"],
+  "/s-admin": ["ADMIN", "MANAGER"],
   "/employee": ["EMPLOYEE", "MANAGER"],
   "/client": ["CLIENT"],
 };
@@ -22,6 +22,7 @@ function getRoleBasedRedirect(role: string): string {
     case "ADMIN":
       return "/s-admin";
     case "MANAGER":
+      return "/s-admin";
     case "EMPLOYEE":
       return "/employee";
     case "CLIENT":

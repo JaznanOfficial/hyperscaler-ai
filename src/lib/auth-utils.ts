@@ -11,6 +11,7 @@ export function getRoleDashboard(role: UserRole): string {
     case "ADMIN":
       return "/s-admin";
     case "MANAGER":
+      return "/s-admin";
     case "EMPLOYEE":
       return "/employee";
     case "CLIENT":

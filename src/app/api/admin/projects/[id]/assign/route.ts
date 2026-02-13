@@ -4,7 +4,7 @@ import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
 
 const assignEmployeesSchema = z.object({
-  employeeIds: z.array(z.string()).min(1, "At least one employee required"),
+  employeeIds: z.array(z.string()),
 });
 
 export async function POST(
@@ -19,7 +19,7 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.role !== "ADMIN") {
+    if (session.user.role !== "ADMIN" && session.user.role !== "MANAGER") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -34,18 +34,20 @@ export async function POST(
     const body = await request.json();
     const { employeeIds } = assignEmployeesSchema.parse(body);
 
-    const employees = await prisma.user.findMany({
-      where: {
-        id: { in: employeeIds },
-        role: { in: ["EMPLOYEE", "MANAGER"] },
-      },
-    });
+    if (employeeIds.length > 0) {
+      const employees = await prisma.user.findMany({
+        where: {
+          id: { in: employeeIds },
+          role: { in: ["EMPLOYEE", "MANAGER"] },
+        },
+      });
 
-    if (employees.length !== employeeIds.length) {
-      return NextResponse.json(
-        { error: "Some employee IDs are invalid" },
-        { status: 400 }
-      );
+      if (employees.length !== employeeIds.length) {
+        return NextResponse.json(
+          { error: "Some employee IDs are invalid" },
+          { status: 400 }
+        );
+      }
     }
 
     const updatedProject = await prisma.project.update({

@@ -1,7 +1,8 @@
 "use client";
 
 import { Eye, EyeClosed, Lock, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,11 +17,35 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function ProfilePage() {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  
   const [passwordVisibility, setPasswordVisibility] = useState({
     current: false,
     new: false,
     confirm: false,
   });
+
+  useEffect(() => {
+    fetch("/api/client/profile")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          setName(data.user.name);
+          setEmail(data.user.email);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        toast.error("Failed to load profile");
+        setLoading(false);
+      });
+  }, []);
 
   const toggleVisibility = (field: keyof typeof passwordVisibility) => {
     setPasswordVisibility((prev) => ({
@@ -28,6 +53,83 @@ export default function ProfilePage() {
       [field]: !prev[field],
     }));
   };
+
+  const handleSaveProfile = async () => {
+    if (!name.trim() || !email.trim()) {
+      toast.error("Name and email are required");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const response = await fetch("/api/client/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update profile");
+      }
+
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to update profile");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      toast.error("All password fields are required");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("New passwords do not match");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const response = await fetch("/api/client/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update password");
+      }
+
+      toast.success("Password updated successfully!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to update password");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-1 items-center justify-center p-4">
+        <p className="text-slate-500">Loading profile...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-4">
@@ -41,7 +143,7 @@ export default function ProfilePage() {
           </span>
         </h1>
         <p className="text-base text-slate-600 leading-3">
-          Manage your account information and login details.{" "}
+          Manage your account information and login details.
         </p>
       </div>
 
@@ -62,7 +164,8 @@ export default function ProfilePage() {
             <Label htmlFor="full-name">Full Name</Label>
             <Input
               className="bg-zinc-100"
-              defaultValue="Jon Doe"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               id="full-name"
               placeholder="Enter your full name"
             />
@@ -71,7 +174,8 @@ export default function ProfilePage() {
             <Label htmlFor="email">Email</Label>
             <Input
               className="bg-zinc-100"
-              defaultValue="client@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               id="email"
               placeholder="you@example.com"
               type="email"
@@ -79,8 +183,13 @@ export default function ProfilePage() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-end pt-6">
-          <Button className="px-6" variant="gradient">
-            Save Changes
+          <Button 
+            className="px-6" 
+            variant="gradient"
+            onClick={handleSaveProfile}
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "Save Changes"}
           </Button>
         </CardFooter>
       </Card>
@@ -109,6 +218,8 @@ export default function ProfilePage() {
                 id="current-password"
                 placeholder="Enter current password"
                 type={passwordVisibility.current ? "text" : "password"}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
               />
               <button
                 aria-label={
@@ -134,6 +245,8 @@ export default function ProfilePage() {
                 id="new-password"
                 placeholder="Enter new password"
                 type={passwordVisibility.new ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
               />
               <button
                 aria-label={
@@ -159,6 +272,8 @@ export default function ProfilePage() {
                 id="confirm-password"
                 placeholder="Confirm new password"
                 type={passwordVisibility.confirm ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
               <button
                 aria-label={
@@ -178,8 +293,13 @@ export default function ProfilePage() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-end pt-6">
-          <Button className="px-6" variant="gradient">
-            Update Password
+          <Button 
+            className="px-6" 
+            variant="gradient"
+            onClick={handleChangePassword}
+            disabled={saving}
+          >
+            {saving ? "Updating..." : "Update Password"}
           </Button>
         </CardFooter>
       </Card>

@@ -8,7 +8,12 @@ import {
 } from "@/components/ui/card";
 import type { MetricGroup } from "@/data/project-metric-groups";
 
-export function ProjectMetricGroupCard({ group }: { group: MetricGroup }) {
+type ProjectMetricGroupCardProps = {
+  group: MetricGroup & { updates?: Record<string, any> };
+  onMetricChange?: (metricId: string, value: string | boolean) => void;
+};
+
+export function ProjectMetricGroupCard({ group, onMetricChange }: ProjectMetricGroupCardProps) {
   const activeMetrics = group.metrics.filter((metric) => metric.enabled);
   if (!activeMetrics.length) return null;
 
@@ -21,11 +26,16 @@ export function ProjectMetricGroupCard({ group }: { group: MetricGroup }) {
       <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {activeMetrics.map((metric) => {
           const inputId = `${group.id}-${metric.id}`;
+          const value = (metric as any).value || "";
+          const type = (metric as any).type || "input";
           return (
             <ProjectMetricInput
               id={inputId}
               key={metric.id}
               label={metric.label}
+              value={value}
+              type={type}
+              onChange={(newValue) => onMetricChange?.(metric.id, newValue)}
             />
           );
         })}

@@ -41,7 +41,7 @@ export default async function SDashboardLayout({
     redirect("/login");
   }
 
-  if (session.user.role !== "ADMIN") {
+  if (session.user.role !== "ADMIN" && session.user.role !== "MANAGER") {
     redirect(getRoleBasedRedirect(session.user.role));
   }
   // Note: Access control is handled by proxy.ts middleware

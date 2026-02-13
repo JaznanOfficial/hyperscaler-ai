@@ -20,7 +20,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.role !== "ADMIN") {
+    if (session.user.role !== "ADMIN" && session.user.role !== "MANAGER") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -54,7 +54,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.role !== "ADMIN") {
+    if (session.user.role !== "ADMIN" && session.user.role !== "MANAGER") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -68,6 +68,14 @@ export async function PATCH(
 
     const body = await request.json();
     const validatedData = updateProjectSchema.parse(body);
+
+    // Only ADMIN can change status (approve/reject projects)
+    if (validatedData.status && session.user.role !== "ADMIN") {
+      return NextResponse.json(
+        { error: "Only admins can approve or change project status" },
+        { status: 403 }
+      );
+    }
 
     const updatedProject = await prisma.project.update({
       where: { id },
@@ -105,7 +113,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.role !== "ADMIN") {
+    if (session.user.role !== "ADMIN" && session.user.role !== "MANAGER") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

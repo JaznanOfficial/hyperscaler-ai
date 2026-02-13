@@ -1,3 +1,6 @@
+"use client";
+
+import { Suspense } from "react";
 import { ActiveServicesStatusCard } from "@/components/dashboard/client/active-services-status-card";
 import { BrandingContentPerformanceCard } from "@/components/dashboard/client/branding-content-performance-card";
 import { ColdCallingPerformanceCard } from "@/components/dashboard/client/cold-calling-performance-card";
@@ -8,6 +11,7 @@ import { PaidAdsPerformanceCard } from "@/components/dashboard/client/paid-ads-p
 import { ServicesOverviewCard } from "@/components/dashboard/client/services-overview-card";
 import { SocialMediaPerformanceCard } from "@/components/dashboard/client/social-media-performance-card";
 import { SoftwareDevelopmentStatusCard } from "@/components/dashboard/client/software-development-status-card";
+import { ServiceMetricsView } from "@/components/client/service-metrics-view";
 
 export default function ClientStatisticsPage() {
   return (
@@ -86,6 +90,10 @@ export default function ClientStatisticsPage() {
       <ColdLinkedinPerformanceCard />
 
       <SoftwareDevelopmentStatusCard />
+
+      <Suspense fallback={<div>Loading...</div>}>
+        <ServiceMetricsView />
+      </Suspense>
     </div>
   );
 }

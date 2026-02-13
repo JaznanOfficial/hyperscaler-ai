@@ -23,7 +23,7 @@ export class AuthGuard {
   }
 
   static async requireAdmin() {
-    return AuthGuard.requireRole(["ADMIN"]);
+    return AuthGuard.requireRole(["ADMIN", "MANAGER"]);
   }
 
   static async requireEmployee() {

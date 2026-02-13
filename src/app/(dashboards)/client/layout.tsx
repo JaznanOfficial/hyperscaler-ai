@@ -15,6 +15,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { CartIcon } from "@/components/client/cart-icon";
 
 const clientNavItems: AppSidebarNavItem[] = [
   {
@@ -95,6 +96,9 @@ export default async function ClientDashboardLayout({
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+            <div className="ml-auto">
+              <CartIcon />
+            </div>
           </div>
         </header>
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden bg-[#F5F7Fa]">

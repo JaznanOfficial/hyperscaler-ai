@@ -1,21 +1,57 @@
+"use client";
+
 import { ArrowRight, ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import { CartItemCard } from "@/components/home/cart/cart-item-card";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { sampleCartItems } from "@/data/cart-items";
-import { formatCurrency } from "@/lib/currency";
+import { useCart } from "@/hooks/use-cart";
 import { cn } from "@/lib/utils";
 
 export default function CartPage() {
-  const subtotal = sampleCartItems.reduce((sum, item) => sum + item.price, 0);
-  const extraCharge = 10;
-  const total = subtotal + extraCharge;
-  const subtotalDisplay = formatCurrency(subtotal);
-  const extraChargeDisplay = formatCurrency(extraCharge);
-  const totalDisplay = formatCurrency(total);
+  const router = useRouter();
+  const { items, clearCart } = useCart();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  const handleCheckout = async () => {
+    if (items.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    setIsCheckingOut(true);
+    try {
+      const response = await fetch("/api/client/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          services: items.map((item) => ({
+            serviceId: item.serviceId,
+            serviceName: item.serviceName,
+          })),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Checkout failed");
+      }
+
+      clearCart();
+      toast.success("Order placed successfully! Awaiting admin approval.");
+      router.push("/client/subscriptions");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Checkout failed");
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
 
   return (
     <section className="bg-[#FDFBFF] py-12">
@@ -41,8 +77,18 @@ export default function CartPage() {
 
         <div className="grid items-start gap-6 md:grid-cols-[2fr_1fr]">
           <div className="space-y-5">
-            {sampleCartItems.map((item) => (
-              <CartItemCard item={item} key={item.id} />
+            {items.map((item) => (
+              <CartItemCard 
+                item={{
+                  id: item.serviceId,
+                  title: item.serviceName,
+                  description: "AI-powered service to help grow your business",
+                  price: 500,
+                  cadence: "/month",
+                  badge: "Popular"
+                }} 
+                key={item.serviceId} 
+              />
             ))}
           </div>
 
@@ -53,35 +99,37 @@ export default function CartPage() {
             <div className="space-y-3 text-slate-600 text-sm">
               <div className="flex items-center justify-between text-base">
                 <span>
-                  Subtotal ({sampleCartItems.length}{" "}
-                  {sampleCartItems.length === 1 ? "service" : "services"})
+                  Subtotal ({items.length}{" "}
+                  {items.length === 1 ? "service" : "services"})
                 </span>
                 <span className="font-semibold text-slate-900">
-                  {subtotalDisplay}
+                  ${items.length * 500}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Extra Charge/Discount</span>
                 <span className="font-semibold text-slate-900">
-                  {extraChargeDisplay}
+                  $10
                 </span>
               </div>
             </div>
             <Separator className="border-slate-100" />
             <div className="flex items-center justify-between font-semibold text-lg text-slate-900">
               <span>Total per month</span>
-              <span>{totalDisplay}</span>
+              <span>${items.length * 500 + 10}</span>
             </div>
             <div className="space-y-2">
               <Button
                 className="w-full gap-2 font-semibold text-base"
+                disabled={isCheckingOut}
+                onClick={handleCheckout}
                 size="lg"
                 variant="gradient"
               >
-                Proceed to Checkout <ArrowRight className="size-4" />
+                {isCheckingOut ? "Processing..." : "Proceed to Checkout"} <ArrowRight className="size-4" />
               </Button>
-              <Button className="w-full" size="lg" variant="outline">
-                Continue Browsing
+              <Button asChild className="w-full" size="lg" variant="outline">
+                <Link href="/services">Continue Browsing</Link>
               </Button>
             </div>
           </Card>

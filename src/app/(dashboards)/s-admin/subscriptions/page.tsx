@@ -1,49 +1,39 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { SubscriptionList } from "@/components/admin/subscription-list";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+
+interface Project {
+  id: string;
+  clientId: string;
+  status: string;
+  services: any[];
+  createdAt: string;
+}
 
 export default function SuperAdminSubscriptionsPage() {
-  const totalPages: number = 5;
-  const currentPage: number = 1;
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/admin/projects")
+      .then((res) => res.json())
+      .then((data) => {
+        setProjects(data.projects || []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto">
-        <SubscriptionList />
+        {loading ? (
+          <p className="p-4 text-center text-slate-600">Loading projects...</p>
+        ) : (
+          <SubscriptionList projects={projects} />
+        )}
       </div>
-      <Pagination className="mt-4 py-3">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious aria-disabled={currentPage === 1} href="#" />
-          </PaginationItem>
-          {[1, 2, 3].map((page) => (
-            <PaginationItem key={page}>
-              <PaginationLink href="#" isActive={currentPage === page}>
-                {page}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">{totalPages}</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              aria-disabled={currentPage === totalPages}
-              href="#"
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
     </section>
   );
 }
