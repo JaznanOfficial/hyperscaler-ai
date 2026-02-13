@@ -40,16 +40,16 @@ export async function GET(
     // Enrich services with full service details - optimized with Promise.all
     const services = Array.isArray(project.services) ? project.services : [];
     const serviceIds = services.map((s: any) => s.serviceId).filter(Boolean);
-    
+
     // Fetch all services in one query
     const fullServices = await prisma.service.findMany({
       where: { id: { in: serviceIds } },
       select: { id: true, serviceName: true, sections: true },
     });
-    
+
     // Create a map for quick lookup
-    const serviceMap = new Map(fullServices.map(s => [s.id, s]));
-    
+    const serviceMap = new Map(fullServices.map((s) => [s.id, s]));
+
     // Enrich services
     const enrichedServices = services.map((service: any) => {
       const fullService = serviceMap.get(service.serviceId);
@@ -63,11 +63,11 @@ export async function GET(
       return service;
     });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       project: {
         ...project,
         services: enrichedServices,
-      }
+      },
     });
   } catch (error) {
     console.error("Error fetching project:", error);

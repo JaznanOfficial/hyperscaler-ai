@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -13,7 +13,9 @@ interface Project {
 }
 
 export function ActiveServicesList() {
-  const [activeServices, setActiveServices] = useState<Array<{ id: string; serviceName: string }>>([]);
+  const [activeServices, setActiveServices] = useState<
+    Array<{ id: string; serviceName: string }>
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,15 +23,17 @@ export function ActiveServicesList() {
       .then((res) => res.json())
       .then((data) => {
         const projects: Project[] = data.projects || [];
-        const approvedProjects = projects.filter((p) => p.status === "APPROVED");
-        
+        const approvedProjects = projects.filter(
+          (p) => p.status === "APPROVED"
+        );
+
         const services = approvedProjects.flatMap((project) =>
           (project.services || []).map((service) => ({
             id: project.id,
             serviceName: service.serviceName || "Service",
           }))
         );
-        
+
         setActiveServices(services);
         setLoading(false);
       })
@@ -91,7 +95,9 @@ export function ActiveServicesList() {
             <div className="flex w-full flex-col gap-4 pt-4">
               <div className="flex w-full flex-col gap-3 min-[450px]:flex-row">
                 <Button asChild className="flex-1" variant="outline">
-                  <Link href={`/client/statistics?service=${service.id}`}>View</Link>
+                  <Link href={`/client/statistics?service=${service.id}`}>
+                    View
+                  </Link>
                 </Button>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 
 export type ProjectMetricInputProps = {
   id: string;
@@ -10,20 +10,23 @@ export type ProjectMetricInputProps = {
   onChange?: (value: string | boolean) => void;
 };
 
-export function ProjectMetricInput({ 
-  id, 
-  label, 
-  value = "", 
+export function ProjectMetricInput({
+  id,
+  label,
+  value = "",
   type = "input",
-  onChange 
+  onChange,
 }: ProjectMetricInputProps) {
   if (type === "boolean") {
     return (
-      <label className="flex items-center justify-between gap-2 rounded-lg border border-slate-200 p-4" htmlFor={id}>
+      <label
+        className="flex items-center justify-between gap-2 rounded-lg border border-slate-200 p-4"
+        htmlFor={id}
+      >
         <span className="font-medium text-slate-900 text-sm">{label}</span>
-        <Switch 
-          id={id}
+        <Switch
           checked={value === true || value === "true"}
+          id={id}
           onCheckedChange={(checked) => onChange?.(checked)}
         />
       </label>
@@ -32,14 +35,17 @@ export function ProjectMetricInput({
 
   if (type === "textarea") {
     return (
-      <label className="flex flex-col gap-2 text-slate-600 text-sm" htmlFor={id}>
+      <label
+        className="flex flex-col gap-2 text-slate-600 text-sm"
+        htmlFor={id}
+      >
         <span className="font-medium text-slate-900">{label}</span>
-        <Textarea 
-          id={id} 
-          placeholder="Enter value"
-          value={value as string}
+        <Textarea
+          id={id}
           onChange={(e) => onChange?.(e.target.value)}
+          placeholder="Enter value"
           rows={3}
+          value={value as string}
         />
       </label>
     );
@@ -48,11 +54,11 @@ export function ProjectMetricInput({
   return (
     <label className="flex flex-col gap-2 text-slate-600 text-sm" htmlFor={id}>
       <span className="font-medium text-slate-900">{label}</span>
-      <Input 
-        id={id} 
+      <Input
+        id={id}
+        onChange={(e) => onChange?.(e.target.value)}
         placeholder="Enter value"
         value={value as string}
-        onChange={(e) => onChange?.(e.target.value)}
       />
     </label>
   );

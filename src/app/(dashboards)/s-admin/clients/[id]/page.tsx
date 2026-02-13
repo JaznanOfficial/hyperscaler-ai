@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ClientDetailView } from "@/components/admin/client-detail-view";
 
 interface ClientDetailPageProps {

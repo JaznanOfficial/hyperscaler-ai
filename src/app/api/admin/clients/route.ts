@@ -6,7 +6,10 @@ export async function GET(request: Request) {
   try {
     const session = await auth();
 
-    if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "MANAGER")) {
+    if (
+      !session?.user ||
+      (session.user.role !== "ADMIN" && session.user.role !== "MANAGER")
+    ) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

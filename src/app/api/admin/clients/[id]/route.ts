@@ -9,7 +9,10 @@ export async function GET(
   try {
     const session = await auth();
 
-    if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "MANAGER")) {
+    if (
+      !session?.user ||
+      (session.user.role !== "ADMIN" && session.user.role !== "MANAGER")
+    ) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -41,30 +44,46 @@ export async function GET(
       },
     });
 
-    const allEmployeeIds = projects.flatMap((p) => (p.assignedEmployees || []) as string[]);
-    const uniqueEmployeeIds = [...new Set(allEmployeeIds)].filter((id): id is string => typeof id === "string");
-    
-    const employees = uniqueEmployeeIds.length > 0 ? await prisma.user.findMany({
-      where: {
-        id: { in: uniqueEmployeeIds },
-      },
-      select: {
-        id: true,
-        name: true,
-      },
-    }) : [];
+    const allEmployeeIds = projects.flatMap(
+      (p) => (p.assignedEmployees || []) as string[]
+    );
+    const uniqueEmployeeIds = [...new Set(allEmployeeIds)].filter(
+      (id): id is string => typeof id === "string"
+    );
+
+    const employees =
+      uniqueEmployeeIds.length > 0
+        ? await prisma.user.findMany({
+            where: {
+              id: { in: uniqueEmployeeIds },
+            },
+            select: {
+              id: true,
+              name: true,
+            },
+          })
+        : [];
 
     const employeeMap = new Map(employees.map((e) => [e.id, e.name]));
 
     const requestedServices = projects.flatMap((project) => {
       const services = Array.isArray(project.services) ? project.services : [];
-      const assignedEmps = Array.isArray(project.assignedEmployees) ? project.assignedEmployees : [];
+      const assignedEmps = Array.isArray(project.assignedEmployees)
+        ? project.assignedEmployees
+        : [];
       return services.map((service: any) => ({
         id: project.id,
         name: service.serviceName || "Service",
         description: `Project created on ${new Date(project.createdAt).toLocaleDateString()}`,
-        status: project.status === "APPROVED" ? "Approved" : project.status === "CANCELLED" ? "Cancelled" : "Pending",
-        assignedEmployees: assignedEmps.filter((id): id is string => typeof id === "string"),
+        status:
+          project.status === "APPROVED"
+            ? "Approved"
+            : project.status === "CANCELLED"
+              ? "Cancelled"
+              : "Pending",
+        assignedEmployees: assignedEmps.filter(
+          (id): id is string => typeof id === "string"
+        ),
         renewal: `Created ${new Date(project.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`,
       }));
     });
@@ -74,7 +93,11 @@ export async function GET(
       name: client.name,
       email: client.email,
       subscriptionId: `SUB-${client.id.slice(0, 4)}`,
-      accountStatus: projects.some((p) => p.status === "APPROVED") ? "Approved" : projects.some((p) => p.status === "PENDING") ? "Pending" : "Cancelled",
+      accountStatus: projects.some((p) => p.status === "APPROVED")
+        ? "Approved"
+        : projects.some((p) => p.status === "PENDING")
+          ? "Pending"
+          : "Cancelled",
       requestedServices,
     };
 
