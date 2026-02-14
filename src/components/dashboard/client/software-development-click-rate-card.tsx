@@ -14,10 +14,7 @@ export function SoftwareDevelopmentClickRateCard() {
     <div className="space-y-4 rounded-2xl border border-slate-100 p-4">
       <div>
         <p className="font-semibold text-slate-900 text-sm">
-          Content Click Rate
-        </p>
-        <p className="text-slate-500 text-xs">
-          How effectively release notes drive engagement.
+          Overall Project Completion
         </p>
       </div>
       <ChartContainer className="mx-auto h-72 max-w-sm" config={{}}>
@@ -43,23 +40,6 @@ export function SoftwareDevelopmentClickRateCard() {
           <span className="text-slate-500 text-xs">Click Rate</span>
         </div>
       </ChartContainer>
-      <div className="space-y-2 text-sm">
-        {softwareClickRateData.map((item) => (
-          <div
-            className="flex items-center justify-between text-slate-600"
-            key={item.name}
-          >
-            <div className="flex items-center gap-2">
-              <span
-                className="size-2.5 rounded-full"
-                style={{ backgroundColor: item.color }}
-              />
-              {item.name}
-            </div>
-            <span className="font-semibold text-slate-900">{item.value}%</span>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
