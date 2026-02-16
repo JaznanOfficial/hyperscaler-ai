@@ -8,7 +8,7 @@ import {
   PhoneOutgoing,
 } from "lucide-react";
 import Link from "next/link";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactElement } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -25,6 +25,7 @@ type ButtonVariant = ComponentProps<typeof Button>["variant"];
 interface TalkToSalesDrawerProps {
   buttonClassName?: string;
   buttonVariant?: ButtonVariant;
+  trigger?: ReactElement;
 }
 
 const contactOptions = [
@@ -55,17 +56,20 @@ const contactOptions = [
 export function TalkToSalesDrawer({
   buttonClassName,
   buttonVariant = "gradient",
+  trigger,
 }: TalkToSalesDrawerProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button
-          className={cn("flex-1", buttonClassName)}
-          variant={buttonVariant}
-        >
-          <PhoneCall className="mr-1.5 size-4" />
-          Talk to Us
-        </Button>
+        {trigger ?? (
+          <Button
+            className={cn("flex-1", buttonClassName)}
+            variant={buttonVariant}
+          >
+            <PhoneCall className="mr-1.5 size-4" />
+            Talk to Us
+          </Button>
+        )}
       </SheetTrigger>
       <SheetContent
         className="w-full border-l bg-white px-6 py-8 sm:max-w-xl sm:px-10 sm:py-14"
@@ -101,6 +105,8 @@ export function TalkToSalesDrawer({
               <Link
                 className="mt-5 inline-flex items-center gap-1.5 font-['Inter'] font-semibold text-[#9E32DD] text-sm"
                 href={option.href}
+                rel="noreferrer"
+                target="_blank"
               >
                 {option.ctaLabel}
                 <ArrowUpRight className="size-4" />

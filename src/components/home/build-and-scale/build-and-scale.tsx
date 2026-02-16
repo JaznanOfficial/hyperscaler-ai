@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 import { cn } from "@/lib/utils";
 
 const scaleServices = {
@@ -198,12 +199,16 @@ const BuildAndScale = () => {
                 </h5>
                 <p className="text-[#515A65]">{card.desc}</p>
 
-                <Link
-                  className="mt-5 flex items-center gap-2 font-semibold text-[#9E32DD] underline-offset-2 hover:underline"
-                  href="#"
-                >
-                  Talk to Us <ArrowRight className="size-4" />
-                </Link>
+                <TalkToSalesDrawer
+                  trigger={
+                    <button
+                      className="mt-5 flex cursor-pointer items-center gap-2 font-semibold text-[#9E32DD] underline-offset-2 hover:underline"
+                      type="button"
+                    >
+                      Talk to Us <ArrowRight className="size-4" />
+                    </button>
+                  }
+                />
 
                 <Image
                   alt={card.title}

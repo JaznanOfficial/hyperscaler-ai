@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { SectionHeader } from "@/components/shared/section-header";
 import { cn } from "@/lib/utils";
 
@@ -70,6 +70,7 @@ const WhyChooseUs = () => {
                   className="flex items-center gap-2 text-gray-600 text-sm md:gap-3"
                   key={i}
                 >
+                  {/** highlight Hyperscaler benefits with check icon */}
                   <div
                     className={cn(
                       "flex aspect-square size-5 items-center justify-center rounded-full md:size-[34px]",
@@ -78,7 +79,11 @@ const WhyChooseUs = () => {
                         : "bg-[#EBD1D1] text-rose-800"
                     )}
                   >
-                    <X className="size-4" />
+                    {iCard === 2 ? (
+                      <Check className="size-4" />
+                    ) : (
+                      <X className="size-4" />
+                    )}
                   </div>
                   {list}
                 </li>
