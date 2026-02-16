@@ -1,4 +1,13 @@
-import { Github, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react";
+import type { LucideProps } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+  Twitter,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,6 +18,67 @@ function PlaceholderLink({ children }: { children: React.ReactNode }) {
 function PlaceholderAnchor({ children }: { children: React.ReactNode }) {
   return <a href="/#">{children}</a>;
 }
+
+const PinterestIcon = (props: LucideProps) => (
+  <svg
+    aria-hidden
+    fill="currentColor"
+    role="img"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <title>Pinterest icon</title>
+    <path d="M12 0C5.372 0 0 5.373 0 12c0 4.908 3.052 9.108 7.375 10.795-.102-.918-.195-2.331.04-3.335.212-.903 1.364-5.751 1.364-5.751s-.348-.696-.348-1.724c0-1.614.936-2.82 2.101-2.82.989 0 1.467.743 1.467 1.635 0 .996-.635 2.486-.963 3.869-.274 1.161.581 2.107 1.721 2.107 2.065 0 3.646-2.179 3.646-5.321 0-2.784-2-4.737-4.852-4.737-3.306 0-5.252 2.478-5.252 5.038 0 1.001.384 2.078.864 2.663.095.115.109.216.08.333-.087.364-.28 1.161-.318 1.324-.05.212-.163.257-.379.155-1.411-.655-2.29-2.711-2.29-4.365 0-3.553 2.582-6.812 7.44-6.812 3.901 0 6.931 2.781 6.931 6.494 0 3.876-2.447 7.002-5.838 7.002-1.14 0-2.212-.592-2.578-1.285l-.701 2.668c-.253.972-.939 2.186-1.401 2.929 1.047.323 2.155.497 3.309.497 6.627 0 12-5.373 12-12S18.627 0 12 0z" />
+  </svg>
+);
+
+const TikTokIcon = (props: LucideProps) => (
+  <svg
+    aria-hidden
+    fill="currentColor"
+    role="img"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <title>TikTok icon</title>
+    <path d="M21.094 7.178a6.09 6.09 0 0 1-3.61-1.166v7.356a6.632 6.632 0 1 1-6.631-6.63c.227 0 .448.02.668.043v3.819a2.891 2.891 0 1 0 2.893 2.89V0h3.07a6.09 6.09 0 0 0 6.092 6.09v3.07a6.07 6.07 0 0 1-2.482-.617z" />
+  </svg>
+);
+
+const socialLinks = [
+  {
+    icon: Twitter,
+    href: "https://twitter.com/scalebuildai",
+    label: "Twitter",
+  },
+  {
+    icon: Linkedin,
+    href: "https://www.linkedin.com/company/scalebuildai",
+    label: "LinkedIn",
+  },
+  {
+    icon: Facebook,
+    href: "https://www.facebook.com/scalebuildai",
+    label: "Facebook",
+  },
+  {
+    icon: Instagram,
+    href: "https://www.instagram.com/scalebuildai",
+    label: "Instagram",
+  },
+  {
+    icon: PinterestIcon,
+    href: "https://www.pinterest.es/scalebuildai/",
+    label: "Pinterest",
+  },
+  {
+    icon: TikTokIcon,
+    href: "https://www.tiktok.com/@scalebuildai?_t=8foXTR0OSKP&_r=1",
+    label: "Tiktok",
+  },
+];
 
 export function Footer() {
   return (
@@ -97,22 +167,19 @@ export function Footer() {
 
         {/* Socials + copyright */}
         <div className="flex w-full flex-col items-center gap-4 border-[#374151] border-t pt-16">
-          <div className="mb-2 flex gap-3">
-            <PlaceholderAnchor>
-              <span className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200">
-                <Twitter className="size-5" />
-              </span>
-            </PlaceholderAnchor>
-            <PlaceholderAnchor>
-              <span className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200">
-                <Linkedin className="size-5" />
-              </span>
-            </PlaceholderAnchor>
-            <PlaceholderAnchor>
-              <span className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200">
-                <Github className="size-5" />
-              </span>
-            </PlaceholderAnchor>
+          <div className="mb-2 flex flex-wrap justify-center gap-3">
+            {socialLinks.map(({ icon: Icon, href, label }) => (
+              <a
+                aria-label={label}
+                className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200"
+                href={href}
+                key={label}
+                rel="noreferrer"
+                target={href.startsWith("http") ? "_blank" : undefined}
+              >
+                <Icon className="size-5" />
+              </a>
+            ))}
           </div>
 
           <p className="text-[#9CA3AF] text-sm">
