@@ -15,10 +15,6 @@ function PlaceholderLink({ children }: { children: React.ReactNode }) {
   return <Link href="/#">{children}</Link>;
 }
 
-function PlaceholderAnchor({ children }: { children: React.ReactNode }) {
-  return <a href="/#">{children}</a>;
-}
-
 const PinterestIcon = (props: LucideProps) => (
   <svg
     aria-hidden
@@ -130,13 +126,31 @@ export function Footer() {
             <h4 className="font-semibold text-base text-white">Legal</h4>
             <ul className="mt-4 space-y-3 text-[#9CA3AF] text-sm">
               <li>
-                <PlaceholderLink>Privacy Policy</PlaceholderLink>
+                <Link
+                  href="https://scalebuild.ai/privacy-and-policy"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Privacy Policy
+                </Link>
               </li>
               <li>
-                <PlaceholderLink>Terms of Service</PlaceholderLink>
+                <Link
+                  href="https://scalebuild.ai/terms-of-service"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Terms &amp; Conditions
+                </Link>
               </li>
               <li>
-                <PlaceholderLink>Cookie Policy</PlaceholderLink>
+                <Link
+                  href="https://scalebuild.ai/cookie-policy"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Cookie Policy
+                </Link>
               </li>
             </ul>
           </div>
@@ -149,17 +163,15 @@ export function Footer() {
             <ul className="mt-4 space-y-3 text-[#9CA3AF] text-sm">
               <li className="flex items-center gap-2">
                 <Mail className="size-4 shrink-0" />
-                <PlaceholderAnchor>
-                  Hyperscaler@Scalebuild.com
-                </PlaceholderAnchor>
+                <a href="mailto:contact@scalebuild.ai">contact@scalebuild.ai</a>
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="size-4 shrink-0" />
-                <span>Dhaka, Bangladesh</span>
+                <span>Manhattan, NYC</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="size-4 shrink-0" />
-                <PlaceholderAnchor>+980909032</PlaceholderAnchor>
+                <a href="tel:+19195766153">+1 919 576 6153</a>
               </li>
             </ul>
           </div>
