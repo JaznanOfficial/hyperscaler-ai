@@ -13,7 +13,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-const pricingData = [
+const scalePricingData = [
   {
     icon: <Rocket className="size-5 md:size-6" />,
     name: "Starter",
@@ -115,6 +115,108 @@ const pricingData = [
   },
 ];
 
+const buildPricingData = [
+  {
+    icon: <Rocket className="size-5 md:size-6" />,
+    name: "Starter",
+    description: "Ship your MVP or iterate on an existing product fast.",
+    price: {
+      amount: "$2,500",
+      cadence: "/month",
+      note: "Billed monthly · Cancel anytime",
+    },
+    comparisonLabel: "What's included",
+    cta: {
+      type: "link",
+      href: "#",
+      label: "Get Started",
+      variant: "outline" as const,
+    },
+    features: [
+      "1 product track (web app, mobile, or landing page)",
+      "AI-assisted development & design",
+      "Dashboard with sprint progress",
+      "Bi-weekly deliverables & demos",
+      "Email support",
+    ],
+  },
+  {
+    icon: <Zap className="size-5 md:size-6" />,
+    name: "Growth",
+    description:
+      "Dedicated product team shipping weekly with human + AI velocity.",
+    price: {
+      amount: "$5,000",
+      cadence: "/month",
+      note: "Billed monthly · Cancel anytime",
+    },
+    comparisonLabel: "Everything in Starter, plus",
+    highlight: {
+      label: "Most Popular",
+    },
+    cta: {
+      type: "link",
+      href: "#",
+      label: "Get Started",
+      variant: "gradient" as const,
+    },
+    features: [
+      "Up to 3 product tracks in parallel",
+      "Dedicated product manager & engineer",
+      "Weekly sprint deliverables",
+      "UX/UI design included",
+      "Priority Slack support",
+    ],
+  },
+  {
+    icon: <Target className="size-5 md:size-6" />,
+    name: "Pro",
+    description: "Full product org in a box. Ship like a well-funded Series B.",
+    price: {
+      amount: "$25,000",
+      cadence: "/month",
+      note: "Billed monthly · Cancel anytime",
+    },
+    comparisonLabel: "Everything in Growth, plus",
+    cta: {
+      type: "link",
+      href: "#",
+      label: "Get Started",
+      variant: "outline" as const,
+    },
+    features: [
+      "Unlimited product tracks",
+      "Full engineering team (front + back + infra)",
+      "Architecture review & technical roadmap",
+      "Daily standups & real-time collaboration",
+      "CTO-level strategic guidance",
+    ],
+  },
+  {
+    icon: <Building2 className="size-4 md:size-5" />,
+    name: "Enterprise",
+    description: "Custom product development at any scale, your way.",
+    price: {
+      amount: "Custom Pricing",
+      cadence: "",
+      note: "Tailored to your goals & budget",
+    },
+    comparisonLabel: "Everything in Pro, plus",
+    cta: {
+      type: "drawer",
+      label: "Talk to Us",
+      variant: "gradient" as const,
+    },
+    features: [
+      "Dedicated multi-discipline product team",
+      "Custom tech stack & integrations",
+      "SLA guarantees & compliance support",
+      "Investor-ready product documentation",
+      "Priority onboarding within 48 hours",
+    ],
+  },
+];
+
 const Pricing = () => {
   return (
     <section className="mx-auto flex w-11/12 flex-col items-center justify-center gap-8 py-10 md:gap-10 md:py-12 lg:w-10/12 lg:gap-13 lg:py-16">
@@ -141,22 +243,24 @@ const Pricing = () => {
         </TabsList>
 
         <TabsContent className="mt-8" value="scale">
-          <PricingCards />
+          <PricingCards data={scalePricingData} />
         </TabsContent>
         <TabsContent className="mt-8" value="build">
-          <PricingCards />
+          <PricingCards data={buildPricingData} />
         </TabsContent>
       </Tabs>
     </section>
   );
 };
 
-const PricingCards = () => {
+type PricingCard = (typeof scalePricingData)[number];
+
+const PricingCards = ({ data }: { data: PricingCard[] }) => {
   return (
     <div className="grid grid-cols-1 gap-5 max-lg:w-full sm:grid-cols-2 xl:grid-cols-4">
-      {pricingData.map((item) => {
+      {data.map((item) => {
         const highlightStyles = item.highlight
-          ? "border border-transparent bg-[#F8F3FF] shadow-[0_0_45px_rgba(91,33,182,0.45)] outline outline-1 outline-offset-[-1px] outline-purple-700"
+          ? "border border-transparent bg-[#F8F3FF] shadow-[0_0_15px_rgba(91,33,182,0.45)] outline outline-1 outline-offset-[-1px] outline-purple-700"
           : "border border-[#D1D1D1] bg-white";
 
         let ctaContent: React.ReactNode = null;
@@ -176,7 +280,7 @@ const PricingCards = () => {
           ctaContent = (
             <TalkToSalesDrawer
               buttonClassName="w-full"
-              buttonVariant="outline"
+              buttonVariant={item.cta.variant ?? "outline"}
             />
           );
         }
