@@ -63,7 +63,7 @@ export function TalkToSalesDrawer({
       <SheetTrigger asChild>
         {trigger ?? (
           <Button
-            className={cn("flex-1", buttonClassName)}
+            className={cn("w-full", buttonClassName)}
             variant={buttonVariant}
           >
             <PhoneCall className="mr-1.5 size-4" />
