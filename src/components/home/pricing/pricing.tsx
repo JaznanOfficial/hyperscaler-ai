@@ -1,3 +1,4 @@
+import type { VariantProps } from "class-variance-authority";
 import {
   ArrowRight,
   Building2,
@@ -256,6 +257,42 @@ const Pricing = () => {
   );
 };
 
+type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
+
+const renderPricingCta = (item: PricingCard) => {
+  const overrideVariant = (variant?: ButtonVariant): ButtonVariant => {
+    if (item.highlight && variant === "gradient") {
+      return "outline";
+    }
+    return variant ?? "default";
+  };
+
+  if (item.cta?.type === "link" && item.cta.href) {
+    return (
+      <Link
+        className={cn(
+          buttonVariants({ variant: overrideVariant(item.cta.variant) }),
+          "w-full"
+        )}
+        href={item.cta.href}
+      >
+        {item.cta.label} <ArrowRight className="size-4" />
+      </Link>
+    );
+  }
+
+  if (item.cta?.type === "drawer") {
+    return (
+      <TalkToSalesDrawer
+        buttonClassName="w-full"
+        buttonVariant={overrideVariant(item.cta.variant ?? "outline")}
+      />
+    );
+  }
+
+  return null;
+};
+
 type PricingCard = (typeof scalePricingData)[number];
 
 const PricingCards = ({ data }: { data: PricingCard[] }) => {
@@ -269,27 +306,7 @@ const PricingCards = ({ data }: { data: PricingCard[] }) => {
           ?.toLowerCase()
           .includes("custom");
 
-        let ctaContent: React.ReactNode = null;
-        if (item.cta?.type === "link" && item.cta.href) {
-          ctaContent = (
-            <Link
-              className={cn(
-                buttonVariants({ variant: item.cta.variant ?? "default" }),
-                "w-full"
-              )}
-              href={item.cta.href}
-            >
-              {item.cta.label} <ArrowRight className="size-4" />
-            </Link>
-          );
-        } else if (item.cta?.type === "drawer") {
-          ctaContent = (
-            <TalkToSalesDrawer
-              buttonClassName="w-full"
-              buttonVariant={item.cta.variant ?? "outline"}
-            />
-          );
-        }
+        const ctaContent = renderPricingCta(item);
 
         return (
           <div
@@ -382,7 +399,24 @@ const PricingCards = ({ data }: { data: PricingCard[] }) => {
               ))}
             </div>
 
-            {ctaContent}
+            <div className="flex w-full flex-col gap-3">
+              {!isCustomPrice && (
+                <Link
+                  className={cn(
+                    item.highlight
+                      ? buttonVariants({ variant: "gradient" })
+                      : "flex w-full items-center justify-center gap-2 rounded-lg border border-purple-100 bg-purple-50 px-4 py-2.5 font-semibold text-purple-600 text-sm transition hover:bg-purple-100"
+                  )}
+                  href="https://calendly.com/ujjwalroy1/ai-implementation"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Book a free session <ArrowRight className="size-4" />
+                </Link>
+              )}
+
+              {ctaContent}
+            </div>
             {item.highlight?.label ? (
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-[#D946EF] bg-[#9E32DD] px-3 py-1.5 text-[10px] text-white md:px-4 md:text-xs">
                 {item.highlight.label}
