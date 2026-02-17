@@ -219,7 +219,10 @@ const buildPricingData = [
 
 const Pricing = () => {
   return (
-    <section className="mx-auto flex w-11/12 flex-col items-center justify-center gap-8 py-10 md:gap-10 md:py-12 lg:w-10/12 lg:gap-13 lg:py-16">
+    <section
+      className="mx-auto flex w-11/12 flex-col items-center justify-center gap-8 py-10 md:gap-10 md:py-12 lg:w-10/12 lg:gap-13 lg:py-16"
+      id="pricing"
+    >
       <SectionHeader
         description="Pick the package that matches where you are. Scale to get customers. Build to ship product. No long-term contracts."
         gradientTitle="everything"

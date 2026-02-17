@@ -107,16 +107,13 @@ export function Footer() {
             <h4 className="font-semibold text-base text-white">Product</h4>
             <ul className="mt-4 space-y-3 text-[#9CA3AF] text-sm">
               <li>
-                <PlaceholderLink>Services</PlaceholderLink>
+                <Link href="/services">Services</Link>
               </li>
               <li>
-                <PlaceholderLink>Pricing</PlaceholderLink>
+                <Link href="/#pricing">Pricing</Link>
               </li>
               <li>
-                <PlaceholderLink>FAQs</PlaceholderLink>
-              </li>
-              <li>
-                <PlaceholderLink>Cart</PlaceholderLink>
+                <Link href="/#faqs">FAQs</Link>
               </li>
             </ul>
           </div>

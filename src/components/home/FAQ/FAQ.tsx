@@ -36,7 +36,10 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="mx-auto my-container flex w-11/12 flex-col items-center justify-center gap-8 py-10 md:gap-10 md:py-12 lg:w-10/12 lg:gap-13 lg:py-16">
+    <section
+      className="mx-auto flex w-11/12 flex-col items-center justify-center gap-8 py-10 md:gap-10 md:py-12 lg:w-10/12 lg:gap-13 lg:py-16"
+      id="faqs"
+    >
       <SectionHeader
         description="Everything you need to know about our services, pricing, and process."
         titlePart1="Frequently Asked Questions"
@@ -51,7 +54,7 @@ const FAQ = () => {
               className={cn(
                 "group w-full rounded-xl border border-[#D1D1D1] bg-[#F9F7FA] px-5 py-3 text-left transition-all duration-200 hover:border-purple-300 hover:bg-purple-50 data-[state=open]:shadow-md"
               )}
-              key={index}
+              key={faq.question}
               onOpenChange={() =>
                 setOpenIndex((current) => (current === index ? null : index))
               }
