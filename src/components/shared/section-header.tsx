@@ -16,7 +16,7 @@ export function SectionHeader({
       <h2 className="font-['Outfit'] font-medium text-2xl text-[#1A1A1A] leading-[1.4] tracking-[0] sm:text-[28px] md:text-[32px]">
         {titlePart1}
         {gradientTitle && (
-          <span className="bg-linear-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-violet-800 to-fuchsia-500 bg-clip-text text-transparent">
             {" "}
             {gradientTitle}{" "}
           </span>
