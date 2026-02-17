@@ -262,6 +262,9 @@ const PricingCards = ({ data }: { data: PricingCard[] }) => {
         const highlightStyles = item.highlight
           ? "border border-transparent bg-[#F8F3FF] shadow-[0_0_15px_rgba(91,33,182,0.45)] outline outline-1 outline-offset-[-1px] outline-purple-700"
           : "border border-[#D1D1D1] bg-white";
+        const isCustomPrice = item.price?.amount
+          ?.toLowerCase()
+          .includes("custom");
 
         let ctaContent: React.ReactNode = null;
         if (item.cta?.type === "link" && item.cta.href) {
@@ -321,7 +324,13 @@ const PricingCards = ({ data }: { data: PricingCard[] }) => {
             {item.price ? (
               <div className="flex flex-col items-start gap-1">
                 <div className="flex items-baseline gap-1 text-[#1A1A1A]">
-                  <span className="font-['Outfit'] font-semibold text-2xl leading-8">
+                  <span
+                    className={cn(
+                      "font-['Outfit'] font-semibold text-2xl leading-8",
+                      isCustomPrice &&
+                        "bg-linear-to-r from-violet-800 to-fuchsia-500 bg-clip-text text-transparent"
+                    )}
+                  >
                     {item.price.amount}
                   </span>
                   <span className="font-['Inter'] font-medium text-[#414851] text-sm">
