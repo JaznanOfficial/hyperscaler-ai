@@ -1,8 +1,40 @@
+import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import type { ChatMessage } from "@/components/chat/types";
 import { cn } from "@/lib/utils";
+
+type CodeProps = React.ComponentPropsWithoutRef<"code"> & {
+  inline?: boolean;
+};
+
+const CodeBlock = ({ inline, className, children, ...props }: CodeProps) =>
+  inline ? (
+    <code
+      className={cn("rounded bg-black/10 px-1 py-0.5 text-[0.85em]", className)}
+      {...props}
+    >
+      {children}
+    </code>
+  ) : (
+    <pre
+      className={cn(
+        "overflow-x-auto rounded-xl bg-black/80 px-4 py-3 text-white text-xs",
+        className
+      )}
+      {...props}
+    >
+      <code>{children}</code>
+    </pre>
+  );
+
+const markdownComponents: Components = {
+  ul: (props) => <ul className="list-disc space-y-1 pl-5" {...props} />,
+  ol: (props) => <ol className="list-decimal space-y-1 pl-5" {...props} />,
+  li: (props) => <li className="leading-relaxed" {...props} />,
+  code: CodeBlock,
+};
 
 export function GeneralAgentMessageItem({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
@@ -23,37 +55,7 @@ export function GeneralAgentMessageItem({ message }: { message: ChatMessage }) {
       >
         <div className={proseClassName}>
           <ReactMarkdown
-            components={{
-              ul: (props) => (
-                <ul className="list-disc space-y-1 pl-5" {...props} />
-              ),
-              ol: (props) => (
-                <ol className="list-decimal space-y-1 pl-5" {...props} />
-              ),
-              li: (props) => <li className="leading-relaxed" {...props} />,
-              code: ({ inline, className, children, ...props }) =>
-                inline ? (
-                  <code
-                    className={cn(
-                      "rounded bg-black/10 px-1 py-0.5 text-[0.85em]",
-                      className
-                    )}
-                    {...props}
-                  >
-                    {children}
-                  </code>
-                ) : (
-                  <pre
-                    className={cn(
-                      "overflow-x-auto rounded-xl bg-black/80 px-4 py-3 text-white text-xs",
-                      className
-                    )}
-                    {...props}
-                  >
-                    <code>{children}</code>
-                  </pre>
-                ),
-            }}
+            components={markdownComponents}
             remarkPlugins={[remarkGfm]}
           >
             {message.content}
