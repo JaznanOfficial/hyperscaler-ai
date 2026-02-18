@@ -13,6 +13,7 @@
     "fix": "ultracite fix"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.29",
     "@ai-sdk/react": "^3.0.88",
     "@base-ui/react": "^1.0.0",
     "@canvasjs/react-charts": "^1.0.2",

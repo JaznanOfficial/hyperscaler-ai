@@ -1,7 +1,8 @@
 "use client";
 
+import { useChat } from "@ai-sdk/react";
 import { ArrowUp } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { ChatMessage } from "@/components/chat/types";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,17 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { AgentGEmptyState } from "./empty-state";
 import { AgentGMessageItem } from "./message-item";
+
+type AIMultiPart =
+  | { type: "text"; text: string }
+  | { type: "text-delta"; textDelta: string };
+
+interface AIMessageShape {
+  id: string;
+  role: "assistant" | "user" | "system";
+  parts?: AIMultiPart[];
+  content?: string;
+}
 
 export function AgentGPanel({
   messages,
@@ -18,8 +30,67 @@ export function AgentGPanel({
   inputPlaceholder?: string;
 }) {
   const [draft, setDraft] = useState("");
-  const [hasConversationStarted, setHasConversationStarted] = useState(false);
-  const [conversation, setConversation] = useState<ChatMessage[]>(messages);
+  const [hasConversationStarted, setHasConversationStarted] = useState(
+    messages.length > 0
+  );
+  const { messages: aiMessages, sendMessage } = useChat();
+  const emptyStateInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const conversationInputRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const liveMessages = useMemo<ChatMessage[]>(() => {
+    if (!aiMessages.length) {
+      return [];
+    }
+
+    return aiMessages
+      .map((message) => {
+        const typedMessage = message as AIMessageShape;
+        const textContent = typedMessage.parts?.length
+          ? typedMessage.parts
+              .map((part) => {
+                if (part.type === "text" && part.text) {
+                  return part.text;
+                }
+                if (part.type === "text-delta" && "textDelta" in part) {
+                  return part.textDelta ?? "";
+                }
+                return "";
+              })
+              .join("")
+              .trim()
+          : (typedMessage.content ?? "");
+
+        if (!textContent) {
+          return null;
+        }
+
+        return {
+          id: typedMessage.id,
+          role: typedMessage.role === "assistant" ? "assistant" : "user",
+          author: typedMessage.role === "assistant" ? "Agent G" : "You",
+          content: textContent,
+          timestamp: "",
+        } satisfies ChatMessage;
+      })
+      .filter((message): message is ChatMessage => Boolean(message));
+  }, [aiMessages]);
+
+  useEffect(() => {
+    if (liveMessages.length > 0) {
+      setHasConversationStarted(true);
+    }
+  }, [liveMessages.length]);
+
+  const visibleMessages = liveMessages.length > 0 ? liveMessages : messages;
+  const showConversation = hasConversationStarted && visibleMessages.length > 0;
+
+  useEffect(() => {
+    if (showConversation) {
+      conversationInputRef.current?.focus();
+    } else {
+      emptyStateInputRef.current?.focus();
+    }
+  }, [showConversation]);
 
   const handleSend = () => {
     const content = draft.trim();
@@ -27,23 +98,10 @@ export function AgentGPanel({
       return;
     }
 
-    const nextMessage: ChatMessage = {
-      id: `agent-g-local-${Date.now()}`,
-      role: "user",
-      author: "You",
-      content,
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-
-    setConversation((prev) => [...prev, nextMessage]);
+    sendMessage({ text: content });
     setDraft("");
     setHasConversationStarted(true);
   };
-
-  const showConversation = hasConversationStarted && conversation.length > 0;
 
   return (
     <section className="relative flex h-[calc(90vh)] w-full flex-1 flex-col overflow-visible p-4 sm:p-6 lg:overflow-hidden">
@@ -60,7 +118,7 @@ export function AgentGPanel({
           role="log"
         >
           {showConversation ? (
-            conversation.map((message) => (
+            visibleMessages.map((message) => (
               <AgentGMessageItem key={message.id} message={message} />
             ))
           ) : (
@@ -68,13 +126,14 @@ export function AgentGPanel({
               draft={draft}
               onDraftChange={setDraft}
               onSubmit={handleSend}
+              textareaRef={emptyStateInputRef}
             />
           )}
         </div>
 
         {showConversation && (
           <div className="border-slate-200 border-t bg-white px-2 py-1 pt-4">
-            <div className="relative rounded-3xl border border-slate-200 bg-white shadow-sm focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
+            <div className="relative rounded-3xl border border-slate-200 bg-white shadow-sm">
               <Textarea
                 className="min-h-20 w-full resize-none rounded-3xl border-0 bg-transparent pr-16 text-base text-slate-900 focus-visible:ring-0"
                 onChange={(event) => setDraft(event.target.value)}
@@ -85,6 +144,7 @@ export function AgentGPanel({
                   }
                 }}
                 placeholder={inputPlaceholder}
+                ref={conversationInputRef}
                 value={draft}
               />
               <Button

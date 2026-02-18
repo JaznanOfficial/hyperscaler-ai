@@ -36,10 +36,12 @@ export function AgentGEmptyState({
   draft,
   onDraftChange,
   onSubmit,
+  textareaRef,
 }: {
   draft: string;
   onDraftChange: (value: string) => void;
   onSubmit: () => void;
+  textareaRef?: React.RefObject<HTMLTextAreaElement | null>;
 }) {
   return (
     <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-12 px-0 py-10 text-center">
@@ -72,7 +74,14 @@ export function AgentGEmptyState({
           <textarea
             className="min-h-22 flex-1 resize-none rounded-2xl border-0 bg-transparent px-4 py-4 pr-16 text-base text-slate-900 outline-none focus:ring-0"
             onChange={(event) => onDraftChange(event.target.value)}
-            placeholder="How can Agent G help you today?"
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                onSubmit();
+              }
+            }}
+            placeholder="How can Hyperscaler AI Assistant help you today?"
+            ref={textareaRef}
             rows={3}
             value={draft}
           />
