@@ -36,6 +36,8 @@ export function AgentGPanel({
   const { messages: aiMessages, sendMessage } = useChat();
   const emptyStateInputRef = useRef<HTMLTextAreaElement | null>(null);
   const conversationInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const conversationLogRef = useRef<HTMLDivElement | null>(null);
+  const conversationEndRef = useRef<HTMLDivElement | null>(null);
 
   const liveMessages = useMemo<ChatMessage[]>(() => {
     if (!aiMessages.length) {
@@ -82,7 +84,17 @@ export function AgentGPanel({
   }, [liveMessages.length]);
 
   const visibleMessages = liveMessages.length > 0 ? liveMessages : messages;
-  const showConversation = hasConversationStarted && visibleMessages.length > 0;
+  const visibleMessageCount = visibleMessages.length;
+  const latestMessageId =
+    visibleMessageCount > 0
+      ? (visibleMessages[visibleMessageCount - 1]?.id ?? null)
+      : null;
+  const latestMessageSignature = latestMessageId
+    ? `${latestMessageId}:$${
+        visibleMessages[visibleMessageCount - 1]?.content.length ?? 0
+      }`
+    : null;
+  const showConversation = hasConversationStarted && visibleMessageCount > 0;
 
   useEffect(() => {
     if (showConversation) {
@@ -91,6 +103,22 @@ export function AgentGPanel({
       emptyStateInputRef.current?.focus();
     }
   }, [showConversation]);
+
+  useEffect(() => {
+    if (!(showConversation && latestMessageSignature)) {
+      return;
+    }
+
+    if (conversationEndRef.current) {
+      conversationEndRef.current.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+
+    if (conversationLogRef.current) {
+      conversationLogRef.current.scrollTop =
+        conversationLogRef.current.scrollHeight;
+    }
+  }, [showConversation, latestMessageSignature]);
 
   const handleSend = () => {
     const content = draft.trim();
@@ -115,6 +143,7 @@ export function AgentGPanel({
         <div
           aria-live="polite"
           className="min-h-0 flex-1 space-y-6 overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          ref={conversationLogRef}
           role="log"
         >
           {showConversation ? (
@@ -129,6 +158,7 @@ export function AgentGPanel({
               textareaRef={emptyStateInputRef}
             />
           )}
+          <div ref={conversationEndRef} />
         </div>
 
         {showConversation && (
