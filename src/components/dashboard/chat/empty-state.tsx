@@ -32,7 +32,7 @@ const agentGQuickActions = [
   },
 ] as const;
 
-export function AgentGEmptyState({
+export function GeneralAgentEmptyState({
   draft,
   onDraftChange,
   onSubmit,

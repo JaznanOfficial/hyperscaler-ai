@@ -8,8 +8,8 @@ import type { ChatMessage } from "@/components/chat/types";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { AgentGEmptyState } from "./empty-state";
-import { AgentGMessageItem } from "./message-item";
+import { GeneralAgentEmptyState } from "./empty-state";
+import { GeneralAgentMessageItem } from "./message-item";
 
 type AIMultiPart =
   | { type: "text"; text: string }
@@ -119,10 +119,10 @@ export function AgentGPanel({
         >
           {showConversation ? (
             visibleMessages.map((message) => (
-              <AgentGMessageItem key={message.id} message={message} />
+              <GeneralAgentMessageItem key={message.id} message={message} />
             ))
           ) : (
-            <AgentGEmptyState
+            <GeneralAgentEmptyState
               draft={draft}
               onDraftChange={setDraft}
               onSubmit={handleSend}
@@ -132,10 +132,10 @@ export function AgentGPanel({
         </div>
 
         {showConversation && (
-          <div className="border-slate-200 border-t bg-white px-2 py-1 pt-4">
-            <div className="relative rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-slate-200 border-t px-2 py-1 pt-4">
+            <div className="relative rounded-3xl border border-slate-200 shadow-sm">
               <Textarea
-                className="min-h-20 w-full resize-none rounded-3xl border-0 bg-transparent pr-16 text-base text-slate-900 focus-visible:ring-0"
+                className="min-h-20 w-full resize-none rounded-3xl border-0 pr-16 text-base text-slate-900 focus-visible:ring-0"
                 onChange={(event) => setDraft(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
