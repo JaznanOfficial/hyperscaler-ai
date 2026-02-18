@@ -26,6 +26,13 @@ export async function GET(
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
+    if (project.status === "CANCELLED") {
+      return NextResponse.json(
+        { error: "This service has been cancelled" },
+        { status: 403 }
+      );
+    }
+
     // Enrich services - optimized with single query
     const services = Array.isArray(project.services) ? project.services : [];
     const serviceIds = services.map((s: any) => s.serviceId).filter(Boolean);

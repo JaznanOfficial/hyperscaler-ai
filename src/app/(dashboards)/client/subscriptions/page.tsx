@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import { ClientSubscriptionList } from "@/components/dashboard/client/subscription-list";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
 
 interface Project {
   id: string;
@@ -11,15 +14,47 @@ interface Project {
   createdAt: string;
 }
 
+interface Package {
+  id: string;
+  packageName: string;
+  amount: number;
+  status: string;
+  createdAt: string;
+}
+
 export default function ClientSubscriptionsPage() {
+  const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/client/projects")
-      .then((res) => res.json())
-      .then((data) => {
-        setProjects(data.projects || []);
+    const success = searchParams.get("success");
+    const payment = searchParams.get("payment");
+    const packageName = searchParams.get("package");
+    const message = searchParams.get("message");
+    
+    if (success === "true") {
+      toast.success(
+        message || "Payment successful! Your service is pending admin approval."
+      );
+    } else if (payment === "success" && packageName) {
+      toast.success(
+        `Payment successful! Your ${packageName} package is now active.`
+      );
+    } else if (payment === "canceled") {
+      toast.error("Payment was canceled. Please try again.");
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/client/projects").then((res) => res.json()),
+      fetch("/api/client/packages").then((res) => res.json()),
+    ])
+      .then(([projectsData, packagesData]) => {
+        setProjects(projectsData.projects || []);
+        setPackages(packagesData.packages || []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -89,6 +124,60 @@ export default function ClientSubscriptionsPage() {
               </TabsTrigger>
             </TabsList>
           </Tabs>
+          <div className="space-y-4">
+            <div>
+              <p className="font-semibold text-slate-400 text-xs uppercase tracking-[0.3em]">
+                Packages
+              </p>
+              <p className="font-semibold text-base text-slate-900">
+                Your purchased packages
+              </p>
+            </div>
+            {packages.length > 0 ? (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {packages.map((pkg) => (
+                  <Card className="p-6" key={pkg.id}>
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="font-semibold text-lg text-slate-900">
+                          {pkg.packageName}
+                        </h3>
+                        <p className="text-slate-500 text-sm">
+                          Purchased on{" "}
+                          {new Date(pkg.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="flex items-baseline gap-1">
+                        <span className="font-bold text-2xl text-slate-900">
+                          ${(pkg.amount / 100).toFixed(2)}
+                        </span>
+                        <span className="text-slate-500 text-sm">/month</span>
+                      </div>
+                      <div>
+                        <span
+                          className={`inline-flex rounded-full px-3 py-1 font-semibold text-xs ${
+                            pkg.status === "PAID"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : pkg.status === "UNPAID"
+                                ? "bg-amber-100 text-amber-700"
+                                : "bg-rose-100 text-rose-700"
+                          }`}
+                        >
+                          {pkg.status}
+                        </span>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card className="p-8 text-center">
+                <p className="text-slate-600">
+                  No packages purchased yet. Visit the Services page to upgrade!
+                </p>
+              </Card>
+            )}
+          </div>
           {loading ? (
             <p className="text-center text-slate-600">Loading...</p>
           ) : (

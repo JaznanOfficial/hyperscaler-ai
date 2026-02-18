@@ -83,8 +83,8 @@ export default function SiteServiceDetailsPage({
                   {service.cadence}
                 </span>
               </p>
-              <Button className="min-w-40" variant="gradient">
-                Add to Cart
+              <Button asChild className="min-w-40" variant="gradient">
+                <Link href="/login">Login to Purchase</Link>
               </Button>
             </div>
           </div>

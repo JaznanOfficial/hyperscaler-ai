@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
       data: {
         name: validatedData.name,
         email: validatedData.email,
+        phone: validatedData.phone,
         password: hashedPassword,
         role: validatedData.role || "CLIENT",
         generalInfo: validatedData.generalInfo as any,
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
         id: true,
         name: true,
         email: true,
+        phone: true,
         role: true,
         createdAt: true,
       },
