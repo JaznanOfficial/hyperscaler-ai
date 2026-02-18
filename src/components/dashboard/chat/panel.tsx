@@ -1,14 +1,26 @@
 "use client";
 
+import { useChat } from "@ai-sdk/react";
 import { ArrowUp } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { ChatMessage } from "@/components/chat/types";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { AgentGEmptyState } from "./empty-state";
-import { AgentGMessageItem } from "./message-item";
+import { GeneralAgentEmptyState } from "./empty-state";
+import { GeneralAgentMessageItem } from "./message-item";
+
+type AIMultiPart =
+  | { type: "text"; text: string }
+  | { type: "text-delta"; textDelta: string };
+
+interface AIMessageShape {
+  id: string;
+  role: "assistant" | "user" | "system";
+  parts?: AIMultiPart[];
+  content?: string;
+}
 
 export function AgentGPanel({
   messages,
@@ -18,8 +30,95 @@ export function AgentGPanel({
   inputPlaceholder?: string;
 }) {
   const [draft, setDraft] = useState("");
-  const [hasConversationStarted, setHasConversationStarted] = useState(false);
-  const [conversation, setConversation] = useState<ChatMessage[]>(messages);
+  const [hasConversationStarted, setHasConversationStarted] = useState(
+    messages.length > 0
+  );
+  const { messages: aiMessages, sendMessage } = useChat();
+  const emptyStateInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const conversationInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const conversationLogRef = useRef<HTMLDivElement | null>(null);
+  const conversationEndRef = useRef<HTMLDivElement | null>(null);
+
+  const liveMessages = useMemo<ChatMessage[]>(() => {
+    if (!aiMessages.length) {
+      return [];
+    }
+
+    return aiMessages
+      .map((message) => {
+        const typedMessage = message as AIMessageShape;
+        const textContent = typedMessage.parts?.length
+          ? typedMessage.parts
+              .map((part) => {
+                if (part.type === "text" && part.text) {
+                  return part.text;
+                }
+                if (part.type === "text-delta" && "textDelta" in part) {
+                  return part.textDelta ?? "";
+                }
+                return "";
+              })
+              .join("")
+              .trim()
+          : (typedMessage.content ?? "");
+
+        if (!textContent) {
+          return null;
+        }
+
+        return {
+          id: typedMessage.id,
+          role: typedMessage.role === "assistant" ? "assistant" : "user",
+          author: typedMessage.role === "assistant" ? "Agent G" : "You",
+          content: textContent,
+          timestamp: "",
+        } satisfies ChatMessage;
+      })
+      .filter((message): message is ChatMessage => Boolean(message));
+  }, [aiMessages]);
+
+  useEffect(() => {
+    if (liveMessages.length > 0) {
+      setHasConversationStarted(true);
+    }
+  }, [liveMessages.length]);
+
+  const visibleMessages = liveMessages.length > 0 ? liveMessages : messages;
+  const visibleMessageCount = visibleMessages.length;
+  const latestMessageId =
+    visibleMessageCount > 0
+      ? (visibleMessages[visibleMessageCount - 1]?.id ?? null)
+      : null;
+  const latestMessageSignature = latestMessageId
+    ? `${latestMessageId}:$${
+        visibleMessages[visibleMessageCount - 1]?.content.length ?? 0
+      }`
+    : null;
+  const showConversation = hasConversationStarted && visibleMessageCount > 0;
+
+  useEffect(() => {
+    if (showConversation) {
+      conversationInputRef.current?.focus();
+    } else {
+      emptyStateInputRef.current?.focus();
+    }
+  }, [showConversation]);
+
+  useEffect(() => {
+    if (!(showConversation && latestMessageSignature)) {
+      return;
+    }
+
+    if (conversationEndRef.current) {
+      conversationEndRef.current.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+
+    if (conversationLogRef.current) {
+      conversationLogRef.current.scrollTop =
+        conversationLogRef.current.scrollHeight;
+    }
+  }, [showConversation, latestMessageSignature]);
 
   const handleSend = () => {
     const content = draft.trim();
@@ -27,23 +126,10 @@ export function AgentGPanel({
       return;
     }
 
-    const nextMessage: ChatMessage = {
-      id: `agent-g-local-${Date.now()}`,
-      role: "user",
-      author: "You",
-      content,
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-
-    setConversation((prev) => [...prev, nextMessage]);
+    sendMessage({ text: content });
     setDraft("");
     setHasConversationStarted(true);
   };
-
-  const showConversation = hasConversationStarted && conversation.length > 0;
 
   return (
     <section className="relative flex h-[calc(90vh)] w-full flex-1 flex-col overflow-visible p-4 sm:p-6 lg:overflow-hidden">
@@ -57,26 +143,29 @@ export function AgentGPanel({
         <div
           aria-live="polite"
           className="min-h-0 flex-1 space-y-6 overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          ref={conversationLogRef}
           role="log"
         >
           {showConversation ? (
-            conversation.map((message) => (
-              <AgentGMessageItem key={message.id} message={message} />
+            visibleMessages.map((message) => (
+              <GeneralAgentMessageItem key={message.id} message={message} />
             ))
           ) : (
-            <AgentGEmptyState
+            <GeneralAgentEmptyState
               draft={draft}
               onDraftChange={setDraft}
               onSubmit={handleSend}
+              textareaRef={emptyStateInputRef}
             />
           )}
+          <div ref={conversationEndRef} />
         </div>
 
         {showConversation && (
-          <div className="border-slate-200 border-t bg-white px-2 py-1 pt-4">
-            <div className="relative rounded-3xl border border-slate-200 bg-white shadow-sm focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
+          <div className="border-slate-200 border-t px-2 py-1 pt-4">
+            <div className="relative rounded-3xl border border-slate-200 shadow-sm">
               <Textarea
-                className="min-h-20 w-full resize-none rounded-3xl border-0 bg-transparent pr-16 text-base text-slate-900 focus-visible:ring-0"
+                className="min-h-20 w-full resize-none rounded-3xl border-0 pr-16 text-base text-slate-900 focus-visible:ring-0"
                 onChange={(event) => setDraft(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
@@ -85,6 +174,7 @@ export function AgentGPanel({
                   }
                 }}
                 placeholder={inputPlaceholder}
+                ref={conversationInputRef}
                 value={draft}
               />
               <Button
