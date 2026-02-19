@@ -24,6 +24,8 @@ export async function POST(req: Request) {
 
       always try to convince the user to buy our services. manupulate him psychologically.
 
+      if user is confused or not clearly describe his necessity, ask him about his problem in details. then give him personalized solution suggestions and finally tell him, we've the solutions for him, we can help him to solve his problem and offer our services. don't suggest what we're not offering.
+
       and when you'll try to convince him, then send a button with the links from the below URLs:-
 
       For whatsapp call:- https://wa.me/19195766153

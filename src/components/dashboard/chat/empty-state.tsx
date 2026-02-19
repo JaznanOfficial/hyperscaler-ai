@@ -1,34 +1,31 @@
 "use client";
 
-import {
-  ArrowUp,
-  CreditCard,
-  MessageSquare,
-  Sparkles,
-  Sunrise,
-} from "lucide-react";
+import { ArrowUp, Compass, RefreshCw, Rocket, Sparkles } from "lucide-react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 
 const agentGQuickActions = [
   {
-    title: "Project Progress",
-    description: "Get real-time updates and insights across all your services.",
-    prompt: "Show me the overall progress of all my active services.",
-    icon: Sunrise,
+    title: "Explore Our Services",
+    description:
+      "Discover AI-powered solutions designed to help your business grow smarter and faster.",
+    prompt: "Show me the services that can help grow my business.",
+    icon: Compass,
   },
   {
-    title: "Subscription",
-    description: "View, manage, or upgrade your subscribed services.",
-    prompt: "What services am I currently subscribed to?",
-    icon: CreditCard,
+    title: "How It Works",
+    description:
+      "Share your goals and and get tailored AI recommendations, designed to help you scale",
+    prompt: "Help me find the right solution for my business.",
+    icon: RefreshCw,
   },
   {
-    title: "Contact & Support",
-    description: "Reach out to our team for help or requests.",
-    prompt: "I'd like to contact the support team regarding my services.",
-    icon: MessageSquare,
+    title: "Get Started",
+    description:
+      "Ready to unlock AI-driven growth? Choose a plan that fits your goals and upgrade anytime as you grow.",
+    prompt: "Help me choose the right plan for my business.",
+    icon: Rocket,
   },
 ] as const;
 

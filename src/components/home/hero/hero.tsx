@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,6 +39,17 @@ export function Hero() {
     number | null
   >(null);
   const [prompt, setPrompt] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = () => {
+    const content = prompt.trim();
+    if (!content) {
+      return;
+    }
+
+    router.push(`/chat?prompt=${encodeURIComponent(content)}`);
+    setPrompt("");
+  };
 
   return (
     <section className="relative">
@@ -82,12 +94,24 @@ export function Hero() {
                 setSelectedSuggestionId(null);
               }
             }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                handleSubmit();
+              }
+            }}
             placeholder="What are you trying to grow?"
             rows={5}
             value={prompt}
           />
           <div className="absolute right-2 bottom-2">
-            <Button className="rounded-lg" size="icon-sm" variant={"gradient"}>
+            <Button
+              className="rounded-lg"
+              onClick={handleSubmit}
+              size="icon-sm"
+              type="button"
+              variant={"gradient"}
+            >
               <ArrowUp className="size-5 font-bold" />
             </Button>
           </div>
