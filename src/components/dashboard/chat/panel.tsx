@@ -25,15 +25,18 @@ interface AIMessageShape {
 export function AgentGPanel({
   messages,
   inputPlaceholder = "Type a message",
+  initialPrompt,
 }: {
   messages: ChatMessage[];
   inputPlaceholder?: string;
+  initialPrompt?: string;
 }) {
   const [draft, setDraft] = useState("");
   const [hasConversationStarted, setHasConversationStarted] = useState(
     messages.length > 0
   );
-  const { messages: aiMessages, sendMessage } = useChat();
+  const [hasUsedInitialPrompt, setHasUsedInitialPrompt] = useState(false);
+  const { messages: aiMessages = [], sendMessage } = useChat();
   const emptyStateInputRef = useRef<HTMLTextAreaElement | null>(null);
   const conversationInputRef = useRef<HTMLTextAreaElement | null>(null);
   const conversationLogRef = useRef<HTMLDivElement | null>(null);
@@ -44,37 +47,39 @@ export function AgentGPanel({
       return [];
     }
 
-    return aiMessages
-      .map((message) => {
-        const typedMessage = message as AIMessageShape;
-        const textContent = typedMessage.parts?.length
-          ? typedMessage.parts
-              .map((part) => {
-                if (part.type === "text" && part.text) {
-                  return part.text;
-                }
-                if (part.type === "text-delta" && "textDelta" in part) {
-                  return part.textDelta ?? "";
-                }
-                return "";
-              })
-              .join("")
-              .trim()
-          : (typedMessage.content ?? "");
+    const parsedMessages: ChatMessage[] = [];
 
-        if (!textContent) {
-          return null;
-        }
+    for (const message of aiMessages) {
+      const typedMessage = message as AIMessageShape;
+      const textContent = typedMessage.parts?.length
+        ? typedMessage.parts
+            .map((part) => {
+              if (part.type === "text" && part.text) {
+                return part.text;
+              }
+              if (part.type === "text-delta" && "textDelta" in part) {
+                return part.textDelta ?? "";
+              }
+              return "";
+            })
+            .join("")
+            .trim()
+        : (typedMessage.content ?? "");
 
-        return {
-          id: typedMessage.id,
-          role: typedMessage.role === "assistant" ? "assistant" : "user",
-          author: typedMessage.role === "assistant" ? "Agent G" : "You",
-          content: textContent,
-          timestamp: "",
-        } satisfies ChatMessage;
-      })
-      .filter((message): message is ChatMessage => Boolean(message));
+      if (!textContent) {
+        continue;
+      }
+
+      parsedMessages.push({
+        id: typedMessage.id,
+        role: typedMessage.role === "assistant" ? "assistant" : "user",
+        author: typedMessage.role === "assistant" ? "Agent G" : "You",
+        content: textContent,
+        timestamp: "",
+      });
+    }
+
+    return parsedMessages;
   }, [aiMessages]);
 
   useEffect(() => {
@@ -82,6 +87,17 @@ export function AgentGPanel({
       setHasConversationStarted(true);
     }
   }, [liveMessages.length]);
+
+  useEffect(() => {
+    const content = initialPrompt?.trim();
+    if (!content || hasUsedInitialPrompt) {
+      return;
+    }
+
+    sendMessage({ text: content });
+    setHasConversationStarted(true);
+    setHasUsedInitialPrompt(true);
+  }, [hasUsedInitialPrompt, initialPrompt, sendMessage]);
 
   const visibleMessages = liveMessages.length > 0 ? liveMessages : messages;
   const visibleMessageCount = visibleMessages.length;
