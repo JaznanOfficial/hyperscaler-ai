@@ -7,6 +7,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChatMessage } from "@/components/chat/types";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  HERO_PROMPT_SEND_KEY,
+  HERO_PROMPT_STORAGE_KEY,
+} from "@/lib/chat-storage";
 
 import { GeneralAgentEmptyState } from "./empty-state";
 import { GeneralAgentMessageItem } from "./message-item";
@@ -25,22 +29,20 @@ interface AIMessageShape {
 export function AgentGPanel({
   messages,
   inputPlaceholder = "Type a message",
-  initialPrompt,
 }: {
   messages: ChatMessage[];
   inputPlaceholder?: string;
-  initialPrompt?: string;
 }) {
   const [draft, setDraft] = useState("");
   const [hasConversationStarted, setHasConversationStarted] = useState(
     messages.length > 0
   );
-  const [hasUsedInitialPrompt, setHasUsedInitialPrompt] = useState(false);
   const { messages: aiMessages = [], sendMessage } = useChat();
   const emptyStateInputRef = useRef<HTMLTextAreaElement | null>(null);
   const conversationInputRef = useRef<HTMLTextAreaElement | null>(null);
   const conversationLogRef = useRef<HTMLDivElement | null>(null);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
+  const heroPromptHandledRef = useRef(false);
 
   const liveMessages = useMemo<ChatMessage[]>(() => {
     if (!aiMessages.length) {
@@ -89,15 +91,37 @@ export function AgentGPanel({
   }, [liveMessages.length]);
 
   useEffect(() => {
-    const content = initialPrompt?.trim();
-    if (!content || hasUsedInitialPrompt) {
+    if (heroPromptHandledRef.current) {
       return;
     }
 
-    sendMessage({ text: content });
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const shouldSend = window.localStorage.getItem(HERO_PROMPT_SEND_KEY);
+    if (shouldSend !== "true") {
+      heroPromptHandledRef.current = true;
+      return;
+    }
+
+    const cachedPrompt = window.localStorage
+      .getItem(HERO_PROMPT_STORAGE_KEY)
+      ?.trim();
+
+    window.localStorage.removeItem(HERO_PROMPT_SEND_KEY);
+
+    if (!cachedPrompt) {
+      window.localStorage.removeItem(HERO_PROMPT_STORAGE_KEY);
+      heroPromptHandledRef.current = true;
+      return;
+    }
+
     setHasConversationStarted(true);
-    setHasUsedInitialPrompt(true);
-  }, [hasUsedInitialPrompt, initialPrompt, sendMessage]);
+    sendMessage({ text: cachedPrompt });
+    window.localStorage.removeItem(HERO_PROMPT_STORAGE_KEY);
+    heroPromptHandledRef.current = true;
+  }, [sendMessage]);
 
   const visibleMessages = liveMessages.length > 0 ? liveMessages : messages;
   const visibleMessageCount = visibleMessages.length;
