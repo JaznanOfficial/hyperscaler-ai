@@ -11,6 +11,7 @@ model User {
   id          String   @id @default(cuid())
   name        String
   email       String   @unique
+  phone       String?
   password    String
   role        UserRole @default(CLIENT)
   projects    Json     @default("[]")
@@ -25,6 +26,7 @@ model Subscription {
   subscriptionId String             @unique
   priceId        String
   invoiceId      String?
+  packageName    String?
   amount         Int
   status         SubscriptionStatus @default(UNPAID)
   createdAt      DateTime           @default(now())

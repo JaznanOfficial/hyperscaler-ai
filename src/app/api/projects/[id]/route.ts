@@ -29,6 +29,13 @@ export async function GET(
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
+    if (project.status === "CANCELLED") {
+      return NextResponse.json(
+        { error: "This project has been cancelled" },
+        { status: 403 }
+      );
+    }
+
     const assignedEmployees = project.assignedEmployees as string[];
     if (!assignedEmployees.includes(userId)) {
       return NextResponse.json(
@@ -102,6 +109,13 @@ export async function PATCH(
 
     if (!project) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    if (project.status === "CANCELLED") {
+      return NextResponse.json(
+        { error: "This project has been cancelled" },
+        { status: 403 }
+      );
     }
 
     const assignedEmployees = project.assignedEmployees as string[];

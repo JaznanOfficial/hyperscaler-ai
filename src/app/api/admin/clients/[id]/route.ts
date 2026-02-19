@@ -89,7 +89,8 @@ export async function GET(
     });
 
     const clientDetail = {
-      id: `CL-${client.id.slice(0, 4).toUpperCase()}`,
+      id: client.id,
+      displayId: `CL-${client.id.slice(0, 4).toUpperCase()}`,
       name: client.name,
       email: client.email,
       subscriptionId: `SUB-${client.id.slice(0, 4)}`,

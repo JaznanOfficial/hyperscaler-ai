@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AddToCartButton } from "@/components/client/add-to-cart-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -64,19 +63,8 @@ export function ExploreServicesGrid() {
               </div>
 
               <div className="flex w-full flex-col gap-4 pt-4">
-                <p className="font-['Outfit'] font-bold text-2xl text-slate-900 leading-8">
-                  $TBD
-                  <span className="font-medium text-slate-500 text-sm leading-5">
-                    /month
-                  </span>
-                </p>
                 <div className="flex w-full flex-col gap-3 min-[450px]:flex-row">
-                  <AddToCartButton
-                    price="$TBD"
-                    serviceId={service.id}
-                    serviceName={service.serviceName}
-                  />
-                  <Button asChild className="flex-1" variant="outline">
+                  <Button asChild className="flex-1" variant="gradient">
                     <Link href={`/client/services/${service.id}`}>
                       View Details
                     </Link>

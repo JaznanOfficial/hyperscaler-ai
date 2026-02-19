@@ -4,6 +4,7 @@ import { UserPlus, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
+import { AssignServiceDialog } from "@/components/admin/assign-service-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +31,14 @@ import {
 } from "@/components/ui/select";
 import type { ClientDetail, ClientServiceStatus } from "@/data/clients";
 
+interface Package {
+  id: string;
+  packageName: string;
+  amount: number;
+  status: string;
+  createdAt: string;
+}
+
 const accountStatusStyles: Record<ClientDetail["accountStatus"], string> = {
   Approved: "bg-emerald-100 text-emerald-700",
   Pending: "bg-amber-100 text-amber-700",
@@ -50,18 +59,22 @@ const serviceStatusStyles: Record<ClientServiceStatus, string> = {
 
 export function ClientDetailView({ client }: { client: ClientDetail }) {
   const [services, setServices] = useState(client.requestedServices);
+  const [packages, setPackages] = useState<Package[]>([]);
   const [employees, setEmployees] = useState<
     Array<{ id: string; name: string }>
   >([]);
 
   useEffect(() => {
-    fetch("/api/admin/employees")
-      .then((res) => res.json())
-      .then((data) => {
-        setEmployees(data.employees || []);
+    Promise.all([
+      fetch("/api/admin/employees").then((res) => res.json()),
+      fetch(`/api/admin/clients/${client.id}/packages`).then((res) => res.json()),
+    ])
+      .then(([employeesData, packagesData]) => {
+        setEmployees(employeesData.employees || []);
+        setPackages(packagesData.packages || []);
       })
       .catch(() => {});
-  }, []);
+  }, [client.id]);
 
   const availableEmployees = useMemo(
     () => employees.map((e) => e.name).sort(),
@@ -158,6 +171,10 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4 text-slate-600 text-sm">
           <div>
+            <span className="font-semibold text-slate-900">Client ID</span>
+            <p>{`CL-${client.id.slice(0, 4).toUpperCase()}`}</p>
+          </div>
+          <div>
             <span className="font-semibold text-slate-900">Subscription</span>
             <p>{client.subscriptionId}</p>
           </div>
@@ -180,14 +197,66 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
         </CardContent>
       </Card>
 
+      {packages.length > 0 && (
+        <div className="space-y-3">
+          <div>
+            <p className="font-semibold text-slate-400 text-xs uppercase tracking-[0.3em]">
+              Packages
+            </p>
+            <p className="font-semibold text-base text-slate-900">
+              Purchased packages
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {packages.map((pkg) => (
+              <Card className="border border-slate-200 p-6" key={pkg.id}>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold text-lg text-slate-900">
+                      {pkg.packageName}
+                    </h3>
+                    <p className="text-slate-500 text-sm">
+                      Purchased on{" "}
+                      {new Date(pkg.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="font-bold text-2xl text-slate-900">
+                      ${(pkg.amount / 100).toFixed(2)}
+                    </span>
+                    <span className="text-slate-500 text-sm">/month</span>
+                  </div>
+                  <div>
+                    <Badge
+                      className={`rounded-full px-3 py-1 font-semibold text-xs ${
+                        pkg.status === "PAID"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : pkg.status === "UNPAID"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-rose-100 text-rose-700"
+                      }`}
+                    >
+                      {pkg.status}
+                    </Badge>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="space-y-3">
-        <div>
-          <p className="font-semibold text-slate-400 text-xs uppercase tracking-[0.3em]">
-            Services
-          </p>
-          <p className="font-semibold text-base text-slate-900">
-            Active workstreams
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-semibold text-slate-400 text-xs uppercase tracking-[0.3em]">
+              Services
+            </p>
+            <p className="font-semibold text-base text-slate-900">
+              Active workstreams
+            </p>
+          </div>
+          <AssignServiceDialog clientId={client.id} clientName={client.name} />
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {services.map((service) => (

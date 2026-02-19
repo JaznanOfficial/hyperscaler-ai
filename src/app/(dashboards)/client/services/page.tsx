@@ -1,6 +1,5 @@
 import { ActiveServicesList } from "@/components/dashboard/client/active-services-list";
-import { ExploreServicesGrid } from "@/components/dashboard/client/explore-services-grid";
-import { RecommendedServices } from "@/components/dashboard/client/recommended-services";
+import { RecommendedPackages } from "@/components/dashboard/client/recommended-packages";
 
 export default function ClientServicesPage() {
   return (
@@ -17,13 +16,12 @@ export default function ClientServicesPage() {
               </span>
             </h1>
             <p className="text-base text-slate-600 leading-3">
-              Discover, manage, and expand your services — all in one place.
+              Manage your active services — all in one place.
             </p>
           </div>
 
-          <RecommendedServices />
           <ActiveServicesList />
-          <ExploreServicesGrid />
+          <RecommendedPackages />
         </div>
       </div>
     </section>

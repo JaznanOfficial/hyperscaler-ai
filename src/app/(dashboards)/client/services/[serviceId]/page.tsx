@@ -1,6 +1,5 @@
 import { BadgeCheck, ChevronLeft, Lock } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   defaultClientServiceDetail,
@@ -50,9 +49,6 @@ export default async function ClientServiceDetailsPage({
                   {detail.cadence}
                 </span>
               </p>
-              <Button className="min-w-[160px]" variant="gradient">
-                Add to Cart
-              </Button>
             </div>
           </div>
         </Card>

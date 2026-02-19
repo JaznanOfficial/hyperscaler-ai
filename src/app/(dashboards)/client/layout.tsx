@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { auth } from "@/backend/config/auth";
 
 import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar";
-import { CartIcon } from "@/components/client/cart-icon";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -96,9 +95,6 @@ export default async function ClientDashboardLayout({
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
-            <div className="ml-auto">
-              <CartIcon />
-            </div>
           </div>
         </header>
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden bg-[#F5F7Fa]">

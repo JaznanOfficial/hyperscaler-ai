@@ -1,3 +1,5 @@
+"use client";
+
 import type { VariantProps } from "class-variance-authority";
 import {
   ArrowRight,
@@ -8,6 +10,7 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { SectionHeader } from "@/components/shared/section-header";
 import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 import { buttonVariants } from "@/components/ui/button";
@@ -259,7 +262,7 @@ const Pricing = () => {
 
 type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 
-const renderPricingCta = (item: PricingCard) => {
+const renderPricingCta = (item: PricingCard, isAuthenticated: boolean) => {
   const overrideVariant = (variant?: ButtonVariant): ButtonVariant => {
     if (item.highlight && variant === "gradient") {
       return "outline";
@@ -268,13 +271,21 @@ const renderPricingCta = (item: PricingCard) => {
   };
 
   if (item.cta?.type === "link" && item.cta.href) {
+    // Extract price amount (remove $ and /month)
+    const priceAmount = item.price?.amount?.replace(/[$,]/g, "") || "0";
+    const packageName = item.name;
+    
+    const href = isAuthenticated 
+      ? `/client?package=${encodeURIComponent(packageName)}&amount=${priceAmount}`
+      : `/signup?package=${encodeURIComponent(packageName)}&amount=${priceAmount}`;
+    
     return (
       <Link
         className={cn(
           buttonVariants({ variant: overrideVariant(item.cta.variant) }),
           "w-full"
         )}
-        href={item.cta.href}
+        href={href}
       >
         {item.cta.label} <ArrowRight className="size-4" />
       </Link>
@@ -296,6 +307,9 @@ const renderPricingCta = (item: PricingCard) => {
 type PricingCard = (typeof scalePricingData)[number];
 
 const PricingCards = ({ data }: { data: PricingCard[] }) => {
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
+  
   return (
     <div className="grid grid-cols-1 gap-5 max-lg:w-full sm:grid-cols-2 xl:grid-cols-4">
       {data.map((item) => {
@@ -306,7 +320,7 @@ const PricingCards = ({ data }: { data: PricingCard[] }) => {
           ?.toLowerCase()
           .includes("custom");
 
-        const ctaContent = renderPricingCta(item);
+        const ctaContent = renderPricingCta(item, isAuthenticated);
 
         return (
           <div
