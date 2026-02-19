@@ -11,9 +11,13 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  HERO_PROMPT_SEND_KEY,
+  HERO_PROMPT_STORAGE_KEY,
+} from "@/lib/chat-storage";
 import { cn } from "@/lib/utils";
 
 const InputSuggestions = [
@@ -41,15 +45,22 @@ export function Hero() {
   const [prompt, setPrompt] = useState("");
   const router = useRouter();
 
-  const handleSubmit = () => {
-    const content = prompt.trim();
-    if (!content) {
+  const handlePromptSubmit = useCallback(() => {
+    const trimmedPrompt = prompt.trim();
+
+    if (!trimmedPrompt) {
       return;
     }
 
-    router.push(`/chat?prompt=${encodeURIComponent(content)}`);
-    setPrompt("");
-  };
+    try {
+      localStorage.setItem(HERO_PROMPT_STORAGE_KEY, trimmedPrompt);
+      localStorage.setItem(HERO_PROMPT_SEND_KEY, "true");
+    } catch (error) {
+      console.error("Failed to cache hero prompt", error);
+    }
+
+    router.push("/chat");
+  }, [prompt, router]);
 
   return (
     <section className="relative">
@@ -97,7 +108,7 @@ export function Hero() {
             onKeyDown={(event) => {
               if (event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
-                handleSubmit();
+                handlePromptSubmit();
               }
             }}
             placeholder="What are you trying to grow?"
@@ -107,9 +118,8 @@ export function Hero() {
           <div className="absolute right-2 bottom-2">
             <Button
               className="rounded-lg"
-              onClick={handleSubmit}
+              onClick={handlePromptSubmit}
               size="icon-sm"
-              type="button"
               variant={"gradient"}
             >
               <ArrowUp className="size-5 font-bold" />
