@@ -3,7 +3,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import type { ChatMessage } from "@/components/chat/types";
-import { EmployeeToolResultCard } from "@/components/dashboard/employee/tool-result-card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -141,22 +140,23 @@ export function EmployeeAgentMessageItem({
       : "rounded-bl-sm bg-slate-100 text-slate-900"
   );
 
-  if (message.toolResult && message.toolName) {
-    return (
-      <article className="flex justify-start">
-        <div className="w-full max-w-[88%] sm:max-w-[70%]">
-          <EmployeeToolResultCard
-            result={message.toolResult}
-            toolName={message.toolName}
-          />
-        </div>
-      </article>
-    );
-  }
+  const toolParts = isUser
+    ? []
+    : (message.parts ?? []).filter((part) => {
+        const partType = part.type ?? "";
+        return (
+          partType.startsWith("tool-") ||
+          partType === "tool-call" ||
+          partType === "tool-result"
+        );
+      });
+
+  const hasStructuredContent = structuredEntries.length > 0;
+  const hasTextContent = message.content?.trim();
 
   return (
     <article className={cn("flex", isUser ? "justify-end" : "justify-start")}>
-      {structuredEntries.length > 0 ? (
+      {hasStructuredContent && (
         <div className="flex w-full max-w-[88%] flex-col gap-4 sm:max-w-[70%]">
           {structuredEntries.map((entry, index) => (
             <div className={bubbleClassName} key={`${message.id}-${index}`}>
@@ -187,7 +187,9 @@ export function EmployeeAgentMessageItem({
             </div>
           ))}
         </div>
-      ) : (
+      )}
+
+      {!hasStructuredContent && hasTextContent && (
         <div className={bubbleClassName}>
           <div className={proseClassName}>
             <ReactMarkdown
@@ -197,6 +199,138 @@ export function EmployeeAgentMessageItem({
               {message.content}
             </ReactMarkdown>
           </div>
+        </div>
+      )}
+
+      {toolParts.length > 0 && (
+        <div className="flex w-full max-w-[88%] flex-col gap-4 sm:max-w-[70%]">
+          {toolParts.map((part) => {
+            const toolPart = part as {
+              type: string;
+              toolCallId?: string;
+              state?: string;
+              input?: unknown;
+              output?: unknown;
+              errorText?: string;
+            };
+
+            switch (toolPart.type) {
+              case "tool-EmployeeFeedbackTool": {
+                const callId = toolPart.toolCallId ?? "unknown";
+
+                switch (toolPart.state) {
+                  case "input-streaming":
+                    return (
+                      <div
+                        className={cn(
+                          bubbleClassName,
+                          "bg-blue-50 text-blue-900"
+                        )}
+                        key={callId}
+                      >
+                        Loading feedbacks...
+                      </div>
+                    );
+                  case "input-available":
+                    return (
+                      <div
+                        className={cn(
+                          bubbleClassName,
+                          "bg-blue-50 text-blue-900"
+                        )}
+                        key={callId}
+                      >
+                        Fetching your feedbacks...
+                      </div>
+                    );
+                  case "output-available": {
+                    const output = toolPart.output as {
+                      success?: boolean;
+                      data?: Array<{
+                        id: string;
+                        heading: string;
+                        details: string;
+                        read: boolean;
+                        createdAt: string;
+                      }>;
+                      unreadCount?: number;
+                      pagination?: {
+                        page: number;
+                        total: number;
+                        totalPages: number;
+                      };
+                    };
+
+                    return (
+                      <div
+                        className={cn(
+                          bubbleClassName,
+                          "bg-green-50 text-green-900"
+                        )}
+                        key={callId}
+                      >
+                        <div className="space-y-3">
+                          {output?.unreadCount !== undefined && (
+                            <p className="font-semibold">
+                              Unread: {output.unreadCount}
+                            </p>
+                          )}
+                          {output?.data && output.data.length > 0 ? (
+                            <div className="space-y-2 overflow-x-auto">
+                              {output.data.map((feedback) => (
+                                <div
+                                  className="rounded border border-green-200 bg-white p-2 text-slate-900 text-sm"
+                                  key={feedback.id}
+                                >
+                                  <p className="font-medium">
+                                    {feedback.heading}
+                                  </p>
+                                  <p className="text-slate-600 text-xs">
+                                    {feedback.details}
+                                  </p>
+                                  <p className="mt-1 text-slate-500 text-xs">
+                                    {feedback.read ? "✓ Read" : "Unread"} •{" "}
+                                    {new Date(
+                                      feedback.createdAt
+                                    ).toLocaleDateString()}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p>No feedbacks found.</p>
+                          )}
+                          {output?.pagination && (
+                            <p className="text-xs">
+                              Page {output.pagination.page} of{" "}
+                              {output.pagination.totalPages}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  }
+                  case "output-error":
+                    return (
+                      <div
+                        className={cn(
+                          bubbleClassName,
+                          "bg-red-50 text-red-900"
+                        )}
+                        key={callId}
+                      >
+                        Error:{" "}
+                        {toolPart.errorText ?? "Failed to fetch feedbacks"}
+                      </div>
+                    );
+                  default:
+                    return null;
+                }
+              }
+              default:
+                return null;
+            }
+          })}
         </div>
       )}
     </article>
