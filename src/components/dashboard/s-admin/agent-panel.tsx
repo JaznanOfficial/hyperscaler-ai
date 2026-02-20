@@ -3,18 +3,19 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { ArrowUp } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import type { ChatMessage } from "@/components/chat/types";
+import { SuperAdminAgentEmptyState } from "@/components/dashboard/s-admin/empty-state";
+import { SuperAdminAgentMessageItem } from "@/components/dashboard/s-admin/message-item";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
   HERO_PROMPT_SEND_KEY,
   HERO_PROMPT_STORAGE_KEY,
 } from "@/lib/chat-storage";
-
-import { GeneralAgentEmptyState } from "./empty-state";
-import { GeneralAgentMessageItem } from "./message-item";
 
 type AIMultiPart =
   | { type: "text"; text: string }
@@ -27,12 +28,12 @@ interface AIMessageShape {
   content?: string;
 }
 
-const DEFAULT_CHAT_ENDPOINT = "/api/chat" as const;
+const DEFAULT_ADMIN_AGENT_ENDPOINT = "/api/admin-agent" as const;
 
-export function GeneralAgentPanel({
+export function SuperAdminAgentPanel({
   messages,
-  inputPlaceholder = "Type a message",
-  apiEndpoint = DEFAULT_CHAT_ENDPOINT,
+  inputPlaceholder = "Talk with Hyperscaler AI Assistant...",
+  apiEndpoint = DEFAULT_ADMIN_AGENT_ENDPOINT,
 }: {
   messages: ChatMessage[];
   inputPlaceholder?: string;
@@ -42,6 +43,9 @@ export function GeneralAgentPanel({
   const [hasConversationStarted, setHasConversationStarted] = useState(
     messages.length > 0
   );
+  const { data: session } = useSession();
+  const isAuthorizedUser =
+    session?.user?.role === "ADMIN" || session?.user?.role === "MANAGER";
   const { messages: aiMessages = [], sendMessage } = useChat({
     transport: new DefaultChatTransport({
       api: apiEndpoint,
@@ -100,7 +104,7 @@ export function GeneralAgentPanel({
   }, [liveMessages.length]);
 
   useEffect(() => {
-    if (heroPromptHandledRef.current) {
+    if (heroPromptHandledRef.current || !isAuthorizedUser) {
       return;
     }
 
@@ -130,7 +134,7 @@ export function GeneralAgentPanel({
     sendMessage({ text: cachedPrompt });
     window.localStorage.removeItem(HERO_PROMPT_STORAGE_KEY);
     heroPromptHandledRef.current = true;
-  }, [sendMessage]);
+  }, [isAuthorizedUser, sendMessage]);
 
   const visibleMessages = liveMessages.length > 0 ? liveMessages : messages;
   const visibleMessageCount = visibleMessages.length;
@@ -139,7 +143,7 @@ export function GeneralAgentPanel({
       ? (visibleMessages[visibleMessageCount - 1]?.id ?? null)
       : null;
   const latestMessageSignature = latestMessageId
-    ? `${latestMessageId}:$${
+    ? `${latestMessageId}:$$${
         visibleMessages[visibleMessageCount - 1]?.content.length ?? 0
       }`
     : null;
@@ -175,6 +179,11 @@ export function GeneralAgentPanel({
       return;
     }
 
+    if (!isAuthorizedUser) {
+      toast.error("Only admins and managers can send messages here.");
+      return;
+    }
+
     sendMessage({ text: content });
     setDraft("");
     setHasConversationStarted(true);
@@ -197,10 +206,10 @@ export function GeneralAgentPanel({
         >
           {showConversation ? (
             visibleMessages.map((message) => (
-              <GeneralAgentMessageItem key={message.id} message={message} />
+              <SuperAdminAgentMessageItem key={message.id} message={message} />
             ))
           ) : (
-            <GeneralAgentEmptyState
+            <SuperAdminAgentEmptyState
               draft={draft}
               onDraftChange={setDraft}
               onSubmit={handleSend}

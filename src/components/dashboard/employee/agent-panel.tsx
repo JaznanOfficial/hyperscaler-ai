@@ -3,9 +3,14 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { ArrowUp } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
+import { mapAiMessagesToChatMessages } from "@/components/chat/ai-message-utils";
 import type { ChatMessage } from "@/components/chat/types";
+import { EmployeeAgentEmptyState } from "@/components/dashboard/employee/empty-state";
+import { EmployeeAgentMessageItem } from "@/components/dashboard/employee/message-item";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -13,26 +18,12 @@ import {
   HERO_PROMPT_STORAGE_KEY,
 } from "@/lib/chat-storage";
 
-import { GeneralAgentEmptyState } from "./empty-state";
-import { GeneralAgentMessageItem } from "./message-item";
+const DEFAULT_EMPLOYEE_AGENT_ENDPOINT = "/api/employee-agent" as const;
 
-type AIMultiPart =
-  | { type: "text"; text: string }
-  | { type: "text-delta"; textDelta: string };
-
-interface AIMessageShape {
-  id: string;
-  role: "assistant" | "user" | "system";
-  parts?: AIMultiPart[];
-  content?: string;
-}
-
-const DEFAULT_CHAT_ENDPOINT = "/api/chat" as const;
-
-export function GeneralAgentPanel({
+export function EmployeeAgentPanel({
   messages,
-  inputPlaceholder = "Type a message",
-  apiEndpoint = DEFAULT_CHAT_ENDPOINT,
+  inputPlaceholder = "Talk with Hyperscaler AI Assistant...",
+  apiEndpoint = DEFAULT_EMPLOYEE_AGENT_ENDPOINT,
 }: {
   messages: ChatMessage[];
   inputPlaceholder?: string;
@@ -42,6 +33,9 @@ export function GeneralAgentPanel({
   const [hasConversationStarted, setHasConversationStarted] = useState(
     messages.length > 0
   );
+  const { data: session } = useSession();
+  const isAuthorizedUser =
+    session?.user?.role === "EMPLOYEE" || session?.user?.role === "MANAGER";
   const { messages: aiMessages = [], sendMessage } = useChat({
     transport: new DefaultChatTransport({
       api: apiEndpoint,
@@ -53,45 +47,10 @@ export function GeneralAgentPanel({
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
   const heroPromptHandledRef = useRef(false);
 
-  const liveMessages = useMemo<ChatMessage[]>(() => {
-    if (!aiMessages.length) {
-      return [];
-    }
-
-    const parsedMessages: ChatMessage[] = [];
-
-    for (const message of aiMessages) {
-      const typedMessage = message as AIMessageShape;
-      const textContent = typedMessage.parts?.length
-        ? typedMessage.parts
-            .map((part) => {
-              if (part.type === "text" && part.text) {
-                return part.text;
-              }
-              if (part.type === "text-delta" && "textDelta" in part) {
-                return part.textDelta ?? "";
-              }
-              return "";
-            })
-            .join("")
-            .trim()
-        : (typedMessage.content ?? "");
-
-      if (!textContent) {
-        continue;
-      }
-
-      parsedMessages.push({
-        id: typedMessage.id,
-        role: typedMessage.role === "assistant" ? "assistant" : "user",
-        author: typedMessage.role === "assistant" ? "Agent G" : "You",
-        content: textContent,
-        timestamp: "",
-      });
-    }
-
-    return parsedMessages;
-  }, [aiMessages]);
+  const liveMessages = useMemo<ChatMessage[]>(
+    () => mapAiMessagesToChatMessages(aiMessages),
+    [aiMessages]
+  );
 
   useEffect(() => {
     if (liveMessages.length > 0) {
@@ -100,7 +59,7 @@ export function GeneralAgentPanel({
   }, [liveMessages.length]);
 
   useEffect(() => {
-    if (heroPromptHandledRef.current) {
+    if (heroPromptHandledRef.current || !isAuthorizedUser) {
       return;
     }
 
@@ -130,7 +89,7 @@ export function GeneralAgentPanel({
     sendMessage({ text: cachedPrompt });
     window.localStorage.removeItem(HERO_PROMPT_STORAGE_KEY);
     heroPromptHandledRef.current = true;
-  }, [sendMessage]);
+  }, [isAuthorizedUser, sendMessage]);
 
   const visibleMessages = liveMessages.length > 0 ? liveMessages : messages;
   const visibleMessageCount = visibleMessages.length;
@@ -139,7 +98,7 @@ export function GeneralAgentPanel({
       ? (visibleMessages[visibleMessageCount - 1]?.id ?? null)
       : null;
   const latestMessageSignature = latestMessageId
-    ? `${latestMessageId}:$${
+    ? `${latestMessageId}:$$${
         visibleMessages[visibleMessageCount - 1]?.content.length ?? 0
       }`
     : null;
@@ -175,6 +134,11 @@ export function GeneralAgentPanel({
       return;
     }
 
+    if (!isAuthorizedUser) {
+      toast.error("Only employees and managers can send messages here.");
+      return;
+    }
+
     sendMessage({ text: content });
     setDraft("");
     setHasConversationStarted(true);
@@ -197,10 +161,10 @@ export function GeneralAgentPanel({
         >
           {showConversation ? (
             visibleMessages.map((message) => (
-              <GeneralAgentMessageItem key={message.id} message={message} />
+              <EmployeeAgentMessageItem key={message.id} message={message} />
             ))
           ) : (
-            <GeneralAgentEmptyState
+            <EmployeeAgentEmptyState
               draft={draft}
               onDraftChange={setDraft}
               onSubmit={handleSend}
