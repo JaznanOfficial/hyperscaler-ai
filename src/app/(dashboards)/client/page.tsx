@@ -1,3 +1,8 @@
+"use client";
+
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { toast } from "sonner";
 import { ClientAgentPanel } from "@/components/dashboard/client/agent-panel";
 
 export default function ClientDashboardPage() {
@@ -11,7 +16,9 @@ export default function ClientDashboardPage() {
 
     // Show success message after payment
     if (payment === "success" && packageName) {
-      toast.success(`Payment successful! Your ${packageName} package is now active.`);
+      toast.success(
+        `Payment successful! Your ${packageName} package is now active.`
+      );
       // Clean up URL
       router.replace("/client");
       return;
@@ -33,7 +40,7 @@ export default function ClientDashboardPage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               packageName,
-              amount: parseFloat(amount),
+              amount: Number.parseFloat(amount),
             }),
           });
 
