@@ -10,7 +10,9 @@ export async function POST(req: Request) {
     messages: await convertToModelMessages(messages),
     system: `You are Hyperscaler AI, built by Scale Build AI. you're a helpful assistant. you'll call only tools.
 
-    don't talk anything else other than this.
+    don't talk anything else other than this. if anyone ask anything else, tell him to talk to our 'General Agent'. and give him a structured response like {"message": "", "buttons": [{"label": "", "url": ""}]}
+
+    for getting reply of any other questions, our 'General Agent' url will be :- https://hyperscaler.scalebuild.ai/chat
     `,
     tools: {
       EmployeeFeedbackTool,

@@ -18,6 +18,13 @@ interface AIMessageShape {
   content?: string;
 }
 
+interface ToolInvocation {
+  toolCallId?: string;
+  toolName?: string;
+  result?: unknown;
+  state?: string;
+}
+
 const getTextFromParts = (parts: AIMultiPart[] = []) =>
   parts
     .map((part) => {
@@ -50,6 +57,9 @@ export const mapAiMessagesToChatMessages = (
 
   for (const message of aiMessages) {
     const parts = (message.parts ?? []) as AIMultiPart[];
+    const toolInvocations =
+      (message as AIMessageShape & { toolInvocations?: ToolInvocation[] })
+        .toolInvocations ?? [];
     const textContent = parts.length
       ? getTextFromParts(parts)
       : (message.content ?? "");
@@ -79,6 +89,26 @@ export const mapAiMessagesToChatMessages = (
           timestamp: "",
           toolName: toolPart.toolName ?? "Tool",
           toolResult: toolPart.result,
+        });
+      });
+
+    toolInvocations
+      .filter(
+        (invocation) =>
+          invocation.state === "result" || invocation.result !== undefined
+      )
+      .forEach((invocation, index) => {
+        parsedMessages.push({
+          id: `${message.id}-tool-invocation-${invocation.toolCallId ?? "unknown"}-${index}`,
+          role: "assistant",
+          author: "Tool",
+          content: formatToolResult(
+            invocation.toolName ?? "Tool",
+            invocation.result
+          ),
+          timestamp: "",
+          toolName: invocation.toolName ?? "Tool",
+          toolResult: invocation.result,
         });
       });
   }
