@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { SignupForm } from "@/components/signup/signup-form";
 
@@ -26,7 +27,9 @@ export default function SignupPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-lg">
-            <SignupForm />
+            <Suspense fallback={<div>Loading...</div>}>
+              <SignupForm />
+            </Suspense>
           </div>
         </div>
       </div>

@@ -2,8 +2,10 @@
 
 import { ArrowRight, Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -22,13 +24,18 @@ export function SignupForm({
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
+  const [phoneValue, setPhoneValue] = React.useState<string>();
   const {
     signupMutation,
     autoLoginMutation,
     isSignupLoading: isLoading,
   } = useSignupMutations();
+
+  const packageName = searchParams.get("package");
+  const packageAmount = searchParams.get("amount");
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,8 +51,23 @@ export function SignupForm({
       return;
     }
 
+    if (phoneValue && !isValidPhoneNumber(phoneValue)) {
+      toast.error("Please enter a valid phone number", { richColors: true });
+      return;
+    }
+
+    if (!phoneValue) {
+      toast.error("Phone number is required", { richColors: true });
+      return;
+    }
+
     try {
-      const data = await signupMutation.mutateAsync({ name, email, password });
+      const data = await signupMutation.mutateAsync({ 
+        name, 
+        email, 
+        password,
+        phone: phoneValue 
+      });
       const successMessage =
         typeof data.message === "string"
           ? data.message
@@ -54,6 +76,29 @@ export function SignupForm({
       await autoLoginMutation.mutateAsync({ email, password });
 
       const role = data.data?.role;
+      
+      if (packageName && packageAmount && role === "CLIENT") {
+        try {
+          const response = await fetch("/api/stripe/checkout-package", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              packageName,
+              amount: parseFloat(packageAmount),
+            }),
+          });
+
+          const paymentData = await response.json();
+
+          if (response.ok && paymentData.url) {
+            window.location.href = paymentData.url;
+            return;
+          }
+        } catch (error) {
+          console.error("Payment redirect error:", error);
+        }
+      }
+      
       if (role === "ADMIN") {
         router.push("/s-admin");
       } else if (role === "CLIENT") {
@@ -109,6 +154,23 @@ export function SignupForm({
               required
               type="email"
             />
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="phone">Phone Number</FieldLabel>
+            <PhoneInput
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              defaultCountry="US"
+              disabled={isLoading}
+              id="phone"
+              international
+              onChange={setPhoneValue}
+              placeholder="Enter phone number"
+              value={phoneValue}
+            />
+            <FieldDescription>
+              Include country code for international numbers
+            </FieldDescription>
           </Field>
 
           <Field>

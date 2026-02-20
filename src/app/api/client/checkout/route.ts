@@ -1,7 +1,16 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
-import { checkoutSchema } from "@/backend/schemas/cart.schema";
+import { z } from "zod";
+
+const checkoutSchema = z.object({
+  services: z.array(
+    z.object({
+      serviceId: z.string(),
+      serviceName: z.string(),
+    })
+  ),
+});
 
 export async function POST(request: Request) {
   try {
@@ -12,21 +21,21 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { items } = checkoutSchema.parse(body);
+    const { services } = checkoutSchema.parse(body);
 
-    const serviceIds = items.map((item) => item.serviceId);
-    const services = await prisma.service.findMany({
+    const serviceIds = services.map((item) => item.serviceId);
+    const serviceRecords = await prisma.service.findMany({
       where: { id: { in: serviceIds } },
     });
 
-    if (services.length !== serviceIds.length) {
+    if (serviceRecords.length !== serviceIds.length) {
       return NextResponse.json(
         { error: "Some services not found" },
         { status: 404 }
       );
     }
 
-    const projectServices = services.map((service) => ({
+    const projectServices = serviceRecords.map((service) => ({
       serviceId: service.id,
       serviceName: service.serviceName,
       updates: {},

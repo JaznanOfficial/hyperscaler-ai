@@ -64,9 +64,11 @@ export function ServicesGrid({
               {ctaType === "talk" ? (
                 <TalkToSalesDrawer buttonClassName="flex-1" />
               ) : (
-                <Button className="flex-1" variant="gradient">
-                  <ShoppingCart className="size-4" />
-                  Add to Cart
+                <Button asChild className="flex-1" variant="gradient">
+                  <Link href="/login">
+                    <ShoppingCart className="size-4" />
+                    Login to Purchase
+                  </Link>
                 </Button>
               )}
               <Button asChild className="flex-1" variant="outline">

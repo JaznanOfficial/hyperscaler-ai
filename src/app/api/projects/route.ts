@@ -17,6 +17,11 @@ export async function GET() {
     }
 
     const projects = await prisma.project.findMany({
+      where: {
+        status: {
+          not: "CANCELLED",
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },

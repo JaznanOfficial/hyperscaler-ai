@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 export interface SignupPayload {
   name: string;
   email: string;
+  phone: string;
   password: string;
 }
 
