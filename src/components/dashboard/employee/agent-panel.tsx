@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { mapAiMessagesToChatMessages } from "@/components/chat/ai-message-utils";
 import type { ChatMessage } from "@/components/chat/types";
 import { EmployeeAgentEmptyState } from "@/components/dashboard/employee/empty-state";
 import { EmployeeAgentMessageItem } from "@/components/dashboard/employee/message-item";
@@ -16,17 +17,6 @@ import {
   HERO_PROMPT_SEND_KEY,
   HERO_PROMPT_STORAGE_KEY,
 } from "@/lib/chat-storage";
-
-type AIMultiPart =
-  | { type: "text"; text: string }
-  | { type: "text-delta"; textDelta: string };
-
-interface AIMessageShape {
-  id: string;
-  role: "assistant" | "user" | "system";
-  parts?: AIMultiPart[];
-  content?: string;
-}
 
 const DEFAULT_EMPLOYEE_AGENT_ENDPOINT = "/api/employee-agent" as const;
 
@@ -57,45 +47,10 @@ export function EmployeeAgentPanel({
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
   const heroPromptHandledRef = useRef(false);
 
-  const liveMessages = useMemo<ChatMessage[]>(() => {
-    if (!aiMessages.length) {
-      return [];
-    }
-
-    const parsedMessages: ChatMessage[] = [];
-
-    for (const message of aiMessages) {
-      const typedMessage = message as AIMessageShape;
-      const textContent = typedMessage.parts?.length
-        ? typedMessage.parts
-            .map((part) => {
-              if (part.type === "text" && part.text) {
-                return part.text;
-              }
-              if (part.type === "text-delta" && "textDelta" in part) {
-                return part.textDelta ?? "";
-              }
-              return "";
-            })
-            .join("")
-            .trim()
-        : (typedMessage.content ?? "");
-
-      if (!textContent) {
-        continue;
-      }
-
-      parsedMessages.push({
-        id: typedMessage.id,
-        role: typedMessage.role === "assistant" ? "assistant" : "user",
-        author: typedMessage.role === "assistant" ? "Agent G" : "You",
-        content: textContent,
-        timestamp: "",
-      });
-    }
-
-    return parsedMessages;
-  }, [aiMessages]);
+  const liveMessages = useMemo<ChatMessage[]>(
+    () => mapAiMessagesToChatMessages(aiMessages),
+    [aiMessages]
+  );
 
   useEffect(() => {
     if (liveMessages.length > 0) {

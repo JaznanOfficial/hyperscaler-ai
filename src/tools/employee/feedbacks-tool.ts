@@ -1,14 +1,11 @@
 import { tool } from "ai";
 import z from "zod";
 import { feedbackService } from "@/backend/services/feedback.service";
+import { AuthGuard } from "@/backend/utils/auth-guard";
 
 export const EmployeeFeedbackTool = tool({
   description: "Get feedbacks for a specific employee.",
   inputSchema: z.object({
-    employeeId: z
-      .string()
-      .min(1)
-      .describe("Employee ID to fetch feedbacks for."),
     page: z
       .number()
       .int()
@@ -23,9 +20,10 @@ export const EmployeeFeedbackTool = tool({
       .optional()
       .describe("Items per page (default 10, max 50)."),
   }),
-  execute: async ({ employeeId, page = 1, limit = 10 }) => {
+  execute: async ({ page = 1, limit = 10 }) => {
+    const session = await AuthGuard.requireEmployee();
     const result = await feedbackService.getEmployeeFeedbacks(
-      employeeId,
+      session.user.id,
       page,
       limit
     );

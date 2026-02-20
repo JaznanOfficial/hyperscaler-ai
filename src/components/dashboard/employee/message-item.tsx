@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import type { ChatMessage } from "@/components/chat/types";
+import { EmployeeToolResultCard } from "@/components/dashboard/employee/tool-result-card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -139,6 +140,19 @@ export function EmployeeAgentMessageItem({
       ? "rounded-br-sm bg-linear-to-r from-violet-900 to-fuchsia-600 text-white"
       : "rounded-bl-sm bg-slate-100 text-slate-900"
   );
+
+  if (message.toolResult && message.toolName) {
+    return (
+      <article className="flex justify-start">
+        <div className="w-full max-w-[88%] sm:max-w-[70%]">
+          <EmployeeToolResultCard
+            result={message.toolResult}
+            toolName={message.toolName}
+          />
+        </div>
+      </article>
+    );
+  }
 
   return (
     <article className={cn("flex", isUser ? "justify-end" : "justify-start")}>
