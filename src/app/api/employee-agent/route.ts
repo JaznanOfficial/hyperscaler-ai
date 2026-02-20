@@ -37,21 +37,7 @@ export async function POST(req: Request) {
 
       don't talk anything else other than this.
       `,
-    // output: Output.object({
-    //   schema: z.object({
-    //     message: z.string(),
-    //     buttons: z
-    //       .array(
-    //         z.object({
-    //           label: z.string().min(1),
-    //           url: z.string(),
-    //         })
-    //       )
-    //       .optional()
-    //       .default([]),
-    //   }),
-    //   // name: "chatResponse",
-    // }),
+
     onError({ error }) {
       console.error(error); // log to your error tracking service
     },
