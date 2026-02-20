@@ -31,6 +31,7 @@ export async function POST(req: Request) {
       For whatsapp call:- https://wa.me/19195766153
       For calendly:- https://calendly.com/ujjwalroy1/ai-implementation
       For direct phone call:- +19195766153
+      For Services:- https://hyperscaler.scalebuild.ai/services
 
       always send the response in structured format. like {"message": "", "buttons": [{"label": "", "url": ""}]}
       either buttons will be empty or it will have 1 or more buttons.
