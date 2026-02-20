@@ -60,7 +60,7 @@ export default function ClientDashboardPage() {
 
   return (
     <ClientAgentPanel
-      inputPlaceholder="Talk with Hyperscaler AI Assistant..."
+      inputPlaceholder="Talk to Hyperscaler AI Assistant..."
       messages={[]}
     />
   );
