@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { prisma } from "@/backend/config/prisma";
-import { stripe } from "@/lib/stripe";
-import { sendPurchaseConfirmationEmail } from "@/lib/email";
+import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { prisma } from "@/backend/config/prisma";
+import { sendPurchaseConfirmationEmail } from "@/lib/email";
+import { stripe } from "@/lib/stripe";
 
 export async function POST(request: Request) {
   const body = await request.text();
@@ -27,17 +27,14 @@ export async function POST(request: Request) {
     );
   } catch (err) {
     console.error("Webhook signature verification failed:", err);
-    return NextResponse.json(
-      { error: "Invalid signature" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
   try {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        
+
         if (session.metadata) {
           const { userId, packageName, amount } = session.metadata;
 
@@ -50,7 +47,7 @@ export async function POST(request: Request) {
                 priceId: session.line_items?.data[0]?.price?.id || "",
                 invoiceId: session.invoice as string | null,
                 packageName: packageName || null,
-                amount: parseInt(amount || "0") * 100,
+                amount: Number.parseInt(amount || "0") * 100,
                 status: "PAID",
               },
             });
@@ -66,7 +63,7 @@ export async function POST(request: Request) {
                 user.email,
                 user.name,
                 packageName,
-                parseInt(amount) * 100
+                Number.parseInt(amount) * 100
               );
             }
           }
@@ -77,7 +74,7 @@ export async function POST(request: Request) {
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
-        
+
         await prisma.subscription.updateMany({
           where: { subscriptionId: subscription.id },
           data: {
@@ -95,7 +92,7 @@ export async function POST(request: Request) {
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as any;
         const subscriptionId = invoice.subscription;
-        
+
         if (subscriptionId && typeof subscriptionId === "string") {
           await prisma.subscription.updateMany({
             where: { subscriptionId },
@@ -111,7 +108,7 @@ export async function POST(request: Request) {
       case "invoice.payment_failed": {
         const invoice = event.data.object as any;
         const subscriptionId = invoice.subscription;
-        
+
         if (subscriptionId && typeof subscriptionId === "string") {
           await prisma.subscription.updateMany({
             where: { subscriptionId },

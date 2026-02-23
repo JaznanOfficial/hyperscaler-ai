@@ -141,7 +141,8 @@ export default function SuperAdminClientsPage() {
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  if (currentPage < totalPages) handlePageClick(currentPage + 1);
+                  if (currentPage < totalPages)
+                    handlePageClick(currentPage + 1);
                 }}
               />
             </PaginationItem>

@@ -1,10 +1,10 @@
 import { sendEmail } from "./send-email";
 import {
-  welcomeEmail,
   employeeCreatedEmail,
   feedbackEmail,
   passwordResetEmail,
   purchaseConfirmationEmail,
+  welcomeEmail,
 } from "./templates";
 
 export async function sendWelcomeEmail(to: string, userName: string) {

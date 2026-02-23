@@ -54,7 +54,11 @@ ${emailFooter}
 </table></body></html>`;
 }
 
-export function employeeCreatedEmail(userName: string, email: string, password: string): string {
+export function employeeCreatedEmail(
+  userName: string,
+  email: string,
+  password: string
+): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><title>Employee Profile Created</title></head>
@@ -108,7 +112,10 @@ ${emailFooter}
 </table></body></html>`;
 }
 
-export function passwordResetEmail(userName: string, resetLink: string): string {
+export function passwordResetEmail(
+  userName: string,
+  resetLink: string
+): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><title>Password Reset</title></head>
@@ -135,7 +142,11 @@ ${emailFooter}
 </table></body></html>`;
 }
 
-export function purchaseConfirmationEmail(userName: string, packageName: string, amount: number): string {
+export function purchaseConfirmationEmail(
+  userName: string,
+  packageName: string,
+  amount: number
+): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><title>Purchase Confirmation</title></head>

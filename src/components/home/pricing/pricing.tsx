@@ -274,11 +274,11 @@ const renderPricingCta = (item: PricingCard, isAuthenticated: boolean) => {
     // Extract price amount (remove $ and /month)
     const priceAmount = item.price?.amount?.replace(/[$,]/g, "") || "0";
     const packageName = item.name;
-    
-    const href = isAuthenticated 
+
+    const href = isAuthenticated
       ? `/client?package=${encodeURIComponent(packageName)}&amount=${priceAmount}`
       : `/signup?package=${encodeURIComponent(packageName)}&amount=${priceAmount}`;
-    
+
     return (
       <Link
         className={cn(
@@ -309,7 +309,7 @@ type PricingCard = (typeof scalePricingData)[number];
 const PricingCards = ({ data }: { data: PricingCard[] }) => {
   const { status } = useSession();
   const isAuthenticated = status === "authenticated";
-  
+
   return (
     <div className="grid grid-cols-1 gap-5 max-lg:w-full sm:grid-cols-2 xl:grid-cols-4">
       {data.map((item) => {

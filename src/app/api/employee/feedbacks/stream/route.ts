@@ -23,15 +23,33 @@ export async function GET() {
             );
 
             const data = `data: ${JSON.stringify({ unreadCount })}\n\n`;
-            controller.enqueue(encoder.encode(data));
+            try {
+              controller.enqueue(encoder.encode(data));
+            } catch (enqueueError) {
+              if (
+                enqueueError instanceof TypeError &&
+                enqueueError.message.includes("Controller is already closed")
+              ) {
+                isClosed = true;
+              }
+            }
           } catch (error) {
             console.error("Error fetching unread count:", error);
             if (!isClosed) {
-              controller.enqueue(
-                encoder.encode(
-                  `data: ${JSON.stringify({ unreadCount: 0 })}\n\n`
-                )
-              );
+              try {
+                controller.enqueue(
+                  encoder.encode(
+                    `data: ${JSON.stringify({ unreadCount: 0 })}\n\n`
+                  )
+                );
+              } catch (enqueueError) {
+                if (
+                  enqueueError instanceof TypeError &&
+                  enqueueError.message.includes("Controller is already closed")
+                ) {
+                  isClosed = true;
+                }
+              }
             }
           }
         };

@@ -76,6 +76,48 @@ export class FeedbackRepository {
       },
     });
   }
+
+  async findByEmployeeIdWithFilters(
+    employeeId: string,
+    filters?: {
+      onlyUnread?: boolean;
+      daysBack?: number;
+    }
+  ) {
+    const where: Prisma.FeedbackWhereInput = {
+      employeeId,
+    };
+
+    if (filters?.onlyUnread !== undefined) {
+      where.read = !filters.onlyUnread;
+    }
+
+    if (filters?.daysBack && filters.daysBack > 0) {
+      const daysAgo = new Date();
+      daysAgo.setDate(daysAgo.getDate() - filters.daysBack);
+      where.createdAt = {
+        gte: daysAgo,
+      };
+    }
+
+    const [feedbacks, total, unreadCount] = await Promise.all([
+      prisma.feedback.findMany({
+        where,
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+      prisma.feedback.count({ where }),
+      prisma.feedback.count({
+        where: {
+          employeeId,
+          read: false,
+        },
+      }),
+    ]);
+
+    return { feedbacks, total, unreadCount };
+  }
 }
 
 export const feedbackRepository = new FeedbackRepository();

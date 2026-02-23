@@ -62,7 +62,7 @@ export function AssignServiceDialog({
     try {
       const url = `/api/admin/clients/${clientId}/assign-service`;
       console.log("Calling URL:", url);
-      
+
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -62,11 +62,11 @@ export function SignupForm({
     }
 
     try {
-      const data = await signupMutation.mutateAsync({ 
-        name, 
-        email, 
+      const data = await signupMutation.mutateAsync({
+        name,
+        email,
         password,
-        phone: phoneValue 
+        phone: phoneValue,
       });
       const successMessage =
         typeof data.message === "string"
@@ -76,7 +76,7 @@ export function SignupForm({
       await autoLoginMutation.mutateAsync({ email, password });
 
       const role = data.data?.role;
-      
+
       if (packageName && packageAmount && role === "CLIENT") {
         try {
           const response = await fetch("/api/stripe/checkout-package", {
@@ -84,7 +84,7 @@ export function SignupForm({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               packageName,
-              amount: parseFloat(packageAmount),
+              amount: Number.parseFloat(packageAmount),
             }),
           });
 
@@ -98,7 +98,7 @@ export function SignupForm({
           console.error("Payment redirect error:", error);
         }
       }
-      
+
       if (role === "ADMIN") {
         router.push("/s-admin");
       } else if (role === "CLIENT") {
