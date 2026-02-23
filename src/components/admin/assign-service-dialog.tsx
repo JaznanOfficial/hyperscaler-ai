@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -36,6 +37,7 @@ export function AssignServiceDialog({
   clientName,
 }: AssignServiceDialogProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [services, setServices] = useState<Service[]>([]);
   const [selectedServiceId, setSelectedServiceId] = useState("");
@@ -56,12 +58,9 @@ export function AssignServiceDialog({
       return;
     }
 
-    console.log("Assigning service:", { clientId, selectedServiceId });
-
     setLoading(true);
     try {
       const url = `/api/admin/clients/${clientId}/assign-service`;
-      console.log("Calling URL:", url);
 
       const response = await fetch(url, {
         method: "POST",
@@ -70,13 +69,17 @@ export function AssignServiceDialog({
       });
 
       const data = await response.json();
-      console.log("Response:", { status: response.status, data });
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to assign service");
       }
 
       toast.success("Service assigned successfully!");
+      
+      // Invalidate both admin client and client projects cache
+      queryClient.invalidateQueries({ queryKey: ["admin-client", clientId] });
+      queryClient.invalidateQueries({ queryKey: ["client-projects"] });
+      
       setOpen(false);
       setSelectedServiceId("");
       router.refresh();

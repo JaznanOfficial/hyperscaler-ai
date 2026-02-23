@@ -57,7 +57,7 @@ const serviceStatusStyles: Record<ClientServiceStatus, string> = {
   Cancelled: "bg-rose-100 text-rose-700",
 };
 
-export function ClientDetailView({ client }: { client: ClientDetail }) {
+export function ClientDetailView({ client, clientId }: { client: ClientDetail; clientId: string }) {
   const [services, setServices] = useState(client.requestedServices);
   const [packages, setPackages] = useState<Package[]>([]);
   const [employees, setEmployees] = useState<
@@ -65,9 +65,13 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
   >([]);
 
   useEffect(() => {
+    setServices(client.requestedServices);
+  }, [client.requestedServices]);
+
+  useEffect(() => {
     Promise.all([
       fetch("/api/admin/employees").then((res) => res.json()),
-      fetch(`/api/admin/clients/${client.id}/packages`).then((res) =>
+      fetch(`/api/admin/clients/${clientId}/packages`).then((res) =>
         res.json()
       ),
     ])
@@ -76,7 +80,7 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
         setPackages(packagesData.packages || []);
       })
       .catch(() => {});
-  }, [client.id]);
+  }, [clientId]);
 
   const availableEmployees = useMemo(
     () => employees.map((e) => e.name).sort(),
@@ -258,7 +262,10 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
               Active workstreams
             </p>
           </div>
-          <AssignServiceDialog clientId={client.id} clientName={client.name} />
+          <AssignServiceDialog 
+            clientId={clientId} 
+            clientName={client.name} 
+          />
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {services.map((service) => (
