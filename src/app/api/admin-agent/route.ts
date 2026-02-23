@@ -1,6 +1,8 @@
 import { openai } from "@ai-sdk/openai";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 
+import { SuperAdminFeedbackTool } from "@/tools/s-admin/feedbacks-tool";
+
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
@@ -13,6 +15,9 @@ export async function POST(req: Request) {
 
     for getting reply of any other questions, our 'General Agent' url will be :- https://hyperscaler.scalebuild.ai/chat
     `,
+    tools: {
+      SuperAdminFeedbackTool,
+    },
     onError({ error }) {
       console.error(error); // log to your error tracking service
     },

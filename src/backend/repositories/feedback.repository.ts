@@ -2,19 +2,19 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/backend/config/prisma";
 
 export class FeedbackRepository {
-  async findById(id: string) {
+  findById(id: string) {
     return prisma.feedback.findUnique({
       where: { id },
     });
   }
 
-  async create(data: Prisma.FeedbackCreateInput) {
+  create(data: Prisma.FeedbackCreateInput) {
     return prisma.feedback.create({
       data,
     });
   }
 
-  async update(id: string, data: Prisma.FeedbackUpdateInput) {
+  update(id: string, data: Prisma.FeedbackUpdateInput) {
     return prisma.feedback.update({
       where: { id },
       data,
@@ -68,7 +68,7 @@ export class FeedbackRepository {
     return { feedbacks, total, unreadCount };
   }
 
-  async countUnreadByEmployeeId(employeeId: string) {
+  countUnreadByEmployeeId(employeeId: string) {
     return prisma.feedback.count({
       where: {
         employeeId,
@@ -77,16 +77,29 @@ export class FeedbackRepository {
     });
   }
 
-  async findByEmployeeIdWithFilters(
+  findByEmployeeIdWithFilters(
     employeeId: string,
     filters?: {
       onlyUnread?: boolean;
       daysBack?: number;
     }
   ) {
-    const where: Prisma.FeedbackWhereInput = {
+    return this.findWithFilters({
       employeeId,
-    };
+      ...filters,
+    });
+  }
+
+  async findWithFilters(filters?: {
+    employeeId?: string;
+    onlyUnread?: boolean;
+    daysBack?: number;
+  }) {
+    const where: Prisma.FeedbackWhereInput = {};
+
+    if (filters?.employeeId) {
+      where.employeeId = filters.employeeId;
+    }
 
     if (filters?.onlyUnread !== undefined) {
       where.read = !filters.onlyUnread;
@@ -110,7 +123,7 @@ export class FeedbackRepository {
       prisma.feedback.count({ where }),
       prisma.feedback.count({
         where: {
-          employeeId,
+          ...(filters?.employeeId ? { employeeId: filters.employeeId } : {}),
           read: false,
         },
       }),

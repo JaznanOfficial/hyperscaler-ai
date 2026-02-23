@@ -21,7 +21,7 @@ export class FeedbackService {
     return feedback;
   }
 
-  async markAsRead(id: string) {
+  markAsRead(id: string) {
     return feedbackRepository.update(id, {
       read: true,
     });
@@ -76,6 +76,14 @@ export class FeedbackService {
 
   async getUnreadCount(employeeId: string) {
     return feedbackRepository.countUnreadByEmployeeId(employeeId);
+  }
+
+  async getFeedbacksForAdmin(filters?: {
+    employeeId?: string;
+    onlyUnread?: boolean;
+    daysBack?: number;
+  }) {
+    return feedbackRepository.findWithFilters(filters);
   }
 }
 

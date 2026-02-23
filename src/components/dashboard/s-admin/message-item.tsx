@@ -5,6 +5,8 @@ import remarkGfm from "remark-gfm";
 import type { ChatMessage } from "@/components/chat/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { renderSuperAdminFeedbackToolPart } from "./tool-parts/super-admin-feedback-tool-part";
+import type { ToolMessagePart } from "./tool-parts/types";
 
 interface StructuredButton {
   label: string;
@@ -140,6 +142,13 @@ export function SuperAdminAgentMessageItem({
       : "rounded-bl-sm bg-slate-100 text-slate-900"
   );
 
+  const toolParts = isUser
+    ? []
+    : (message.parts ?? []).filter((part) => {
+        const partType = part.type ?? "";
+        return partType.startsWith("tool-") || partType === "tool-result";
+      });
+
   return (
     <article className={cn("flex", isUser ? "justify-end" : "justify-start")}>
       {structuredEntries.length > 0 ? (
@@ -183,6 +192,24 @@ export function SuperAdminAgentMessageItem({
               {message.content}
             </ReactMarkdown>
           </div>
+        </div>
+      )}
+
+      {toolParts.length > 0 && (
+        <div className="flex w-full max-w-[88%] flex-col gap-4 sm:max-w-[70%]">
+          {toolParts.map((part) => {
+            const toolPart = part as ToolMessagePart;
+
+            switch (toolPart.type) {
+              case "tool-SuperAdminFeedbackTool":
+                return renderSuperAdminFeedbackToolPart(
+                  toolPart,
+                  bubbleClassName
+                );
+              default:
+                return null;
+            }
+          })}
         </div>
       )}
     </article>

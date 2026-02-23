@@ -1,6 +1,6 @@
 import type { ChatMessage } from "@/components/chat/types";
 
-type AIMultiPart =
+export type AIMultiPart =
   | { type: "text"; text?: string }
   | { type: "text-delta"; textDelta?: string }
   | {
@@ -11,7 +11,7 @@ type AIMultiPart =
     }
   | { type: string; [key: string]: unknown };
 
-interface AIMessageShape {
+export interface AIMessageShape {
   id: string;
   role: "assistant" | "user" | "system";
   parts?: unknown[];
