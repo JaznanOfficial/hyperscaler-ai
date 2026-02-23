@@ -24,7 +24,7 @@ async function main() {
       subscriptionId: `sub_test_starter_${Date.now()}`,
       priceId: "price_test_starter",
       packageName: "Starter",
-      amount: 100000, // $1,000 in cents
+      amount: 100_000, // $1,000 in cents
       status: "PAID" as const,
     },
     {
@@ -32,7 +32,7 @@ async function main() {
       subscriptionId: `sub_test_growth_${Date.now()}`,
       priceId: "price_test_growth",
       packageName: "Growth",
-      amount: 250000, // $2,500 in cents
+      amount: 250_000, // $2,500 in cents
       status: "PAID" as const,
     },
   ];
@@ -41,7 +41,9 @@ async function main() {
     const created = await prisma.subscription.create({
       data: pkg,
     });
-    console.log(`Created package: ${created.packageName} - $${created.amount / 100}`);
+    console.log(
+      `Created package: ${created.packageName} - $${created.amount / 100}`
+    );
   }
 
   console.log("Package seed completed!");

@@ -10,7 +10,10 @@ interface BuyPackageButtonProps {
   amount: number;
 }
 
-export function BuyPackageButton({ packageName, amount }: BuyPackageButtonProps) {
+export function BuyPackageButton({
+  packageName,
+  amount,
+}: BuyPackageButtonProps) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleBuyNow = async () => {

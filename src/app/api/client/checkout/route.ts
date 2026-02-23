@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
-import { z } from "zod";
 
 const checkoutSchema = z.object({
   services: z.array(

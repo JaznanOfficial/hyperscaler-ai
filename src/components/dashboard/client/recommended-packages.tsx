@@ -8,7 +8,8 @@ const packages = [
   {
     icon: <Rocket className="size-5 md:size-6" />,
     name: "Starter",
-    description: "One channel, full automation. Perfect for testing the waters.",
+    description:
+      "One channel, full automation. Perfect for testing the waters.",
     price: 1000,
     features: [
       "Pick only one service",
@@ -87,7 +88,7 @@ export function RecommendedPackages() {
                 </div>
               </div>
               <div>
-                <h3 className="font-['Outfit'] font-semibold text-xl text-slate-900">
+                <h3 className="font-['Outfit'] font-semibold text-slate-900 text-xl">
                   {pkg.name}
                 </h3>
                 <p className="mt-1 text-slate-600 text-sm">{pkg.description}</p>
@@ -113,7 +114,9 @@ export function RecommendedPackages() {
                     >
                       <Check className="size-3 text-purple-700" />
                     </div>
-                    <p className="text-slate-700 text-sm leading-5">{feature}</p>
+                    <p className="text-slate-700 text-sm leading-5">
+                      {feature}
+                    </p>
                   </div>
                 ))}
               </div>

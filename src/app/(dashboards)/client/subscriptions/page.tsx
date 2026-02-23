@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ClientSubscriptionList } from "@/components/dashboard/client/subscription-list";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Project {
   id: string;
@@ -33,7 +33,7 @@ export default function ClientSubscriptionsPage() {
     const payment = searchParams.get("payment");
     const packageName = searchParams.get("package");
     const message = searchParams.get("message");
-    
+
     if (success === "true") {
       toast.success(
         message || "Payment successful! Your service is pending admin approval."

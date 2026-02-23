@@ -4,35 +4,54 @@ import { feedbackService } from "@/backend/services/feedback.service";
 import { AuthGuard } from "@/backend/utils/auth-guard";
 
 export const EmployeeFeedbackTool = tool({
-  description: "Get feedbacks for a specific employee.",
+  description: "Get feedbacks for the current employee with optional filters.",
   inputSchema: z.object({
-    page: z
+    onlyUnread: z
+      .boolean()
+      .optional()
+      .describe(
+        "If true, show only unread feedbacks. If false, show only read feedbacks."
+      ),
+    daysBack: z
       .number()
       .int()
       .positive()
       .optional()
-      .describe("Page number for pagination (default 1)."),
-    limit: z
-      .number()
-      .int()
-      .positive()
-      .max(50)
-      .optional()
-      .describe("Items per page (default 10, max 50)."),
+      .describe(
+        "Show feedbacks from the last N days. For example, 3 for last 3 days, 7 for last week, 30 for last month."
+      ),
   }),
-  execute: async ({ page = 1, limit = 10 }) => {
+  execute: async ({ onlyUnread, daysBack }) => {
     const session = await AuthGuard.requireEmployee();
-    const result = await feedbackService.getEmployeeFeedbacks(
+
+    const filters: {
+      onlyUnread?: boolean;
+      daysBack?: number;
+    } = {};
+
+    if (onlyUnread !== undefined && typeof onlyUnread === "boolean") {
+      filters.onlyUnread = onlyUnread;
+    }
+
+    if (
+      daysBack !== undefined &&
+      typeof daysBack === "number" &&
+      Number.isInteger(daysBack) &&
+      daysBack > 0
+    ) {
+      filters.daysBack = daysBack;
+    }
+
+    const result = await feedbackService.getEmployeeFeedbacksWithFilters(
       session.user.id,
-      page,
-      limit
+      Object.keys(filters).length > 0 ? filters : undefined
     );
 
     return {
       success: true,
       data: result.feedbacks,
       unreadCount: result.unreadCount,
-      pagination: result.pagination,
+      total: result.total,
     };
   },
 });

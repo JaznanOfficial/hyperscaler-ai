@@ -67,7 +67,9 @@ export function ClientDetailView({ client }: { client: ClientDetail }) {
   useEffect(() => {
     Promise.all([
       fetch("/api/admin/employees").then((res) => res.json()),
-      fetch(`/api/admin/clients/${client.id}/packages`).then((res) => res.json()),
+      fetch(`/api/admin/clients/${client.id}/packages`).then((res) =>
+        res.json()
+      ),
     ])
       .then(([employeesData, packagesData]) => {
         setEmployees(employeesData.employees || []);

@@ -1,6 +1,8 @@
 import { openai } from "@ai-sdk/openai";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { EmployeeFeedbackTool } from "@/tools/employee/feedbacks-tool";
+import { MarkFeedbackReadTool } from "@/tools/employee/mark-feedback-read-tool";
+import { EmployeeProjectsTool } from "@/tools/employee/projects-tool";
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
@@ -8,7 +10,7 @@ export async function POST(req: Request) {
   const result = streamText({
     model: openai("gpt-4o-mini"),
     messages: await convertToModelMessages(messages),
-    system: `You are Hyperscaler AI, built by Scale Build AI. you're a helpful assistant for helping employees with their queries about projects and feedbacks. you'll call only tools realted to these.
+    system: `You are Hyperscaler AI, built by Scale Build AI. you're a helpful assistant for helping employees with their queries about projects and feedbacks. you'll call only tools realted to these. and give result only for this employee related queries.
 
     don't talk anything else other than these. if anyone ask anything else, tell him to talk to our 'General Agent'. and give him a structured response like {"message": "", "buttons": [{"label": "Talk to General Agent", "url": ""}]}
 
@@ -16,6 +18,8 @@ export async function POST(req: Request) {
     `,
     tools: {
       EmployeeFeedbackTool,
+      EmployeeProjectsTool,
+      MarkFeedbackReadTool,
     },
     onError({ error }) {
       console.error(error); // log to your error tracking service

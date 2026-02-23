@@ -57,6 +57,23 @@ export class FeedbackService {
     };
   }
 
+  async getEmployeeFeedbacksWithFilters(
+    employeeId: string,
+    filters?: {
+      onlyUnread?: boolean;
+      daysBack?: number;
+    }
+  ) {
+    const { feedbacks, total, unreadCount } =
+      await feedbackRepository.findByEmployeeIdWithFilters(employeeId, filters);
+
+    return {
+      feedbacks,
+      unreadCount,
+      total,
+    };
+  }
+
   async getUnreadCount(employeeId: string) {
     return feedbackRepository.countUnreadByEmployeeId(employeeId);
   }
