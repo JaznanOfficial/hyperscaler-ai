@@ -30,8 +30,8 @@ const clientNavItems: AppSidebarNavItem[] = [
     matchSubRoutes: false,
   },
   {
-    title: "Subscriptions",
-    url: "/client/subscriptions",
+    title: "Packages",
+    url: "/client/packages",
     icon: "creditCard",
     matchSubRoutes: false,
   },
@@ -97,7 +97,7 @@ export default async function ClientDashboardLayout({
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden bg-[#F5F7Fa]">
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden p-4">
           {children}
         </div>
       </SidebarInset>

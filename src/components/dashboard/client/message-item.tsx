@@ -5,6 +5,9 @@ import remarkGfm from "remark-gfm";
 import type { ChatMessage } from "@/components/chat/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { renderClientPackagesToolPart } from "./tool-parts/client-packages-tool-part";
+import { renderClientProjectsToolPart } from "./tool-parts/client-projects-tool-part";
+import type { ToolMessagePart } from "./tool-parts/types";
 
 interface StructuredButton {
   label: string;
@@ -129,6 +132,7 @@ export function ClientAgentMessageItem({ message }: { message: ChatMessage }) {
   const structuredEntries = isUser
     ? []
     : parseStructuredEntries(message.content);
+  const trimmedContent = message.content.trim();
   const bubbleClassName = cn(
     "max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-relaxed sm:max-w-[70%]",
     isUser
@@ -136,9 +140,19 @@ export function ClientAgentMessageItem({ message }: { message: ChatMessage }) {
       : "rounded-bl-sm bg-slate-100 text-slate-900"
   );
 
+  const toolParts = isUser
+    ? []
+    : (message.parts ?? []).filter((part) => {
+        const partType = part.type ?? "";
+        return partType.startsWith("tool-") || partType === "tool-result";
+      });
+
+  const hasStructuredEntries = structuredEntries.length > 0;
+  const hasPlainContent = !hasStructuredEntries && Boolean(trimmedContent);
+
   return (
     <article className={cn("flex", isUser ? "justify-end" : "justify-start")}>
-      {structuredEntries.length > 0 ? (
+      {hasStructuredEntries && (
         <div className="flex w-full max-w-[88%] flex-col gap-4 sm:max-w-[70%]">
           {structuredEntries.map((entry, index) => (
             <div className={bubbleClassName} key={`${message.id}-${index}`}>
@@ -169,16 +183,35 @@ export function ClientAgentMessageItem({ message }: { message: ChatMessage }) {
             </div>
           ))}
         </div>
-      ) : (
+      )}
+
+      {hasPlainContent && (
         <div className={bubbleClassName}>
           <div className={proseClassName}>
             <ReactMarkdown
               components={markdownComponents}
               remarkPlugins={[remarkGfm]}
             >
-              {message.content}
+              {trimmedContent}
             </ReactMarkdown>
           </div>
+        </div>
+      )}
+
+      {toolParts.length > 0 && (
+        <div className="flex w-full max-w-[88%] flex-col gap-4 sm:max-w-[70%]">
+          {toolParts.map((part) => {
+            const toolPart = part as ToolMessagePart;
+
+            switch (toolPart.type) {
+              case "tool-ClientProjectsTool":
+                return renderClientProjectsToolPart(toolPart, bubbleClassName);
+              case "tool-ClientPackagesTool":
+                return renderClientPackagesToolPart(toolPart, bubbleClassName);
+              default:
+                return null;
+            }
+          })}
         </div>
       )}
     </article>

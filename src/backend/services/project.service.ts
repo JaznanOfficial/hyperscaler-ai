@@ -62,6 +62,10 @@ export class ProjectService {
     return projectRepository.findByEmployeeId(employeeId);
   }
 
+  async getClientProjects(clientId: string) {
+    return projectRepository.findByClientId(clientId);
+  }
+
   async assignEmployees(id: string, employeeIds: string[]) {
     return projectRepository.update(id, {
       assignedEmployees: employeeIds,

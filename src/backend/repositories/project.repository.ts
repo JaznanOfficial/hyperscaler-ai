@@ -47,6 +47,17 @@ export class ProjectRepository {
       },
     });
   }
+
+  async findByClientId(clientId: string) {
+    return prisma.project.findMany({
+      where: {
+        clientId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  }
 }
 
 export const projectRepository = new ProjectRepository();
