@@ -32,10 +32,10 @@ export class UserService {
       email?: string;
       password?: string;
       role?: UserRole;
-      generalInfo?: any;
+      generalInfo?: Record<string, unknown>;
     }
   ) {
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       name: data.name,
       email: data.email,
       role: data.role,
@@ -49,7 +49,7 @@ export class UserService {
     return userRepository.update(id, updateData);
   }
 
-  async deleteEmployee(id: string) {
+  deleteEmployee(id: string) {
     return userRepository.delete(id);
   }
 
@@ -70,8 +70,14 @@ export class UserService {
     };
   }
 
-  async getEmployeeById(id: string) {
+  getEmployeeById(id: string) {
     return userRepository.findById(id);
+  }
+
+  async getAllEmployees() {
+    const { employees } = await userRepository.findEmployees(1, 1000);
+
+    return employees;
   }
 }
 

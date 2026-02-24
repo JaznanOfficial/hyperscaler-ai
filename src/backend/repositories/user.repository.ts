@@ -2,7 +2,7 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/backend/config/prisma";
 
 export class UserRepository {
-  async findById(id: string) {
+  findById(id: string) {
     return prisma.user.findUnique({
       where: { id },
       select: {
@@ -17,13 +17,13 @@ export class UserRepository {
     });
   }
 
-  async findByEmail(email: string) {
+  findByEmail(email: string) {
     return prisma.user.findUnique({
       where: { email },
     });
   }
 
-  async create(data: Prisma.UserCreateInput) {
+  create(data: Prisma.UserCreateInput) {
     return prisma.user.create({
       data,
       select: {
@@ -38,7 +38,7 @@ export class UserRepository {
     });
   }
 
-  async update(id: string, data: Prisma.UserUpdateInput) {
+  update(id: string, data: Prisma.UserUpdateInput) {
     return prisma.user.update({
       where: { id },
       data,
@@ -54,7 +54,7 @@ export class UserRepository {
     });
   }
 
-  async delete(id: string) {
+  delete(id: string) {
     return prisma.user.delete({
       where: { id },
     });
@@ -95,6 +95,39 @@ export class UserRepository {
     ]);
 
     return { employees, total };
+  }
+
+  async findClients(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+
+    const [clients, total] = await Promise.all([
+      prisma.user.findMany({
+        where: {
+          role: "CLIENT",
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          generalInfo: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        skip,
+        take: limit,
+      }),
+      prisma.user.count({
+        where: {
+          role: "CLIENT",
+        },
+      }),
+    ]);
+
+    return { clients, total };
   }
 }
 

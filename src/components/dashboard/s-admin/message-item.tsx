@@ -5,7 +5,11 @@ import remarkGfm from "remark-gfm";
 import type { ChatMessage } from "@/components/chat/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { renderSuperAdminClientsToolPart } from "./tool-parts/super-admin-clients-tool-part";
+import { renderSuperAdminEmployeesToolPart } from "./tool-parts/super-admin-employees-tool-part";
 import { renderSuperAdminFeedbackToolPart } from "./tool-parts/super-admin-feedback-tool-part";
+import { renderSuperAdminProjectsToolPart } from "./tool-parts/super-admin-projects-tool-part";
+import { renderSuperAdminServicesToolPart } from "./tool-parts/super-admin-services-tool-part";
 import type { ToolMessagePart } from "./tool-parts/types";
 
 interface StructuredButton {
@@ -135,6 +139,7 @@ export function SuperAdminAgentMessageItem({
   const structuredEntries = isUser
     ? []
     : parseStructuredEntries(message.content);
+  const trimmedContent = message.content.trim();
   const bubbleClassName = cn(
     "max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-relaxed sm:max-w-[70%]",
     isUser
@@ -149,9 +154,12 @@ export function SuperAdminAgentMessageItem({
         return partType.startsWith("tool-") || partType === "tool-result";
       });
 
+  const hasStructuredEntries = structuredEntries.length > 0;
+  const hasPlainContent = !hasStructuredEntries && Boolean(trimmedContent);
+
   return (
     <article className={cn("flex", isUser ? "justify-end" : "justify-start")}>
-      {structuredEntries.length > 0 ? (
+      {hasStructuredEntries && (
         <div className="flex w-full max-w-[88%] flex-col gap-4 sm:max-w-[70%]">
           {structuredEntries.map((entry, index) => (
             <div className={bubbleClassName} key={`${message.id}-${index}`}>
@@ -182,14 +190,16 @@ export function SuperAdminAgentMessageItem({
             </div>
           ))}
         </div>
-      ) : (
+      )}
+
+      {hasPlainContent && (
         <div className={bubbleClassName}>
           <div className={proseClassName}>
             <ReactMarkdown
               components={markdownComponents}
               remarkPlugins={[remarkGfm]}
             >
-              {message.content}
+              {trimmedContent}
             </ReactMarkdown>
           </div>
         </div>
@@ -203,6 +213,26 @@ export function SuperAdminAgentMessageItem({
             switch (toolPart.type) {
               case "tool-SuperAdminFeedbackTool":
                 return renderSuperAdminFeedbackToolPart(
+                  toolPart,
+                  bubbleClassName
+                );
+              case "tool-SuperAdminProjectsTool":
+                return renderSuperAdminProjectsToolPart(
+                  toolPart,
+                  bubbleClassName
+                );
+              case "tool-SuperAdminClientsTool":
+                return renderSuperAdminClientsToolPart(
+                  toolPart,
+                  bubbleClassName
+                );
+              case "tool-SuperAdminEmployeesTool":
+                return renderSuperAdminEmployeesToolPart(
+                  toolPart,
+                  bubbleClassName
+                );
+              case "tool-SuperAdminServicesTool":
+                return renderSuperAdminServicesToolPart(
                   toolPart,
                   bubbleClassName
                 );

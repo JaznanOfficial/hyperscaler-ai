@@ -75,8 +75,8 @@ const defaultNavItems: NavItem[] = [
     icon: "briefcase",
   },
   {
-    title: "Subscriptions",
-    url: "/s-admin/subscriptions",
+    title: "Projects",
+    url: "/s-admin/projects",
     icon: "creditCard",
   },
   {
