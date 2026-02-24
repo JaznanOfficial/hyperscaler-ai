@@ -1,8 +1,9 @@
 "use client";
 
+import { use } from "react";
 import { notFound } from "next/navigation";
-import { useEffect, useState } from "react";
 import { ClientDetailView } from "@/components/admin/client-detail-view";
+import { useAdminClient } from "@/hooks/use-admin-client";
 
 interface ClientDetailPageProps {
   params: Promise<{ id: string }>;
@@ -11,29 +12,10 @@ interface ClientDetailPageProps {
 export default function SuperAdminClientDetailPage({
   params,
 }: ClientDetailPageProps) {
-  const [client, setClient] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [clientId, setClientId] = useState<string>("");
+  const { id: clientId } = use(params);
+  const { data: client, isLoading } = useAdminClient(clientId);
 
-  useEffect(() => {
-    params.then(({ id }) => {
-      setClientId(id);
-      fetch(`/api/admin/clients/${id}`)
-        .then((res) => {
-          if (!res.ok) throw new Error("Not found");
-          return res.json();
-        })
-        .then((data) => {
-          setClient(data.client);
-          setLoading(false);
-        })
-        .catch(() => {
-          setLoading(false);
-        });
-    });
-  }, [params]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-y-auto pb-6">
         <p className="p-6 text-center text-slate-600">Loading...</p>
@@ -47,7 +29,7 @@ export default function SuperAdminClientDetailPage({
 
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-y-auto pb-6">
-      <ClientDetailView client={client} />
+      <ClientDetailView client={client} clientId={clientId} />
     </section>
   );
 }

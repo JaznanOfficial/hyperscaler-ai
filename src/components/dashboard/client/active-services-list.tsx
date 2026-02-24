@@ -1,46 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-
-interface Project {
-  id: string;
-  status: string;
-  services: Array<{ serviceName: string }>;
-}
+import { useClientProjects } from "@/hooks/use-client-projects";
 
 export function ActiveServicesList() {
-  const [activeServices, setActiveServices] = useState<
-    Array<{ id: string; serviceName: string }>
-  >([]);
-  const [loading, setLoading] = useState(true);
+  const { data: projects, isLoading } = useClientProjects();
 
-  useEffect(() => {
-    fetch("/api/client/projects")
-      .then((res) => res.json())
-      .then((data) => {
-        const projects: Project[] = data.projects || [];
-        const approvedProjects = projects.filter(
-          (p) => p.status === "APPROVED"
-        );
+  const activeServices =
+    projects
+      ?.filter((p) => p.status === "APPROVED")
+      .flatMap((project) =>
+        (project.services || []).map((service) => ({
+          id: project.id,
+          serviceName: service.serviceName || "Service",
+        }))
+      ) || [];
 
-        const services = approvedProjects.flatMap((project) =>
-          (project.services || []).map((service) => ({
-            id: project.id,
-            serviceName: service.serviceName || "Service",
-          }))
-        );
-
-        setActiveServices(services);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <section className="mt-20">
         <div className="space-y-1">

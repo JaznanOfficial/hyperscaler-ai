@@ -57,14 +57,15 @@ export async function GET(
     // Create a map for quick lookup
     const serviceMap = new Map(fullServices.map((s) => [s.id, s]));
 
-    // Enrich services
+    // Enrich services with sections from database
     const enrichedServices = services.map((service: any) => {
       const fullService = serviceMap.get(service.serviceId);
       if (fullService) {
         return {
-          ...service,
-          sections: fullService.sections,
+          serviceId: service.serviceId,
           serviceName: fullService.serviceName,
+          sections: fullService.sections, // Use sections from database
+          updates: service.updates || {},
         };
       }
       return service;
