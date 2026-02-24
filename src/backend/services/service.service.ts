@@ -13,7 +13,7 @@ export class ServiceService {
   }) {
     return serviceRepository.create({
       serviceName: data.serviceName,
-      sections: data.sections as Prisma.JsonValue,
+      sections: data.sections as Prisma.InputJsonValue,
     });
   }
 
@@ -35,7 +35,7 @@ export class ServiceService {
     }
 
     if (data.sections) {
-      updateData.sections = data.sections as Prisma.JsonValue;
+      updateData.sections = data.sections as Prisma.InputJsonValue;
     }
 
     return serviceRepository.update(id, updateData);
