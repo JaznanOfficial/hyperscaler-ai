@@ -1,7 +1,9 @@
+import type { Prisma } from "@prisma/client";
+
 import { serviceRepository } from "@/backend/repositories/service.repository";
 
 export class ServiceService {
-  async createService(data: {
+  createService(data: {
     serviceName: string;
     sections: Array<{
       id: string;
@@ -11,11 +13,11 @@ export class ServiceService {
   }) {
     return serviceRepository.create({
       serviceName: data.serviceName,
-      sections: data.sections as any,
+      sections: data.sections as Prisma.JsonValue,
     });
   }
 
-  async updateService(
+  updateService(
     id: string,
     data: {
       serviceName?: string;
@@ -26,20 +28,20 @@ export class ServiceService {
       }>;
     }
   ) {
-    const updateData: any = {};
+    const updateData: Prisma.ServiceUpdateInput = {};
 
     if (data.serviceName) {
       updateData.serviceName = data.serviceName;
     }
 
     if (data.sections) {
-      updateData.sections = data.sections;
+      updateData.sections = data.sections as Prisma.JsonValue;
     }
 
     return serviceRepository.update(id, updateData);
   }
 
-  async deleteService(id: string) {
+  deleteService(id: string) {
     return serviceRepository.delete(id);
   }
 
@@ -57,8 +59,14 @@ export class ServiceService {
     };
   }
 
-  async getServiceById(id: string) {
+  getServiceById(id: string) {
     return serviceRepository.findById(id);
+  }
+
+  async getAllServices() {
+    const { services } = await serviceRepository.findAll(1, 1000);
+
+    return services;
   }
 }
 
