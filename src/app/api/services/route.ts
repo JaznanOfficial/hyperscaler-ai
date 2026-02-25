@@ -7,6 +7,7 @@ export async function GET() {
       select: {
         id: true,
         serviceName: true,
+        slug: true,
       },
       orderBy: {
         createdAt: "desc",

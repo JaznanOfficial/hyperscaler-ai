@@ -21,16 +21,6 @@ import {
 } from "./social-media-engagement-chart";
 import { SocialMediaFollowerGrowthChart } from "./social-media-follower-growth-chart";
 
-const socialMetrics = [
-  { label: "Impressions", value: "1.2M" },
-  { label: "Engagements", value: "1.8K" },
-  { label: "Followers Gained", value: "24.5K" },
-  { label: "Profile Visits", value: "2,500" },
-  { label: "Shares / Saves", value: "3K" },
-  { label: "Links Clicked", value: "8.1K" },
-  { label: "Conversion Rate", value: "18.2%" },
-];
-
 const socialInsights = [
   {
     label: "Audience engagement rising",
@@ -62,7 +52,20 @@ const socialInsights = [
   },
 ];
 
-export function SocialMediaPerformanceCard() {
+interface SocialMediaPerformanceCardProps {
+  data?: Record<string, any>;
+}
+
+export function SocialMediaPerformanceCard({ data }: SocialMediaPerformanceCardProps) {
+  const socialMetrics = [
+    { label: "Impressions", value: data?.Impressions || "0" },
+    { label: "Engagements", value: data?.["Engagement Rate"] || "0" },
+    { label: "Followers Gained", value: data?.Followers || "0" },
+    { label: "Profile Visits", value: data?.Reach || "0" },
+    { label: "Shares / Saves", value: "0" },
+    { label: "Links Clicked", value: data?.["Link Clicks"] || "0" },
+    { label: "Conversion Rate", value: data?.["Posts Published"] || "0" },
+  ];
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardHeader className="space-y-6">

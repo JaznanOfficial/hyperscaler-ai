@@ -10,132 +10,183 @@ import type { ChartConfig } from "@/components/ui/chart";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const conversionConfig = {
-  coldEmail: {
-    label: "Cold Email Campaign",
-    color: "#7c3aed",
-  },
-  paidAds: {
+  "cmm2b4i9v000010kjjn8gnunc": { // Paid Ads
     label: "Paid Ads",
     color: "#0ea5e9",
   },
-  socialMedia: {
+  "cmm2b4j58000110kj3fouc7wr": { // Social Media
     label: "Social Media Marketing",
     color: "#f97316",
   },
-  linkedin: {
-    label: "LinkedIn Outreach",
+  "cmm2b4jrx000210kjr0wxdk7s": { // Cold Calling
+    label: "Cold Calling",
     color: "#22c55e",
   },
-} satisfies ChartConfig;
+  "cmm2b4khh000310kjfskvvs9k": { // Branding Content
+    label: "Branding & Content Creation",
+    color: "#a855f7",
+  },
+  "cmm2b4l4d000410kj1l2q2qkc": { // Cold Linkedin
+    label: "Cold LinkedIn Outreach",
+    color: "#ec4899",
+  },
+  "cmm2b4lr0000510kj84s4g4f3": { // Software Development
+    label: "Software Development",
+    color: "#14b8a6",
+  },
+} satisfies Record<string, { label: string; color: string }>;
 
 const conversionData = [
-  { day: 2, coldEmail: 2, paidAds: 1, socialMedia: 0.5, linkedin: 0.2 },
-  { day: 4, coldEmail: 4, paidAds: 2, socialMedia: 1.5, linkedin: 1 },
-  { day: 6, coldEmail: 6, paidAds: 4, socialMedia: 3, linkedin: 2 },
-  { day: 8, coldEmail: 8, paidAds: 5, socialMedia: 6, linkedin: 4 },
-  { day: 10, coldEmail: 10, paidAds: 6, socialMedia: 8, linkedin: 7 },
-  { day: 12, coldEmail: 11, paidAds: 8, socialMedia: 9, linkedin: 9 },
-  { day: 16, coldEmail: 12, paidAds: 10, socialMedia: 12, linkedin: 12 },
-  { day: 20, coldEmail: 13, paidAds: 11, socialMedia: 14, linkedin: 15 },
-  { day: 24, coldEmail: 14, paidAds: 12, socialMedia: 16, linkedin: 18 },
-  { day: 28, coldEmail: 15, paidAds: 13, socialMedia: 18, linkedin: 20 },
-  { day: 30, coldEmail: 16, paidAds: 14, socialMedia: 19, linkedin: 22 },
+  { day: 2 },
+  { day: 4 },
+  { day: 6 },
+  { day: 8 },
+  { day: 10 },
+  { day: 12 },
+  { day: 16 },
+  { day: 20 },
+  { day: 24 },
+  { day: 28 },
+  { day: 30 },
 ];
-
-const legendItems = [
-  { key: "coldEmail", label: "Cold Email Campaign" },
-  { key: "paidAds", label: "Paid Ads" },
-  { key: "socialMedia", label: "Social Media Marketing" },
-  { key: "linkedin", label: "LinkedIn Outreach" },
-] as const;
 
 const dayCategories = conversionData.map((point) => point.day);
 
-const conversionSeries = [
-  {
-    name: conversionConfig.coldEmail.label,
-    data: conversionData.map((point) => point.coldEmail),
-  },
-  {
-    name: conversionConfig.paidAds.label,
-    data: conversionData.map((point) => point.paidAds),
-  },
-  {
-    name: conversionConfig.socialMedia.label,
-    data: conversionData.map((point) => point.socialMedia),
-  },
-  {
-    name: conversionConfig.linkedin.label,
-    data: conversionData.map((point) => point.linkedin),
-  },
-];
+interface ConversionRateTrendsCardProps {
+  serviceData: Record<string, { serviceName: string; metrics: any; history: any[] }>;
+}
 
-const conversionChartOptions: ApexOptions = {
-  chart: {
-    id: "conversion-rate-trends",
-    type: "line",
-    toolbar: { show: false },
-    zoom: { enabled: false },
-    fontFamily: "var(--font-outfit, 'Inter', sans-serif)",
-  },
-  stroke: {
-    curve: "smooth",
-    width: 3,
-  },
-  colors: Object.values(conversionConfig).map((config) => config.color),
-  dataLabels: {
-    enabled: false,
-  },
-  markers: {
-    size: 4,
-    strokeWidth: 2,
-    strokeColors: "#ffffff",
-  },
-  grid: {
-    borderColor: "#e2e8f0",
-    strokeDashArray: 4,
-  },
-  xaxis: {
-    categories: dayCategories,
-    axisBorder: { show: false },
-    axisTicks: { show: false },
-    labels: {
-      style: {
-        colors: new Array(dayCategories.length).fill("#94a3b8"),
-        fontSize: "12px",
+export function ConversionRateTrendsCard({ serviceData }: ConversionRateTrendsCardProps) {
+  // Filter to only active services
+  const activeServiceIds = Object.keys(serviceData).filter(id => conversionConfig[id]);
+  
+  if (activeServiceIds.length === 0) {
+    return (
+      <Card className="border-none bg-white shadow-sm">
+        <CardContent className="py-8 text-center">
+          <p className="text-slate-500 text-sm">No active services to display</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Collect all unique dates from all services
+  const allDates = new Set<string>();
+  activeServiceIds.forEach(serviceId => {
+    const history = serviceData[serviceId]?.history || [];
+    history.forEach((record: any) => {
+      const date = new Date(record.date);
+      allDates.add(date.toISOString().split('T')[0]); // YYYY-MM-DD format
+    });
+  });
+
+  // Sort dates
+  const sortedDates = Array.from(allDates).sort();
+  
+  // Use dates as categories, or fallback to day numbers if no history
+  const categories = sortedDates.length > 0 
+    ? sortedDates.map(date => new Date(date).getDate()) 
+    : [1];
+
+  // Generate series with real historical data
+  const conversionSeries = activeServiceIds.map(serviceId => {
+    const history = serviceData[serviceId]?.history || [];
+    
+    // Map history to conversion rate values
+    const dataPoints = sortedDates.map(date => {
+      const record = history.find((h: any) => {
+        const recordDate = new Date(h.date).toISOString().split('T')[0];
+        return recordDate === date;
+      });
+      
+      if (record?.metrics?.["Conversion Rate"]) {
+        const value = parseFloat(String(record.metrics["Conversion Rate"]).replace(/[^0-9.-]/g, ''));
+        return isNaN(value) ? 0 : value;
+      }
+      return 0;
+    });
+
+    return {
+      name: conversionConfig[serviceId].label,
+      data: dataPoints.length > 0 ? dataPoints : [0],
+    };
+  });
+
+  // Generate legend items
+  const legendItems = activeServiceIds.map(serviceId => ({
+    key: serviceId,
+    label: conversionConfig[serviceId].label,
+    color: conversionConfig[serviceId].color,
+  }));
+
+  // Get colors for active services
+  const activeColors = activeServiceIds.map(id => conversionConfig[id].color);
+
+  const conversionChartOptions: ApexOptions = {
+    chart: {
+      id: "conversion-rate-trends",
+      type: "line",
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      fontFamily: "var(--font-outfit, 'Inter', sans-serif)",
+    },
+    stroke: {
+      curve: "smooth",
+      width: 3,
+    },
+    colors: activeColors,
+    dataLabels: {
+      enabled: false,
+    },
+    markers: {
+      size: 4,
+      strokeWidth: 2,
+      strokeColors: "#ffffff",
+    },
+    grid: {
+      borderColor: "#e2e8f0",
+      strokeDashArray: 4,
+    },
+    xaxis: {
+      categories: categories,
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: {
+        style: {
+          colors: new Array(categories.length).fill("#94a3b8"),
+          fontSize: "12px",
+        },
+      },
+      title: {
+        text: "Day",
+        offsetY: 60,
+        style: { color: "#94a3b8", fontWeight: 500 },
       },
     },
-    title: {
-      text: "Day",
-      offsetY: 60,
-      style: { color: "#94a3b8", fontWeight: 500 },
-    },
-  },
-  yaxis: {
-    axisBorder: { show: false },
-    axisTicks: { show: false },
-    labels: {
-      formatter: (value) => `${value}`,
-      style: {
-        colors: ["#94a3b8"],
-        fontSize: "12px",
+    yaxis: {
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: {
+        formatter: (value) => `${value}`,
+        style: {
+          colors: ["#94a3b8"],
+          fontSize: "12px",
+        },
+      },
+      title: {
+        text: "Conversion Rate (%)",
+        style: { color: "#475569", fontWeight: 500 },
       },
     },
-    title: {
-      text: "Conversion Rate (%)",
-      style: { color: "#475569", fontWeight: 500 },
+    legend: { show: false },
+    tooltip: {
+      theme: "light",
+      y: {
+        formatter: (value) => `${value}%`,
+      },
     },
-  },
-  legend: { show: false },
-  tooltip: {
-    theme: "light",
-    y: {
-      formatter: (value) => `${value}%`,
-    },
-  },
-};
+  };
 
-export function ConversionRateTrendsCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardContent className="space-y-6 px-1 lg:px-5">
@@ -156,11 +207,7 @@ export function ConversionRateTrendsCard() {
             >
               <span
                 className="size-2.5 rounded-full"
-                style={
-                  {
-                    backgroundColor: conversionConfig[item.key].color,
-                  } as CSSProperties
-                }
+                style={{ backgroundColor: item.color } as CSSProperties}
               />
               <span>{item.label}</span>
             </div>

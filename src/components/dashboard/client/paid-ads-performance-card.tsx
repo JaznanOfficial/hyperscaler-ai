@@ -23,49 +23,52 @@ const spendDistribution = [
   { name: "Meta Ads", value: 2000, color: "#6b21a8" },
 ];
 
-const paidMetrics = [
-  { label: "Impressions", value: "1.2M" },
-  { label: "Clicks", value: "24.5K" },
-  { label: "Reach", value: "21K" },
-  { label: "Cost-per-click (CPC)", value: "$0.10" },
-  { label: "Cost-per-lead (CPL)", value: "$10" },
-  { label: "Click-Through Rate (CTR)", value: "2.4%" },
-  { label: "Conversion Rate", value: "18.2%" },
-];
+interface PaidAdsPerformanceCardProps {
+  data?: Record<string, any>;
+}
 
-const paidInsights = [
-  {
-    label: "Ad relevance improving",
-    detail: "+8% vs last period",
-    icon: TrendingUp,
-    iconBg: "bg-emerald-50",
-    iconColor: "text-emerald-600",
-  },
-  {
-    label: "Cost per click is high",
-    detail: "$3.20 CPC (Target <$2.50)",
-    icon: AlertTriangle,
-    iconBg: "bg-amber-50",
-    iconColor: "text-amber-600",
-    detailColor: "text-amber-600",
-  },
-  {
-    label: "ROAS is healthy",
-    detail: "3.5x return on ad spend",
-    icon: Activity,
-    iconBg: "bg-sky-50",
-    iconColor: "text-sky-600",
-  },
-  {
-    label: "Conversion Rate strong",
-    detail: "18.2% conversion rate",
-    icon: Target,
-    iconBg: "bg-purple-50",
-    iconColor: "text-purple-600",
-  },
-];
+export function PaidAdsPerformanceCard({ data }: PaidAdsPerformanceCardProps) {
+  const paidMetrics = [
+    { label: "Impressions", value: data?.Impressions || "0" },
+    { label: "Clicks", value: data?.Clicks || "0" },
+    { label: "Reach", value: data?.Reach || "0" },
+    { label: "Cost-per-click (CPC)", value: data?.["Cost-per-click (CPC)"] || "$0" },
+    { label: "Cost-per-lead (CPL)", value: data?.["Cost-per-lead (CPL)"] || "$0" },
+    { label: "Click-Through Rate (CTR)", value: data?.["Click-Through Rate (CTR)"] || "0%" },
+    { label: "Conversion Rate", value: data?.["Conversion Rate"] || "0%" },
+  ];
 
-export function PaidAdsPerformanceCard() {
+  const paidInsights = [
+    {
+      label: "Ad relevance improving",
+      detail: "+8% vs last period",
+      icon: TrendingUp,
+      iconBg: "bg-emerald-50",
+      iconColor: "text-emerald-600",
+    },
+    {
+      label: "Cost per click is high",
+      detail: "$3.20 CPC (Target <$2.50)",
+      icon: AlertTriangle,
+      iconBg: "bg-amber-50",
+      iconColor: "text-amber-600",
+      detailColor: "text-amber-600",
+    },
+    {
+      label: "ROAS is healthy",
+      detail: "3.5x return on ad spend",
+      icon: Activity,
+      iconBg: "bg-sky-50",
+      iconColor: "text-sky-600",
+    },
+    {
+      label: "Conversion Rate strong",
+      detail: data?.["Conversion Rate"] || "0%",
+      icon: Target,
+      iconBg: "bg-purple-50",
+      iconColor: "text-purple-600",
+    },
+  ];
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardHeader className="space-y-6">

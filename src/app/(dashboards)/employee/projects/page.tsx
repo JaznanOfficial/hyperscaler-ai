@@ -30,18 +30,26 @@ export default function EmployeeProjectsPage() {
         const data = await response.json();
 
         const formattedProjects: EmployeeProjectItem[] = data.projects.map(
-          (project: any) => ({
-            id: project.id,
-            name: `Project ${project.id.slice(0, 8)}`,
-            owner: project.clientId.slice(0, 8),
-            updated: new Date(project.updatedAt).toLocaleDateString(),
-            status:
-              project.status === "APPROVED"
-                ? "On-going"
-                : project.status === "CANCELLED"
-                  ? "Cancelled"
-                  : "On-going",
-          })
+          (project: any) => {
+            // Get service names from the project
+            const serviceNames = (project.services || [])
+              .map((s: any) => s.serviceName)
+              .filter(Boolean)
+              .join(", ");
+            
+            return {
+              id: project.id,
+              name: serviceNames || `Project ${project.id.slice(0, 8)}`,
+              owner: project.clientId.slice(0, 8),
+              updated: new Date(project.updatedAt).toLocaleDateString(),
+              status:
+                project.status === "APPROVED"
+                  ? "On-going"
+                  : project.status === "CANCELLED"
+                    ? "Cancelled"
+                    : "On-going",
+            };
+          }
         );
 
         setProjects(formattedProjects);

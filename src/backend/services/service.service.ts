@@ -1,9 +1,10 @@
 import type { Prisma } from "@prisma/client";
 
 import { serviceRepository } from "@/backend/repositories/service.repository";
+import { generateSlug } from "@/lib/generate-slug";
 
 export class ServiceService {
-  createService(data: {
+  async createService(data: {
     serviceName: string;
     sections: Array<{
       id: string;
@@ -11,13 +12,24 @@ export class ServiceService {
       type: "input" | "textarea" | "boolean";
     }>;
   }) {
+    let slug = generateSlug();
+    let attempts = 0;
+    
+    while (attempts < 10) {
+      const existing = await serviceRepository.findBySlug(slug);
+      if (!existing) break;
+      slug = generateSlug();
+      attempts++;
+    }
+
     return serviceRepository.create({
       serviceName: data.serviceName,
       sections: data.sections as Prisma.InputJsonValue,
+      slug,
     });
   }
 
-  updateService(
+  async updateService(
     id: string,
     data: {
       serviceName?: string;
@@ -61,6 +73,10 @@ export class ServiceService {
 
   getServiceById(id: string) {
     return serviceRepository.findById(id);
+  }
+
+  getServiceBySlug(slug: string) {
+    return serviceRepository.findBySlug(slug);
   }
 
   async getAllServices() {

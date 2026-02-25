@@ -9,6 +9,7 @@ datasource db {
 
 model User {
   id          String   @id @default(cuid())
+  displayId   String?  @unique
   name        String
   email       String   @unique
   phone       String?
@@ -50,6 +51,7 @@ model Service {
   sections    Json     @default("[]")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  slug        String?  @unique
 }
 
 model Feedback {
@@ -61,6 +63,18 @@ model Feedback {
   read       Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model MetricHistory {
+  id          String   @id @default(cuid())
+  projectId   String
+  serviceId   String
+  serviceName String
+  metrics     Json     @default("{}")
+  recordedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  @@index([projectId, serviceId, recordedAt])
 }
 
 model PasswordResetToken {

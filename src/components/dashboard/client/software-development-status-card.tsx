@@ -15,7 +15,11 @@ import { SoftwareDevelopmentMetricsRow } from "./software-development-metrics-ro
 import { SoftwareDevelopmentTeamStatusCard } from "./software-development-team-status-card";
 import { SoftwareDevelopmentTimelineSection } from "./software-development-timeline-section";
 
-export function SoftwareDevelopmentStatusCard() {
+interface SoftwareDevelopmentStatusCardProps {
+  data?: Record<string, any>;
+}
+
+export function SoftwareDevelopmentStatusCard({ data }: SoftwareDevelopmentStatusCardProps) {
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardHeader className="space-y-6">

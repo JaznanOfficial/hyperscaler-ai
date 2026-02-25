@@ -1,11 +1,13 @@
 "use client";
 
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ServiceListItem } from "@/components/admin/service-list-item";
 
 export type ServiceItem = {
   id: string;
   name: string;
+  slug?: string;
 };
 
 type ServiceListProps = {
@@ -31,9 +33,12 @@ export function ServiceList({ page, onPaginationChange }: ServiceListProps) {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30_000),
   });
 
-  if (data?.pagination && onPaginationChange) {
-    onPaginationChange(data.pagination.page, data.pagination.totalPages);
-  }
+  // Update pagination in useEffect to avoid setState during render
+  useEffect(() => {
+    if (data?.pagination && onPaginationChange) {
+      onPaginationChange(data.pagination.page, data.pagination.totalPages);
+    }
+  }, [data?.pagination, onPaginationChange]);
 
   if (error) {
     return (
@@ -57,6 +62,7 @@ export function ServiceList({ page, onPaginationChange }: ServiceListProps) {
     data?.services.map((service: any) => ({
       id: service.id,
       name: service.serviceName,
+      slug: service.slug,
     })) || [];
 
   if (services.length === 0) {

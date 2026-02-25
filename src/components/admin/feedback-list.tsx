@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AdminFeedbackListItem } from "@/components/admin/feedback-list-item";
 
@@ -40,9 +41,12 @@ export function AdminFeedbackList({
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30_000),
   });
 
-  if (data?.pagination && onPaginationChange) {
-    onPaginationChange(data.pagination.page, data.pagination.totalPages);
-  }
+  // Update pagination in useEffect to avoid setState during render
+  useEffect(() => {
+    if (data?.pagination && onPaginationChange) {
+      onPaginationChange(data.pagination.page, data.pagination.totalPages);
+    }
+  }, [data?.pagination, onPaginationChange]);
 
   if (error) {
     return (

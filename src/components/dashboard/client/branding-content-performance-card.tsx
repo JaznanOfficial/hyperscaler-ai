@@ -18,14 +18,6 @@ import { BrandingContentEngagementChart } from "./branding-content-engagement-ch
 import { InsightsDrawer } from "./insights-drawer";
 import { KeyInsightsGrid } from "./key-insights-grid";
 
-const brandingMetrics = [
-  { label: "Assets Produced", value: "42" },
-  { label: "Approval Rate", value: "95.5%" },
-  { label: "Content Engagement", value: "6.9%" },
-  { label: "Brand Search Volume", value: "+18%" },
-  { label: "Conversion Rate", value: "18.2%" },
-];
-
 const clickRateData = [
   { name: "Clicked", value: 46, color: "#147638" },
   { name: "Not Clicked", value: 54, color: "#979CA3" },
@@ -63,7 +55,18 @@ const brandingInsights = [
   },
 ];
 
-export function BrandingContentPerformanceCard() {
+interface BrandingContentPerformanceCardProps {
+  data?: Record<string, any>;
+}
+
+export function BrandingContentPerformanceCard({ data }: BrandingContentPerformanceCardProps) {
+  const brandingMetrics = [
+    { label: "Assets Produced", value: data?.["Articles Published"] || "0" },
+    { label: "Approval Rate", value: "95.5%" },
+    { label: "Content Engagement", value: data?.["Engagement Rate"] || "0" },
+    { label: "Brand Search Volume", value: data?.["Total Views"] || "0" },
+    { label: "Conversion Rate", value: data?.["Leads Generated"] || "0" },
+  ];
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardHeader className="space-y-6">

@@ -7,6 +7,9 @@ import { SubscriptionListItem } from "@/components/admin/subscription-list-item"
 export type SubscriptionItem = {
   id: string;
   clientId: string;
+  clientName?: string;
+  clientEmail?: string;
+  employeeNames?: string[];
   status: string;
   services: any[];
   createdAt: string;

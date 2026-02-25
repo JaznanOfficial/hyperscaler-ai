@@ -44,10 +44,13 @@ export function SubscriptionListItem({
           >
             <div>
               <p className="font-semibold text-lg text-slate-900">
-                Project #{item.id.slice(0, 8)}
+                {item.services.map((s: any) => s.serviceName).filter(Boolean).join(", ") || 
+                 `Project #${item.id.slice(0, 8)}`}
               </p>
               <p className="text-slate-500 text-sm">
-                {item.services.length} service(s) requested
+                Client: {item.clientName || item.clientId.slice(0, 8)}
+                {item.employeeNames && item.employeeNames.length > 0 && 
+                  ` • ${item.employeeNames.length} employee(s) assigned`}
               </p>
             </div>
             <div className="mt-2 flex flex-wrap items-center gap-3 sm:mt-0">
@@ -71,17 +74,28 @@ export function SubscriptionListItem({
           </AlertDialogHeader>
           <div className="space-y-4 text-slate-600 text-sm">
             <div>
-              <p className="font-medium text-slate-900">Project ID</p>
-              <p>{item.id}</p>
+              <p className="font-medium text-slate-900">Client</p>
+              <p>{item.clientName || "Unknown"}</p>
+              {item.clientEmail && <p className="text-xs">{item.clientEmail}</p>}
             </div>
             <div>
-              <p className="font-medium text-slate-900">Services Requested</p>
+              <p className="font-medium text-slate-900">Services</p>
               <ul className="mt-2 space-y-1">
                 {item.services.map((service: any, index: number) => (
                   <li key={index}>• {service.serviceName || "Service"}</li>
                 ))}
               </ul>
             </div>
+            {item.employeeNames && item.employeeNames.length > 0 && (
+              <div>
+                <p className="font-medium text-slate-900">Assigned Employees</p>
+                <ul className="mt-2 space-y-1">
+                  {item.employeeNames.map((name: string, index: number) => (
+                    <li key={index}>• {name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div>
               <p className="font-medium text-slate-900">Status</p>
               <Select
@@ -97,6 +111,10 @@ export function SubscriptionListItem({
                   <SelectItem value="CANCELLED">Cancelled</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div>
+              <p className="font-medium text-slate-900">Project ID</p>
+              <p className="text-xs">{item.id}</p>
             </div>
             <div>
               <p className="font-medium text-slate-900">Created</p>

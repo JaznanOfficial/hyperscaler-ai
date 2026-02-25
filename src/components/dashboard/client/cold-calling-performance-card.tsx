@@ -16,13 +16,6 @@ import {
 import { InsightsDrawer } from "./insights-drawer";
 import { KeyInsightsGrid } from "./key-insights-grid";
 
-const coldMetrics = [
-  { label: "Calls Made", value: "240" },
-  { label: "Pick-Up Rate", value: "56%" },
-  { label: "Meetings Booked", value: "24" },
-  { label: "Conversion Rate", value: "18.2%" },
-];
-
 const callQualityMetrics = [
   {
     label: "Average call duration",
@@ -75,7 +68,17 @@ const callInsights = [
   },
 ];
 
-export function ColdCallingPerformanceCard() {
+interface ColdCallingPerformanceCardProps {
+  data?: Record<string, any>;
+}
+
+export function ColdCallingPerformanceCard({ data }: ColdCallingPerformanceCardProps) {
+  const coldMetrics = [
+    { label: "Calls Made", value: data?.["Total Calls"] || "0" },
+    { label: "Pick-Up Rate", value: data?.["Connected Calls"] || "0" },
+    { label: "Meetings Booked", value: data?.["Meetings Booked"] || "0" },
+    { label: "Conversion Rate", value: data?.["Conversion Rate"] || "0" },
+  ];
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardHeader className="space-y-6">
