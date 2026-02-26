@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -44,6 +45,7 @@ export function ServiceDetailsForm({
   serviceId,
 }: ServiceDetailsFormProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [serviceName, setServiceName] = useState(initialServiceName);
   const [sections, setSections] = useState<ServiceSection[]>(
     initialSections.length
@@ -107,6 +109,8 @@ export function ServiceDetailsForm({
 
       if (response.ok) {
         toast.success("Service saved successfully!");
+        // Invalidate services cache to trigger auto-refresh
+        queryClient.invalidateQueries({ queryKey: ["services"] });
         router.push("/s-admin/services");
       } else {
         const error = await response.json();

@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/backend/config/prisma";
 import { signupSchema } from "@/backend/schemas/auth.schema";
+import { generateDisplayId } from "@/lib/generate-display-id";
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,6 +21,8 @@ export async function POST(req: NextRequest) {
     }
 
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
+    const role = validatedData.role || "CLIENT";
+    const displayId = await generateDisplayId(role as any);
 
     const user = await prisma.user.create({
       data: {
@@ -27,7 +30,8 @@ export async function POST(req: NextRequest) {
         email: validatedData.email,
         phone: validatedData.phone,
         password: hashedPassword,
-        role: validatedData.role || "CLIENT",
+        role,
+        displayId,
         generalInfo: validatedData.generalInfo as any,
       },
       select: {
@@ -36,6 +40,7 @@ export async function POST(req: NextRequest) {
         email: true,
         phone: true,
         role: true,
+        displayId: true,
         createdAt: true,
       },
     });

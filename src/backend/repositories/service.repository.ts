@@ -8,6 +8,12 @@ export class ServiceRepository {
     });
   }
 
+  async findBySlug(slug: string) {
+    return prisma.service.findUnique({
+      where: { slug },
+    });
+  }
+
   async create(data: Prisma.ServiceCreateInput) {
     return prisma.service.create({
       data,

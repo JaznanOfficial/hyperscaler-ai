@@ -130,12 +130,28 @@ export async function PATCH(
     const body = await request.json();
     const validatedData = updateProjectServicesSchema.parse(body);
 
+    // Update project with new services data
     const updatedProject = await prisma.project.update({
       where: { id },
       data: {
         services: validatedData.services as any,
         updatedAt: new Date(),
       },
+    });
+
+    // Create metric history records for each service
+    const historyRecords = validatedData.services.map((service: any) => ({
+      projectId: id,
+      serviceId: service.serviceId,
+      serviceName: service.serviceName,
+      metrics: service.updates || {},
+      recordedAt: new Date(),
+    }));
+
+    // Bulk create history records
+    await prisma.metricHistory.createMany({
+      data: historyRecords,
+      skipDuplicates: true,
     });
 
     return NextResponse.json({ project: updatedProject });

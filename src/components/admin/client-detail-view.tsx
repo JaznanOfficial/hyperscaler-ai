@@ -121,18 +121,15 @@ export function ClientDetailView({ client, clientId }: { client: ClientDetail; c
 
   const toggleEmployeeAssignment = async (
     serviceId: string,
-    employeeName: string
+    employeeId: string
   ) => {
     const service = services.find((s) => s.id === serviceId);
     if (!service) return;
 
-    const employee = employees.find((e) => e.name === employeeName);
-    if (!employee) return;
-
-    const isAssigned = service.assignedEmployees.includes(employee.id);
+    const isAssigned = service.assignedEmployees.includes(employeeId);
     const newAssignedEmployees = isAssigned
-      ? service.assignedEmployees.filter((id) => id !== employee.id)
-      : [...service.assignedEmployees, employee.id];
+      ? service.assignedEmployees.filter((id) => id !== employeeId)
+      : [...service.assignedEmployees, employeeId];
 
     try {
       const response = await fetch(`/api/admin/projects/${serviceId}/assign`, {
@@ -158,10 +155,7 @@ export function ClientDetailView({ client, clientId }: { client: ClientDetail; c
   };
 
   const removeEmployee = (serviceId: string, employeeId: string) => {
-    const employee = employees.find((e) => e.id === employeeId);
-    if (employee) {
-      toggleEmployeeAssignment(serviceId, employee.name);
-    }
+    toggleEmployeeAssignment(serviceId, employeeId);
   };
 
   return (
@@ -332,28 +326,18 @@ export function ClientDetailView({ client, clientId }: { client: ClientDetail; c
                       <DropdownMenuContent align="start" className="min-w-56">
                         <DropdownMenuLabel>Assign teammates</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        {availableEmployees.map((employeeName) => {
-                          const employee = employees.find(
-                            (e) => e.name === employeeName
-                          );
-                          return (
-                            <DropdownMenuCheckboxItem
-                              checked={service.assignedEmployees.includes(
-                                employee?.id || ""
-                              )}
-                              className="cursor-pointer"
-                              key={employeeName}
-                              onCheckedChange={() =>
-                                toggleEmployeeAssignment(
-                                  service.id,
-                                  employeeName
-                                )
-                              }
-                            >
-                              {employeeName}
-                            </DropdownMenuCheckboxItem>
-                          );
-                        })}
+                        {employees.map((employee) => (
+                          <DropdownMenuCheckboxItem
+                            checked={service.assignedEmployees.includes(employee.id)}
+                            className="cursor-pointer"
+                            key={employee.id}
+                            onCheckedChange={() =>
+                              toggleEmployeeAssignment(service.id, employee.id)
+                            }
+                          >
+                            {employee.name}
+                          </DropdownMenuCheckboxItem>
+                        ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>

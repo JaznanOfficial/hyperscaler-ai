@@ -13,7 +13,10 @@ export async function GET(
 
     const { id } = await params;
 
-    const service = await serviceService.getServiceById(id);
+    let service = await serviceService.getServiceBySlug(id);
+    if (!service) {
+      service = await serviceService.getServiceById(id);
+    }
 
     if (!service) {
       return ApiResponse.error("Service not found", 404);

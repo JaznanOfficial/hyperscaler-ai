@@ -18,15 +18,6 @@ import { ColdLinkedinConversionChart } from "./cold-linkedin-conversion-chart";
 import { InsightsDrawer } from "./insights-drawer";
 import { KeyInsightsGrid } from "./key-insights-grid";
 
-const linkedinMetrics = [
-  { label: "Connection Request Sent", value: "42" },
-  { label: "Messages Sent", value: "38" },
-  { label: "Reply Rate", value: "14%" },
-  { label: "Positive Reply Rates", value: "6%" },
-  { label: "Qualified Leads", value: "9" },
-  { label: "Meetings Booked", value: "7" },
-];
-
 const clickRateData = [
   { name: "Accepted Requests", value: 46, color: "#147638" },
   { name: "Ignored Requests", value: 54, color: "#979CA3" },
@@ -63,7 +54,19 @@ const linkedinInsights = [
   },
 ];
 
-export function ColdLinkedinPerformanceCard() {
+interface ColdLinkedinPerformanceCardProps {
+  data?: Record<string, any>;
+}
+
+export function ColdLinkedinPerformanceCard({ data }: ColdLinkedinPerformanceCardProps) {
+  const linkedinMetrics = [
+    { label: "Connection Request Sent", value: data?.["Connection Requests"] || "0" },
+    { label: "Messages Sent", value: data?.["Messages Sent"] || "0" },
+    { label: "Reply Rate", value: data?.["Reply Rate"] || "0" },
+    { label: "Positive Reply Rates", value: "0" },
+    { label: "Qualified Leads", value: data?.["Accepted Connections"] || "0" },
+    { label: "Meetings Booked", value: data?.["Meetings Booked"] || "0" },
+  ];
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardHeader className="space-y-6">
