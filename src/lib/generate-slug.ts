@@ -1,3 +1,4 @@
+//slug-generate
 export function generateSlug(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const length = Math.random() > 0.5 ? 3 : 4;
