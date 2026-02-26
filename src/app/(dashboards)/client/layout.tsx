@@ -30,8 +30,8 @@ const clientNavItems: AppSidebarNavItem[] = [
     matchSubRoutes: false,
   },
   {
-    title: "Packages",
-    url: "/client/packages",
+    title: "Subscriptions",
+    url: "/client/subscriptions",
     icon: "creditCard",
     matchSubRoutes: false,
   },
