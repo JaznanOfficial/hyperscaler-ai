@@ -58,7 +58,7 @@ interface ConversionRateTrendsCardProps {
 
 export function ConversionRateTrendsCard({ serviceData }: ConversionRateTrendsCardProps) {
   // Filter to only active services
-  const activeServiceIds = Object.keys(serviceData).filter(id => conversionConfig[id]);
+  const activeServiceIds = Object.keys(serviceData).filter(id => id in conversionConfig);
   
   if (activeServiceIds.length === 0) {
     return (
@@ -91,6 +91,7 @@ export function ConversionRateTrendsCard({ serviceData }: ConversionRateTrendsCa
   // Generate series with real historical data
   const conversionSeries = activeServiceIds.map(serviceId => {
     const history = serviceData[serviceId]?.history || [];
+    const config = conversionConfig[serviceId as keyof typeof conversionConfig];
     
     // Map history to conversion rate values
     const dataPoints = sortedDates.map(date => {
@@ -107,20 +108,23 @@ export function ConversionRateTrendsCard({ serviceData }: ConversionRateTrendsCa
     });
 
     return {
-      name: conversionConfig[serviceId].label,
+      name: config.label,
       data: dataPoints.length > 0 ? dataPoints : [0],
     };
   });
 
   // Generate legend items
-  const legendItems = activeServiceIds.map(serviceId => ({
-    key: serviceId,
-    label: conversionConfig[serviceId].label,
-    color: conversionConfig[serviceId].color,
-  }));
+  const legendItems = activeServiceIds.map(serviceId => {
+    const config = conversionConfig[serviceId as keyof typeof conversionConfig];
+    return {
+      key: serviceId,
+      label: config.label,
+      color: config.color,
+    };
+  });
 
   // Get colors for active services
-  const activeColors = activeServiceIds.map(id => conversionConfig[id].color);
+  const activeColors = activeServiceIds.map(id => conversionConfig[id as keyof typeof conversionConfig].color);
 
   const conversionChartOptions: ApexOptions = {
     chart: {
