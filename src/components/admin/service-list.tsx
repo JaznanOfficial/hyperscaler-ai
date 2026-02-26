@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { ServiceListItem } from "@/components/admin/service-list-item";
 
 export type ServiceItem = {

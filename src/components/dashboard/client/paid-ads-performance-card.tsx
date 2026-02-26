@@ -32,9 +32,18 @@ export function PaidAdsPerformanceCard({ data }: PaidAdsPerformanceCardProps) {
     { label: "Impressions", value: data?.Impressions || "0" },
     { label: "Clicks", value: data?.Clicks || "0" },
     { label: "Reach", value: data?.Reach || "0" },
-    { label: "Cost-per-click (CPC)", value: data?.["Cost-per-click (CPC)"] || "$0" },
-    { label: "Cost-per-lead (CPL)", value: data?.["Cost-per-lead (CPL)"] || "$0" },
-    { label: "Click-Through Rate (CTR)", value: data?.["Click-Through Rate (CTR)"] || "0%" },
+    {
+      label: "Cost-per-click (CPC)",
+      value: data?.["Cost-per-click (CPC)"] || "$0",
+    },
+    {
+      label: "Cost-per-lead (CPL)",
+      value: data?.["Cost-per-lead (CPL)"] || "$0",
+    },
+    {
+      label: "Click-Through Rate (CTR)",
+      value: data?.["Click-Through Rate (CTR)"] || "0%",
+    },
     { label: "Conversion Rate", value: data?.["Conversion Rate"] || "0%" },
   ];
 

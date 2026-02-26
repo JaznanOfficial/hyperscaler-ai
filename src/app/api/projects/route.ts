@@ -35,8 +35,12 @@ export async function GET() {
     // Enrich projects with service names
     const enrichedProjects = await Promise.all(
       userProjects.map(async (project) => {
-        const services = Array.isArray(project.services) ? project.services : [];
-        const serviceIds = services.map((s: any) => s.serviceId).filter(Boolean);
+        const services = Array.isArray(project.services)
+          ? project.services
+          : [];
+        const serviceIds = services
+          .map((s: any) => s.serviceId)
+          .filter(Boolean);
 
         if (serviceIds.length > 0) {
           const fullServices = await prisma.service.findMany({
@@ -44,11 +48,14 @@ export async function GET() {
             select: { id: true, serviceName: true },
           });
 
-          const serviceMap = new Map(fullServices.map((s) => [s.id, s.serviceName]));
+          const serviceMap = new Map(
+            fullServices.map((s) => [s.id, s.serviceName])
+          );
 
           const enrichedServices = services.map((service: any) => ({
             ...service,
-            serviceName: serviceMap.get(service.serviceId) || service.serviceName,
+            serviceName:
+              serviceMap.get(service.serviceId) || service.serviceName,
           }));
 
           return {

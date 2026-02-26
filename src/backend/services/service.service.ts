@@ -14,7 +14,7 @@ export class ServiceService {
   }) {
     let slug = generateSlug();
     let attempts = 0;
-    
+
     while (attempts < 10) {
       const existing = await serviceRepository.findBySlug(slug);
       if (!existing) break;

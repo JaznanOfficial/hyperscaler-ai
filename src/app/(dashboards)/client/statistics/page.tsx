@@ -65,7 +65,8 @@ export default function ClientStatisticsPage() {
       {!hasAnyServices && (
         <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center">
           <p className="text-slate-500">
-            No services assigned yet. Your team will update metrics once services are active.
+            No services assigned yet. Your team will update metrics once
+            services are active.
           </p>
         </div>
       )}
@@ -112,27 +113,39 @@ export default function ClientStatisticsPage() {
       )}
 
       {"cmm2b4i9v000010kjjn8gnunc" in serviceData && (
-        <PaidAdsPerformanceCard data={serviceData["cmm2b4i9v000010kjjn8gnunc"]?.metrics} />
+        <PaidAdsPerformanceCard
+          data={serviceData["cmm2b4i9v000010kjjn8gnunc"]?.metrics}
+        />
       )}
 
       {"cmm2b4j58000110kj3fouc7wr" in serviceData && (
-        <SocialMediaPerformanceCard data={serviceData["cmm2b4j58000110kj3fouc7wr"]?.metrics} />
+        <SocialMediaPerformanceCard
+          data={serviceData["cmm2b4j58000110kj3fouc7wr"]?.metrics}
+        />
       )}
 
       {"cmm2b4jrx000210kjr0wxdk7s" in serviceData && (
-        <ColdCallingPerformanceCard data={serviceData["cmm2b4jrx000210kjr0wxdk7s"]?.metrics} />
+        <ColdCallingPerformanceCard
+          data={serviceData["cmm2b4jrx000210kjr0wxdk7s"]?.metrics}
+        />
       )}
 
       {"cmm2b4khh000310kjfskvvs9k" in serviceData && (
-        <BrandingContentPerformanceCard data={serviceData["cmm2b4khh000310kjfskvvs9k"]?.metrics} />
+        <BrandingContentPerformanceCard
+          data={serviceData["cmm2b4khh000310kjfskvvs9k"]?.metrics}
+        />
       )}
 
       {"cmm2b4l4d000410kj1l2q2qkc" in serviceData && (
-        <ColdLinkedinPerformanceCard data={serviceData["cmm2b4l4d000410kj1l2q2qkc"]?.metrics} />
+        <ColdLinkedinPerformanceCard
+          data={serviceData["cmm2b4l4d000410kj1l2q2qkc"]?.metrics}
+        />
       )}
 
       {"cmm2b4lr0000510kj84s4g4f3" in serviceData && (
-        <SoftwareDevelopmentStatusCard data={serviceData["cmm2b4lr0000510kj84s4g4f3"]?.metrics} />
+        <SoftwareDevelopmentStatusCard
+          data={serviceData["cmm2b4lr0000510kj84s4g4f3"]?.metrics}
+        />
       )}
     </div>
   );

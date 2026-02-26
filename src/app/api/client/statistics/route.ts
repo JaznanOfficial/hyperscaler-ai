@@ -21,7 +21,7 @@ export async function GET() {
       },
     });
 
-    const projectIds = projects.map(p => p.id);
+    const projectIds = projects.map((p) => p.id);
 
     // Get metric history for the last 30 days
     const thirtyDaysAgo = new Date();
@@ -33,7 +33,7 @@ export async function GET() {
         recordedAt: { gte: thirtyDaysAgo },
       },
       orderBy: {
-        recordedAt: 'asc',
+        recordedAt: "asc",
       },
     });
 
@@ -75,7 +75,9 @@ export async function GET() {
         const recordMetrics = record.metrics as Record<string, any>;
         for (const [key, value] of Object.entries(recordMetrics)) {
           // Try to parse as number and add to total
-          const numValue = parseFloat(String(value).replace(/[^0-9.-]/g, ''));
+          const numValue = Number.parseFloat(
+            String(value).replace(/[^0-9.-]/g, "")
+          );
           if (!isNaN(numValue)) {
             if (!serviceMetrics[record.serviceId].totals) {
               serviceMetrics[record.serviceId].totals = {};
@@ -91,12 +93,14 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      data: Object.entries(serviceMetrics).map(([serviceId, data]: [string, any]) => ({
-        serviceId,
-        serviceName: data.serviceName,
-        metrics: data.totals || data.metrics, // Use totals if available, otherwise latest
-        history: data.history,
-      })),
+      data: Object.entries(serviceMetrics).map(
+        ([serviceId, data]: [string, any]) => ({
+          serviceId,
+          serviceName: data.serviceName,
+          metrics: data.totals || data.metrics, // Use totals if available, otherwise latest
+          history: data.history,
+        })
+      ),
     });
   } catch (error) {
     console.error("Error fetching client statistics:", error);

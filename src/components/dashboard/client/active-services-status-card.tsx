@@ -4,26 +4,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
 const serviceConfig: Record<string, { color: string }> = {
-  "cmm2b4i9v000010kjjn8gnunc": { color: "#0ea5e9" }, // Paid Ads
-  "cmm2b4j58000110kj3fouc7wr": { color: "#f97316" }, // Social Media
-  "cmm2b4jrx000210kjr0wxdk7s": { color: "#22c55e" }, // Cold Calling
-  "cmm2b4khh000310kjfskvvs9k": { color: "#a855f7" }, // Branding Content
-  "cmm2b4l4d000410kj1l2q2qkc": { color: "#ec4899" }, // Cold Linkedin
-  "cmm2b4lr0000510kj84s4g4f3": { color: "#14b8a6" }, // Software Development
+  cmm2b4i9v000010kjjn8gnunc: { color: "#0ea5e9" }, // Paid Ads
+  cmm2b4j58000110kj3fouc7wr: { color: "#f97316" }, // Social Media
+  cmm2b4jrx000210kjr0wxdk7s: { color: "#22c55e" }, // Cold Calling
+  cmm2b4khh000310kjfskvvs9k: { color: "#a855f7" }, // Branding Content
+  cmm2b4l4d000410kj1l2q2qkc: { color: "#ec4899" }, // Cold Linkedin
+  cmm2b4lr0000510kj84s4g4f3: { color: "#14b8a6" }, // Software Development
 };
 
 interface ActiveServicesStatusCardProps {
   serviceData: Record<string, { serviceName: string; metrics: any }>;
 }
 
-export function ActiveServicesStatusCard({ serviceData }: ActiveServicesStatusCardProps) {
-  const activeServices = Object.entries(serviceData).map(([serviceId, data]) => ({
-    id: serviceId,
-    name: data.serviceName,
-    progress: Math.floor(Math.random() * 100), // TODO: Calculate real progress
-    summary: "Real-time metrics from your team",
-    color: serviceConfig[serviceId]?.color || "#64748b",
-  }));
+export function ActiveServicesStatusCard({
+  serviceData,
+}: ActiveServicesStatusCardProps) {
+  const activeServices = Object.entries(serviceData).map(
+    ([serviceId, data]) => ({
+      id: serviceId,
+      name: data.serviceName,
+      progress: Math.floor(Math.random() * 100), // TODO: Calculate real progress
+      summary: "Real-time metrics from your team",
+      color: serviceConfig[serviceId]?.color || "#64748b",
+    })
+  );
 
   if (activeServices.length === 0) {
     return (

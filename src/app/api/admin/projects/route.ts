@@ -84,15 +84,21 @@ export async function GET() {
     const enrichedProjects = await Promise.all(
       projects.map(async (project) => {
         // Get service names
-        const services = Array.isArray(project.services) ? project.services : [];
-        const serviceIds = services.map((s: any) => s.serviceId).filter(Boolean);
-        
+        const services = Array.isArray(project.services)
+          ? project.services
+          : [];
+        const serviceIds = services
+          .map((s: any) => s.serviceId)
+          .filter(Boolean);
+
         const fullServices = await prisma.service.findMany({
           where: { id: { in: serviceIds } },
           select: { id: true, serviceName: true },
         });
-        
-        const serviceMap = new Map(fullServices.map((s) => [s.id, s.serviceName]));
+
+        const serviceMap = new Map(
+          fullServices.map((s) => [s.id, s.serviceName])
+        );
         const enrichedServices = services.map((service: any) => ({
           ...service,
           serviceName: serviceMap.get(service.serviceId) || service.serviceName,
@@ -105,23 +111,24 @@ export async function GET() {
         });
 
         // Get employee names
-        const assignedEmployees = Array.isArray(project.assignedEmployees) 
-          ? project.assignedEmployees as string[]
+        const assignedEmployees = Array.isArray(project.assignedEmployees)
+          ? (project.assignedEmployees as string[])
           : [];
-        
-        const employees = assignedEmployees.length > 0
-          ? await prisma.user.findMany({
-              where: { id: { in: assignedEmployees } },
-              select: { id: true, name: true },
-            })
-          : [];
+
+        const employees =
+          assignedEmployees.length > 0
+            ? await prisma.user.findMany({
+                where: { id: { in: assignedEmployees } },
+                select: { id: true, name: true },
+              })
+            : [];
 
         return {
           ...project,
           services: enrichedServices,
           clientName: client?.name || "Unknown Client",
           clientEmail: client?.email,
-          employeeNames: employees.map(e => e.name),
+          employeeNames: employees.map((e) => e.name),
         };
       })
     );

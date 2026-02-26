@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Outfit } from "next/font/google";
 import { Toaster } from "sonner";
-
-import { QueryProvider } from "@/providers/query-provider";
 import { AuthSessionProvider } from "@/components/providers/session-provider";
+import { QueryProvider } from "@/providers/query-provider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });

@@ -59,7 +59,9 @@ interface BrandingContentPerformanceCardProps {
   data?: Record<string, any>;
 }
 
-export function BrandingContentPerformanceCard({ data }: BrandingContentPerformanceCardProps) {
+export function BrandingContentPerformanceCard({
+  data,
+}: BrandingContentPerformanceCardProps) {
   const brandingMetrics = [
     { label: "Assets Produced", value: data?.["Articles Published"] || "0" },
     { label: "Approval Rate", value: "95.5%" },

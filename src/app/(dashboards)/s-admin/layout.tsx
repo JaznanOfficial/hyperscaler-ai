@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { auth } from "@/backend/config/auth";
 
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar, type AppSidebarNavItem } from "@/components/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,6 +15,36 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+
+const superAdminNavItems: AppSidebarNavItem[] = [
+  {
+    title: "Hyperscaler AI",
+    url: "/s-admin",
+    icon: "bot",
+    matchSubRoutes: false,
+  },
+  {
+    title: "Employees",
+    url: "/s-admin/employees",
+    icon: "users",
+  },
+  {
+    title: "Clients",
+    url: "/s-admin/clients",
+    icon: "briefcase",
+  },
+  // {
+  //   title: "Projects",
+  //   url: "/s-admin/projects",
+  //   icon: "creditCard",
+  // },
+  {
+    title: "Feedbacks",
+    url: "/s-admin/feedbacks",
+    icon: "messageSquare",
+    matchSubRoutes: false,
+  },
+];
 
 function getRoleBasedRedirect(role: string): string {
   switch (role) {
@@ -48,6 +78,7 @@ export default async function SDashboardLayout({
   return (
     <SidebarProvider>
       <AppSidebar
+        navItems={superAdminNavItems}
         profileLink={{
           label: "Profile",
           href: "/s-admin/profile",

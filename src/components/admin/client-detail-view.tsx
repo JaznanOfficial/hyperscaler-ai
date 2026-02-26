@@ -57,7 +57,13 @@ const serviceStatusStyles: Record<ClientServiceStatus, string> = {
   Cancelled: "bg-rose-100 text-rose-700",
 };
 
-export function ClientDetailView({ client, clientId }: { client: ClientDetail; clientId: string }) {
+export function ClientDetailView({
+  client,
+  clientId,
+}: {
+  client: ClientDetail;
+  clientId: string;
+}) {
   const [services, setServices] = useState(client.requestedServices);
   const [packages, setPackages] = useState<Package[]>([]);
   const [employees, setEmployees] = useState<
@@ -256,10 +262,7 @@ export function ClientDetailView({ client, clientId }: { client: ClientDetail; c
               Active workstreams
             </p>
           </div>
-          <AssignServiceDialog 
-            clientId={clientId} 
-            clientName={client.name} 
-          />
+          <AssignServiceDialog clientId={clientId} clientName={client.name} />
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {services.map((service) => (
@@ -328,7 +331,9 @@ export function ClientDetailView({ client, clientId }: { client: ClientDetail; c
                         <DropdownMenuSeparator />
                         {employees.map((employee) => (
                           <DropdownMenuCheckboxItem
-                            checked={service.assignedEmployees.includes(employee.id)}
+                            checked={service.assignedEmployees.includes(
+                              employee.id
+                            )}
                             className="cursor-pointer"
                             key={employee.id}
                             onCheckedChange={() =>

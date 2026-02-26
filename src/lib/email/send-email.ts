@@ -11,7 +11,7 @@ interface SendEmailParams {
 export async function sendEmail({ to, subject, html }: SendEmailParams) {
   try {
     const data = await resend.emails.send({
-      from: process.env.SENDER_EMAIL || "noreply@scalebuild.ai",
+      from: process.env.SENDER_EMAIL || "noreply@hyperscaler.scalebuild.ai",
       to,
       subject,
       html,
@@ -19,7 +19,7 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
 
     return { success: true, data };
   } catch (error) {
-    console.error("Email send error:", error);
+    console.log("Email send error:", error);
     return { success: false, error };
   }
 }

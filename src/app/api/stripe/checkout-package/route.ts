@@ -45,8 +45,8 @@ export async function POST(request: Request) {
         packageName,
         amount: amount.toString(),
       },
-      success_url: `${appUrl}/client/subscriptions?payment=success&package=${encodeURIComponent(packageName)}`,
-      cancel_url: `${appUrl}/client/services?payment=canceled`,
+      success_url: `${appUrl}/client/payment-success?payment=success&package=${encodeURIComponent(packageName)}`,
+      cancel_url: `${appUrl}/client/payment-failed?payment=canceled`,
       customer_email: session.user.email || undefined,
     });
 

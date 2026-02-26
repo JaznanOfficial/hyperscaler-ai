@@ -19,7 +19,9 @@ interface SoftwareDevelopmentStatusCardProps {
   data?: Record<string, any>;
 }
 
-export function SoftwareDevelopmentStatusCard({ data }: SoftwareDevelopmentStatusCardProps) {
+export function SoftwareDevelopmentStatusCard({
+  data,
+}: SoftwareDevelopmentStatusCardProps) {
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardHeader className="space-y-6">

@@ -66,7 +66,9 @@ export function ExploreServicesGrid() {
               <div className="flex w-full flex-col gap-4 pt-4">
                 <div className="flex w-full flex-col gap-3 min-[450px]:flex-row">
                   <Button asChild className="flex-1" variant="gradient">
-                    <Link href={`/client/services/${service.slug || service.id}`}>
+                    <Link
+                      href={`/client/services/${service.slug || service.id}`}
+                    >
                       View Details
                     </Link>
                   </Button>

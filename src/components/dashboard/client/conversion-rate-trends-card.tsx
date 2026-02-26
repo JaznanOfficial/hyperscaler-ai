@@ -5,32 +5,37 @@ import dynamic from "next/dynamic";
 import type { CSSProperties } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
-import type { ChartConfig } from "@/components/ui/chart";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const conversionConfig = {
-  "cmm2b4i9v000010kjjn8gnunc": { // Paid Ads
+  cmm2b4i9v000010kjjn8gnunc: {
+    // Paid Ads
     label: "Paid Ads",
     color: "#0ea5e9",
   },
-  "cmm2b4j58000110kj3fouc7wr": { // Social Media
+  cmm2b4j58000110kj3fouc7wr: {
+    // Social Media
     label: "Social Media Marketing",
     color: "#f97316",
   },
-  "cmm2b4jrx000210kjr0wxdk7s": { // Cold Calling
+  cmm2b4jrx000210kjr0wxdk7s: {
+    // Cold Calling
     label: "Cold Calling",
     color: "#22c55e",
   },
-  "cmm2b4khh000310kjfskvvs9k": { // Branding Content
+  cmm2b4khh000310kjfskvvs9k: {
+    // Branding Content
     label: "Branding & Content Creation",
     color: "#a855f7",
   },
-  "cmm2b4l4d000410kj1l2q2qkc": { // Cold Linkedin
+  cmm2b4l4d000410kj1l2q2qkc: {
+    // Cold Linkedin
     label: "Cold LinkedIn Outreach",
     color: "#ec4899",
   },
-  "cmm2b4lr0000510kj84s4g4f3": { // Software Development
+  cmm2b4lr0000510kj84s4g4f3: {
+    // Software Development
     label: "Software Development",
     color: "#14b8a6",
   },
@@ -53,18 +58,27 @@ const conversionData = [
 const dayCategories = conversionData.map((point) => point.day);
 
 interface ConversionRateTrendsCardProps {
-  serviceData: Record<string, { serviceName: string; metrics: any; history: any[] }>;
+  serviceData: Record<
+    string,
+    { serviceName: string; metrics: any; history: any[] }
+  >;
 }
 
-export function ConversionRateTrendsCard({ serviceData }: ConversionRateTrendsCardProps) {
+export function ConversionRateTrendsCard({
+  serviceData,
+}: ConversionRateTrendsCardProps) {
   // Filter to only active services
-  const activeServiceIds = Object.keys(serviceData).filter(id => conversionConfig[id]);
-  
+  const activeServiceIds = Object.keys(serviceData).filter(
+    (id) => conversionConfig[id]
+  );
+
   if (activeServiceIds.length === 0) {
     return (
       <Card className="border-none bg-white shadow-sm">
         <CardContent className="py-8 text-center">
-          <p className="text-slate-500 text-sm">No active services to display</p>
+          <p className="text-slate-500 text-sm">
+            No active services to display
+          </p>
         </CardContent>
       </Card>
     );
@@ -72,35 +86,38 @@ export function ConversionRateTrendsCard({ serviceData }: ConversionRateTrendsCa
 
   // Collect all unique dates from all services
   const allDates = new Set<string>();
-  activeServiceIds.forEach(serviceId => {
+  activeServiceIds.forEach((serviceId) => {
     const history = serviceData[serviceId]?.history || [];
     history.forEach((record: any) => {
       const date = new Date(record.date);
-      allDates.add(date.toISOString().split('T')[0]); // YYYY-MM-DD format
+      allDates.add(date.toISOString().split("T")[0]); // YYYY-MM-DD format
     });
   });
 
   // Sort dates
   const sortedDates = Array.from(allDates).sort();
-  
+
   // Use dates as categories, or fallback to day numbers if no history
-  const categories = sortedDates.length > 0 
-    ? sortedDates.map(date => new Date(date).getDate()) 
-    : [1];
+  const categories =
+    sortedDates.length > 0
+      ? sortedDates.map((date) => new Date(date).getDate())
+      : [1];
 
   // Generate series with real historical data
-  const conversionSeries = activeServiceIds.map(serviceId => {
+  const conversionSeries = activeServiceIds.map((serviceId) => {
     const history = serviceData[serviceId]?.history || [];
-    
+
     // Map history to conversion rate values
-    const dataPoints = sortedDates.map(date => {
+    const dataPoints = sortedDates.map((date) => {
       const record = history.find((h: any) => {
-        const recordDate = new Date(h.date).toISOString().split('T')[0];
+        const recordDate = new Date(h.date).toISOString().split("T")[0];
         return recordDate === date;
       });
-      
+
       if (record?.metrics?.["Conversion Rate"]) {
-        const value = parseFloat(String(record.metrics["Conversion Rate"]).replace(/[^0-9.-]/g, ''));
+        const value = Number.parseFloat(
+          String(record.metrics["Conversion Rate"]).replace(/[^0-9.-]/g, "")
+        );
         return isNaN(value) ? 0 : value;
       }
       return 0;
@@ -113,14 +130,14 @@ export function ConversionRateTrendsCard({ serviceData }: ConversionRateTrendsCa
   });
 
   // Generate legend items
-  const legendItems = activeServiceIds.map(serviceId => ({
+  const legendItems = activeServiceIds.map((serviceId) => ({
     key: serviceId,
     label: conversionConfig[serviceId].label,
     color: conversionConfig[serviceId].color,
   }));
 
   // Get colors for active services
-  const activeColors = activeServiceIds.map(id => conversionConfig[id].color);
+  const activeColors = activeServiceIds.map((id) => conversionConfig[id].color);
 
   const conversionChartOptions: ApexOptions = {
     chart: {
@@ -148,7 +165,7 @@ export function ConversionRateTrendsCard({ serviceData }: ConversionRateTrendsCa
       strokeDashArray: 4,
     },
     xaxis: {
-      categories: categories,
+      categories,
       axisBorder: { show: false },
       axisTicks: { show: false },
       labels: {

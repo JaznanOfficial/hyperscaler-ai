@@ -6,8 +6,8 @@ export async function sendPasswordResetEmail(email: string, token: string) {
   const resetLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${token}`;
 
   try {
-    await resend.emails.send({
-      from: process.env.SENDER_EMAIL || "noreply@scalebuild.ai",
+    const response = await resend.emails.send({
+      from: process.env.SENDER_EMAIL || "noreply@hyperscaler.scalebuild.ai",
       to: email,
       subject: "Reset Your Password",
       html: `
@@ -22,9 +22,13 @@ export async function sendPasswordResetEmail(email: string, token: string) {
         </div>
       `,
     });
-    return { success: true };
+    return { success: true, data: response };
   } catch (error) {
-    return { success: false, error };
+    console.log("Password reset email send error:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 }
 
@@ -33,7 +37,7 @@ export async function sendVerificationEmail(email: string, token: string) {
 
   try {
     await resend.emails.send({
-      from: process.env.SENDER_EMAIL || "noreply@scalebuild.ai",
+      from: process.env.SENDER_EMAIL || "noreply@hyperscaler.scalebuild.ai",
       to: email,
       subject: "Verify Your Email",
       html: `
@@ -49,6 +53,7 @@ export async function sendVerificationEmail(email: string, token: string) {
     });
     return { success: true };
   } catch (error) {
+    console.log("Email send error:", error);
     return { success: false, error };
   }
 }

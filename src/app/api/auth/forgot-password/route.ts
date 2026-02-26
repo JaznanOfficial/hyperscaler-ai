@@ -42,7 +42,19 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    await sendPasswordResetEmail(user.email, resetToken);
+    const emailResult = await sendPasswordResetEmail(user.email, resetToken);
+    console.log(emailResult);
+
+    if (!emailResult.success) {
+      console.log("Password reset email failed:", emailResult.error);
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Unable to send reset email. Please try again later.",
+        },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
       {

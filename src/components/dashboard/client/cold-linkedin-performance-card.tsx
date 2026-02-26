@@ -58,9 +58,14 @@ interface ColdLinkedinPerformanceCardProps {
   data?: Record<string, any>;
 }
 
-export function ColdLinkedinPerformanceCard({ data }: ColdLinkedinPerformanceCardProps) {
+export function ColdLinkedinPerformanceCard({
+  data,
+}: ColdLinkedinPerformanceCardProps) {
   const linkedinMetrics = [
-    { label: "Connection Request Sent", value: data?.["Connection Requests"] || "0" },
+    {
+      label: "Connection Request Sent",
+      value: data?.["Connection Requests"] || "0",
+    },
     { label: "Messages Sent", value: data?.["Messages Sent"] || "0" },
     { label: "Reply Rate", value: data?.["Reply Rate"] || "0" },
     { label: "Positive Reply Rates", value: "0" },

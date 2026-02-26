@@ -36,7 +36,7 @@ export default function EmployeeProjectsPage() {
               .map((s: any) => s.serviceName)
               .filter(Boolean)
               .join(", ");
-            
+
             return {
               id: project.id,
               name: serviceNames || `Project ${project.id.slice(0, 8)}`,

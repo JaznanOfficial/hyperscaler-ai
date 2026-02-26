@@ -1,10 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { Check, ChevronsUpDown, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -15,21 +24,16 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { type FixedServiceId, listFixedServices } from "@/data/fixed-services";
+import { cn } from "@/lib/utils";
 
 interface AssignServiceDialogProps {
   clientId: string;
   clientName: string;
-}
-
-interface Service {
-  id: string;
-  serviceName: string;
 }
 
 export function AssignServiceDialog({
@@ -39,22 +43,32 @@ export function AssignServiceDialog({
   const router = useRouter();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [services, setServices] = useState<Service[]>([]);
-  const [selectedServiceId, setSelectedServiceId] = useState("");
+  const services = useMemo(() => listFixedServices(), []);
+  const [selectedServiceIds, setSelectedServiceIds] = useState<
+    FixedServiceId[]
+  >([]);
   const [loading, setLoading] = useState(false);
+  const [servicePickerOpen, setServicePickerOpen] = useState(false);
 
-  useEffect(() => {
-    if (open) {
-      fetch("/api/services")
-        .then((res) => res.json())
-        .then((data) => setServices(data.services || []))
-        .catch(() => toast.error("Failed to load services"));
-    }
-  }, [open]);
+  const toggleService = (serviceId: FixedServiceId) => {
+    setSelectedServiceIds((prev) =>
+      prev.includes(serviceId)
+        ? prev.filter((id) => id !== serviceId)
+        : [...prev, serviceId]
+    );
+  };
+
+  const handleRemoveChip = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    serviceId: FixedServiceId
+  ) => {
+    event.stopPropagation();
+    toggleService(serviceId);
+  };
 
   const handleAssign = async () => {
-    if (!selectedServiceId) {
-      toast.error("Please select a service");
+    if (!selectedServiceIds.length) {
+      toast.error("Please select at least one service");
       return;
     }
 
@@ -65,7 +79,7 @@ export function AssignServiceDialog({
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ serviceId: selectedServiceId }),
+        body: JSON.stringify({ serviceIds: selectedServiceIds }),
       });
 
       const data = await response.json();
@@ -75,13 +89,14 @@ export function AssignServiceDialog({
       }
 
       toast.success("Service assigned successfully!");
-      
+
       // Invalidate both admin client and client projects cache
       queryClient.invalidateQueries({ queryKey: ["admin-client", clientId] });
       queryClient.invalidateQueries({ queryKey: ["client-projects"] });
-      
+
       setOpen(false);
-      setSelectedServiceId("");
+      setServicePickerOpen(false);
+      setSelectedServiceIds([]);
       router.refresh();
     } catch (error) {
       console.error("Assign error:", error);
@@ -108,22 +123,84 @@ export function AssignServiceDialog({
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label>Service</Label>
-            <Select
-              onValueChange={setSelectedServiceId}
-              value={selectedServiceId}
+            <Label>Services</Label>
+            <Popover
+              onOpenChange={setServicePickerOpen}
+              open={servicePickerOpen}
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a service" />
-              </SelectTrigger>
-              <SelectContent>
-                {services.map((service) => (
-                  <SelectItem key={service.id} value={service.id}>
-                    {service.serviceName}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <PopoverTrigger asChild>
+                <button
+                  className={cn(
+                    "flex min-h-12 w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2 text-left text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/50 dark:border-slate-700 dark:bg-slate-900/40",
+                    !selectedServiceIds.length && "text-slate-500"
+                  )}
+                  type="button"
+                >
+                  {selectedServiceIds.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedServiceIds.map((serviceId) => {
+                        const service = services.find(
+                          (s) => s.id === serviceId
+                        );
+                        return (
+                          <Badge
+                            className="flex items-center gap-1 rounded-full px-3 py-1 text-xs"
+                            key={serviceId}
+                            variant="secondary"
+                          >
+                            {service?.title}
+                            <button
+                              aria-label="Remove service"
+                              className="text-slate-500 transition hover:text-slate-900"
+                              onClick={(event) =>
+                                handleRemoveChip(event, serviceId)
+                              }
+                              type="button"
+                            >
+                              <X className="size-3" />
+                            </button>
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <span>Select services</span>
+                  )}
+                  <ChevronsUpDown className="ml-auto size-4 shrink-0 text-slate-400" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                align="start"
+                className="w-[--radix-popover-trigger-width] p-0"
+              >
+                <Command>
+                  <CommandInput placeholder="Search services..." />
+                  <CommandEmpty>No services found.</CommandEmpty>
+                  <CommandGroup>
+                    {services.map((service) => {
+                      const isSelected = selectedServiceIds.includes(
+                        service.id
+                      );
+                      return (
+                        <CommandItem
+                          key={service.id}
+                          onSelect={() => toggleService(service.id)}
+                          value={service.title}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 size-4",
+                              isSelected ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          {service.title}
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
         <div className="flex justify-end gap-2">
