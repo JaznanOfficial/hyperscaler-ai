@@ -27,7 +27,7 @@ export default function ProjectDetailPage() {
   useEffect(() => {
     async function fetchProject() {
       try {
-        const response = await fetch(`/api/projects/${params.id}`);
+        const response = await fetch(`/api/client-services/${params.id}`);
         if (!response.ok) {
           if (response.status === 403) {
             toast.error("You don't have access to this project");
@@ -136,7 +136,7 @@ export default function ProjectDetailPage() {
         updates: group.updates || {},
       }));
 
-      const response = await fetch(`/api/projects/${params.id}`, {
+      const response = await fetch(`/api/client-services/${params.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

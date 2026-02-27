@@ -42,21 +42,21 @@ export async function POST(
       return NextResponse.json({ error: "Service not found" }, { status: 404 });
     }
 
-    const createdProjects = await Promise.all(
+    const createdClientServices = await Promise.all(
       services.map((service) =>
-        prisma.project.create({
+        prisma.clientService.create({
           data: {
             clientId,
             status: "APPROVED",
-            services: [
+            services: JSON.stringify([
               {
                 serviceId: service.id,
                 serviceName: service.title,
-                serviceLabel: service.id,
+                serviceSlug: service.slug,
+                description: service.description,
                 sections: service.sections,
-                updates: {},
               },
-            ],
+            ]),
             assignedEmployees: [],
             read: false,
           },
@@ -67,9 +67,10 @@ export async function POST(
     return NextResponse.json({
       success: true,
       message: "Services assigned to client successfully",
-      projects: createdProjects.map((project) => ({
-        id: project.id,
-        status: project.status,
+      clientServices: createdClientServices.map((clientService) => ({
+        id: clientService.id,
+        status: clientService.status,
+        services: clientService.services,
       })),
     });
   } catch (error) {

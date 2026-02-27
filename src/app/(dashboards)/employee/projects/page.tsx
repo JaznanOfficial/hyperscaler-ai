@@ -23,7 +23,7 @@ export default function EmployeeProjectsPage() {
   useEffect(() => {
     async function fetchProjects() {
       try {
-        const response = await fetch("/api/projects");
+        const response = await fetch("/api/client-services");
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }

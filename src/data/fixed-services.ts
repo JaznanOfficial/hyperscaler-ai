@@ -130,3 +130,12 @@ export function getFixedServiceBySlugOrId(identifier: string) {
       service.id === identifier || service.slug.toLowerCase() === normalized
   );
 }
+
+export function getFixedServicesByIds(ids: string[]) {
+  const idSet = new Set(ids);
+  return listFixedServices().filter((service) => idSet.has(service.id));
+}
+
+export function isFixedServiceId(value: string): value is FixedServiceId {
+  return FIXED_SERVICE_IDS.includes(value as FixedServiceId);
+}

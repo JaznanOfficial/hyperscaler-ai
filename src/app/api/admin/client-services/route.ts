@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
+import {
+  parseClientServiceServices,
+  serializeClientServiceServices,
+} from "@/backend/utils/client-service-helpers";
 
 const createProjectSchema = z.object({
   clientId: z.string(),
@@ -37,11 +41,11 @@ export async function POST(request: Request) {
     const body = await request.json();
     const validatedData = createProjectSchema.parse(body);
 
-    const project = await prisma.project.create({
+    const project = await prisma.clientService.create({
       data: {
         clientId: validatedData.clientId,
         assignedEmployees: validatedData.assignedEmployees || [],
-        services: validatedData.services as any,
+        services: serializeClientServiceServices(validatedData.services),
         status: "PENDING",
       },
     });
@@ -74,7 +78,7 @@ export async function GET() {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const projects = await prisma.project.findMany({
+    const projects = await prisma.clientService.findMany({
       orderBy: {
         createdAt: "desc",
       },
@@ -84,12 +88,8 @@ export async function GET() {
     const enrichedProjects = await Promise.all(
       projects.map(async (project) => {
         // Get service names
-        const services = Array.isArray(project.services)
-          ? project.services
-          : [];
-        const serviceIds = services
-          .map((s: any) => s.serviceId)
-          .filter(Boolean);
+        const services = parseClientServiceServices(project.services);
+        const serviceIds = services.map((s) => s.serviceId).filter(Boolean);
 
         const fullServices = await prisma.service.findMany({
           where: { id: { in: serviceIds } },
@@ -99,9 +99,10 @@ export async function GET() {
         const serviceMap = new Map(
           fullServices.map((s) => [s.id, s.serviceName])
         );
-        const enrichedServices = services.map((service: any) => ({
+        const enrichedServices = services.map((service) => ({
           ...service,
-          serviceName: serviceMap.get(service.serviceId) || service.serviceName,
+          serviceName:
+            serviceMap.get(service.serviceId ?? "") || service.serviceName,
         }));
 
         // Get client name

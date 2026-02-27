@@ -34,11 +34,13 @@ import { cn } from "@/lib/utils";
 interface AssignServiceDialogProps {
   clientId: string;
   clientName: string;
+  assignedServiceIds?: FixedServiceId[];
 }
 
 export function AssignServiceDialog({
   clientId,
   clientName,
+  assignedServiceIds = [],
 }: AssignServiceDialogProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -50,7 +52,24 @@ export function AssignServiceDialog({
   const [loading, setLoading] = useState(false);
   const [servicePickerOpen, setServicePickerOpen] = useState(false);
 
+  const assignedIdSet = useMemo(
+    () => new Set<FixedServiceId>(assignedServiceIds),
+    [assignedServiceIds]
+  );
+
+  const availableServices = useMemo(
+    () =>
+      services.map((service) => ({
+        ...service,
+        isAssigned: assignedIdSet.has(service.id),
+      })),
+    [services, assignedIdSet]
+  );
+
   const toggleService = (serviceId: FixedServiceId) => {
+    if (assignedIdSet.has(serviceId)) {
+      return;
+    }
     setSelectedServiceIds((prev) =>
       prev.includes(serviceId)
         ? prev.filter((id) => id !== serviceId)
@@ -177,12 +196,17 @@ export function AssignServiceDialog({
                   <CommandInput placeholder="Search services..." />
                   <CommandEmpty>No services found.</CommandEmpty>
                   <CommandGroup>
-                    {services.map((service) => {
+                    {availableServices.map((service) => {
                       const isSelected = selectedServiceIds.includes(
                         service.id
                       );
+                      const isAssigned = service.isAssigned;
+                      const showCheck = isSelected || isAssigned;
                       return (
                         <CommandItem
+                          aria-disabled={isAssigned}
+                          data-state={isAssigned ? "assigned" : undefined}
+                          disabled={isAssigned}
                           key={service.id}
                           onSelect={() => toggleService(service.id)}
                           value={service.title}
@@ -190,10 +214,21 @@ export function AssignServiceDialog({
                           <Check
                             className={cn(
                               "mr-2 size-4",
-                              isSelected ? "opacity-100" : "opacity-0"
+                              showCheck ? "opacity-100" : "opacity-0",
+                              isAssigned ? "text-emerald-600" : undefined
                             )}
                           />
-                          {service.title}
+                          <span className="flex flex-1 items-center justify-between gap-2">
+                            {service.title}
+                            {isAssigned && (
+                              <Badge
+                                className="rounded-full bg-emerald-100 text-emerald-700 text-xs"
+                                variant="outline"
+                              >
+                                Assigned
+                              </Badge>
+                            )}
+                          </span>
                         </CommandItem>
                       );
                     })}

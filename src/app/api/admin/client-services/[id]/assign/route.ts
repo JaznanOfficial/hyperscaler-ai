@@ -23,12 +23,15 @@ export async function POST(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const project = await prisma.project.findUnique({
+    const clientService = await prisma.clientService.findUnique({
       where: { id },
     });
 
-    if (!project) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    if (!clientService) {
+      return NextResponse.json(
+        { error: "Service request not found" },
+        { status: 404 }
+      );
     }
 
     const body = await request.json();
@@ -50,15 +53,15 @@ export async function POST(
       }
     }
 
-    const updatedProject = await prisma.project.update({
+    const updatedClientService = await prisma.clientService.update({
       where: { id },
       data: {
-        assignedEmployees: employeeIds as any,
+        assignedEmployees: employeeIds,
         updatedAt: new Date(),
       },
     });
 
-    return NextResponse.json({ project: updatedProject });
+    return NextResponse.json({ project: updatedClientService });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

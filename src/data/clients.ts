@@ -2,6 +2,7 @@ export type ClientServiceStatus = "Approved" | "Pending" | "Cancelled";
 
 export type ClientServiceRequest = {
   id: string;
+  serviceId?: string;
   name: string;
   description: string;
   status: ClientServiceStatus;

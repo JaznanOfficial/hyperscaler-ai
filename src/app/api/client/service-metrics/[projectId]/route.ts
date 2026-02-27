@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
+import { parseClientServiceServices } from "@/backend/utils/client-service-helpers";
 
 export async function GET(
   request: Request,
@@ -15,18 +16,18 @@ export async function GET(
 
     const { projectId } = await params;
 
-    const project = await prisma.project.findUnique({
+    const clientService = await prisma.clientService.findUnique({
       where: {
         id: projectId,
         clientId: session.user.id,
       },
     });
 
-    if (!project) {
+    if (!clientService) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    if (project.status === "CANCELLED") {
+    if (clientService.status === "CANCELLED") {
       return NextResponse.json(
         { error: "This service has been cancelled" },
         { status: 403 }
@@ -34,7 +35,7 @@ export async function GET(
     }
 
     // Enrich services - optimized with single query
-    const services = Array.isArray(project.services) ? project.services : [];
+    const services = parseClientServiceServices(clientService.services);
     const serviceIds = services.map((s: any) => s.serviceId).filter(Boolean);
 
     const fullServices = await prisma.service.findMany({

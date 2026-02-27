@@ -4,7 +4,6 @@ import { SuperAdminClientsTool } from "@/tools/s-admin/clients-tool";
 import { SuperAdminEmployeesTool } from "@/tools/s-admin/employees-tool";
 import { SuperAdminFeedbackTool } from "@/tools/s-admin/feedbacks-tool";
 import { SuperAdminProjectsTool } from "@/tools/s-admin/projects-tool";
-import { SuperAdminServicesTool } from "@/tools/s-admin/services-tool";
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
@@ -23,7 +22,6 @@ export async function POST(req: Request) {
       SuperAdminProjectsTool,
       SuperAdminClientsTool,
       SuperAdminEmployeesTool,
-      SuperAdminServicesTool,
     },
     onError({ error }) {
       console.error(error); // log to your error tracking service
