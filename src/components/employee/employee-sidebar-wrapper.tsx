@@ -11,9 +11,9 @@ const baseEmployeeNavItems: AppSidebarNavItem[] = [
     matchSubRoutes: false,
   },
   {
-    title: "Projects",
-    url: "/employee/projects",
-    icon: "folderKanban",
+    title: "Clients",
+    url: "/employee/clients",
+    icon: "users",
     matchSubRoutes: true,
   },
   {

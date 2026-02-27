@@ -1,37 +1,39 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   type EmployeeProjectItem,
   ProjectListItem,
 } from "@/components/employee/project-list-item";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 
-export default function EmployeeProjectsPage() {
+type ClientInfo = {
+  id: string;
+  name: string;
+  email: string;
+  displayId: string;
+};
+
+export default function ClientProjectsPage() {
+  const params = useParams();
+  const [client, setClient] = useState<ClientInfo | null>(null);
   const [projects, setProjects] = useState<EmployeeProjectItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchProjects() {
+    async function fetchClientProjects() {
       try {
-        const response = await fetch("/api/projects");
+        const response = await fetch(`/api/employee/clients/${params.clientId}/projects`);
         if (!response.ok) {
-          throw new Error("Failed to fetch projects");
+          throw new Error("Failed to fetch client projects");
         }
         const data = await response.json();
+        
+        setClient(data.client);
 
         const formattedProjects: EmployeeProjectItem[] = data.projects.map(
           (project: any) => {
-            // Get service names from the project
             const serviceNames = (project.services || [])
               .map((s: any) => s.serviceName)
               .filter(Boolean)
@@ -40,7 +42,7 @@ export default function EmployeeProjectsPage() {
             return {
               id: project.id,
               name: serviceNames || `Project ${project.id.slice(0, 8)}`,
-              owner: project.clientId.slice(0, 8),
+              owner: data.client.displayId,
               updated: new Date(project.updatedAt).toLocaleDateString(),
               status:
                 project.status === "APPROVED"
@@ -48,6 +50,7 @@ export default function EmployeeProjectsPage() {
                   : project.status === "CANCELLED"
                     ? "Cancelled"
                     : "On-going",
+              clientId: data.client.id,
             };
           }
         );
@@ -60,8 +63,10 @@ export default function EmployeeProjectsPage() {
       }
     }
 
-    fetchProjects();
-  }, []);
+    if (params.clientId) {
+      fetchClientProjects();
+    }
+  }, [params.clientId]);
 
   if (loading) {
     return (
@@ -83,55 +88,38 @@ export default function EmployeeProjectsPage() {
     );
   }
 
-  if (projects.length === 0) {
+  if (!client) {
     return (
       <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
         <div className="flex flex-1 items-center justify-center">
-          <p className="text-slate-500">No projects assigned yet</p>
+          <p className="text-slate-500">Client not found</p>
         </div>
       </section>
     );
   }
 
-  const totalPages: number = 1;
-  const currentPage: number = 1;
-
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
-      <div className="flex-1 overflow-y-auto">
-        <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
-          {projects.map((folder) => (
-            <ProjectListItem folder={folder} key={folder.id} />
-          ))}
-        </ul>
+      <div className="mb-4 rounded-2xl border border-slate-200 bg-white p-4">
+        <p className="text-slate-400 text-xs uppercase tracking-wide">
+          {client.displayId}
+        </p>
+        <h1 className="font-semibold text-2xl text-slate-900">{client.name}</h1>
+        <p className="text-slate-500 text-sm">{client.email}</p>
       </div>
-      {totalPages > 1 && (
-        <Pagination className="mt-4 py-3">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious aria-disabled={currentPage === 1} href="#" />
-            </PaginationItem>
-            {[1, 2, 3].map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink href="#" isActive={currentPage === page}>
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
+
+      {projects.length === 0 ? (
+        <div className="flex flex-1 items-center justify-center rounded-2xl border border-slate-200 bg-white">
+          <p className="text-slate-500">No projects assigned yet</p>
+        </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto">
+          <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+            {projects.map((project) => (
+              <ProjectListItem folder={project} key={project.id} />
             ))}
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">{totalPages}</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext
-                aria-disabled={currentPage === totalPages}
-                href="#"
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+          </ul>
+        </div>
       )}
     </section>
   );
