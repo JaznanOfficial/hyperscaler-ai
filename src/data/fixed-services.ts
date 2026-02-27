@@ -40,7 +40,7 @@ export const FIXED_SERVICES: Record<FixedServiceId, FixedServiceDefinition> = {
   PAID_ADS: {
     id: "PAID_ADS",
     slug: "paid-ads",
-    title: "Paid Ads Optimization",
+    title: "Paid Ads",
     description:
       "Full-funnel ad operations with weekly optimization loops and reporting.",
     sections: [

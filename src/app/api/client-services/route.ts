@@ -53,7 +53,7 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json({ projects: formattedProjects });
+    return NextResponse.json({ client_services: formattedProjects });
   } catch (error) {
     console.error("Error fetching projects:", error);
     return NextResponse.json(

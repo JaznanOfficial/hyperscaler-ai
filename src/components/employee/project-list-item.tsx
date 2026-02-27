@@ -19,12 +19,16 @@ const statusStyles: Record<EmployeeProjectItem["status"], string> = {
 };
 
 export function ProjectListItem({ folder }: { folder: EmployeeProjectItem }) {
+  const detailHref = `/employee/services/${folder.id}?name=${encodeURIComponent(
+    folder.name
+  )}`;
+
   return (
     <li className="px-4 py-4">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <Link
           className="flex-1 cursor-pointer rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
-          href={`/employee/projects/${folder.id}`}
+          href={detailHref}
         >
           <p className="text-slate-400 text-xs uppercase tracking-wide">
             {folder.owner}
@@ -44,10 +48,7 @@ export function ProjectListItem({ folder }: { folder: EmployeeProjectItem }) {
             className="rounded-full px-4 py-1 text-sm"
             variant="outline"
           >
-            <Link
-              className="inline-flex items-center gap-2"
-              href={`/employee/projects/${folder.id}`}
-            >
+            <Link className="inline-flex items-center gap-2" href={detailHref}>
               <FolderOpen className="size-4" />
               Open
             </Link>

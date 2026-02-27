@@ -29,7 +29,7 @@ export default function EmployeeProjectsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchProjects() {
+    async function fetchServices() {
       try {
         const response = await fetch("/api/client-services");
         if (!response.ok) {
@@ -37,7 +37,11 @@ export default function EmployeeProjectsPage() {
         }
         const data = await response.json();
 
-        const formattedProjects: EmployeeProjectItem[] = data.projects.map(
+        const servicePayload = Array.isArray(data.client_services)
+          ? data.client_services
+          : [];
+
+        const formattedProjects: EmployeeProjectItem[] = servicePayload.map(
           (project: {
             id: string;
             clientId: string;
@@ -88,7 +92,7 @@ export default function EmployeeProjectsPage() {
       }
     }
 
-    fetchProjects();
+    fetchServices();
   }, []);
 
   const clientOptions = useMemo(() => {
@@ -112,7 +116,7 @@ export default function EmployeeProjectsPage() {
     return (
       <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
         <div className="flex flex-1 items-center justify-center">
-          <p className="text-slate-500">Loading projects...</p>
+          <p className="text-slate-500">Loading services...</p>
         </div>
       </section>
     );
