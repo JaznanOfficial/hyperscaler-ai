@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 
 export type EmployeeProjectItem = {
   id: string;
+  clientId: string;
   name: string;
   owner: string;
-  updated: string;
+  clientName: string;
   status: "Completed" | "Cancelled" | "On-going";
 };
 
@@ -29,7 +30,7 @@ export function ProjectListItem({ folder }: { folder: EmployeeProjectItem }) {
             {folder.owner}
           </p>
           <p className="font-semibold text-lg text-slate-900">{folder.name}</p>
-          <p className="text-slate-500 text-xs">Updated {folder.updated}</p>
+          <p className="text-slate-500 text-xs">Client: {folder.clientName}</p>
         </Link>
         <div className="mt-3 flex items-center gap-3 sm:mt-0">
           <Badge

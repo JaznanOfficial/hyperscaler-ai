@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
+import { parseClientServiceServices } from "@/backend/utils/client-service-helpers";
 
 export async function GET() {
   try {
@@ -16,10 +17,13 @@ export async function GET() {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const projects = await prisma.project.findMany({
+    const projects = await prisma.clientService.findMany({
       where: {
         status: {
           not: "CANCELLED",
+        },
+        assignedEmployees: {
+          array_contains: userId,
         },
       },
       orderBy: {
@@ -27,48 +31,29 @@ export async function GET() {
       },
     });
 
-    const userProjects = projects.filter((project) => {
-      const assignedEmployees = project.assignedEmployees as string[];
-      return assignedEmployees.includes(userId);
-    });
-
-    // Enrich projects with service names
-    const enrichedProjects = await Promise.all(
-      userProjects.map(async (project) => {
-        const services = Array.isArray(project.services)
-          ? project.services
-          : [];
-        const serviceIds = services
-          .map((s: any) => s.serviceId)
-          .filter(Boolean);
-
-        if (serviceIds.length > 0) {
-          const fullServices = await prisma.service.findMany({
-            where: { id: { in: serviceIds } },
-            select: { id: true, serviceName: true },
-          });
-
-          const serviceMap = new Map(
-            fullServices.map((s) => [s.id, s.serviceName])
-          );
-
-          const enrichedServices = services.map((service: any) => ({
-            ...service,
-            serviceName:
-              serviceMap.get(service.serviceId) || service.serviceName,
-          }));
-
-          return {
-            ...project,
-            services: enrichedServices,
-          };
-        }
-
-        return project;
-      })
+    const clientIds = Array.from(
+      new Set(projects.map((project) => project.clientId))
+    );
+    const clients = clientIds.length
+      ? await prisma.user.findMany({
+          where: { id: { in: clientIds } },
+          select: { id: true, name: true },
+        })
+      : [];
+    const clientMap = new Map(
+      clients.map((client) => [client.id, client.name])
     );
 
-    return NextResponse.json({ projects: enrichedProjects });
+    const formattedProjects = projects.map((project) => {
+      const services = parseClientServiceServices(project.services);
+      return {
+        ...project,
+        services,
+        clientName: clientMap.get(project.clientId) || "Client",
+      };
+    });
+
+    return NextResponse.json({ projects: formattedProjects });
   } catch (error) {
     console.error("Error fetching projects:", error);
     return NextResponse.json(
