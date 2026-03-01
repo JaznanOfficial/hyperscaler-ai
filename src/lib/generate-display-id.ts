@@ -17,20 +17,19 @@ export async function generateDisplayId(role: UserRole): Promise<string> {
     where: { role },
   });
   
-  // Generate ID like CL-001, EMP-001, etc.
-  const number = String(count + 1).padStart(3, "0");
-  const displayId = `${prefix}-${number}`;
-  
-  // Check if it already exists (in case of race condition)
-  const existing = await prisma.user.findUnique({
-    where: { displayId },
-  });
-  
-  if (existing) {
-    // If exists, try with next number
-    const nextNumber = String(count + 2).padStart(3, "0");
-    return `${prefix}-${nextNumber}`;
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const number = String(count + 1 + attempt).padStart(3, "0");
+    const displayId = `${prefix}-${number}`;
+    
+    const existing = await prisma.user.findUnique({
+      where: { displayId },
+    });
+    
+    if (!existing) {
+      return displayId;
+    }
   }
   
-  return displayId;
+  const timestamp = Date.now().toString().slice(-4);
+  return `${prefix}-${timestamp}`;
 }

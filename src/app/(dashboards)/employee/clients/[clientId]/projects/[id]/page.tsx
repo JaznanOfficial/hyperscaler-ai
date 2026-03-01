@@ -31,7 +31,7 @@ export default function ProjectDetailPage() {
         if (!response.ok) {
           if (response.status === 403) {
             toast.error("You don't have access to this project");
-            router.push("/employee/projects");
+            router.push("/employee/clients");
             return;
           }
           throw new Error("Failed to fetch project");
