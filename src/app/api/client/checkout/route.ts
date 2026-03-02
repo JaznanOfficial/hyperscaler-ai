@@ -23,29 +23,17 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { services } = checkoutSchema.parse(body);
 
-    const serviceIds = services.map((item) => item.serviceId);
-    const serviceRecords = await prisma.service.findMany({
-      where: { id: { in: serviceIds } },
-    });
-
-    if (serviceRecords.length !== serviceIds.length) {
-      return NextResponse.json(
-        { error: "Some services not found" },
-        { status: 404 }
-      );
-    }
-
-    const projectServices = serviceRecords.map((service) => ({
-      serviceId: service.id,
+    const projectServices = services.map((service) => ({
+      serviceId: service.serviceId,
       serviceName: service.serviceName,
       updates: {},
     }));
 
-    const project = await prisma.project.create({
+    const clientService = await prisma.clientService.create({
       data: {
         clientId: session.user.id,
         status: "PENDING",
-        services: projectServices,
+        services: JSON.stringify(projectServices),
         assignedEmployees: [],
         read: false,
       },
@@ -55,8 +43,8 @@ export async function POST(request: Request) {
       success: true,
       message: "Order placed successfully! Awaiting admin approval.",
       project: {
-        id: project.id,
-        status: project.status,
+        id: clientService.id,
+        status: clientService.status,
       },
     });
   } catch (error) {

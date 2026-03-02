@@ -69,7 +69,7 @@ export function ConversionRateTrendsCard({
 }: ConversionRateTrendsCardProps) {
   // Filter to only active services
   const activeServiceIds = Object.keys(serviceData).filter(
-    (id) => conversionConfig[id]
+    (id) => conversionConfig[id as keyof typeof conversionConfig]
   );
 
   if (activeServiceIds.length === 0) {
@@ -124,7 +124,7 @@ export function ConversionRateTrendsCard({
     });
 
     return {
-      name: conversionConfig[serviceId].label,
+      name: conversionConfig[serviceId as keyof typeof conversionConfig].label,
       data: dataPoints.length > 0 ? dataPoints : [0],
     };
   });
@@ -132,12 +132,14 @@ export function ConversionRateTrendsCard({
   // Generate legend items
   const legendItems = activeServiceIds.map((serviceId) => ({
     key: serviceId,
-    label: conversionConfig[serviceId].label,
-    color: conversionConfig[serviceId].color,
+    label: conversionConfig[serviceId as keyof typeof conversionConfig].label,
+    color: conversionConfig[serviceId as keyof typeof conversionConfig].color,
   }));
 
   // Get colors for active services
-  const activeColors = activeServiceIds.map((id) => conversionConfig[id].color);
+  const activeColors = activeServiceIds.map(
+    (id) => conversionConfig[id as keyof typeof conversionConfig].color
+  );
 
   const conversionChartOptions: ApexOptions = {
     chart: {

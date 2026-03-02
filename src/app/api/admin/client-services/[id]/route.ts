@@ -24,15 +24,18 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const project = await prisma.project.findUnique({
+    const clientService = await prisma.clientService.findUnique({
       where: { id },
     });
 
-    if (!project) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    if (!clientService) {
+      return NextResponse.json(
+        { error: "Client service not found" },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({ project });
+    return NextResponse.json({ clientService });
   } catch (error) {
     console.error("Error fetching project:", error);
     return NextResponse.json(
@@ -58,12 +61,15 @@ export async function PATCH(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const project = await prisma.project.findUnique({
+    const clientService = await prisma.clientService.findUnique({
       where: { id },
     });
 
-    if (!project) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    if (!clientService) {
+      return NextResponse.json(
+        { error: "Client service not found" },
+        { status: 404 }
+      );
     }
 
     const body = await request.json();
@@ -77,7 +83,7 @@ export async function PATCH(
       );
     }
 
-    const updatedProject = await prisma.project.update({
+    const updatedClientService = await prisma.clientService.update({
       where: { id },
       data: {
         ...validatedData,
@@ -85,7 +91,7 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json({ project: updatedProject });
+    return NextResponse.json({ clientService: updatedClientService });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -117,11 +123,13 @@ export async function DELETE(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await prisma.project.delete({
+    await prisma.clientService.delete({
       where: { id },
     });
 
-    return NextResponse.json({ message: "Project deleted successfully" });
+    return NextResponse.json({
+      message: "Client service deleted successfully",
+    });
   } catch (error) {
     console.error("Error deleting project:", error);
     return NextResponse.json(

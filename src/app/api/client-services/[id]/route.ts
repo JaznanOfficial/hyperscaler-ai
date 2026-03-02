@@ -21,60 +21,41 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const project = await prisma.project.findUnique({
+    const clientService = await prisma.clientService.findUnique({
       where: { id },
     });
 
-    if (!project) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    if (!clientService) {
+      return NextResponse.json(
+        { error: "Client service not found" },
+        { status: 404 }
+      );
     }
 
-    if (project.status === "CANCELLED") {
+    if (clientService.status === "CANCELLED") {
       return NextResponse.json(
-        { error: "This project has been cancelled" },
+        { error: "This service has been cancelled" },
         { status: 403 }
       );
     }
 
-    const assignedEmployees = project.assignedEmployees as string[];
+    const assignedEmployees = Array.isArray(clientService.assignedEmployees)
+      ? (clientService.assignedEmployees as string[])
+      : [];
     if (!assignedEmployees.includes(userId)) {
       return NextResponse.json(
-        { error: "You are not assigned to this project" },
+        { error: "You are not assigned to this service" },
         { status: 403 }
       );
     }
 
-    // Enrich services with full service details - optimized with Promise.all
-    const services = Array.isArray(project.services) ? project.services : [];
-    const serviceIds = services.map((s: any) => s.serviceId).filter(Boolean);
-
-    // Fetch all services in one query
-    const fullServices = await prisma.service.findMany({
-      where: { id: { in: serviceIds } },
-      select: { id: true, serviceName: true, sections: true },
-    });
-
-    // Create a map for quick lookup
-    const serviceMap = new Map(fullServices.map((s) => [s.id, s]));
-
-    // Enrich services with sections from database
-    const enrichedServices = services.map((service: any) => {
-      const fullService = serviceMap.get(service.serviceId);
-      if (fullService) {
-        return {
-          serviceId: service.serviceId,
-          serviceName: fullService.serviceName,
-          sections: fullService.sections, // Use sections from database
-          updates: service.updates || {},
-        };
-      }
-      return service;
-    });
+    // Parse services from JSON storage
+    const services = JSON.parse(clientService.services || "[]");
 
     return NextResponse.json({
-      project: {
-        ...project,
-        services: enrichedServices,
+      clientService: {
+        ...clientService,
+        services,
       },
     });
   } catch (error) {
@@ -104,25 +85,30 @@ export async function PATCH(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const project = await prisma.project.findUnique({
+    const clientService = await prisma.clientService.findUnique({
       where: { id },
     });
 
-    if (!project) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    if (!clientService) {
+      return NextResponse.json(
+        { error: "Client service not found" },
+        { status: 404 }
+      );
     }
 
-    if (project.status === "CANCELLED") {
+    if (clientService.status === "CANCELLED") {
       return NextResponse.json(
-        { error: "This project has been cancelled" },
+        { error: "This service has been cancelled" },
         { status: 403 }
       );
     }
 
-    const assignedEmployees = project.assignedEmployees as string[];
+    const assignedEmployees = Array.isArray(clientService.assignedEmployees)
+      ? (clientService.assignedEmployees as string[])
+      : [];
     if (!assignedEmployees.includes(userId)) {
       return NextResponse.json(
-        { error: "You are not assigned to this project" },
+        { error: "You are not assigned to this service" },
         { status: 403 }
       );
     }
@@ -130,23 +116,25 @@ export async function PATCH(
     const body = await request.json();
     const validatedData = updateProjectServicesSchema.parse(body);
 
-    // Update project with new services data
-    const updatedProject = await prisma.project.update({
+    // Update client service with new services data
+    const updatedClientService = await prisma.clientService.update({
       where: { id },
       data: {
-        services: validatedData.services as any,
+        services: JSON.stringify(validatedData.services),
         updatedAt: new Date(),
       },
     });
 
     // Create metric history records for each service
-    const historyRecords = validatedData.services.map((service: any) => ({
-      projectId: id,
-      serviceId: service.serviceId,
-      serviceName: service.serviceName,
-      metrics: service.updates || {},
-      recordedAt: new Date(),
-    }));
+    const historyRecords = validatedData.services.map(
+      (service: Record<string, unknown>) => ({
+        projectId: id,
+        serviceId: String(service.serviceId),
+        serviceName: String(service.serviceName),
+        metrics: service.updates || {},
+        recordedAt: new Date(),
+      })
+    );
 
     // Bulk create history records
     await prisma.metricHistory.createMany({
@@ -154,7 +142,7 @@ export async function PATCH(
       skipDuplicates: true,
     });
 
-    return NextResponse.json({ project: updatedProject });
+    return NextResponse.json({ clientService: updatedClientService });
   } catch (error) {
     if (error instanceof Error && error.name === "ZodError") {
       return NextResponse.json(

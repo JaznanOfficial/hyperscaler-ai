@@ -1,7 +1,7 @@
 import { tool } from "ai";
 import z from "zod";
 
-import { projectService } from "@/backend/services/project.service";
+import { clientService } from "@/backend/services/client-service.service";
 import { AuthGuard } from "@/backend/utils/auth-guard";
 
 const PROJECT_STATUS_VALUES = ["APPROVED", "PENDING", "CANCELLED"] as const;
@@ -49,7 +49,7 @@ export const ClientProjectsTool = tool({
   execute: async () => {
     const session = await AuthGuard.requireClient();
 
-    const rawProjects = await projectService.getClientProjects(session.user.id);
+    const rawProjects = await clientService.getClientServices(session.user.id);
 
     const normalizedProjects: NormalizedProject[] = rawProjects.map(
       (project) => {

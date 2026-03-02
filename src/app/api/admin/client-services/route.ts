@@ -84,26 +84,11 @@ export async function GET() {
       },
     });
 
-    // Enrich projects with service names, client names, and employee names
+    // Enrich projects with client names and employee names
     const enrichedProjects = await Promise.all(
       projects.map(async (project) => {
-        // Get service names
+        // Get service names from stored JSON
         const services = parseClientServiceServices(project.services);
-        const serviceIds = services.map((s) => s.serviceId).filter(Boolean);
-
-        const fullServices = await prisma.service.findMany({
-          where: { id: { in: serviceIds } },
-          select: { id: true, serviceName: true },
-        });
-
-        const serviceMap = new Map(
-          fullServices.map((s) => [s.id, s.serviceName])
-        );
-        const enrichedServices = services.map((service) => ({
-          ...service,
-          serviceName:
-            serviceMap.get(service.serviceId ?? "") || service.serviceName,
-        }));
 
         // Get client name
         const client = await prisma.user.findUnique({
@@ -126,7 +111,7 @@ export async function GET() {
 
         return {
           ...project,
-          services: enrichedServices,
+          services,
           clientName: client?.name || "Unknown Client",
           clientEmail: client?.email,
           employeeNames: employees.map((e) => e.name),

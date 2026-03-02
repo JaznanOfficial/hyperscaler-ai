@@ -110,7 +110,6 @@ export function enrichProjectService(value: unknown): EnrichedProjectService {
     id: definition?.id ?? normalized.id,
     slug: definition?.slug ?? normalized.slug ?? normalized.id,
     title: normalized.title || definition?.title || "Service",
-    serviceName: normalized.title || definition?.title || "Service",
     updates: normalized.updates,
     sections: definition?.sections ?? [],
     description: definition?.description,

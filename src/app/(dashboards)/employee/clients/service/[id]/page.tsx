@@ -3,7 +3,13 @@
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { ProjectCalendarCard } from "@/components/employee/project-calendar-card";
+import { BrandContentCreationStatisticsInput } from "@/components/employee/service-inputs/brand-content-creation-statistics-input";
+import { ColdCallingStatisticsInput } from "@/components/employee/service-inputs/cold-calling-statistics-input";
 import { ColdEmailCampaignStatisticsInput } from "@/components/employee/service-inputs/cold-email-campaign-statistics-input";
+import { LinkedinOutreachStatisticsInput } from "@/components/employee/service-inputs/linkedin-outreach-statistics-input";
+import { PaidAdsStatisticsInput } from "@/components/employee/service-inputs/paid-ads-statistics-input";
+import { SocialMediaMarketingStatisticsInput } from "@/components/employee/service-inputs/social-media-marketing-statistics-input";
+import { SoftwareDevelopmentStatisticsInput } from "@/components/employee/service-inputs/software-development-statistics-input";
 import type { ServiceInputProps } from "@/components/employee/service-inputs/types";
 import {
   type FixedServiceId,
@@ -17,6 +23,12 @@ const SERVICE_COMPONENTS: Partial<
   Record<FixedServiceId, React.ComponentType<ServiceInputProps>>
 > = {
   COLD_EMAIL: ColdEmailCampaignStatisticsInput,
+  PAID_ADS: PaidAdsStatisticsInput,
+  SOCIAL_MEDIA: SocialMediaMarketingStatisticsInput,
+  COLD_CALLING: ColdCallingStatisticsInput,
+  BRAND_CONTENT: BrandContentCreationStatisticsInput,
+  LINKEDIN_OUTREACH: LinkedinOutreachStatisticsInput,
+  SOFTWARE_DEVELOPMENT: SoftwareDevelopmentStatisticsInput,
 };
 
 export default function ProjectDetailPage() {

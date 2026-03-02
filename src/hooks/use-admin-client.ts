@@ -2,11 +2,12 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import type { ClientDetail } from "@/data/clients";
 
 export function useAdminClient(clientId: string) {
   const queryClient = useQueryClient();
 
-  const query = useQuery({
+  const query = useQuery<ClientDetail | undefined, Error>({
     queryKey: ["admin-client", clientId],
     queryFn: async () => {
       const response = await fetch(`/api/admin/clients/${clientId}`);
@@ -23,17 +24,17 @@ export function useAdminClient(clientId: string) {
         throw new Error(message);
       }
       const data = await response.json();
-      return data.client;
+      return data.client as ClientDetail;
     },
     enabled: !!clientId,
     retry: false,
-    onError: (error) => {
-      toast.error("Unable to load client", {
-        description:
-          error instanceof Error ? error.message : "Unexpected error occurred",
-      });
-    },
   });
+
+  if (query.error) {
+    toast.error("Unable to load client", {
+      description: query.error.message || "Unexpected error occurred",
+    });
+  }
 
   const refetch = () => {
     queryClient.invalidateQueries({ queryKey: ["admin-client", clientId] });

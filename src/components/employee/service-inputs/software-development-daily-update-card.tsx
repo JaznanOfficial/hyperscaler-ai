@@ -1,32 +1,29 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { ServiceInputProps } from "./types";
+import {
+  DAILY_UPDATE_FIELDS,
+  type ServiceInputComponentProps,
+} from "./software-development-config";
 
-const FIELDS: Array<{ id: string; label: string; suffix?: string }> = [
-  { id: "calls_made", label: "Calls made" },
-  { id: "calls_picked_up", label: "Calls picked up" },
-  { id: "meetings_booked", label: "Meetings booked" },
-  { id: "conversion_rate", label: "Conversion rate", suffix: "%" },
-  { id: "average_call_duration", label: "Avg. call duration (min)" },
-  { id: "qualified_conversions", label: "Qualified conversions" },
-  { id: "follow_ups_scheduled", label: "Follow-ups scheduled" },
-];
-
-export function ColdCallingStatisticsInput({
+export function SoftwareDevelopmentDailyUpdateCard({
   defaultValues,
   onChange,
-}: ServiceInputProps) {
-  const handleChange = (fieldId: string) => (value: string) => {
-    onChange?.(fieldId, value);
-  };
-
+}: ServiceInputComponentProps) {
   return (
     <Card className="rounded-2xl border border-slate-200 bg-white p-6">
-      <div className="space-y-6">
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <p className="font-semibold text-slate-500 text-xs uppercase tracking-wide">
+            Daily update
+          </p>
+          <p className="text-slate-600 text-sm">
+            Log today's shipped work, incidents, and coverage metrics.
+          </p>
+        </div>
+
         <div className="grid gap-4 md:grid-cols-2">
-          {FIELDS.map((field) => (
+          {DAILY_UPDATE_FIELDS.map((field) => (
             <div className="space-y-1.5" key={field.id}>
               <Label className="font-medium text-slate-700 text-sm">
                 {field.label}
@@ -35,9 +32,7 @@ export function ColdCallingStatisticsInput({
                 <Input
                   className={field.suffix ? "pr-10" : undefined}
                   inputMode="decimal"
-                  onChange={(event) =>
-                    handleChange(field.id)(event.target.value)
-                  }
+                  onChange={(event) => onChange?.(field.id, event.target.value)}
                   placeholder={field.suffix ? `0${field.suffix}` : "0"}
                   type="text"
                   value={
@@ -52,12 +47,6 @@ export function ColdCallingStatisticsInput({
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="flex justify-end">
-          <Button className="min-w-[140px]" size="lg" type="button">
-            Save metrics
-          </Button>
         </div>
       </div>
     </Card>

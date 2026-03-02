@@ -1,12 +1,12 @@
 import { tool } from "ai";
 import z from "zod";
 
-import { projectService } from "@/backend/services/project.service";
+import { clientService } from "@/backend/services/client-service.service";
 import { AuthGuard } from "@/backend/utils/auth-guard";
 
-const PROJECT_STATUS_VALUES = ["APPROVED", "PENDING", "CANCELLED"] as const;
+const SERVICE_STATUS_VALUES = ["APPROVED", "PENDING", "CANCELLED"] as const;
 
-type ProjectStatus = (typeof PROJECT_STATUS_VALUES)[number];
+type ServiceStatus = (typeof SERVICE_STATUS_VALUES)[number];
 
 const toStringArray = (value: unknown): string[] => {
   if (!Array.isArray(value)) {
@@ -30,13 +30,13 @@ const toIsoString = (value: Date | string): string => {
     : parsed.toISOString();
 };
 
-export const SuperAdminProjectsTool = tool({
+export const SuperAdminServicesTool = tool({
   description: "List every project in the workspace for super admins.",
   inputSchema: z.object({}),
   execute: async () => {
     await AuthGuard.requireAdmin();
 
-    const rawProjects = await projectService.getAllProjects();
+    const rawProjects = await clientService.getAllProjects();
 
     const normalizedProjects = rawProjects.map((project) => {
       const assignedEmployees = toStringArray(project.assignedEmployees);
@@ -45,7 +45,7 @@ export const SuperAdminProjectsTool = tool({
       return {
         id: project.id,
         clientId: project.clientId,
-        status: project.status as ProjectStatus,
+        status: project.status as ServiceStatus,
         assignedEmployees,
         assignedEmployeesCount: assignedEmployees.length,
         services,
@@ -57,11 +57,11 @@ export const SuperAdminProjectsTool = tool({
     });
 
     const initialStatusCounts = Object.fromEntries(
-      PROJECT_STATUS_VALUES.map((status) => [status, 0])
-    ) as Record<ProjectStatus, number>;
+      SERVICE_STATUS_VALUES.map((status) => [status, 0])
+    ) as Record<ServiceStatus, number>;
 
     const statusCounts = normalizedProjects.reduce((acc, project) => {
-      const status = project.status as ProjectStatus;
+      const status = project.status as ServiceStatus;
       if (acc[status] === undefined) {
         acc[status] = 0;
       }

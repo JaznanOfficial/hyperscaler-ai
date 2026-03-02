@@ -34,35 +34,15 @@ export async function GET(
       );
     }
 
-    // Enrich services - optimized with single query
+    // Parse services from stored JSON
     const services = parseClientServiceServices(clientService.services);
-    const serviceIds = services.map((s: any) => s.serviceId).filter(Boolean);
-
-    const fullServices = await prisma.service.findMany({
-      where: { id: { in: serviceIds } },
-      select: { id: true, serviceName: true, sections: true },
-    });
-
-    const serviceMap = new Map(fullServices.map((s) => [s.id, s]));
-
-    const enrichedServices = services.map((service: any) => {
-      const fullService = serviceMap.get(service.serviceId);
-      if (fullService) {
-        return {
-          ...service,
-          sections: fullService.sections,
-          serviceName: fullService.serviceName,
-        };
-      }
-      return service;
-    });
 
     return NextResponse.json({
       project: {
-        id: project.id,
-        status: project.status,
-        services: enrichedServices,
-        createdAt: project.createdAt,
+        id: clientService.id,
+        status: clientService.status,
+        services,
+        createdAt: clientService.createdAt,
       },
     });
   } catch (error) {

@@ -10,7 +10,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const projects = await prisma.project.findMany({
+    const clientServices = await prisma.clientService.findMany({
       where: {
         clientId: session.user.id,
       },
@@ -19,7 +19,7 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ projects });
+    return NextResponse.json({ projects: clientServices });
   } catch (error) {
     console.error("Get client projects error:", error);
     return NextResponse.json(

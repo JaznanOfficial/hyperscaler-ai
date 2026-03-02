@@ -1,19 +1,18 @@
 import { tool } from "ai";
 import z from "zod";
-
-import { projectService } from "@/backend/services/project.service";
+import { clientService } from "@/backend/services/client-service.service";
 import { AuthGuard } from "@/backend/utils/auth-guard";
 
-const PROJECT_STATUS_VALUES = ["APPROVED", "PENDING", "CANCELLED"] as const;
+const SERVICE_STATUS_VALUES = ["APPROVED", "PENDING", "CANCELLED"] as const;
 
-const projectStatusSchema = z.enum(PROJECT_STATUS_VALUES);
+const serviceStatusSchema = z.enum(SERVICE_STATUS_VALUES);
 
-type ProjectStatus = (typeof PROJECT_STATUS_VALUES)[number];
+type ServiceStatus = (typeof SERVICE_STATUS_VALUES)[number];
 
 interface ProjectSummary {
   id: string;
   clientId: string;
-  status: ProjectStatus;
+  status: ServiceStatus;
   assignedEmployees: string[];
   assignedEmployeesCount: number;
   services: unknown[];
@@ -45,11 +44,11 @@ const toIsoString = (value: Date | string): string => {
     : parsed.toISOString();
 };
 
-export const EmployeeProjectsTool = tool({
+export const EmployeeServicesTool = tool({
   description:
     "List every project assigned to the current employee with optional filters.",
   inputSchema: z.object({
-    status: projectStatusSchema
+    status: serviceStatusSchema
       .describe("Filter projects by status, e.g. APPROVED")
       .optional(),
     includeCancelled: z
@@ -62,7 +61,7 @@ export const EmployeeProjectsTool = tool({
   execute: async ({ status, includeCancelled = true }) => {
     const session = await AuthGuard.requireEmployee();
 
-    const rawProjects = await projectService.getEmployeeProjects(
+    const rawProjects = await clientService.getEmployeeServices(
       session.user.id
     );
 
@@ -73,7 +72,7 @@ export const EmployeeProjectsTool = tool({
       return {
         id: project.id,
         clientId: project.clientId,
-        status: project.status as ProjectStatus,
+        status: project.status as ServiceStatus,
         assignedEmployees,
         assignedEmployeesCount: assignedEmployees.length,
         services,
@@ -97,15 +96,15 @@ export const EmployeeProjectsTool = tool({
     });
 
     const statusCounts = normalizedProjects.reduce<
-      Record<ProjectStatus, number>
+      Record<ServiceStatus, number>
     >(
       (acc, project) => {
         acc[project.status] = (acc[project.status] ?? 0) + 1;
         return acc;
       },
       Object.fromEntries(
-        PROJECT_STATUS_VALUES.map((option) => [option, 0])
-      ) as Record<ProjectStatus, number>
+        SERVICE_STATUS_VALUES.map((option) => [option, 0])
+      ) as Record<ServiceStatus, number>
     );
 
     return {
