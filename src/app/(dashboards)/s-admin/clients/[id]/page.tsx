@@ -13,12 +13,22 @@ export default function SuperAdminClientDetailPage({
   params,
 }: ClientDetailPageProps) {
   const { id: clientId } = use(params);
-  const { data: client, isLoading } = useAdminClient(clientId);
+  const { data: client, isLoading, error } = useAdminClient(clientId);
 
   if (isLoading) {
     return (
       <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-y-auto pb-6">
         <p className="p-6 text-center text-slate-600">Loading...</p>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-y-auto pb-6">
+        <p className="p-6 text-center text-rose-600">
+          We couldn&apos;t load this client. Please try again shortly.
+        </p>
       </section>
     );
   }
