@@ -36,7 +36,7 @@ export const SuperAdminServicesTool = tool({
   execute: async () => {
     await AuthGuard.requireAdmin();
 
-    const rawProjects = await clientService.getAllProjects();
+    const rawProjects = await clientService.getAllClientServices();
 
     const normalizedProjects = rawProjects.map((project) => {
       const assignedEmployees = toStringArray(project.assignedEmployees);

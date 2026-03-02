@@ -2,7 +2,7 @@ import type { ClientServiceStatus } from "@prisma/client";
 import { clientServiceRepository } from "@/backend/repositories/client-service.repository";
 
 export class ClientService {
-  async createProject(data: {
+  async createClientService(data: {
     clientId: string;
     assignedEmployees?: string[];
     services?: Record<string, unknown>[];
@@ -16,7 +16,7 @@ export class ClientService {
     });
   }
 
-  async updateProject(
+  async updateClientService(
     id: string,
     data: {
       assignedEmployees?: string[];
@@ -46,15 +46,15 @@ export class ClientService {
     return clientServiceRepository.update(id, updateData);
   }
 
-  async deleteProject(id: string) {
+  async deleteClientService(id: string) {
     return clientServiceRepository.delete(id);
   }
 
-  async getAllProjects() {
+  async getAllClientServices() {
     return clientServiceRepository.findAll();
   }
 
-  async getProjectById(id: string) {
+  async getClientServiceById(id: string) {
     return clientServiceRepository.findById(id);
   }
 

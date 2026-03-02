@@ -61,11 +61,11 @@ export const EmployeeServicesTool = tool({
   execute: async ({ status, includeCancelled = true }) => {
     const session = await AuthGuard.requireEmployee();
 
-    const rawProjects = await clientService.getEmployeeServices(
+    const rawServices = await clientService.getEmployeeServices(
       session.user.id
     );
 
-    const normalizedProjects: ProjectSummary[] = rawProjects.map((project) => {
+    const normalizedProjects: ProjectSummary[] = rawServices.map((project) => {
       const assignedEmployees = toStringArray(project.assignedEmployees);
       const services = toUnknownArray(project.services);
 

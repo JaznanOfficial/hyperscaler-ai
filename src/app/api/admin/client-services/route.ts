@@ -7,7 +7,7 @@ import {
   serializeClientServiceServices,
 } from "@/backend/utils/client-service-helpers";
 
-const createProjectSchema = z.object({
+const createClientServiceSchema = z.object({
   clientId: z.string(),
   services: z.array(
     z.object({
@@ -39,9 +39,9 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const validatedData = createProjectSchema.parse(body);
+    const validatedData = createClientServiceSchema.parse(body);
 
-    const project = await prisma.clientService.create({
+    const clientService = await prisma.clientService.create({
       data: {
         clientId: validatedData.clientId,
         assignedEmployees: validatedData.assignedEmployees || [],
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({ project }, { status: 201 });
+    return NextResponse.json({ clientService }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -58,9 +58,9 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    console.error("Error creating project:", error);
+    console.error("Error creating client service:", error);
     return NextResponse.json(
-      { error: "Failed to create project" },
+      { error: "Failed to create client service" },
       { status: 500 }
     );
   }
@@ -78,27 +78,27 @@ export async function GET() {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const projects = await prisma.clientService.findMany({
+    const clientServices = await prisma.clientService.findMany({
       orderBy: {
         createdAt: "desc",
       },
     });
 
-    // Enrich projects with client names and employee names
-    const enrichedProjects = await Promise.all(
-      projects.map(async (project) => {
+    // Enrich client services with client names and employee names
+    const enrichedClientServices = await Promise.all(
+      clientServices.map(async (clientService) => {
         // Get service names from stored JSON
-        const services = parseClientServiceServices(project.services);
+        const services = parseClientServiceServices(clientService.services);
 
         // Get client name
         const client = await prisma.user.findUnique({
-          where: { id: project.clientId },
+          where: { id: clientService.clientId },
           select: { name: true, email: true },
         });
 
         // Get employee names
-        const assignedEmployees = Array.isArray(project.assignedEmployees)
-          ? (project.assignedEmployees as string[])
+        const assignedEmployees = Array.isArray(clientService.assignedEmployees)
+          ? (clientService.assignedEmployees as string[])
           : [];
 
         const employees =
@@ -110,7 +110,7 @@ export async function GET() {
             : [];
 
         return {
-          ...project,
+          ...clientService,
           services,
           clientName: client?.name || "Unknown Client",
           clientEmail: client?.email,
@@ -119,11 +119,11 @@ export async function GET() {
       })
     );
 
-    return NextResponse.json({ projects: enrichedProjects });
+    return NextResponse.json({ clientServices: enrichedClientServices });
   } catch (error) {
-    console.error("Error fetching projects:", error);
+    console.error("Error fetching client services:", error);
     return NextResponse.json(
-      { error: "Failed to fetch projects" },
+      { error: "Failed to fetch client services" },
       { status: 500 }
     );
   }

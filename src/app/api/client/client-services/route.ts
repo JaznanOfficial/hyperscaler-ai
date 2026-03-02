@@ -19,11 +19,11 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ projects: clientServices });
+    return NextResponse.json({ clientServices });
   } catch (error) {
-    console.error("Get client projects error:", error);
+    console.error("Get client services error:", error);
     return NextResponse.json(
-      { error: "Failed to fetch projects" },
+      { error: "Failed to fetch client services" },
       { status: 500 }
     );
   }

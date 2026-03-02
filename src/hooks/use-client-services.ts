@@ -2,29 +2,29 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-interface Project {
+interface ClientService {
   id: string;
   status: string;
   services: Array<{ serviceName: string }>;
 }
 
-export function useClientProjects() {
+export function useClientServices() {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    queryKey: ["client-projects"],
+    queryKey: ["client-services"],
     queryFn: async () => {
-      const response = await fetch("/api/client/projects");
+      const response = await fetch("/api/client/client-services");
       if (!response.ok) {
-        throw new Error("Failed to fetch projects");
+        throw new Error("Failed to fetch client services");
       }
       const data = await response.json();
-      return data.projects as Project[];
+      return data.clientServices as ClientService[];
     },
   });
 
   const refetch = () => {
-    queryClient.invalidateQueries({ queryKey: ["client-projects"] });
+    queryClient.invalidateQueries({ queryKey: ["client-services"] });
   };
 
   return {
