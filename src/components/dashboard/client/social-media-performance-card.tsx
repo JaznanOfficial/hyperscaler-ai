@@ -56,7 +56,9 @@ interface SocialMediaPerformanceCardProps {
   data?: Record<string, any>;
 }
 
-export function SocialMediaPerformanceCard({ data }: SocialMediaPerformanceCardProps) {
+export function SocialMediaPerformanceCard({
+  data,
+}: SocialMediaPerformanceCardProps) {
   const socialMetrics = [
     { label: "Impressions", value: data?.Impressions || "0" },
     { label: "Engagements", value: data?.["Engagement Rate"] || "0" },

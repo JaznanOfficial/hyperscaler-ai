@@ -2,7 +2,7 @@ import { openai } from "@ai-sdk/openai";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { EmployeeFeedbackTool } from "@/tools/employee/feedbacks-tool";
 import { MarkFeedbackReadTool } from "@/tools/employee/mark-feedback-read-tool";
-import { EmployeeProjectsTool } from "@/tools/employee/projects-tool";
+import { EmployeeServicesTool } from "@/tools/employee/services-tool";
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     `,
     tools: {
       EmployeeFeedbackTool,
-      EmployeeProjectsTool,
+      EmployeeServicesTool,
       MarkFeedbackReadTool,
     },
     onError({ error }) {

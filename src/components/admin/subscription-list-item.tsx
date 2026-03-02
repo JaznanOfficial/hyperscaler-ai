@@ -44,12 +44,15 @@ export function SubscriptionListItem({
           >
             <div>
               <p className="font-semibold text-lg text-slate-900">
-                {item.services.map((s: any) => s.serviceName).filter(Boolean).join(", ") || 
-                 `Project #${item.id.slice(0, 8)}`}
+                {item.services
+                  .map((s: any) => s.serviceName)
+                  .filter(Boolean)
+                  .join(", ") || `Project #${item.id.slice(0, 8)}`}
               </p>
               <p className="text-slate-500 text-sm">
                 Client: {item.clientName || item.clientId.slice(0, 8)}
-                {item.employeeNames && item.employeeNames.length > 0 && 
+                {item.employeeNames &&
+                  item.employeeNames.length > 0 &&
                   ` • ${item.employeeNames.length} employee(s) assigned`}
               </p>
             </div>
@@ -76,7 +79,9 @@ export function SubscriptionListItem({
             <div>
               <p className="font-medium text-slate-900">Client</p>
               <p>{item.clientName || "Unknown"}</p>
-              {item.clientEmail && <p className="text-xs">{item.clientEmail}</p>}
+              {item.clientEmail && (
+                <p className="text-xs">{item.clientEmail}</p>
+              )}
             </div>
             <div>
               <p className="font-medium text-slate-900">Services</p>

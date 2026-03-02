@@ -34,24 +34,15 @@ model Subscription {
   updatedAt      DateTime           @updatedAt
 }
 
-model Project {
+model ClientService {
   id                String        @id @default(cuid())
   clientId          String
   assignedEmployees Json          @default("[]")
-  services          Json          @default("[]")
-  status            ProjectStatus @default(PENDING)
+  services          String        @default("")
+  status            ClientServiceStatus @default(PENDING)
   read              Boolean       @default(false)
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
-}
-
-model Service {
-  id          String   @id @default(cuid())
-  serviceName String
-  sections    Json     @default("[]")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  slug        String?  @unique
 }
 
 model Feedback {
@@ -99,7 +90,7 @@ enum SubscriptionStatus {
   CANCELLED
 }
 
-enum ProjectStatus {
+enum ClientServiceStatus {
   APPROVED
   PENDING
   CANCELLED

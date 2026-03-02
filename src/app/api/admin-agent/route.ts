@@ -3,7 +3,6 @@ import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { SuperAdminClientsTool } from "@/tools/s-admin/clients-tool";
 import { SuperAdminEmployeesTool } from "@/tools/s-admin/employees-tool";
 import { SuperAdminFeedbackTool } from "@/tools/s-admin/feedbacks-tool";
-import { SuperAdminProjectsTool } from "@/tools/s-admin/projects-tool";
 import { SuperAdminServicesTool } from "@/tools/s-admin/services-tool";
 
 export async function POST(req: Request) {
@@ -20,10 +19,9 @@ export async function POST(req: Request) {
     `,
     tools: {
       SuperAdminFeedbackTool,
-      SuperAdminProjectsTool,
+      SuperAdminServicesTool,
       SuperAdminClientsTool,
       SuperAdminEmployeesTool,
-      SuperAdminServicesTool,
     },
     onError({ error }) {
       console.error(error); // log to your error tracking service

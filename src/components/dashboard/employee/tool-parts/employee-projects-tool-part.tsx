@@ -17,7 +17,7 @@ export const renderEmployeeProjectsToolPart = (
           className={cn(bubbleClassName, "bg-blue-50 text-blue-900")}
           key={callId}
         >
-          Loading projects...
+          Loading services...
         </div>
       );
     case "input-available":

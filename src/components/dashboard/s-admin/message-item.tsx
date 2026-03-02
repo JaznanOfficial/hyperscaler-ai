@@ -9,7 +9,6 @@ import { renderSuperAdminClientsToolPart } from "./tool-parts/super-admin-client
 import { renderSuperAdminEmployeesToolPart } from "./tool-parts/super-admin-employees-tool-part";
 import { renderSuperAdminFeedbackToolPart } from "./tool-parts/super-admin-feedback-tool-part";
 import { renderSuperAdminProjectsToolPart } from "./tool-parts/super-admin-projects-tool-part";
-import { renderSuperAdminServicesToolPart } from "./tool-parts/super-admin-services-tool-part";
 import type { ToolMessagePart } from "./tool-parts/types";
 
 interface StructuredButton {
@@ -228,11 +227,6 @@ export function SuperAdminAgentMessageItem({
                 );
               case "tool-SuperAdminEmployeesTool":
                 return renderSuperAdminEmployeesToolPart(
-                  toolPart,
-                  bubbleClassName
-                );
-              case "tool-SuperAdminServicesTool":
-                return renderSuperAdminServicesToolPart(
                   toolPart,
                   bubbleClassName
                 );

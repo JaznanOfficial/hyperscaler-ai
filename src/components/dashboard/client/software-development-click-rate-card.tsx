@@ -37,7 +37,7 @@ export function SoftwareDevelopmentClickRateCard() {
         </ResponsiveContainer>
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
           <span className="font-semibold text-3xl text-slate-900">46%</span>
-          <span className="text-slate-500 text-xs">Click Rate</span>
+          <span className="text-slate-500 text-xs">Project Complete</span>
         </div>
       </ChartContainer>
     </div>

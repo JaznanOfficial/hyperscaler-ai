@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 
 export type EmployeeProjectItem = {
   id: string;
+  clientId: string;
   name: string;
   owner: string;
-  updated: string;
+  clientName: string;
   status: "Completed" | "Cancelled" | "On-going";
   clientId?: string;
 };
@@ -19,22 +20,22 @@ const statusStyles: Record<EmployeeProjectItem["status"], string> = {
 };
 
 export function ProjectListItem({ folder }: { folder: EmployeeProjectItem }) {
-  const projectUrl = folder.clientId 
-    ? `/employee/clients/${folder.clientId}/projects/${folder.id}`
-    : `/employee/projects/${folder.id}`;
+  const detailHref = `/employee/services/${folder.id}?name=${encodeURIComponent(
+    folder.name
+  )}`;
 
   return (
     <li className="px-4 py-4">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <Link
           className="flex-1 cursor-pointer rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
-          href={projectUrl}
+          href={detailHref}
         >
           <p className="text-slate-400 text-xs uppercase tracking-wide">
             {folder.owner}
           </p>
           <p className="font-semibold text-lg text-slate-900">{folder.name}</p>
-          <p className="text-slate-500 text-xs">Updated {folder.updated}</p>
+          <p className="text-slate-500 text-xs">Client: {folder.clientName}</p>
         </Link>
         <div className="mt-3 flex items-center gap-3 sm:mt-0">
           <Badge
@@ -48,10 +49,7 @@ export function ProjectListItem({ folder }: { folder: EmployeeProjectItem }) {
             className="rounded-full px-4 py-1 text-sm"
             variant="outline"
           >
-            <Link
-              className="inline-flex items-center gap-2"
-              href={projectUrl}
-            >
+            <Link className="inline-flex items-center gap-2" href={detailHref}>
               <FolderOpen className="size-4" />
               Open
             </Link>

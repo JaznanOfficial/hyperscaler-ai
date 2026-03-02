@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
+import { FIXED_SERVICE_IDS, getFixedService } from "@/data/fixed-services";
 
 const assignServiceSchema = z.object({
-  serviceId: z.string(),
+  serviceIds: z.array(z.enum(FIXED_SERVICE_IDS)).min(1),
 });
 
 export async function POST(
@@ -20,7 +21,8 @@ export async function POST(
 
     const { id: clientId } = await params;
     const body = await request.json();
-    const { serviceId } = assignServiceSchema.parse(body);
+    const { serviceIds } = assignServiceSchema.parse(body);
+    const uniqueServiceIds = [...new Set(serviceIds)];
 
     const client = await prisma.user.findUnique({
       where: { id: clientId, role: "CLIENT" },
@@ -30,37 +32,46 @@ export async function POST(
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
     }
 
-    const service = await prisma.service.findUnique({
-      where: { id: serviceId },
-    });
+    const services = uniqueServiceIds
+      .map((serviceId) => getFixedService(serviceId))
+      .filter((service): service is NonNullable<typeof service> =>
+        Boolean(service)
+      );
 
-    if (!service) {
+    if (services.length !== uniqueServiceIds.length) {
       return NextResponse.json({ error: "Service not found" }, { status: 404 });
     }
 
-    const project = await prisma.project.create({
-      data: {
-        clientId,
-        status: "APPROVED",
-        services: [
-          {
-            serviceId: service.id,
-            serviceName: service.serviceName,
-            updates: {},
+    const createdClientServices = await Promise.all(
+      services.map((service) =>
+        prisma.clientService.create({
+          data: {
+            clientId,
+            status: "APPROVED",
+            services: JSON.stringify([
+              {
+                serviceId: service.id,
+                serviceName: service.title,
+                serviceSlug: service.slug,
+                description: service.description,
+                sections: service.sections,
+              },
+            ]),
+            assignedEmployees: [],
+            read: false,
           },
-        ],
-        assignedEmployees: [],
-        read: false,
-      },
-    });
+        })
+      )
+    );
 
     return NextResponse.json({
       success: true,
-      message: "Service assigned to client successfully",
-      project: {
-        id: project.id,
-        status: project.status,
-      },
+      message: "Services assigned to client successfully",
+      clientServices: createdClientServices.map((clientService) => ({
+        id: clientService.id,
+        status: clientService.status,
+        services: clientService.services,
+      })),
     });
   } catch (error) {
     console.error("Assign service error:", error);

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
+import { parseClientServiceServices } from "@/backend/utils/client-service-helpers";
 
 export async function GET(
   request: Request,
@@ -15,53 +16,33 @@ export async function GET(
 
     const { projectId } = await params;
 
-    const project = await prisma.project.findUnique({
+    const clientService = await prisma.clientService.findUnique({
       where: {
         id: projectId,
         clientId: session.user.id,
       },
     });
 
-    if (!project) {
+    if (!clientService) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    if (project.status === "CANCELLED") {
+    if (clientService.status === "CANCELLED") {
       return NextResponse.json(
         { error: "This service has been cancelled" },
         { status: 403 }
       );
     }
 
-    // Enrich services - optimized with single query
-    const services = Array.isArray(project.services) ? project.services : [];
-    const serviceIds = services.map((s: any) => s.serviceId).filter(Boolean);
-
-    const fullServices = await prisma.service.findMany({
-      where: { id: { in: serviceIds } },
-      select: { id: true, serviceName: true, sections: true },
-    });
-
-    const serviceMap = new Map(fullServices.map((s) => [s.id, s]));
-
-    const enrichedServices = services.map((service: any) => {
-      const fullService = serviceMap.get(service.serviceId);
-      if (fullService) {
-        return {
-          ...service,
-          sections: fullService.sections,
-          serviceName: fullService.serviceName,
-        };
-      }
-      return service;
-    });
+    // Parse services from stored JSON
+    const services = parseClientServiceServices(clientService.services);
 
     return NextResponse.json({
       project: {
-        id: project.id,
-        status: project.status,
-        services: enrichedServices,
-        createdAt: project.createdAt,
+        id: clientService.id,
+        status: clientService.status,
+        services,
+        createdAt: clientService.createdAt,
       },
     });
   } catch (error) {

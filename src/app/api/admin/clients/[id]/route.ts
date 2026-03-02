@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
+import {
+  type ClientServiceEntry,
+  parseClientServiceServices,
+} from "@/backend/utils/client-service-helpers";
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -35,7 +39,7 @@ export async function GET(
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
     }
 
-    const projects = await prisma.project.findMany({
+    const clientServices = await prisma.clientService.findMany({
       where: {
         clientId: id,
       },
@@ -44,48 +48,39 @@ export async function GET(
       },
     });
 
-    const allEmployeeIds = projects.flatMap(
-      (p) => (p.assignedEmployees || []) as string[]
-    );
-    const uniqueEmployeeIds = [...new Set(allEmployeeIds)].filter(
-      (id): id is string => typeof id === "string"
-    );
-
-    const employees =
-      uniqueEmployeeIds.length > 0
-        ? await prisma.user.findMany({
-            where: {
-              id: { in: uniqueEmployeeIds },
-            },
-            select: {
-              id: true,
-              name: true,
-            },
-          })
+    const requestedServices = clientServices.flatMap((serviceRecord) => {
+      const services = parseClientServiceServices(serviceRecord.services);
+      const assignedEmps = Array.isArray(serviceRecord.assignedEmployees)
+        ? serviceRecord.assignedEmployees
         : [];
+      return services.map((service: ClientServiceEntry) => {
+        const assignedEmployees = assignedEmps.filter(
+          (assignedId): assignedId is string => typeof assignedId === "string"
+        );
 
-    const employeeMap = new Map(employees.map((e) => [e.id, e.name]));
+        let statusLabel = "Pending";
+        if (serviceRecord.status === "APPROVED") {
+          statusLabel = "Approved";
+        } else if (serviceRecord.status === "CANCELLED") {
+          statusLabel = "Cancelled";
+        }
 
-    const requestedServices = projects.flatMap((project) => {
-      const services = Array.isArray(project.services) ? project.services : [];
-      const assignedEmps = Array.isArray(project.assignedEmployees)
-        ? project.assignedEmployees
-        : [];
-      return services.map((service: any) => ({
-        id: project.id,
-        name: service.serviceName || "Service",
-        description: `Project created on ${new Date(project.createdAt).toLocaleDateString()}`,
-        status:
-          project.status === "APPROVED"
-            ? "Approved"
-            : project.status === "CANCELLED"
-              ? "Cancelled"
-              : "Pending",
-        assignedEmployees: assignedEmps.filter(
-          (id): id is string => typeof id === "string"
-        ),
-        renewal: `Created ${new Date(project.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`,
-      }));
+        return {
+          id: serviceRecord.id,
+          serviceId: service.serviceId ?? serviceRecord.id,
+          name:
+            service.serviceName ||
+            service.serviceSlug ||
+            service.serviceId ||
+            "Service",
+          description: `Project created on ${new Date(serviceRecord.createdAt).toLocaleDateString()}`,
+          status: statusLabel,
+          assignedEmployees,
+          renewal: `Created ${new Date(
+            serviceRecord.createdAt
+          ).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`,
+        };
+      });
     });
 
     const clientDetail = {
@@ -94,11 +89,15 @@ export async function GET(
       name: client.name,
       email: client.email,
       subscriptionId: `SUB-${client.id.slice(0, 4)}`,
-      accountStatus: projects.some((p) => p.status === "APPROVED")
-        ? "Approved"
-        : projects.some((p) => p.status === "PENDING")
-          ? "Pending"
-          : "Cancelled",
+      accountStatus: (() => {
+        if (clientServices.some((p) => p.status === "APPROVED")) {
+          return "Approved";
+        }
+        if (clientServices.some((p) => p.status === "PENDING")) {
+          return "Pending";
+        }
+        return "Cancelled";
+      })(),
       requestedServices,
     };
 

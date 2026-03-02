@@ -29,7 +29,7 @@ export default function SuperAdminSubscriptionsPage() {
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <p className="p-4 text-center text-slate-600">Loading projects...</p>
+          <p className="p-4 text-center text-slate-600">Loading services...</p>
         ) : (
           <SubscriptionList projects={projects} />
         )}

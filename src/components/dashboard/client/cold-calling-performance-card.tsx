@@ -72,7 +72,9 @@ interface ColdCallingPerformanceCardProps {
   data?: Record<string, any>;
 }
 
-export function ColdCallingPerformanceCard({ data }: ColdCallingPerformanceCardProps) {
+export function ColdCallingPerformanceCard({
+  data,
+}: ColdCallingPerformanceCardProps) {
   const coldMetrics = [
     { label: "Calls Made", value: data?.["Total Calls"] || "0" },
     { label: "Pick-Up Rate", value: data?.["Connected Calls"] || "0" },

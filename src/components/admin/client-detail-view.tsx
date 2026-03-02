@@ -1,12 +1,11 @@
 "use client";
 
-import { UserPlus, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-
+import { AssignEmployeesPopover } from "@/components/admin/assign-employees-popover";
 import { AssignServiceDialog } from "@/components/admin/assign-service-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,14 +14,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -30,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { ClientDetail, ClientServiceStatus } from "@/data/clients";
+import { FIXED_SERVICE_IDS, type FixedServiceId } from "@/data/fixed-services";
 
 interface Package {
   id: string;
@@ -57,12 +49,28 @@ const serviceStatusStyles: Record<ClientServiceStatus, string> = {
   Cancelled: "bg-rose-100 text-rose-700",
 };
 
-export function ClientDetailView({ client, clientId }: { client: ClientDetail; clientId: string }) {
+export function ClientDetailView({
+  client,
+  clientId,
+}: {
+  client: ClientDetail;
+  clientId: string;
+}) {
   const [services, setServices] = useState(client.requestedServices);
   const [packages, setPackages] = useState<Package[]>([]);
   const [employees, setEmployees] = useState<
     Array<{ id: string; name: string }>
   >([]);
+
+  const assignedServiceIds = useMemo(() => {
+    const ids = client.requestedServices
+      .map((service) => service.serviceId)
+      .filter(
+        (id): id is FixedServiceId =>
+          Boolean(id) && FIXED_SERVICE_IDS.includes(id as FixedServiceId)
+      );
+    return Array.from(new Set(ids));
+  }, [client.requestedServices]);
 
   useEffect(() => {
     setServices(client.requestedServices);
@@ -119,43 +127,38 @@ export function ClientDetailView({ client, clientId }: { client: ClientDetail; c
     }
   };
 
-  const toggleEmployeeAssignment = async (
+  const assignEmployees = async (
     serviceId: string,
-    employeeId: string
+    nextEmployeeIds: string[]
   ) => {
-    const service = services.find((s) => s.id === serviceId);
-    if (!service) return;
-
-    const isAssigned = service.assignedEmployees.includes(employeeId);
-    const newAssignedEmployees = isAssigned
-      ? service.assignedEmployees.filter((id) => id !== employeeId)
-      : [...service.assignedEmployees, employeeId];
-
     try {
-      const response = await fetch(`/api/admin/projects/${serviceId}/assign`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ employeeIds: newAssignedEmployees }),
-      });
+      const response = await fetch(
+        `/api/admin/client-services/${serviceId}/assign`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ employeeIds: nextEmployeeIds }),
+        }
+      );
 
-      if (!response.ok) throw new Error("Failed to assign");
+      if (!response.ok) {
+        throw new Error("Failed to update assignment");
+      }
 
       setServices((prev) =>
-        prev.map((s) =>
-          s.id === serviceId
-            ? { ...s, assignedEmployees: newAssignedEmployees }
-            : s
+        prev.map((service) =>
+          service.id === serviceId
+            ? { ...service, assignedEmployees: nextEmployeeIds }
+            : service
         )
       );
 
-      toast.success(isAssigned ? "Employee removed" : "Employee assigned");
+      toast.success("Employees updated");
+      return true;
     } catch (error) {
       toast.error("Failed to update assignment");
+      return false;
     }
-  };
-
-  const removeEmployee = (serviceId: string, employeeId: string) => {
-    toggleEmployeeAssignment(serviceId, employeeId);
   };
 
   return (
@@ -256,9 +259,10 @@ export function ClientDetailView({ client, clientId }: { client: ClientDetail; c
               Active workstreams
             </p>
           </div>
-          <AssignServiceDialog 
-            clientId={clientId} 
-            clientName={client.name} 
+          <AssignServiceDialog
+            assignedServiceIds={assignedServiceIds}
+            clientId={clientId}
+            clientName={client.name}
           />
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -317,29 +321,14 @@ export function ClientDetailView({ client, clientId }: { client: ClientDetail; c
                     <p className="font-semibold text-slate-500 text-xs uppercase tracking-wide">
                       Assigned team
                     </p>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button className="gap-2" size="sm" variant="outline">
-                          <UserPlus className="size-4" /> Assign employees
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start" className="min-w-56">
-                        <DropdownMenuLabel>Assign teammates</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {employees.map((employee) => (
-                          <DropdownMenuCheckboxItem
-                            checked={service.assignedEmployees.includes(employee.id)}
-                            className="cursor-pointer"
-                            key={employee.id}
-                            onCheckedChange={() =>
-                              toggleEmployeeAssignment(service.id, employee.id)
-                            }
-                          >
-                            {employee.name}
-                          </DropdownMenuCheckboxItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <AssignEmployeesPopover
+                      assignedEmployeeIds={service.assignedEmployees}
+                      employees={employees}
+                      onAssign={(employeeIds) =>
+                        assignEmployees(service.id, employeeIds)
+                      }
+                      serviceName={service.name}
+                    />
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {service.assignedEmployees.length ? (
@@ -358,7 +347,12 @@ export function ClientDetailView({ client, clientId }: { client: ClientDetail; c
                               aria-label={`Remove ${employee?.name}`}
                               className="cursor-pointer text-slate-500 transition hover:text-slate-900"
                               onClick={() =>
-                                removeEmployee(service.id, employeeId)
+                                assignEmployees(
+                                  service.id,
+                                  service.assignedEmployees.filter(
+                                    (id) => id !== employeeId
+                                  )
+                                )
                               }
                               type="button"
                             >
@@ -369,7 +363,7 @@ export function ClientDetailView({ client, clientId }: { client: ClientDetail; c
                       })
                     ) : (
                       <p className="text-slate-500 text-sm">
-                        No teammates assigned yet.
+                        No employees assigned yet.
                       </p>
                     )}
                   </div>

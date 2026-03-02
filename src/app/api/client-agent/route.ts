@@ -2,7 +2,7 @@ import { openai } from "@ai-sdk/openai";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 
 import { ClientPackagesTool } from "@/tools/client/packages-tool";
-import { ClientProjectsTool } from "@/tools/client/projects-tool";
+import { ClientServicesTool } from "@/tools/client/services-tool";
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     // Keep responses concise, professional, and centered on the client's workspace data. When the client asks for structured data (projects/services/etc.), call the appropriate tool instead of guessing.
     // `,
     tools: {
-      ClientProjectsTool,
+      ClientServicesTool,
       ClientPackagesTool,
     },
     onError({ error }) {

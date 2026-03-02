@@ -4,10 +4,10 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useClientProjects } from "@/hooks/use-client-projects";
+import { useClientServices } from "@/hooks/use-client-services";
 
 export function ActiveServicesList() {
-  const { data: projects, isLoading } = useClientProjects();
+  const { data: projects, isLoading } = useClientServices();
 
   const activeServices =
     projects
