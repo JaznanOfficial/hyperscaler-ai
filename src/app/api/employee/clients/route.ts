@@ -6,26 +6,28 @@ export async function GET() {
   try {
     const session = await auth();
 
-    if (!session?.user || !["EMPLOYEE", "MANAGER"].includes(session.user.role)) {
+    if (
+      !(session?.user && ["EMPLOYEE", "MANAGER"].includes(session.user.role))
+    ) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get all projects and filter by assigned employee
-    const allProjects = await prisma.project.findMany({
+    // Get all client services and filter by assigned employee
+    const allClientServices = await prisma.clientService.findMany({
       select: {
         clientId: true,
         assignedEmployees: true,
       },
     });
 
-    // Filter projects assigned to this employee
-    const projects = allProjects.filter((project) => {
-      const assignedEmployees = project.assignedEmployees as string[];
+    // Filter client services assigned to this employee
+    const clientServices = allClientServices.filter((clientService) => {
+      const assignedEmployees = clientService.assignedEmployees as string[];
       return assignedEmployees.includes(session.user.id);
     });
 
     // Get unique client IDs
-    const clientIds = [...new Set(projects.map(p => p.clientId))];
+    const clientIds = [...new Set(clientServices.map((p) => p.clientId))];
 
     // Get client details
     const clients = await prisma.user.findMany({
@@ -45,16 +47,18 @@ export async function GET() {
       },
     });
 
-    // Count projects per client
-    const clientsWithProjectCount = clients.map(client => {
-      const projectCount = projects.filter(p => p.clientId === client.id).length;
+    // Count client services per client
+    const clientsWithServiceCount = clients.map((client) => {
+      const serviceCount = clientServices.filter(
+        (p) => p.clientId === client.id
+      ).length;
       return {
         ...client,
-        projectCount,
+        serviceCount,
       };
     });
 
-    return NextResponse.json({ clients: clientsWithProjectCount });
+    return NextResponse.json({ clients: clientsWithServiceCount });
   } catch (error) {
     console.error("Get employee clients error:", error);
     return NextResponse.json(

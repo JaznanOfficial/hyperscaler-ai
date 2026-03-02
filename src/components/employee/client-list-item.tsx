@@ -27,10 +27,11 @@ export function ClientListItem({ client }: { client: EmployeeClientItem }) {
         </Link>
         <div className="mt-3 flex items-center gap-3 sm:mt-0">
           <Badge
-            className="rounded-full px-3 py-1 font-semibold text-[11px] bg-blue-100 text-blue-700"
+            className="rounded-full bg-blue-100 px-3 py-1 font-semibold text-[11px] text-blue-700"
             variant="secondary"
           >
-            {client.projectCount} {client.projectCount === 1 ? "Project" : "Projects"}
+            {client.projectCount}{" "}
+            {client.projectCount === 1 ? "Project" : "Projects"}
           </Badge>
           <Button
             asChild

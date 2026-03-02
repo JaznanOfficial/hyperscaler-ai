@@ -47,16 +47,21 @@ export default function ProjectDetailPage() {
               const sections = Array.isArray(service.sections)
                 ? service.sections
                 : [];
-              
+
               const metrics = sections.map((section: any) => {
                 const fieldName = section.name || section.id;
                 const savedValue = service.updates?.[fieldName];
-                
+
                 return {
                   id: section.id,
                   label: section.name,
                   enabled: true,
-                  value: savedValue !== undefined ? savedValue : (section.type === "boolean" ? false : ""),
+                  value:
+                    savedValue !== undefined
+                      ? savedValue
+                      : section.type === "boolean"
+                        ? false
+                        : "",
                   type: section.type,
                 };
               });

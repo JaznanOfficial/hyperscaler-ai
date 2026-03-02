@@ -65,7 +65,7 @@ export const EmployeeServicesTool = tool({
       session.user.id
     );
 
-    const normalizedProjects: ProjectSummary[] = rawServices.map((project) => {
+    const normalizedServices: ProjectSummary[] = rawServices.map((project) => {
       const assignedEmployees = toStringArray(project.assignedEmployees);
       const services = toUnknownArray(project.services);
 
@@ -83,7 +83,7 @@ export const EmployeeServicesTool = tool({
       };
     });
 
-    const filteredProjects = normalizedProjects.filter((project) => {
+    const filteredProjects = normalizedServices.filter((project) => {
       if (status && project.status !== status) {
         return false;
       }
@@ -95,7 +95,7 @@ export const EmployeeServicesTool = tool({
       return true;
     });
 
-    const statusCounts = normalizedProjects.reduce<
+    const statusCounts = normalizedServices.reduce<
       Record<ServiceStatus, number>
     >(
       (acc, project) => {
