@@ -13,18 +13,9 @@ export async function GET() {
     const packages = await prisma.subscription.findMany({
       where: {
         userId: session.user.id,
-        packageName: { not: null },
       },
       orderBy: {
         createdAt: "desc",
-      },
-      select: {
-        id: true,
-        packageName: true,
-        amount: true,
-        status: true,
-        createdAt: true,
-        subscriptionId: true,
       },
     });
 

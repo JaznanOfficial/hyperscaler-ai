@@ -10,6 +10,7 @@ export type EmployeeProjectItem = {
   owner: string;
   clientName: string;
   status: "Completed" | "Cancelled" | "On-going";
+  clientId?: string;
 };
 
 const statusStyles: Record<EmployeeProjectItem["status"], string> = {
