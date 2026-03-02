@@ -3,8 +3,8 @@
 import { Check, Rocket, Target, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BuyPackageButton } from "@/components/client/buy-package-button";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 const packages = [
   {
@@ -81,7 +81,7 @@ export function RecommendedPackages() {
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {packages.map((pkg) => {
           const isActive = activePackage === pkg.name;
-          
+
           return (
             <Card
               className={`relative overflow-visible border p-6 shadow-sm ${
@@ -117,7 +117,9 @@ export function RecommendedPackages() {
                   <h3 className="font-['Outfit'] font-semibold text-slate-900 text-xl">
                     {pkg.name}
                   </h3>
-                  <p className="mt-1 text-slate-600 text-sm">{pkg.description}</p>
+                  <p className="mt-1 text-slate-600 text-sm">
+                    {pkg.description}
+                  </p>
                 </div>
                 <div>
                   <p className="font-['Outfit'] font-bold text-3xl text-slate-900">

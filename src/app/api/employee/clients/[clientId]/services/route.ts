@@ -9,7 +9,9 @@ export async function GET(
   try {
     const session = await auth();
 
-    if (!session?.user || !["EMPLOYEE", "MANAGER"].includes(session.user.role)) {
+    if (
+      !(session?.user && ["EMPLOYEE", "MANAGER"].includes(session.user.role))
+    ) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -30,8 +32,8 @@ export async function GET(
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
     }
 
-    // Get projects for this client and filter by assigned employee
-    const allProjects = await prisma.project.findMany({
+    // Get client services for this client and filter by assigned employee
+    const allClientServices = await prisma.clientService.findMany({
       where: {
         clientId,
       },
@@ -40,17 +42,17 @@ export async function GET(
       },
     });
 
-    // Filter projects assigned to this employee
-    const projects = allProjects.filter((project) => {
-      const assignedEmployees = project.assignedEmployees as string[];
+    // Filter client services assigned to this employee
+    const clientServices = allClientServices.filter((clientService) => {
+      const assignedEmployees = clientService.assignedEmployees as string[];
       return assignedEmployees.includes(session.user.id);
     });
 
-    return NextResponse.json({ client, projects });
+    return NextResponse.json({ client, clientServices });
   } catch (error) {
-    console.error("Get client projects error:", error);
+    console.error("Get client services error:", error);
     return NextResponse.json(
-      { error: "Failed to fetch projects" },
+      { error: "Failed to fetch client services" },
       { status: 500 }
     );
   }

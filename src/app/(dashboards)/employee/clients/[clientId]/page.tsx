@@ -24,12 +24,14 @@ export default function ClientProjectsPage() {
   useEffect(() => {
     async function fetchClientProjects() {
       try {
-        const response = await fetch(`/api/employee/clients/${params.clientId}/projects`);
+        const response = await fetch(
+          `/api/employee/clients/${params.clientId}/projects`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch client projects");
         }
         const data = await response.json();
-        
+
         setClient(data.client);
 
         const formattedProjects: EmployeeProjectItem[] = data.projects.map(
@@ -38,7 +40,7 @@ export default function ClientProjectsPage() {
               .map((s: any) => s.serviceName)
               .filter(Boolean)
               .join(", ");
-            
+
             return {
               id: project.id,
               name: serviceNames || `Project ${project.id.slice(0, 8)}`,

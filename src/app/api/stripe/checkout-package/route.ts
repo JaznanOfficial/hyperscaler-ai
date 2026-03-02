@@ -32,7 +32,10 @@ export async function POST(request: Request) {
         await stripe.subscriptions.cancel(sub.subscriptionId);
         console.log(`Cancelled existing subscription: ${sub.subscriptionId}`);
       } catch (error) {
-        console.error(`Failed to cancel subscription ${sub.subscriptionId}:`, error);
+        console.error(
+          `Failed to cancel subscription ${sub.subscriptionId}:`,
+          error
+        );
       }
     }
 
