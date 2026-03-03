@@ -113,7 +113,7 @@ export function PaidAdsStatisticsInput({
 
     setIsSaving(true);
     try {
-      const history = {
+      const history: Record<string, Record<string, string | null>> = {
         meta: {},
         google: {},
       };
@@ -122,9 +122,11 @@ export function PaidAdsStatisticsInput({
         BASE_FIELDS.forEach((field) => {
           const value = getValue(channel.id, field.id);
           if (channel.id === "meta") {
-            history.meta[field.id] = value || null;
+            (history.meta as Record<string, string | null>)[field.id] =
+              value || null;
           } else if (channel.id === "google") {
-            history.google[field.id] = value || null;
+            (history.google as Record<string, string | null>)[field.id] =
+              value || null;
           }
         });
       });

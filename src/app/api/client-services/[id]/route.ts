@@ -128,6 +128,7 @@ export async function PATCH(
     // Create metric history records for each service
     const historyRecords = validatedData.services.map(
       (service: Record<string, unknown>) => ({
+        clientId: clientService.clientId,
         projectId: id,
         serviceId: String(service.serviceId),
         serviceName: String(service.serviceName),
