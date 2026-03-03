@@ -6,4 +6,5 @@ export interface ServiceInputProps {
   selectedDate?: Date;
   onDateChange?: (date: Date) => void;
   serviceId?: FixedServiceId | null;
+  onTabChange?: (tab: string) => void;
 }

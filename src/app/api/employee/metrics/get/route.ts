@@ -12,6 +12,7 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const serviceId = searchParams.get("serviceId");
+    const metricId = searchParams.get("metricId");
     const date = searchParams.get("date");
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
@@ -22,6 +23,18 @@ export async function GET(request: Request) {
         { error: "Missing serviceId parameter" },
         { status: 400 }
       );
+    }
+
+    // If metricId is provided, query by serviceId matching metricId (for overall records)
+    if (metricId) {
+      const metricHistories = await prisma.metricHistory.findMany({
+        where: {
+          clientId: session.user.id,
+          serviceId: metricId,
+        },
+      });
+
+      return NextResponse.json({ metricHistories }, { status: 200 });
     }
 
     let queryStartDate: Date;
