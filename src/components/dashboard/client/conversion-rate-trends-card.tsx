@@ -72,27 +72,18 @@ export function ConversionRateTrendsCard({
     (id) => conversionConfig[id as keyof typeof conversionConfig]
   );
 
-  if (activeServiceIds.length === 0) {
-    return (
-      <Card className="border-none bg-white shadow-sm">
-        <CardContent className="py-8 text-center">
-          <p className="text-slate-500 text-sm">
-            No active services to display
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
+  // Use dummy data if no active services
+  const hasData = activeServiceIds.length > 0;
 
   // Collect all unique dates from all services
   const allDates = new Set<string>();
-  activeServiceIds.forEach((serviceId) => {
+  for (const serviceId of activeServiceIds) {
     const history = serviceData[serviceId]?.history || [];
-    history.forEach((record: any) => {
+    for (const record of history) {
       const date = new Date(record.date);
       allDates.add(date.toISOString().split("T")[0]); // YYYY-MM-DD format
-    });
-  });
+    }
+  }
 
   // Sort dates
   const sortedDates = Array.from(allDates).sort();
@@ -101,45 +92,70 @@ export function ConversionRateTrendsCard({
   const categories =
     sortedDates.length > 0
       ? sortedDates.map((date) => new Date(date).getDate())
-      : [1];
+      : dayCategories;
 
-  // Generate series with real historical data
-  const conversionSeries = activeServiceIds.map((serviceId) => {
-    const history = serviceData[serviceId]?.history || [];
+  // Generate series with real historical data or dummy data
+  const conversionSeries = hasData
+    ? activeServiceIds.map((serviceId) => {
+        const history = serviceData[serviceId]?.history || [];
 
-    // Map history to conversion rate values
-    const dataPoints = sortedDates.map((date) => {
-      const record = history.find((h: any) => {
-        const recordDate = new Date(h.date).toISOString().split("T")[0];
-        return recordDate === date;
-      });
+        // Map history to conversion rate values
+        const dataPoints = sortedDates.map((date) => {
+          const record = history.find((h: any) => {
+            const recordDate = new Date(h.date).toISOString().split("T")[0];
+            return recordDate === date;
+          });
 
-      if (record?.metrics?.["Conversion Rate"]) {
-        const value = Number.parseFloat(
-          String(record.metrics["Conversion Rate"]).replace(/[^0-9.-]/g, "")
-        );
-        return isNaN(value) ? 0 : value;
-      }
-      return 0;
-    });
+          if (record?.metrics?.["Conversion Rate"]) {
+            const value = Number.parseFloat(
+              String(record.metrics["Conversion Rate"]).replace(/[^0-9.-]/g, "")
+            );
+            return Number.isNaN(value) ? 0 : value;
+          }
+          return 0;
+        });
 
-    return {
-      name: conversionConfig[serviceId as keyof typeof conversionConfig].label,
-      data: dataPoints.length > 0 ? dataPoints : [0],
-    };
-  });
+        return {
+          name: conversionConfig[serviceId as keyof typeof conversionConfig]
+            .label,
+          data: dataPoints.length > 0 ? dataPoints : [0],
+        };
+      })
+    : [
+        {
+          name: "Paid Ads",
+          data: [5, 8, 12, 15, 18, 22, 25, 28, 32, 35, 38],
+        },
+        {
+          name: "Social Media Marketing",
+          data: [3, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32],
+        },
+      ];
 
   // Generate legend items
-  const legendItems = activeServiceIds.map((serviceId) => ({
-    key: serviceId,
-    label: conversionConfig[serviceId as keyof typeof conversionConfig].label,
-    color: conversionConfig[serviceId as keyof typeof conversionConfig].color,
-  }));
+  const legendItems = hasData
+    ? activeServiceIds.map((serviceId) => ({
+        key: serviceId,
+        label:
+          conversionConfig[serviceId as keyof typeof conversionConfig].label,
+        color:
+          conversionConfig[serviceId as keyof typeof conversionConfig].color,
+      }))
+    : [
+        { key: "paid-ads", label: "Paid Ads", color: "#0ea5e9" },
+        {
+          key: "social-media",
+          label: "Social Media Marketing",
+          color: "#f97316",
+        },
+      ];
 
-  // Get colors for active services
-  const activeColors = activeServiceIds.map(
-    (id) => conversionConfig[id as keyof typeof conversionConfig].color
-  );
+  // Get colors for active services or dummy colors
+  const activeColors = hasData
+    ? activeServiceIds.map(
+        (id) => conversionConfig[id as keyof typeof conversionConfig].color
+      )
+    : ["#0ea5e9", "#f97316"];
 
   const conversionChartOptions: ApexOptions = {
     chart: {

@@ -2,37 +2,40 @@ import { NextResponse } from "next/server";
 import { auth } from "@/backend/config/auth";
 import { prisma } from "@/backend/config/prisma";
 
-export async function POST(request: Request) {
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await auth();
 
-    if (!session?.user || session.user.role !== "EMPLOYEE") {
+    if (!session?.user || session.user.role !== "CLIENT") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { clientId, serviceId, entryDate, history } = await request.json();
+    const { id } = await params;
+    const { serviceId, entryDate, history } = await request.json();
 
-    if (!(clientId && serviceId && entryDate && history)) {
+    if (!(serviceId && entryDate && history)) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    const metricHistory = await prisma.metricHistory.create({
+    const metricHistory = await prisma.metricHistory.update({
+      where: { id },
       data: {
-        clientId,
-        serviceId,
         history,
         entryDate: new Date(entryDate),
       },
     });
 
-    return NextResponse.json({ metricHistory }, { status: 201 });
+    return NextResponse.json({ metricHistory }, { status: 200 });
   } catch (error) {
-    console.error("Save metrics error:", error);
+    console.error("Update metrics error:", error);
     return NextResponse.json(
-      { error: "Failed to save metrics" },
+      { error: "Failed to update metrics" },
       { status: 500 }
     );
   }

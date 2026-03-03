@@ -32,7 +32,7 @@ const SERVICE_COMPONENTS: Partial<
 };
 
 export default function ProjectDetailPage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ clientId: string; id: string }>();
   const [inputValues, setInputValues] = useState<
     Record<string, string | boolean>
   >({});
@@ -81,6 +81,7 @@ export default function ProjectDetailPage() {
         </div>
         {ServiceComponent ? (
           <ServiceComponent
+            clientId={params?.clientId}
             defaultValues={inputValues}
             onChange={handleInputChange}
             onTabChange={

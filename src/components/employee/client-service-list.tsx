@@ -31,7 +31,7 @@ function EmployeeClientListItem({ client }: { client: EmployeeClientSummary }) {
   const router = useRouter();
 
   const goToService = (serviceId: string) => {
-    router.push(`/employee/clients/service/${serviceId}`);
+    router.push(`/employee/clients/${client.clientId}/service/${serviceId}`);
   };
 
   return (
