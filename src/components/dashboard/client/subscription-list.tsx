@@ -30,11 +30,7 @@ export function ClientSubscriptionList({
   projects,
 }: ClientSubscriptionListProps) {
   if (projects.length === 0) {
-    return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center">
-        <p className="text-slate-600">No subscriptions yet</p>
-      </div>
-    );
+    return null;
   }
 
   return (
