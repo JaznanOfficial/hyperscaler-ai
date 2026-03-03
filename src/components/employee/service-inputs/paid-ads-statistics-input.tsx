@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,7 +32,71 @@ const CHANNELS = [
 export function PaidAdsStatisticsInput({
   defaultValues,
   onChange,
+  selectedDate,
+  onDateChange,
+  serviceId,
 }: ServiceInputProps) {
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [metricId, setMetricId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadMetrics = async () => {
+      if (!(selectedDate && serviceId)) return;
+
+      setIsLoading(true);
+      try {
+        // Clear all input values first
+        BASE_FIELDS.forEach((field) => {
+          CHANNELS.forEach((channel) => {
+            onChange?.(`${channel.id}_${field.id}`, "");
+          });
+        });
+
+        const year = selectedDate.getFullYear();
+        const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+        const day = String(selectedDate.getDate()).padStart(2, "0");
+        const dateStr = `${year}-${month}-${day}`;
+        const response = await fetch(
+          `/api/employee/metrics/get?serviceId=${serviceId}&date=${dateStr}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch metrics");
+        }
+
+        const data = await response.json();
+
+        if (data.metricHistories && data.metricHistories.length > 0) {
+          const metricHistory = data.metricHistories[0];
+          setMetricId(metricHistory.id);
+          const history = metricHistory.history as Record<
+            string,
+            Record<string, string>
+          >;
+
+          CHANNELS.forEach((channel) => {
+            const channelData = history[channel.id] || {};
+            BASE_FIELDS.forEach((field) => {
+              const value = channelData[field.id];
+              if (value) {
+                onChange?.(`${channel.id}_${field.id}`, value);
+              }
+            });
+          });
+        } else {
+          setMetricId(null);
+        }
+      } catch (error) {
+        console.error("Error loading metrics:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadMetrics();
+  }, [selectedDate, serviceId, onChange]);
+
   const getValue = (channelId: string, fieldId: string) =>
     (defaultValues?.[`${channelId}_${fieldId}`] as string | undefined) ?? "";
 
@@ -36,6 +104,65 @@ export function PaidAdsStatisticsInput({
     (channelId: string, fieldId: string) => (value: string) => {
       onChange?.(`${channelId}_${fieldId}`, value);
     };
+
+  const handleSaveMetrics = async () => {
+    if (!selectedDate) {
+      toast.error("Please select a date");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const history = {
+        meta: {},
+        google: {},
+      };
+
+      CHANNELS.forEach((channel) => {
+        BASE_FIELDS.forEach((field) => {
+          const value = getValue(channel.id, field.id);
+          if (channel.id === "meta") {
+            history.meta[field.id] = value || null;
+          } else if (channel.id === "google") {
+            history.google[field.id] = value || null;
+          }
+        });
+      });
+
+      const method = metricId ? "PUT" : "POST";
+      const url = metricId
+        ? `/api/employee/metrics/${metricId}`
+        : "/api/employee/metrics";
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          serviceId,
+          entryDate: selectedDate.toISOString(),
+          history,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save metrics");
+      }
+
+      const data = await response.json();
+      if (!metricId && data.metricHistory) {
+        setMetricId(data.metricHistory.id);
+      }
+
+      toast.success(
+        metricId ? "Metrics updated successfully" : "Metrics saved successfully"
+      );
+    } catch (error) {
+      toast.error("Error saving metrics");
+      console.error(error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <Card className="rounded-2xl border border-slate-200 bg-white p-6">
@@ -95,7 +222,6 @@ export function PaidAdsStatisticsInput({
                           }
                           return undefined;
                         })()}
-                        inputMode="decimal"
                         onChange={(event) =>
                           handleChange(channel.id, field.id)(event.target.value)
                         }
@@ -108,7 +234,8 @@ export function PaidAdsStatisticsInput({
                           }
                           return "0";
                         })()}
-                        type="text"
+                        step="0.01"
+                        type="number"
                         value={getValue(channel.id, field.id)}
                       />
                       {field.suffix && (
@@ -125,8 +252,14 @@ export function PaidAdsStatisticsInput({
         </div>
 
         <div className="flex justify-end">
-          <Button className="min-w-[140px]" size="lg" type="button">
-            Save metrics
+          <Button
+            className="min-w-[140px]"
+            disabled={isSaving}
+            onClick={handleSaveMetrics}
+            size="lg"
+            type="button"
+          >
+            {isSaving ? "Saving..." : "Save metrics"}
           </Button>
         </div>
       </div>

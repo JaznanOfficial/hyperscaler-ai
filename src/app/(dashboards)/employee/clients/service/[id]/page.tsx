@@ -2,7 +2,6 @@
 
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import { ProjectCalendarCard } from "@/components/employee/project-calendar-card";
 import { BrandContentCreationStatisticsInput } from "@/components/employee/service-inputs/brand-content-creation-statistics-input";
 import { ColdCallingStatisticsInput } from "@/components/employee/service-inputs/cold-calling-statistics-input";
 import { ColdEmailCampaignStatisticsInput } from "@/components/employee/service-inputs/cold-email-campaign-statistics-input";
@@ -11,6 +10,7 @@ import { PaidAdsStatisticsInput } from "@/components/employee/service-inputs/pai
 import { SocialMediaMarketingStatisticsInput } from "@/components/employee/service-inputs/social-media-marketing-statistics-input";
 import { SoftwareDevelopmentStatisticsInput } from "@/components/employee/service-inputs/software-development-statistics-input";
 import type { ServiceInputProps } from "@/components/employee/service-inputs/types";
+import { Calendar } from "@/components/ui/calendar";
 import {
   type FixedServiceId,
   getFixedService,
@@ -36,6 +36,7 @@ export default function ProjectDetailPage() {
   const [inputValues, setInputValues] = useState<
     Record<string, string | boolean>
   >({});
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const { serviceName, serviceId } = useMemo(() => {
     const rawId = params?.id?.toUpperCase();
@@ -47,6 +48,11 @@ export default function ProjectDetailPage() {
   }, [params]);
 
   const ServiceComponent = serviceId ? SERVICE_COMPONENTS[serviceId] : null;
+
+  const handleDateChange = (date: Date) => {
+    setSelectedDate(date);
+    setInputValues({});
+  };
 
   const handleInputChange = (fieldId: string, value: string | boolean) => {
     setInputValues((prev) => ({
@@ -72,6 +78,8 @@ export default function ProjectDetailPage() {
           <ServiceComponent
             defaultValues={inputValues}
             onChange={handleInputChange}
+            selectedDate={selectedDate}
+            serviceId={serviceId}
           />
         ) : (
           <div className="rounded-2xl border border-slate-200 border-dashed bg-slate-50 p-8 text-center">
@@ -87,7 +95,25 @@ export default function ProjectDetailPage() {
       </div>
 
       <div className="order-1 space-y-4 lg:order-2">
-        <ProjectCalendarCard />
+        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+          <p className="mb-4 text-slate-400 text-xs uppercase tracking-[0.3em]">
+            Entry Date
+          </p>
+          <Calendar
+            className="w-full rounded-lg border"
+            disabled={(date: Date) => {
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+              return date > today;
+            }}
+            fullWidth
+            mode="single"
+            onSelect={(date) => {
+              if (date) handleDateChange(date);
+            }}
+            selected={selectedDate}
+          />
+        </div>
       </div>
     </section>
   );
