@@ -4,7 +4,7 @@ import { prisma } from "@/backend/config/prisma";
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -13,6 +13,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
     const { serviceId, entryDate, history } = await request.json();
 
     if (!(serviceId && entryDate && history)) {
@@ -23,7 +24,7 @@ export async function PUT(
     }
 
     const metricHistory = await prisma.metricHistory.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         history,
         entryDate: new Date(entryDate),
