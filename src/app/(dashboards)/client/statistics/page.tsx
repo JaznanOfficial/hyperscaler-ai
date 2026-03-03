@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ActiveServicesStatusCard } from "@/components/dashboard/client/active-services-status-card";
 import { BrandingContentPerformanceCard } from "@/components/dashboard/client/branding-content-performance-card";
 import { ColdCallingPerformanceCard } from "@/components/dashboard/client/cold-calling-performance-card";
+import { ColdEmailPerformanceCard } from "@/components/dashboard/client/cold-email-performance-card";
 import { ColdLinkedinPerformanceCard } from "@/components/dashboard/client/cold-linkedin-performance-card";
 import { ConversionRateTrendsCard } from "@/components/dashboard/client/conversion-rate-trends-card";
 import { OverallProgressCard } from "@/components/dashboard/client/overall-progress-card";
@@ -22,6 +23,10 @@ const SERVICE_CARD_MAP: Record<string, ServiceCardConfig> = {
   PAID_ADS: {
     name: "Paid Ads",
     component: PaidAdsPerformanceCard,
+  },
+  COLD_EMAIL: {
+    name: "Cold Email",
+    component: ColdEmailPerformanceCard,
   },
   SOCIAL_MEDIA: {
     name: "Social Media Marketing",

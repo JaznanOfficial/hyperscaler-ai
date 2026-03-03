@@ -99,8 +99,9 @@ export function ClientDetailView({
     serviceId: string,
     status: ClientServiceStatus
   ) => {
+    const loadingToastId = toast.loading("Updating status...");
     try {
-      const response = await fetch(`/api/admin/projects/${serviceId}`, {
+      const response = await fetch(`/api/admin/client-services/${serviceId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -121,8 +122,10 @@ export function ClientDetailView({
         )
       );
 
+      toast.dismiss(loadingToastId);
       toast.success("Status updated");
     } catch (error) {
+      toast.dismiss(loadingToastId);
       toast.error("Failed to update status");
     }
   };

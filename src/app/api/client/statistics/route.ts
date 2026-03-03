@@ -45,12 +45,15 @@ export async function GET() {
         const serviceName =
           service.serviceName || SERVICE_NAMES[serviceId] || "Unknown Service";
 
-        allServices.push({
-          serviceId,
-          serviceName,
-          metrics: {},
-          history: [],
-        });
+        // Only include APPROVED services in statistics
+        if (clientService.status === "APPROVED") {
+          allServices.push({
+            serviceId,
+            serviceName,
+            metrics: {},
+            history: [],
+          });
+        }
       }
     }
 
