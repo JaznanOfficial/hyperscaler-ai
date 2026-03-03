@@ -6,13 +6,13 @@ export async function POST(request: Request) {
   try {
     const session = await auth();
 
-    if (!session?.user || session.user.role !== "EMPLOYEE") {
+    if (!session?.user || session.user.role !== "CLIENT") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { clientId, serviceId, entryDate, history } = await request.json();
+    const { serviceId, entryDate, history } = await request.json();
 
-    if (!(clientId && serviceId && entryDate && history)) {
+    if (!(serviceId && entryDate && history)) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     const metricHistory = await prisma.metricHistory.create({
       data: {
-        clientId,
+        clientId: session.user.id,
         serviceId,
         history,
         entryDate: new Date(entryDate),

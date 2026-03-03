@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -23,10 +24,12 @@ export function ColdCallingStatisticsInput({
   onChange,
   selectedDate,
   serviceId,
+  clientId,
 }: ServiceInputProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [metricId, setMetricId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const loadMetrics = async () => {
@@ -44,7 +47,7 @@ export function ColdCallingStatisticsInput({
         const day = String(selectedDate.getDate()).padStart(2, "0");
         const dateStr = `${year}-${month}-${day}`;
         const response = await fetch(
-          `/api/employee/metrics/get?serviceId=${serviceId}&date=${dateStr}`
+          `/api/employee/metrics/get?clientId=${clientId}&serviceId=${serviceId}&date=${dateStr}`
         );
 
         if (!response.ok) {
@@ -75,7 +78,7 @@ export function ColdCallingStatisticsInput({
     };
 
     loadMetrics();
-  }, [selectedDate, serviceId, onChange]);
+  }, [selectedDate, serviceId, clientId, onChange]);
 
   const handleChange = (fieldId: string) => (value: string) => {
     onChange?.(fieldId, value);
@@ -105,6 +108,7 @@ export function ColdCallingStatisticsInput({
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          clientId,
           serviceId,
           entryDate: selectedDate.toISOString(),
           history,
@@ -119,6 +123,14 @@ export function ColdCallingStatisticsInput({
       if (!metricId && data.metricHistory) {
         setMetricId(data.metricHistory.id);
       }
+
+      // Invalidate the query to refetch fresh data
+      const dateStr = selectedDate
+        ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`
+        : null;
+      await queryClient.invalidateQueries({
+        queryKey: ["employee-metrics", clientId, serviceId, dateStr],
+      });
 
       toast.success(
         metricId ? "Metrics updated successfully" : "Metrics saved successfully"

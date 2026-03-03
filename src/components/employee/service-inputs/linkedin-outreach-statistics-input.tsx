@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -23,59 +24,47 @@ export function LinkedinOutreachStatisticsInput({
   onChange,
   selectedDate,
   serviceId,
+  clientId,
 }: ServiceInputProps) {
   const [isSaving, setIsSaving] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [metricId, setMetricId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+
+  const dateStr = selectedDate
+    ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`
+    : null;
+
+  const { data: metricsData } = useQuery({
+    queryKey: ["employee-metrics", clientId, serviceId, dateStr],
+    queryFn: async () => {
+      if (!(dateStr && clientId && serviceId)) return null;
+      const response = await fetch(
+        `/api/employee/metrics/get?clientId=${clientId}&serviceId=${serviceId}&date=${dateStr}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+    enabled: !!dateStr && !!clientId && !!serviceId,
+  });
 
   useEffect(() => {
-    const loadMetrics = async () => {
-      if (!(selectedDate && serviceId)) return;
-
-      setIsLoading(true);
-      try {
-        // Clear all input values first
-        FIELDS.forEach((field) => {
-          onChange?.(`${field.id}`, "");
-        });
-
-        const year = selectedDate.getFullYear();
-        const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
-        const day = String(selectedDate.getDate()).padStart(2, "0");
-        const dateStr = `${year}-${month}-${day}`;
-        const response = await fetch(
-          `/api/employee/metrics/get?serviceId=${serviceId}&date=${dateStr}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch metrics");
+    const metricHistory = metricsData?.metricHistories?.[0];
+    if (metricHistory) {
+      setMetricId(metricHistory.id);
+      const history = metricHistory.history as Record<string, string>;
+      FIELDS.forEach((field) => {
+        const value = history[field.id];
+        if (value) {
+          onChange?.(`${field.id}`, value);
         }
-
-        const data = await response.json();
-
-        if (data.metricHistories && data.metricHistories.length > 0) {
-          const metricHistory = data.metricHistories[0];
-          setMetricId(metricHistory.id);
-          const history = metricHistory.history as Record<string, string>;
-
-          FIELDS.forEach((field) => {
-            const value = history[field.id];
-            if (value) {
-              onChange?.(`${field.id}`, value);
-            }
-          });
-        } else {
-          setMetricId(null);
-        }
-      } catch (error) {
-        console.error("Error loading metrics:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadMetrics();
-  }, [selectedDate, serviceId, onChange]);
+      });
+    } else {
+      setMetricId(null);
+      FIELDS.forEach((field) => {
+        onChange?.(`${field.id}`, "");
+      });
+    }
+  }, [metricsData, onChange]);
 
   const handleChange = (fieldId: string) => (value: string) => {
     onChange?.(fieldId, value);
@@ -105,6 +94,7 @@ export function LinkedinOutreachStatisticsInput({
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          clientId,
           serviceId,
           entryDate: selectedDate.toISOString(),
           history,
@@ -119,6 +109,11 @@ export function LinkedinOutreachStatisticsInput({
       if (!metricId && data.metricHistory) {
         setMetricId(data.metricHistory.id);
       }
+
+      // Invalidate the query to refetch fresh data
+      await queryClient.invalidateQueries({
+        queryKey: ["employee-metrics", clientId, serviceId, dateStr],
+      });
 
       toast.success(
         metricId ? "Metrics updated successfully" : "Metrics saved successfully"

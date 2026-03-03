@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -18,10 +19,12 @@ export function SoftwareDevelopmentStatisticsInput({
   onChange,
   selectedDate,
   serviceId,
+  clientId,
   onTabChange,
 }: ServiceInputProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
   const [metricId, setMetricId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("today");
 
@@ -75,7 +78,7 @@ export function SoftwareDevelopmentStatisticsInput({
         setIsLoading(true);
         try {
           const response = await fetch(
-            `/api/employee/metrics/get?serviceId=${serviceId}&metricId=${OVERALL_METRIC_ID}`
+            `/api/employee/metrics/get?clientId=${clientId}&serviceId=${serviceId}&metricId=${OVERALL_METRIC_ID}`
           );
 
           if (!response.ok) {
@@ -106,7 +109,7 @@ export function SoftwareDevelopmentStatisticsInput({
     };
 
     loadMetrics();
-  }, [selectedDate, serviceId, onChange, activeTab]);
+  }, [selectedDate, serviceId, clientId, onChange, activeTab]);
 
   const handleSaveMetrics = async () => {
     if (activeTab === "today" && !selectedDate) {
@@ -136,6 +139,7 @@ export function SoftwareDevelopmentStatisticsInput({
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          clientId,
           serviceId,
           entryDate,
           history,
@@ -150,6 +154,14 @@ export function SoftwareDevelopmentStatisticsInput({
       const data = await response.json();
       if (!metricId && data.metricHistory) {
         setMetricId(data.metricHistory.id);
+      }
+
+      // Invalidate the query to refetch fresh data
+      if (activeTab === "today" && selectedDate) {
+        const dateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`;
+        await queryClient.invalidateQueries({
+          queryKey: ["employee-metrics", clientId, serviceId, dateStr],
+        });
       }
 
       toast.success(

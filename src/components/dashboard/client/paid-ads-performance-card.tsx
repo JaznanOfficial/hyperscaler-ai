@@ -1,6 +1,7 @@
 "use client";
 
 import { Activity, AlertTriangle, Target, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import {
   Card,
@@ -28,23 +29,125 @@ interface PaidAdsPerformanceCardProps {
 }
 
 export function PaidAdsPerformanceCard({ data }: PaidAdsPerformanceCardProps) {
+  const [metrics, setMetrics] = useState<Record<string, string | number>>({
+    Impressions: "0",
+    Clicks: "0",
+    Reach: "0",
+    "Cost-per-click (CPC)": "$0",
+    "Cost-per-lead (CPL)": "$0",
+    "Click-Through Rate (CTR)": "0%",
+    "Conversion Rate": "0%",
+  });
+
+  useEffect(() => {
+    const fetchTodayMetrics = async () => {
+      try {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+        const dateStr = `${year}-${month}-${day}`;
+
+        const response = await fetch(
+          `/api/client/metrics?serviceId=PAID_ADS&date=${dateStr}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch metrics");
+        }
+
+        const result = await response.json();
+
+        if (result.metricHistories && result.metricHistories.length > 0) {
+          const metricHistory = result.metricHistories[0];
+          const history = metricHistory.history as Record<
+            string,
+            Record<string, string>
+          >;
+
+          // Combine meta and google data
+          const combinedMetrics: Record<string, string | number> = {};
+
+          const fields = [
+            "Impressions",
+            "Clicks",
+            "Reach",
+            "Cost-per-click (CPC)",
+            "Cost-per-lead (CPL)",
+            "Click-Through Rate (CTR)",
+            "Conversion Rate",
+          ];
+
+          for (const field of fields) {
+            const metaValue = history.meta?.[field];
+            const googleValue = history.google?.[field];
+
+            if (
+              field === "Cost-per-click (CPC)" ||
+              field === "Cost-per-lead (CPL)"
+            ) {
+              // For currency fields, sum the values
+              const metaNum = metaValue
+                ? Number.parseFloat(metaValue.replace(/[^0-9.-]/g, ""))
+                : 0;
+              const googleNum = googleValue
+                ? Number.parseFloat(googleValue.replace(/[^0-9.-]/g, ""))
+                : 0;
+              const total = metaNum + googleNum;
+              combinedMetrics[field] =
+                total > 0 ? `$${total.toFixed(2)}` : "$0";
+            } else if (
+              field === "Click-Through Rate (CTR)" ||
+              field === "Conversion Rate"
+            ) {
+              // For percentage fields, average them
+              const metaNum = metaValue
+                ? Number.parseFloat(metaValue.replace(/[^0-9.-]/g, ""))
+                : 0;
+              const googleNum = googleValue
+                ? Number.parseFloat(googleValue.replace(/[^0-9.-]/g, ""))
+                : 0;
+              const count = (metaValue ? 1 : 0) + (googleValue ? 1 : 0);
+              const average = count > 0 ? (metaNum + googleNum) / count : 0;
+              combinedMetrics[field] =
+                average > 0 ? `${average.toFixed(2)}%` : "0%";
+            } else {
+              // For numeric fields, sum them
+              const metaNum = metaValue ? Number.parseInt(metaValue, 10) : 0;
+              const googleNum = googleValue
+                ? Number.parseInt(googleValue, 10)
+                : 0;
+              combinedMetrics[field] = (metaNum + googleNum).toString();
+            }
+          }
+
+          setMetrics(combinedMetrics);
+        }
+      } catch (error) {
+        console.error("Error fetching metrics:", error);
+      }
+    };
+
+    fetchTodayMetrics();
+  }, []);
+
   const paidMetrics = [
-    { label: "Impressions", value: data?.Impressions || "0" },
-    { label: "Clicks", value: data?.Clicks || "0" },
-    { label: "Reach", value: data?.Reach || "0" },
+    { label: "Impressions", value: metrics.Impressions || "0" },
+    { label: "Clicks", value: metrics.Clicks || "0" },
+    { label: "Reach", value: metrics.Reach || "0" },
     {
       label: "Cost-per-click (CPC)",
-      value: data?.["Cost-per-click (CPC)"] || "$0",
+      value: metrics["Cost-per-click (CPC)"] || "$0",
     },
     {
       label: "Cost-per-lead (CPL)",
-      value: data?.["Cost-per-lead (CPL)"] || "$0",
+      value: metrics["Cost-per-lead (CPL)"] || "$0",
     },
     {
       label: "Click-Through Rate (CTR)",
-      value: data?.["Click-Through Rate (CTR)"] || "0%",
+      value: metrics["Click-Through Rate (CTR)"] || "0%",
     },
-    { label: "Conversion Rate", value: data?.["Conversion Rate"] || "0%" },
+    { label: "Conversion Rate", value: metrics["Conversion Rate"] || "0%" },
   ];
 
   const paidInsights = [

@@ -68,7 +68,7 @@ const coldEmailMetrics = [
   { label: "Conversion Rate", value: "12%" },
 ];
 
-export function ServicesOverviewCard() {
+export function ColdEmailPerformanceCard() {
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardContent className="space-y-8">

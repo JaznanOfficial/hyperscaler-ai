@@ -1,6 +1,8 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Presentation, Target, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import {
   Card,
@@ -18,10 +20,7 @@ import { ColdLinkedinConversionChart } from "./cold-linkedin-conversion-chart";
 import { InsightsDrawer } from "./insights-drawer";
 import { KeyInsightsGrid } from "./key-insights-grid";
 
-const clickRateData = [
-  { name: "Accepted Requests", value: 46, color: "#147638" },
-  { name: "Ignored Requests", value: 54, color: "#979CA3" },
-];
+// This will be calculated dynamically based on actual data
 
 const linkedinInsights = [
   {
@@ -61,16 +60,122 @@ interface ColdLinkedinPerformanceCardProps {
 export function ColdLinkedinPerformanceCard({
   data,
 }: ColdLinkedinPerformanceCardProps) {
+  const [todayDate, setTodayDate] = useState<string>("");
+
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    setTodayDate(`${year}-${month}-${day}`);
+  }, []);
+
+  const { data: metricsData } = useQuery({
+    queryKey: ["linkedin-metrics", todayDate],
+    queryFn: async () => {
+      if (!todayDate) return null;
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=LINKEDIN_OUTREACH&date=${todayDate}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+    enabled: !!todayDate,
+  });
+
+  // Calculate current month and previous month date ranges
+  const today = new Date();
+  const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const currentMonthEnd = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0
+  );
+  const previousMonthStart = new Date(
+    today.getFullYear(),
+    today.getMonth() - 1,
+    1
+  );
+  const previousMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+
+  const formatDateForApi = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const { data: currentMonthData } = useQuery({
+    queryKey: ["linkedin-metrics-current-month"],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=LINKEDIN_OUTREACH&startDate=${formatDateForApi(currentMonthStart)}&endDate=${formatDateForApi(currentMonthEnd)}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+  });
+
+  const { data: previousMonthData } = useQuery({
+    queryKey: ["linkedin-metrics-previous-month"],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=LINKEDIN_OUTREACH&startDate=${formatDateForApi(previousMonthStart)}&endDate=${formatDateForApi(previousMonthEnd)}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+  });
+
+  const metricHistory = metricsData?.metricHistories?.[0];
+  const history = metricHistory?.history || {};
+
+  // Calculate acceptance rate
+  const connectionsSent = Number(history?.connections_sent) || 0;
+  const connectionsAccepted = Number(history?.connections_accepted) || 0;
+  const acceptanceRate =
+    connectionsSent > 0
+      ? Math.round((connectionsAccepted / connectionsSent) * 100)
+      : 0;
+
+  // Calculate month-over-month comparison
+  const calculateAverageRate = (data: Record<string, any>) => {
+    const records = data?.metricHistories || [];
+    if (records.length === 0) return 0;
+    const sum = records.reduce((acc: number, record: Record<string, any>) => {
+      const rate = Number(record.history?.positive_reply_rate) || 0;
+      return acc + rate;
+    }, 0);
+    return Math.round(sum / records.length);
+  };
+
+  const currentMonthRate = calculateAverageRate(currentMonthData || {});
+  const previousMonthRate = calculateAverageRate(previousMonthData || {});
+  const monthOverMonthChange = currentMonthRate - previousMonthRate;
+  const isPositive = monthOverMonthChange >= 0;
+
+  const clickRateData = [
+    { name: "Accepted Requests", value: acceptanceRate, color: "#147638" },
+    {
+      name: "Ignored Requests",
+      value: 100 - acceptanceRate,
+      color: "#979CA3",
+    },
+  ];
+
   const linkedinMetrics = [
     {
       label: "Connection Request Sent",
-      value: data?.["Connection Requests"] || "0",
+      value: history?.connections_sent || "0",
     },
-    { label: "Messages Sent", value: data?.["Messages Sent"] || "0" },
-    { label: "Reply Rate", value: data?.["Reply Rate"] || "0" },
-    { label: "Positive Reply Rates", value: "0" },
-    { label: "Qualified Leads", value: data?.["Accepted Connections"] || "0" },
-    { label: "Meetings Booked", value: data?.["Meetings Booked"] || "0" },
+    { label: "Messages Sent", value: history?.messages_sent || "0" },
+    { label: "Reply Rate", value: history?.reply_rate || "0%" },
+    {
+      label: "Positive Reply Rates",
+      value: history?.positive_reply_rate || "0%",
+    },
+    { label: "Qualified Leads", value: history?.qualified_leads || "0" },
+    { label: "Meetings Booked", value: history?.meetings_booked || "0" },
   ];
   return (
     <Card className="border-none bg-white shadow-sm">
@@ -118,14 +223,19 @@ export function ColdLinkedinPerformanceCard({
               </p>
             </div>
             <ColdLinkedinConversionChart />
-            <p className="font-semibold text-emerald-600 text-sm">
-              ↑ 12% vs last month
+            <p
+              className={`font-semibold text-sm ${
+                isPositive ? "text-emerald-600" : "text-red-600"
+              }`}
+            >
+              {isPositive ? "↑" : "↓"} {Math.abs(monthOverMonthChange)}% vs last
+              month
             </p>
           </div>
           <div className="space-y-4 rounded-2xl border border-slate-100 p-4">
             <div>
               <p className="font-semibold text-slate-900 text-sm">
-                Content Click Rate
+                Connection Acceptance Rate
               </p>
               <p className="text-slate-500 text-xs">
                 How effectively outreach drives responses.
@@ -151,7 +261,7 @@ export function ColdLinkedinPerformanceCard({
               </ResponsiveContainer>
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
                 <span className="font-semibold text-3xl text-slate-900">
-                  46%
+                  {acceptanceRate}%
                 </span>
                 <span className="text-slate-500 text-xs">Accepted</span>
               </div>

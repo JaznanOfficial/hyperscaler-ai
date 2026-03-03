@@ -4,12 +4,51 @@ import { useEffect, useState } from "react";
 import { ActiveServicesStatusCard } from "@/components/dashboard/client/active-services-status-card";
 import { BrandingContentPerformanceCard } from "@/components/dashboard/client/branding-content-performance-card";
 import { ColdCallingPerformanceCard } from "@/components/dashboard/client/cold-calling-performance-card";
+import { ColdEmailPerformanceCard } from "@/components/dashboard/client/cold-email-performance-card";
 import { ColdLinkedinPerformanceCard } from "@/components/dashboard/client/cold-linkedin-performance-card";
 import { ConversionRateTrendsCard } from "@/components/dashboard/client/conversion-rate-trends-card";
 import { OverallProgressCard } from "@/components/dashboard/client/overall-progress-card";
 import { PaidAdsPerformanceCard } from "@/components/dashboard/client/paid-ads-performance-card";
 import { SocialMediaPerformanceCard } from "@/components/dashboard/client/social-media-performance-card";
 import { SoftwareDevelopmentStatusCard } from "@/components/dashboard/client/software-development-status-card";
+
+type ServiceCardComponent = React.ComponentType<{ data: any }>;
+
+interface ServiceCardConfig {
+  name: string;
+  component: ServiceCardComponent;
+}
+
+const SERVICE_CARD_MAP: Record<string, ServiceCardConfig> = {
+  PAID_ADS: {
+    name: "Paid Ads",
+    component: PaidAdsPerformanceCard,
+  },
+  COLD_EMAIL: {
+    name: "Cold Email",
+    component: ColdEmailPerformanceCard,
+  },
+  SOCIAL_MEDIA: {
+    name: "Social Media Marketing",
+    component: SocialMediaPerformanceCard,
+  },
+  COLD_CALLING: {
+    name: "Cold Calling",
+    component: ColdCallingPerformanceCard,
+  },
+  BRAND_CONTENT: {
+    name: "Branding Content",
+    component: BrandingContentPerformanceCard,
+  },
+  LINKEDIN_OUTREACH: {
+    name: "LinkedIn Outreach",
+    component: ColdLinkedinPerformanceCard,
+  },
+  SOFTWARE_DEVELOPMENT: {
+    name: "Software Development",
+    component: SoftwareDevelopmentStatusCard,
+  },
+};
 
 export default function ClientStatisticsPage() {
   const [serviceData, setServiceData] = useState<Record<string, any>>({});
@@ -20,13 +59,13 @@ export default function ClientStatisticsPage() {
       .then((res) => res.json())
       .then((result) => {
         if (result.success) {
-          const dataMap: Record<string, any> = {};
+          const dataMap: Record<string, Record<string, unknown>> = {};
           for (const service of result.data) {
-            // Map by service ID
-            dataMap[service.serviceId] = {
+            // Map by service name (key) instead of ID
+            dataMap[service.serviceName] = {
               serviceName: service.serviceName,
               metrics: service.metrics,
-              history: service.history || [], // Add history data
+              history: service.history || [],
             };
           }
           setServiceData(dataMap);
@@ -109,43 +148,29 @@ export default function ClientStatisticsPage() {
             </div>
             <ConversionRateTrendsCard serviceData={serviceData} />
           </div>
+
+          <div className="space-y-6">
+            {Object.entries(serviceData).map(([serviceName, data]) => {
+              const serviceKey = Object.keys(SERVICE_CARD_MAP).find(
+                (key) =>
+                  SERVICE_CARD_MAP[key].name === serviceName ||
+                  serviceName.toUpperCase().includes(key.replace(/_/g, " "))
+              );
+
+              if (!serviceKey) return null;
+
+              const config = SERVICE_CARD_MAP[serviceKey];
+              const CardComponent = config.component;
+
+              return (
+                <CardComponent
+                  data={(data as Record<string, unknown>).metrics}
+                  key={serviceName}
+                />
+              );
+            })}
+          </div>
         </>
-      )}
-
-      {"cmm2b4i9v000010kjjn8gnunc" in serviceData && (
-        <PaidAdsPerformanceCard
-          data={serviceData["cmm2b4i9v000010kjjn8gnunc"]?.metrics}
-        />
-      )}
-
-      {"cmm2b4j58000110kj3fouc7wr" in serviceData && (
-        <SocialMediaPerformanceCard
-          data={serviceData["cmm2b4j58000110kj3fouc7wr"]?.metrics}
-        />
-      )}
-
-      {"cmm2b4jrx000210kjr0wxdk7s" in serviceData && (
-        <ColdCallingPerformanceCard
-          data={serviceData["cmm2b4jrx000210kjr0wxdk7s"]?.metrics}
-        />
-      )}
-
-      {"cmm2b4khh000310kjfskvvs9k" in serviceData && (
-        <BrandingContentPerformanceCard
-          data={serviceData["cmm2b4khh000310kjfskvvs9k"]?.metrics}
-        />
-      )}
-
-      {"cmm2b4l4d000410kj1l2q2qkc" in serviceData && (
-        <ColdLinkedinPerformanceCard
-          data={serviceData["cmm2b4l4d000410kj1l2q2qkc"]?.metrics}
-        />
-      )}
-
-      {"cmm2b4lr0000510kj84s4g4f3" in serviceData && (
-        <SoftwareDevelopmentStatusCard
-          data={serviceData["cmm2b4lr0000510kj84s4g4f3"]?.metrics}
-        />
       )}
     </div>
   );

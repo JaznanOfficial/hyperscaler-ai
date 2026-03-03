@@ -6,12 +6,11 @@ export async function GET(request: Request) {
   try {
     const session = await auth();
 
-    if (!session?.user || session.user.role !== "EMPLOYEE") {
+    if (!session?.user || session.user.role !== "CLIENT") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
-    const clientId = searchParams.get("clientId");
     const serviceId = searchParams.get("serviceId");
     const metricId = searchParams.get("metricId");
     const date = searchParams.get("date");
@@ -19,9 +18,9 @@ export async function GET(request: Request) {
     const endDate = searchParams.get("endDate");
     const lastDays = searchParams.get("lastDays");
 
-    if (!(clientId && serviceId)) {
+    if (!serviceId) {
       return NextResponse.json(
-        { error: "Missing clientId or serviceId parameter" },
+        { error: "Missing serviceId parameter" },
         { status: 400 }
       );
     }
@@ -30,7 +29,7 @@ export async function GET(request: Request) {
     if (metricId) {
       const metricHistories = await prisma.metricHistory.findMany({
         where: {
-          clientId,
+          clientId: session.user.id,
           serviceId: metricId,
         },
       });
@@ -85,7 +84,7 @@ export async function GET(request: Request) {
 
     const metricHistories = await prisma.metricHistory.findMany({
       where: {
-        clientId,
+        clientId: session.user.id,
         serviceId,
         entryDate: {
           gte: queryStartDate,
