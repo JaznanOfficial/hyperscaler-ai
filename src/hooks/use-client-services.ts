@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 interface ClientService {
   id: string;
   status: string;
-  services: Array<{ serviceName: string }>;
+  services: string;
 }
 
 export function useClientServices() {

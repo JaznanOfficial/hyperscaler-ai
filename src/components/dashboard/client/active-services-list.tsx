@@ -12,12 +12,20 @@ export function ActiveServicesList() {
   const activeServices =
     projects
       ?.filter((p) => p.status === "APPROVED")
-      .flatMap((project) =>
-        (project.services || []).map((service) => ({
+      .flatMap((project) => {
+        let services: Array<{ serviceName?: string }> = [];
+        try {
+          if (typeof project.services === "string" && project.services.trim()) {
+            services = JSON.parse(project.services);
+          }
+        } catch {
+          services = [];
+        }
+        return (Array.isArray(services) ? services : []).map((service) => ({
           id: project.id,
           serviceName: service.serviceName || "Service",
-        }))
-      ) || [];
+        }));
+      }) || [];
 
   if (isLoading) {
     return (
@@ -41,13 +49,20 @@ export function ActiveServicesList() {
 
   return (
     <section className="mt-20">
-      <div className="space-y-1">
-        <p className="font-['Outfit'] font-semibold text-gray-900 text-xl leading-7">
-          Active Services{" "}
-        </p>
-        <p className="font-normal text-gray-600 text-sm leading-5">
-          Your currently running services
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-1">
+          <p className="font-['Outfit'] font-semibold text-gray-900 text-xl leading-7">
+            Active Services{" "}
+          </p>
+          <p className="font-normal text-gray-600 text-sm leading-5">
+            Your currently running services
+          </p>
+        </div>
+        <Link href="/client/subscriptions">
+          <Button variant="gradient">
+            Need more services? Upgrade your plan
+          </Button>
+        </Link>
       </div>
 
       <div className="mt-10 grid gap-4 lg:grid-cols-3">

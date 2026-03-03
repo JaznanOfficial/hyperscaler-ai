@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -55,9 +57,12 @@ function parseList<T>(raw: unknown, fallback: T): T[] {
   }
 }
 
+const OVERALL_METRIC_ID = "SOFTWARE_DEVELOPMENT_OVERALL";
+
 export function SoftwareDevelopmentOverallTab({
   defaultValues,
   onChange,
+  serviceId,
 }: ServiceInputProps) {
   const initialTimeline = useMemo(
     () =>
@@ -79,6 +84,56 @@ export function SoftwareDevelopmentOverallTab({
 
   const [timeline, setTimeline] = useState<TimelineItem[]>(initialTimeline);
   const [blockers, setBlockers] = useState<BlockerItem[]>(initialBlockers);
+  const [isSaving, setIsSaving] = useState(false);
+  const [metricId, setMetricId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadOverallData = async () => {
+      try {
+        const response = await fetch(
+          `/api/employee/metrics/get?serviceId=${OVERALL_METRIC_ID}&metricId=${OVERALL_METRIC_ID}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch overall data");
+        }
+
+        const data = await response.json();
+
+        if (data.metricHistories && data.metricHistories.length > 0) {
+          const metricHistory = data.metricHistories[0];
+          setMetricId(metricHistory.id);
+          const history = metricHistory.history as Record<string, string>;
+
+          if (history.project_timeline) {
+            try {
+              const parsedTimeline = JSON.parse(history.project_timeline);
+              if (Array.isArray(parsedTimeline) && parsedTimeline.length > 0) {
+                setTimeline(parsedTimeline);
+              }
+            } catch {
+              // Keep initial timeline if parsing fails
+            }
+          }
+
+          if (history.active_blockers) {
+            try {
+              const parsedBlockers = JSON.parse(history.active_blockers);
+              if (Array.isArray(parsedBlockers) && parsedBlockers.length > 0) {
+                setBlockers(parsedBlockers);
+              }
+            } catch {
+              // Keep initial blockers if parsing fails
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error loading overall data:", error);
+      }
+    };
+
+    loadOverallData();
+  }, []);
 
   const persist = useCallback(
     (field: string, value: unknown) => {
@@ -119,6 +174,62 @@ export function SoftwareDevelopmentOverallTab({
     updateBlockers(next);
   };
 
+  const handleDeleteTimeline = (index: number) => {
+    const next = timeline.filter((_, idx) => idx !== index);
+    updateTimeline(next);
+  };
+
+  const handleDeleteBlocker = (index: number) => {
+    const next = blockers.filter((_, idx) => idx !== index);
+    updateBlockers(next);
+  };
+
+  const handleSaveOverview = async () => {
+    setIsSaving(true);
+    try {
+      const history = {
+        project_timeline: JSON.stringify(timeline),
+        active_blockers: JSON.stringify(blockers),
+      };
+
+      const method = metricId ? "PUT" : "POST";
+      const url = metricId
+        ? `/api/employee/metrics/${metricId}`
+        : "/api/employee/metrics";
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          serviceId: OVERALL_METRIC_ID,
+          entryDate: new Date().toISOString(),
+          history,
+          id: OVERALL_METRIC_ID,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save overview");
+      }
+
+      const data = await response.json();
+      if (!metricId && data.metricHistory) {
+        setMetricId(data.metricHistory.id);
+      }
+
+      toast.success(
+        metricId
+          ? "Overview updated successfully"
+          : "Overview saved successfully"
+      );
+    } catch (error) {
+      toast.error("Error saving overview");
+      console.error(error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card className="rounded-2xl border border-slate-200 bg-white p-6">
@@ -135,9 +246,17 @@ export function SoftwareDevelopmentOverallTab({
           <div className="space-y-4">
             {timeline.map((item, index) => (
               <div
-                className="grid gap-4 rounded-xl border border-slate-100 p-4 md:grid-cols-3"
-                key={`${index}-${item.milestone}-${item.timeframe}`}
+                className="relative grid gap-4 rounded-xl border border-slate-100 p-4 md:grid-cols-3"
+                key={index}
               >
+                <button
+                  className="absolute top-2 right-2 rounded-md p-1 hover:bg-slate-100"
+                  onClick={() => handleDeleteTimeline(index)}
+                  type="button"
+                >
+                  <X className="h-4 w-4 text-slate-500" />
+                </button>
+
                 <div className="space-y-1.5">
                   <Label className="font-medium text-slate-700 text-sm">
                     Milestone name
@@ -225,9 +344,17 @@ export function SoftwareDevelopmentOverallTab({
           <div className="space-y-4">
             {blockers.map((blocker, index) => (
               <div
-                className="space-y-4 rounded-xl border border-slate-100 p-4"
-                key={`${index}-${blocker.title}-${blocker.waitingOn}`}
+                className="relative space-y-4 rounded-xl border border-slate-100 p-4"
+                key={index}
               >
+                <button
+                  className="absolute top-2 right-2 rounded-md p-1 hover:bg-slate-100"
+                  onClick={() => handleDeleteBlocker(index)}
+                  type="button"
+                >
+                  <X className="h-4 w-4 text-slate-500" />
+                </button>
+
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-1.5">
                     <Label className="font-medium text-slate-700 text-sm">
@@ -294,8 +421,14 @@ export function SoftwareDevelopmentOverallTab({
       </Card>
 
       <div className="flex justify-end">
-        <Button className="min-w-[140px]" size="lg" type="button">
-          Save overview
+        <Button
+          className="min-w-[140px]"
+          disabled={isSaving}
+          onClick={handleSaveOverview}
+          size="lg"
+          type="button"
+        >
+          {isSaving ? "Saving..." : "Save overview"}
         </Button>
       </div>
     </div>
