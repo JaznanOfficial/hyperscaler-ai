@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import type { LucideIcon } from "lucide-react";
 import {
   AlertTriangle,
@@ -7,6 +8,7 @@ import {
   Signal,
   TrendingUp,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { ConversionFunnelSection } from "./conversion-funnel-section";
@@ -59,16 +61,42 @@ const insights: Insight[] = [
   },
 ];
 
-const coldEmailMetrics = [
-  { label: "Emails Sent", value: "12,450" },
-  { label: "Open Rate", value: "34.2%" },
-  { label: "Reply Rate", value: "8.5%" },
-  { label: "Bounce Rate", value: "2%" },
-  { label: "Spam Rate", value: "3%" },
-  { label: "Conversion Rate", value: "12%" },
-];
-
 export function ColdEmailPerformanceCard() {
+  const [todayDate, setTodayDate] = useState<string>("");
+
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    setTodayDate(`${year}-${month}-${day}`);
+  }, []);
+
+  const { data: metricsData } = useQuery({
+    queryKey: ["cold-email-metrics", todayDate],
+    queryFn: async () => {
+      if (!todayDate) return null;
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=COLD_EMAIL&date=${todayDate}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+    enabled: !!todayDate,
+  });
+
+  const metricHistory = metricsData?.metricHistories?.[0];
+  const history = metricHistory?.history || {};
+
+  const coldEmailMetrics = [
+    { label: "Emails Sent", value: history?.emails_sent || "0" },
+    { label: "Open Rate", value: `${history?.open_rate || "0"}%` },
+    { label: "Reply Rate", value: `${history?.reply_rate || "0"}%` },
+    { label: "Bounce Rate", value: `${history?.bounce_rate || "0"}%` },
+    { label: "Spam Rate", value: `${history?.spam_rate || "0"}%` },
+    { label: "Conversion Rate", value: `${history?.conversion_rate || "0"}%` },
+  ];
+
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardContent className="space-y-8">

@@ -48,12 +48,12 @@ const SECTIONS: Array<{
       {
         id: "uiux_screen_worked_on",
         label: "Screen worked on",
-        placeholder: "eg. Onboarding flow",
+        placeholder: "0",
       },
       {
         id: "uiux_screen_approved",
         label: "Screen approved",
-        placeholder: "eg. Pricing v2",
+        placeholder: "0",
       },
       {
         id: "uiux_time_spent",
@@ -77,7 +77,7 @@ const SECTIONS: Array<{
       {
         id: "frontend_features_worked_on",
         label: "Features worked on",
-        placeholder: "eg. Billing portal",
+        placeholder: "0",
       },
       {
         id: "frontend_features_completed",
@@ -107,7 +107,7 @@ const SECTIONS: Array<{
       {
         id: "backend_apis_worked_on",
         label: "APIs worked on",
-        placeholder: "eg. Subscription webhook",
+        placeholder: "0",
       },
       {
         id: "backend_apis_completed",

@@ -61,9 +61,11 @@ export default function ClientStatisticsPage() {
         if (result.success) {
           const dataMap: Record<string, Record<string, unknown>> = {};
           for (const service of result.data) {
-            // Map by service name (key) instead of ID
-            dataMap[service.serviceName] = {
+            // Map by serviceId to avoid duplicates, but use serviceName as display key
+            const key = service.serviceId || service.serviceName;
+            dataMap[key] = {
               serviceName: service.serviceName,
+              serviceId: service.serviceId,
               metrics: service.metrics,
               history: service.history || [],
             };
@@ -146,15 +148,15 @@ export default function ClientStatisticsPage() {
                 30-day trend comparison across conversion rates.
               </p>
             </div>
-            <ConversionRateTrendsCard serviceData={serviceData} />
+            <ConversionRateTrendsCard />
           </div>
 
           <div className="space-y-6">
-            {Object.entries(serviceData).map(([serviceName, data]) => {
+            {Object.entries(serviceData).map(([, data]) => {
+              const dataRecord = data as Record<string, unknown>;
+              const displayName = dataRecord.serviceName as string;
               const serviceKey = Object.keys(SERVICE_CARD_MAP).find(
-                (key) =>
-                  SERVICE_CARD_MAP[key].name === serviceName ||
-                  serviceName.toUpperCase().includes(key.replace(/_/g, " "))
+                (key) => SERVICE_CARD_MAP[key].name === displayName
               );
 
               if (!serviceKey) return null;
@@ -163,10 +165,7 @@ export default function ClientStatisticsPage() {
               const CardComponent = config.component;
 
               return (
-                <CardComponent
-                  data={(data as Record<string, unknown>).metrics}
-                  key={serviceName}
-                />
+                <CardComponent data={dataRecord.metrics} key={displayName} />
               );
             })}
           </div>

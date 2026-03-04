@@ -1,163 +1,200 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import type { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import type { CSSProperties } from "react";
+import { useMemo } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const conversionConfig = {
-  cmm2b4i9v000010kjjn8gnunc: {
-    // Paid Ads
-    label: "Paid Ads",
-    color: "#0ea5e9",
-  },
-  cmm2b4j58000110kj3fouc7wr: {
-    // Social Media
-    label: "Social Media Marketing",
-    color: "#f97316",
-  },
-  cmm2b4jrx000210kjr0wxdk7s: {
-    // Cold Calling
-    label: "Cold Calling",
-    color: "#22c55e",
-  },
-  cmm2b4khh000310kjfskvvs9k: {
-    // Branding Content
-    label: "Branding & Content Creation",
-    color: "#a855f7",
-  },
-  cmm2b4l4d000410kj1l2q2qkc: {
-    // Cold Linkedin
-    label: "Cold LinkedIn Outreach",
-    color: "#ec4899",
-  },
-  cmm2b4lr0000510kj84s4g4f3: {
-    // Software Development
-    label: "Software Development",
-    color: "#14b8a6",
-  },
-} satisfies Record<string, { label: string; color: string }>;
+const serviceColorMap: Record<string, string> = {
+  PAID_ADS: "#0ea5e9",
+  SOCIAL_MEDIA: "#f97316",
+  COLD_CALLING: "#22c55e",
+  BRAND_CONTENT: "#a855f7",
+  LINKEDIN_OUTREACH: "#ec4899",
+  COLD_EMAIL: "#06b6d4",
+  SOFTWARE_DEVELOPMENT: "#14b8a6",
+};
 
-const conversionData = [
-  { day: 2 },
-  { day: 4 },
-  { day: 6 },
-  { day: 8 },
-  { day: 10 },
-  { day: 12 },
-  { day: 16 },
-  { day: 20 },
-  { day: 24 },
-  { day: 28 },
-  { day: 30 },
-];
+export function ConversionRateTrendsCard() {
+  // Fetch all active services' metrics for last 30 days
+  const { data: metricsData } = useQuery({
+    queryKey: ["conversion-rate-trends-30days"],
+    queryFn: async () => {
+      const response = await fetch("/api/client/metrics/all?lastDays=30");
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+  });
 
-const dayCategories = conversionData.map((point) => point.day);
+  const { categories, series, colors, legendItems } = useMemo(() => {
+    const allMetrics = metricsData?.data || [];
 
-interface ConversionRateTrendsCardProps {
-  serviceData: Record<
-    string,
-    { serviceName: string; metrics: any; history: any[] }
-  >;
-}
+    // 6 periods: Day 5, 10, 15, 20, 25, 30
+    const periodDays = [5, 10, 15, 20, 25, 30];
+    const periodLabels = [
+      "Day 5",
+      "Day 10",
+      "Day 15",
+      "Day 20",
+      "Day 25",
+      "Day 30",
+    ];
 
-export function ConversionRateTrendsCard({
-  serviceData,
-}: ConversionRateTrendsCardProps) {
-  // Filter to only active services
-  const activeServiceIds = Object.keys(serviceData).filter(
-    (id) => conversionConfig[id as keyof typeof conversionConfig]
-  );
+    // Group metrics by service and calculate conversion rates for each period
+    const serviceData: Record<string, { name: string; periodRates: number[] }> =
+      {};
 
-  // Use dummy data if no active services
-  const hasData = activeServiceIds.length > 0;
+    for (const metric of allMetrics) {
+      const serviceId = metric.serviceId;
+      const serviceName = metric.serviceName;
 
-  // Collect all unique dates from all services
-  const allDates = new Set<string>();
-  for (const serviceId of activeServiceIds) {
-    const history = serviceData[serviceId]?.history || [];
-    for (const record of history) {
-      const date = new Date(record.date);
-      allDates.add(date.toISOString().split("T")[0]); // YYYY-MM-DD format
-    }
-  }
-
-  // Sort dates
-  const sortedDates = Array.from(allDates).sort();
-
-  // Use dates as categories, or fallback to day numbers if no history
-  const categories =
-    sortedDates.length > 0
-      ? sortedDates.map((date) => new Date(date).getDate())
-      : dayCategories;
-
-  // Generate series with real historical data or dummy data
-  const conversionSeries = hasData
-    ? activeServiceIds.map((serviceId) => {
-        const history = serviceData[serviceId]?.history || [];
-
-        // Map history to conversion rate values
-        const dataPoints = sortedDates.map((date) => {
-          const record = history.find((h: any) => {
-            const recordDate = new Date(h.date).toISOString().split("T")[0];
-            return recordDate === date;
-          });
-
-          if (record?.metrics?.["Conversion Rate"]) {
-            const value = Number.parseFloat(
-              String(record.metrics["Conversion Rate"]).replace(/[^0-9.-]/g, "")
-            );
-            return Number.isNaN(value) ? 0 : value;
-          }
-          return 0;
-        });
-
-        return {
-          name: conversionConfig[serviceId as keyof typeof conversionConfig]
-            .label,
-          data: dataPoints.length > 0 ? dataPoints : [0],
+      if (!serviceData[serviceId]) {
+        serviceData[serviceId] = {
+          name: serviceName,
+          periodRates: Array(6).fill(0),
         };
-      })
-    : [
-        {
-          name: "Paid Ads",
-          data: [5, 8, 12, 15, 18, 22, 25, 28, 32, 35, 38],
-        },
-        {
-          name: "Social Media Marketing",
-          data: [3, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32],
-        },
-      ];
+      }
 
-  // Generate legend items
-  const legendItems = hasData
-    ? activeServiceIds.map((serviceId) => ({
-        key: serviceId,
-        label:
-          conversionConfig[serviceId as keyof typeof conversionConfig].label,
-        color:
-          conversionConfig[serviceId as keyof typeof conversionConfig].color,
-      }))
-    : [
-        { key: "paid-ads", label: "Paid Ads", color: "#0ea5e9" },
-        {
-          key: "social-media",
-          label: "Social Media Marketing",
-          color: "#f97316",
-        },
-      ];
+      // Group data by period
+      const periodData: Record<number, { values: number[]; count: number }> =
+        {};
+      for (let i = 0; i < 6; i++) {
+        periodData[i] = { values: [], count: 0 };
+      }
 
-  // Get colors for active services or dummy colors
-  const activeColors = hasData
-    ? activeServiceIds.map(
-        (id) => conversionConfig[id as keyof typeof conversionConfig].color
-      )
-    : ["#0ea5e9", "#f97316"];
+      for (const historyRecord of metric.metricHistories) {
+        const date = new Date(historyRecord.entryDate);
+        const dayOfMonth = date.getDate();
 
-  const conversionChartOptions: ApexOptions = {
+        // Parse history if it's a string, otherwise use as is
+        let history: Record<string, unknown> = {};
+        if (typeof historyRecord.history === "string") {
+          try {
+            history = JSON.parse(historyRecord.history);
+          } catch {
+            history = {};
+          }
+        } else {
+          history = historyRecord.history as Record<string, unknown>;
+        }
+
+        let conversionRate = 0;
+
+        if (serviceId === "PAID_ADS") {
+          // PAID_ADS has nested meta and google objects
+          let totalClicks = 0;
+          let totalConversions = 0;
+
+          const metaData = history?.meta as Record<string, unknown>;
+          if (metaData) {
+            totalClicks += Number(metaData?.clicks) || 0;
+            totalConversions += Number(metaData?.conversion_rate) || 0;
+          }
+
+          const googleData = history?.google as Record<string, unknown>;
+          if (googleData) {
+            totalClicks += Number(googleData?.clicks) || 0;
+            totalConversions += Number(googleData?.conversion_rate) || 0;
+          }
+
+          conversionRate =
+            totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
+        } else if (serviceId === "SOCIAL_MEDIA") {
+          const impressions = Number(history?.impressions) || 0;
+          const linksClicked = Number(history?.links_clicked) || 0;
+          conversionRate =
+            impressions > 0 ? (linksClicked / impressions) * 100 : 0;
+        } else if (serviceId === "COLD_EMAIL") {
+          const sent = Number(history?.emails_sent) || 0;
+          const replyRate = Number(history?.reply_rate) || 0;
+          conversionRate = sent > 0 ? replyRate : 0;
+        } else if (serviceId === "COLD_CALLING") {
+          const calls = Number(history?.calls_made) || 0;
+          const pickedUp = Number(history?.calls_picked_up) || 0;
+          conversionRate = calls > 0 ? (pickedUp / calls) * 100 : 0;
+        } else if (serviceId === "LINKEDIN_OUTREACH") {
+          const messagesSent = Number(history?.messages_sent) || 0;
+          const replyRate = Number(history?.reply_rate) || 0;
+          conversionRate = messagesSent > 0 ? replyRate : 0;
+        } else if (serviceId === "BRAND_CONTENT") {
+          const contentEngagementRate =
+            Number(history?.content_engagement_rate) || 0;
+          conversionRate = contentEngagementRate;
+        } else if (serviceId === "SOFTWARE_DEVELOPMENT") {
+          // Software development doesn't have conversion rates
+          conversionRate = 0;
+        }
+
+        // Determine which period this day belongs to
+        let periodIndex = -1;
+        if (dayOfMonth <= 5) periodIndex = 0;
+        else if (dayOfMonth <= 10) periodIndex = 1;
+        else if (dayOfMonth <= 15) periodIndex = 2;
+        else if (dayOfMonth <= 20) periodIndex = 3;
+        else if (dayOfMonth <= 25) periodIndex = 4;
+        else periodIndex = 5;
+
+        if (periodIndex >= 0) {
+          periodData[periodIndex].values.push(conversionRate);
+          periodData[periodIndex].count++;
+        }
+      }
+
+      // Calculate average for each period
+      for (let i = 0; i < 6; i++) {
+        const data = periodData[i];
+        if (data.count > 0) {
+          const avg = data.values.reduce((a, b) => a + b, 0) / data.count;
+          serviceData[serviceId].periodRates[i] = Math.round(avg * 10) / 10;
+        }
+      }
+    }
+
+    // Generate series for all services
+    const chartSeries = Object.entries(serviceData).map(([serviceId, data]) => {
+      return {
+        name: data.name,
+        data: data.periodRates,
+        serviceId,
+      };
+    });
+
+    const chartColors = chartSeries.map(
+      (s) =>
+        serviceColorMap[s.serviceId as keyof typeof serviceColorMap] ||
+        "#94a3b8"
+    );
+
+    const legend = chartSeries.map((s) => ({
+      label: s.name,
+      color:
+        serviceColorMap[s.serviceId as keyof typeof serviceColorMap] ||
+        "#94a3b8",
+    }));
+
+    return {
+      categories: periodLabels,
+      series:
+        chartSeries.length > 0
+          ? chartSeries
+          : [
+              {
+                name: "Paid Ads",
+                data: [5, 8, 12, 15, 18, 22],
+              },
+            ],
+      colors: chartColors.length > 0 ? chartColors : ["#0ea5e9"],
+      legendItems:
+        legend.length > 0 ? legend : [{ label: "Paid Ads", color: "#0ea5e9" }],
+    };
+  }, [metricsData]);
+
+  const chartOptions: ApexOptions = {
     chart: {
       id: "conversion-rate-trends",
       type: "line",
@@ -167,9 +204,9 @@ export function ConversionRateTrendsCard({
     },
     stroke: {
       curve: "smooth",
-      width: 3,
+      width: 2.5,
     },
-    colors: activeColors,
+    colors,
     dataLabels: {
       enabled: false,
     },
@@ -228,23 +265,20 @@ export function ConversionRateTrendsCard({
         <div className="h-90 w-full">
           <ApexChart
             height={360}
-            options={conversionChartOptions}
-            series={conversionSeries}
+            options={chartOptions}
+            series={series}
             type="line"
             width="100%"
           />
         </div>
-        <div className="flex flex-wrap justify-center gap-4 text-center text-sm">
+        <div className="flex flex-wrap justify-center gap-6 text-sm">
           {legendItems.map((item) => (
-            <div
-              className="inline-flex items-center gap-2 text-slate-600"
-              key={item.key}
-            >
+            <div className="inline-flex items-center gap-2" key={item.label}>
               <span
-                className="size-2.5 rounded-full"
+                className="size-3 rounded-full"
                 style={{ backgroundColor: item.color } as CSSProperties}
               />
-              <span>{item.label}</span>
+              <span className="text-slate-700">{item.label}</span>
             </div>
           ))}
         </div>

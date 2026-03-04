@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Activity, AlertTriangle, Target, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
@@ -19,17 +20,45 @@ import { InsightsDrawer } from "./insights-drawer";
 import { KeyInsightsGrid } from "./key-insights-grid";
 import { PaidAdsRoasTrendChart } from "./paid-ads-roas-trend-chart";
 
-const spendDistribution = [
-  { name: "Google Ads", value: 3000, color: "#1e3a8a" },
-  { name: "Meta Ads", value: 2000, color: "#6b21a8" },
-];
+interface SpendItem {
+  name: string;
+  value: number;
+  color: string;
+}
 
 interface PaidAdsPerformanceCardProps {
   data?: Record<string, any>;
 }
 
 export function PaidAdsPerformanceCard({ data }: PaidAdsPerformanceCardProps) {
-  const [metrics, setMetrics] = useState<Record<string, string | number>>({
+  const [todayDate, setTodayDate] = useState<string>("");
+
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    setTodayDate(`${year}-${month}-${day}`);
+  }, []);
+
+  const { data: metricsData } = useQuery({
+    queryKey: ["paid-ads-metrics", todayDate],
+    queryFn: async () => {
+      if (!todayDate) return null;
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=PAID_ADS&date=${todayDate}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+    enabled: !!todayDate,
+  });
+
+  const metricHistory = metricsData?.metricHistories?.[0];
+  const history = metricHistory?.history || {};
+
+  // Combine meta and google data
+  const combinedMetrics: Record<string, string | number> = {
     Impressions: "0",
     Clicks: "0",
     Reach: "0",
@@ -37,117 +66,91 @@ export function PaidAdsPerformanceCard({ data }: PaidAdsPerformanceCardProps) {
     "Cost-per-lead (CPL)": "$0",
     "Click-Through Rate (CTR)": "0%",
     "Conversion Rate": "0%",
-  });
+  };
 
-  useEffect(() => {
-    const fetchTodayMetrics = async () => {
-      try {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, "0");
-        const day = String(today.getDate()).padStart(2, "0");
-        const dateStr = `${year}-${month}-${day}`;
+  const fields = [
+    "impressions",
+    "clicks",
+    "reach",
+    "cost_per_click",
+    "cost_per_lead",
+    "click_through_rate",
+    "conversion_rate",
+  ];
 
-        const response = await fetch(
-          `/api/client/metrics?serviceId=PAID_ADS&date=${dateStr}`
-        );
+  // Extract meta and google data
+  const metaData = history?.meta || {};
+  const googleData = history?.google || {};
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch metrics");
-        }
+  // Impressions, Clicks, Reach - sum them
+  combinedMetrics.Impressions = (
+    (Number(metaData?.impressions) || 0) +
+    (Number(googleData?.impressions) || 0)
+  ).toString();
+  combinedMetrics.Clicks = (
+    (Number(metaData?.clicks) || 0) + (Number(googleData?.clicks) || 0)
+  ).toString();
+  combinedMetrics.Reach = (
+    (Number(metaData?.reach) || 0) + (Number(googleData?.reach) || 0)
+  ).toString();
 
-        const result = await response.json();
+  // Cost-per-click and Cost-per-lead - sum them
+  const metaCPC = Number(metaData?.cpc) || 0;
+  const googleCPC = Number(googleData?.cpc) || 0;
+  combinedMetrics["Cost-per-click (CPC)"] =
+    metaCPC + googleCPC > 0 ? `$${(metaCPC + googleCPC).toFixed(2)}` : "$0";
 
-        if (result.metricHistories && result.metricHistories.length > 0) {
-          const metricHistory = result.metricHistories[0];
-          const history = metricHistory.history as Record<
-            string,
-            Record<string, string>
-          >;
+  const metaCPL = Number(metaData?.cpl) || 0;
+  const googleCPL = Number(googleData?.cpl) || 0;
+  combinedMetrics["Cost-per-lead (CPL)"] =
+    metaCPL + googleCPL > 0 ? `$${(metaCPL + googleCPL).toFixed(2)}` : "$0";
 
-          // Combine meta and google data
-          const combinedMetrics: Record<string, string | number> = {};
+  // CTR and Conversion Rate - average them
+  const metaCTR = Number(metaData?.ctr) || 0;
+  const googleCTR = Number(googleData?.ctr) || 0;
+  const ctrCount = (metaData?.ctr ? 1 : 0) + (googleData?.ctr ? 1 : 0);
+  const avgCTR = ctrCount > 0 ? (metaCTR + googleCTR) / ctrCount : 0;
+  combinedMetrics["Click-Through Rate (CTR)"] =
+    avgCTR > 0 ? `${avgCTR.toFixed(2)}%` : "0%";
 
-          const fields = [
-            "Impressions",
-            "Clicks",
-            "Reach",
-            "Cost-per-click (CPC)",
-            "Cost-per-lead (CPL)",
-            "Click-Through Rate (CTR)",
-            "Conversion Rate",
-          ];
+  const metaConv = Number(metaData?.conversion_rate) || 0;
+  const googleConv = Number(googleData?.conversion_rate) || 0;
+  const convCount =
+    (metaData?.conversion_rate ? 1 : 0) + (googleData?.conversion_rate ? 1 : 0);
+  const avgConv = convCount > 0 ? (metaConv + googleConv) / convCount : 0;
+  combinedMetrics["Conversion Rate"] =
+    avgConv > 0 ? `${avgConv.toFixed(2)}%` : "0%";
 
-          for (const field of fields) {
-            const metaValue = history.meta?.[field];
-            const googleValue = history.google?.[field];
+  // Calculate spend distribution
+  const metaCosts = Number(metaData?.costs) || 0;
+  const googleCosts = Number(googleData?.costs) || 0;
+  const totalSpend = metaCosts + googleCosts;
 
-            if (
-              field === "Cost-per-click (CPC)" ||
-              field === "Cost-per-lead (CPL)"
-            ) {
-              // For currency fields, sum the values
-              const metaNum = metaValue
-                ? Number.parseFloat(metaValue.replace(/[^0-9.-]/g, ""))
-                : 0;
-              const googleNum = googleValue
-                ? Number.parseFloat(googleValue.replace(/[^0-9.-]/g, ""))
-                : 0;
-              const total = metaNum + googleNum;
-              combinedMetrics[field] =
-                total > 0 ? `$${total.toFixed(2)}` : "$0";
-            } else if (
-              field === "Click-Through Rate (CTR)" ||
-              field === "Conversion Rate"
-            ) {
-              // For percentage fields, average them
-              const metaNum = metaValue
-                ? Number.parseFloat(metaValue.replace(/[^0-9.-]/g, ""))
-                : 0;
-              const googleNum = googleValue
-                ? Number.parseFloat(googleValue.replace(/[^0-9.-]/g, ""))
-                : 0;
-              const count = (metaValue ? 1 : 0) + (googleValue ? 1 : 0);
-              const average = count > 0 ? (metaNum + googleNum) / count : 0;
-              combinedMetrics[field] =
-                average > 0 ? `${average.toFixed(2)}%` : "0%";
-            } else {
-              // For numeric fields, sum them
-              const metaNum = metaValue ? Number.parseInt(metaValue, 10) : 0;
-              const googleNum = googleValue
-                ? Number.parseInt(googleValue, 10)
-                : 0;
-              combinedMetrics[field] = (metaNum + googleNum).toString();
-            }
-          }
-
-          setMetrics(combinedMetrics);
-        }
-      } catch (error) {
-        console.error("Error fetching metrics:", error);
-      }
-    };
-
-    fetchTodayMetrics();
-  }, []);
+  const spendDistribution: SpendItem[] = [
+    { name: "Google Ads", value: googleCosts, color: "#1e3a8a" },
+    { name: "Meta Ads", value: metaCosts, color: "#6b21a8" },
+  ];
 
   const paidMetrics = [
-    { label: "Impressions", value: metrics.Impressions || "0" },
-    { label: "Clicks", value: metrics.Clicks || "0" },
-    { label: "Reach", value: metrics.Reach || "0" },
+    { label: "Impressions", value: combinedMetrics.Impressions || "0" },
+    { label: "Clicks", value: combinedMetrics.Clicks || "0" },
+    { label: "Reach", value: combinedMetrics.Reach || "0" },
     {
       label: "Cost-per-click (CPC)",
-      value: metrics["Cost-per-click (CPC)"] || "$0",
+      value: combinedMetrics["Cost-per-click (CPC)"] || "$0",
     },
     {
       label: "Cost-per-lead (CPL)",
-      value: metrics["Cost-per-lead (CPL)"] || "$0",
+      value: combinedMetrics["Cost-per-lead (CPL)"] || "$0",
     },
     {
       label: "Click-Through Rate (CTR)",
-      value: metrics["Click-Through Rate (CTR)"] || "0%",
+      value: combinedMetrics["Click-Through Rate (CTR)"] || "0%",
     },
-    { label: "Conversion Rate", value: metrics["Conversion Rate"] || "0%" },
+    {
+      label: "Conversion Rate",
+      value: combinedMetrics["Conversion Rate"] || "0%",
+    },
   ];
 
   const paidInsights = [
@@ -222,9 +225,7 @@ export function PaidAdsPerformanceCard({ data }: PaidAdsPerformanceCardProps) {
               <p className="font-semibold text-slate-900 text-sm">
                 ROAS Performance Trend
               </p>
-              <p className="text-slate-500 text-xs">
-                30-day performance vs target (3.0x).
-              </p>
+              <p className="text-slate-500 text-xs">30-day performance.</p>
             </div>
             <PaidAdsRoasTrendChart />
           </div>
@@ -257,7 +258,7 @@ export function PaidAdsPerformanceCard({ data }: PaidAdsPerformanceCardProps) {
               </ResponsiveContainer>
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
                 <span className="font-semibold text-3xl text-slate-900">
-                  $5,000
+                  ${totalSpend.toLocaleString()}
                 </span>
                 <span className="text-slate-500 text-xs">Total Spend</span>
               </div>
@@ -277,7 +278,10 @@ export function PaidAdsPerformanceCard({ data }: PaidAdsPerformanceCardProps) {
                   </div>
                   <span className="font-semibold text-slate-900">
                     ${item.value.toLocaleString()} (
-                    {Math.round((item.value / 5000) * 100)}%)
+                    {totalSpend > 0
+                      ? Math.round((item.value / totalSpend) * 100)
+                      : 0}
+                    %)
                   </span>
                 </div>
               ))}

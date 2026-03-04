@@ -23,27 +23,28 @@ export interface ProgressProps
 const Progress = forwardRef<
   ElementRef<typeof ProgressPrimitiveRoot>,
   ProgressProps
->(({ className, indicatorClassName, indicatorStyle, value, ...props }, ref) => (
-  <ProgressPrimitiveRoot
-    className={cn(
-      "relative h-2 w-full overflow-hidden rounded-full bg-muted",
-      className
-    )}
-    ref={ref}
-    {...props}
-  >
-    <ProgressPrimitiveIndicator
+>(({ className, indicatorClassName, indicatorStyle, value, ...props }, ref) => {
+  const numValue = Number(value) || 0;
+
+  return (
+    <ProgressPrimitiveRoot
       className={cn(
-        "h-full w-full flex-1 bg-primary transition-all",
-        indicatorClassName
+        "relative h-2 w-full overflow-visible rounded-full bg-muted",
+        className
       )}
-      style={{
-        transform: `translateX(-${100 - (Number(value) || 0)}%)`,
-        ...indicatorStyle,
-      }}
-    />
-  </ProgressPrimitiveRoot>
-));
+      ref={ref}
+      {...props}
+    >
+      <ProgressPrimitiveIndicator
+        className={cn("h-full bg-primary transition-all", indicatorClassName)}
+        style={{
+          width: `${numValue}%`,
+          ...indicatorStyle,
+        }}
+      />
+    </ProgressPrimitiveRoot>
+  );
+});
 Progress.displayName = ProgressPrimitiveRoot.displayName;
 
 export { Progress };
