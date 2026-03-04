@@ -1,6 +1,8 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, PhoneCall, TrendingUp, UsersRound } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -15,27 +17,6 @@ import {
 } from "./cold-calling-call-meeting-chart";
 import { InsightsDrawer } from "./insights-drawer";
 import { KeyInsightsGrid } from "./key-insights-grid";
-
-const callQualityMetrics = [
-  {
-    label: "Average call duration",
-    change: "↑ 18% vs last period",
-    detail: "4:32 minutes",
-    percent: 72,
-  },
-  {
-    label: "Qualified Conversions",
-    change: "↑ 8% vs last period",
-    detail: "246 (76% of pick-ups)",
-    percent: 76,
-  },
-  {
-    label: "Follow-Up Scheduled",
-    change: "↑ 8% vs last period",
-    detail: "153 (62% of qualified)",
-    percent: 62,
-  },
-];
 
 const callInsights = [
   {
@@ -75,11 +56,175 @@ interface ColdCallingPerformanceCardProps {
 export function ColdCallingPerformanceCard({
   data,
 }: ColdCallingPerformanceCardProps) {
+  const [todayDate, setTodayDate] = useState<string>("");
+
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    setTodayDate(`${year}-${month}-${day}`);
+  }, []);
+
+  const { data: metricsData } = useQuery({
+    queryKey: ["cold-calling-metrics", todayDate],
+    queryFn: async () => {
+      if (!todayDate) return null;
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=COLD_CALLING&date=${todayDate}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+    enabled: !!todayDate,
+  });
+
+  // Calculate current month and previous month date ranges
+  const today = new Date();
+  const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const currentMonthEnd = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0
+  );
+  const previousMonthStart = new Date(
+    today.getFullYear(),
+    today.getMonth() - 1,
+    1
+  );
+  const previousMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+
+  const formatDateForApi = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const { data: currentMonthData } = useQuery({
+    queryKey: ["cold-calling-metrics-current-month"],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=COLD_CALLING&startDate=${formatDateForApi(currentMonthStart)}&endDate=${formatDateForApi(currentMonthEnd)}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+  });
+
+  const { data: previousMonthData } = useQuery({
+    queryKey: ["cold-calling-metrics-previous-month"],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=COLD_CALLING&startDate=${formatDateForApi(previousMonthStart)}&endDate=${formatDateForApi(previousMonthEnd)}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+  });
+
+  const metricHistory = metricsData?.metricHistories?.[0];
+  const history = metricHistory?.history || {};
+
+  // Calculate pick-up rate
+  const callsMade = Number(history?.calls_made) || 0;
+  const callsPickedUp = Number(history?.calls_picked_up) || 0;
+  const pickUpRate =
+    callsMade > 0 ? Math.round((callsPickedUp / callsMade) * 100) : 0;
+
+  // Calculate month-over-month comparison for calls made
+  const calculateTotalCalls = (data: Record<string, any>) => {
+    const records = data?.metricHistories || [];
+    if (records.length === 0) return 0;
+    const sum = records.reduce((acc: number, record: Record<string, any>) => {
+      const calls = Number(record.history?.calls_made) || 0;
+      return acc + calls;
+    }, 0);
+    return sum;
+  };
+
+  // Calculate average pick-up rate for the month
+  const calculateAveragePickUpRate = (data: Record<string, any>) => {
+    const records = data?.metricHistories || [];
+    if (records.length === 0) return 0;
+    const rates = records.map((record: Record<string, any>) => {
+      const callsMade = Number(record.history?.calls_made) || 0;
+      const callsPickedUp = Number(record.history?.calls_picked_up) || 0;
+      return callsMade > 0 ? Math.round((callsPickedUp / callsMade) * 100) : 0;
+    });
+    return Math.round(rates.reduce((a, b) => a + b, 0) / rates.length);
+  };
+
+  // Calculate average meetings booked for the month
+  const calculateAverageMeetings = (data: Record<string, any>) => {
+    const records = data?.metricHistories || [];
+    if (records.length === 0) return 0;
+    const sum = records.reduce((acc: number, record: Record<string, any>) => {
+      const meetings = Number(record.history?.meetings_booked) || 0;
+      return acc + meetings;
+    }, 0);
+    return Math.round(sum / records.length);
+  };
+
+  const currentMonthCalls = calculateTotalCalls(currentMonthData || {});
+  const previousMonthCalls = calculateTotalCalls(previousMonthData || {});
+  const callsChange = currentMonthCalls - previousMonthCalls;
+  const callsIsPositive = callsChange >= 0;
+
+  const currentMonthPickUpRate = calculateAveragePickUpRate(
+    currentMonthData || {}
+  );
+  const previousMonthPickUpRate = calculateAveragePickUpRate(
+    previousMonthData || {}
+  );
+  const pickUpRateChange = currentMonthPickUpRate - previousMonthPickUpRate;
+  const pickUpIsPositive = pickUpRateChange >= 0;
+
+  const currentMonthMeetings = calculateAverageMeetings(currentMonthData || {});
+  const previousMonthMeetings = calculateAverageMeetings(
+    previousMonthData || {}
+  );
+  const meetingsChange = currentMonthMeetings - previousMonthMeetings;
+  const meetingsIsPositive = meetingsChange >= 0;
+
+  const callsPercent = Math.round((currentMonthCalls / 1000) * 100);
+  const meetingsPercent = currentMonthMeetings;
+
+  const callQualityMetrics = [
+    {
+      label: "Calls Made",
+      change: callsIsPositive
+        ? `↑ ${callsChange}% vs last month`
+        : `↓ ${Math.abs(callsChange)}% vs last month`,
+      detail: `${callsMade} calls`,
+      percent: callsPercent,
+    },
+    {
+      label: "Pick-Up Rate",
+      change: pickUpIsPositive
+        ? `↑ ${pickUpRateChange}% vs last month`
+        : `↓ ${Math.abs(pickUpRateChange)}% vs last month`,
+      detail: `${callsPickedUp} picked up`,
+      percent: currentMonthPickUpRate,
+    },
+    {
+      label: "Meetings Booked",
+      change: meetingsIsPositive
+        ? `↑ ${meetingsChange}% vs last month`
+        : `↓ ${Math.abs(meetingsChange)}% vs last month`,
+      detail: `${history?.meetings_booked || "0"} meetings`,
+      percent: meetingsPercent,
+    },
+  ];
+
   const coldMetrics = [
-    { label: "Calls Made", value: data?.["Total Calls"] || "0" },
-    { label: "Pick-Up Rate", value: data?.["Connected Calls"] || "0" },
-    { label: "Meetings Booked", value: data?.["Meetings Booked"] || "0" },
-    { label: "Conversion Rate", value: data?.["Conversion Rate"] || "0" },
+    { label: "Calls Made", value: history?.calls_made || "0" },
+    {
+      label: "Follow Up Scheduled",
+      value: history?.follow_ups_scheduled || "0",
+    },
+    { label: "Meetings Booked", value: history?.meetings_booked || "0" },
+    { label: "Pick Up", value: history?.calls_picked_up || "0" },
   ];
   return (
     <Card className="border-none bg-white shadow-sm">

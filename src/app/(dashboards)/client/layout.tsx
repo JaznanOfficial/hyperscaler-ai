@@ -35,12 +35,12 @@ const clientNavItems: AppSidebarNavItem[] = [
     icon: "creditCard",
     matchSubRoutes: false,
   },
-  {
-    title: "Services",
-    url: "/client/services",
-    icon: "layers",
-    matchSubRoutes: false,
-  },
+  // {
+  //   title: "Services",
+  //   url: "/client/services",
+  //   icon: "layers",
+  //   matchSubRoutes: false,
+  // },
 ];
 
 function getRoleBasedRedirect(role: string): string {

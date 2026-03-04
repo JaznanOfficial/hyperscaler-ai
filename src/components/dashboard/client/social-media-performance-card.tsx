@@ -1,11 +1,13 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import {
   AlertTriangle,
   MousePointerClick,
   TrendingUp,
   UserPlus,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -59,14 +61,104 @@ interface SocialMediaPerformanceCardProps {
 export function SocialMediaPerformanceCard({
   data,
 }: SocialMediaPerformanceCardProps) {
+  const [todayDate, setTodayDate] = useState<string>("");
+
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    setTodayDate(`${year}-${month}-${day}`);
+  }, []);
+
+  const { data: metricsData } = useQuery({
+    queryKey: ["social-media-metrics", todayDate],
+    queryFn: async () => {
+      if (!todayDate) return null;
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=SOCIAL_MEDIA&date=${todayDate}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+    enabled: !!todayDate,
+  });
+
+  // Calculate current month and previous month date ranges
+  const today = new Date();
+  const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const currentMonthEnd = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0
+  );
+  const previousMonthStart = new Date(
+    today.getFullYear(),
+    today.getMonth() - 1,
+    1
+  );
+  const previousMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+
+  const formatDateForApi = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const { data: currentMonthData } = useQuery({
+    queryKey: ["social-media-metrics-current-month"],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=SOCIAL_MEDIA&startDate=${formatDateForApi(currentMonthStart)}&endDate=${formatDateForApi(currentMonthEnd)}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+  });
+
+  const { data: previousMonthData } = useQuery({
+    queryKey: ["social-media-metrics-previous-month"],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=SOCIAL_MEDIA&startDate=${formatDateForApi(previousMonthStart)}&endDate=${formatDateForApi(previousMonthEnd)}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+  });
+
+  const metricHistory = metricsData?.metricHistories?.[0];
+  const history = metricHistory?.history || {};
+
+  // Calculate month-over-month comparison for follower growth
+  const calculateAverageFollowers = (data: Record<string, any>) => {
+    const records = data?.metricHistories || [];
+    if (records.length === 0) return 0;
+    const sum = records.reduce((acc: number, record: Record<string, any>) => {
+      const followers = Number(record.history?.followers_gained) || 0;
+      return acc + followers;
+    }, 0);
+    return Math.round(sum / records.length);
+  };
+
+  const currentMonthFollowers = calculateAverageFollowers(
+    currentMonthData || {}
+  );
+  const previousMonthFollowers = calculateAverageFollowers(
+    previousMonthData || {}
+  );
+  const monthOverMonthChange = currentMonthFollowers - previousMonthFollowers;
+  const isPositive = monthOverMonthChange >= 0;
+
   const socialMetrics = [
-    { label: "Impressions", value: data?.Impressions || "0" },
-    { label: "Engagements", value: data?.["Engagement Rate"] || "0" },
-    { label: "Followers Gained", value: data?.Followers || "0" },
-    { label: "Profile Visits", value: data?.Reach || "0" },
-    { label: "Shares / Saves", value: "0" },
-    { label: "Links Clicked", value: data?.["Link Clicks"] || "0" },
-    { label: "Conversion Rate", value: data?.["Posts Published"] || "0" },
+    { label: "Impressions", value: history?.impressions || "0" },
+    { label: "Engagements", value: history?.engagements || "0" },
+    { label: "Followers Gained", value: history?.followers_gained || "0" },
+    { label: "Profile Visits", value: history?.profile_visits || "0" },
+    { label: "Shares / Saves", value: history?.shares_saves || "0" },
+    { label: "Links Clicked", value: history?.links_clicked || "0" },
+    { label: "Engagement Rate", value: `${history?.conversion_rate || "0"}%` },
   ];
   return (
     <Card className="border-none bg-white shadow-sm">
@@ -139,8 +231,13 @@ export function SocialMediaPerformanceCard({
               </p>
             </div>
             <SocialMediaFollowerGrowthChart />
-            <p className="font-semibold text-emerald-600 text-sm">
-              ↑ 12% vs last month
+            <p
+              className={`font-semibold text-sm ${
+                isPositive ? "text-emerald-600" : "text-red-600"
+              }`}
+            >
+              {isPositive ? "↑" : "↓"} {Math.abs(monthOverMonthChange)}% vs last
+              month
             </p>
           </div>
         </section>
