@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ActiveServicesStatusCard } from "@/components/dashboard/client/active-services-status-card";
 import { BrandingContentPerformanceCard } from "@/components/dashboard/client/branding-content-performance-card";
 import { ColdCallingPerformanceCard } from "@/components/dashboard/client/cold-calling-performance-card";
 import { ColdEmailPerformanceCard } from "@/components/dashboard/client/cold-email-performance-card";
@@ -88,7 +87,7 @@ export default function ClientStatisticsPage() {
   const hasAnyServices = Object.keys(serviceData).length > 0;
 
   return (
-    <div className="space-y-6 p-4">
+    <div className="space-y-6">
       <div className="max-w-xl">
         <h1
           className="font-semibold text-3xl leading-10"
@@ -114,29 +113,16 @@ export default function ClientStatisticsPage() {
 
       {hasAnyServices && (
         <>
-          <div className="grid gap-6 xl:grid-cols-2">
-            <div className="h-full space-y-3">
-              <div>
-                <h2 className="font-semibold text-slate-900 text-xl">
-                  Overall Progress
-                </h2>
-                <p className="text-slate-600 text-sm">
-                  Combined progress across all active services.
-                </p>
-              </div>
-              <OverallProgressCard />
+          <div className="space-y-3">
+            <div>
+              <h2 className="font-semibold text-slate-900 text-xl">
+                Overall Progress
+              </h2>
+              <p className="text-slate-600 text-sm">
+                Combined progress across all active services.
+              </p>
             </div>
-            <div className="h-full space-y-3">
-              <div>
-                <h2 className="font-semibold text-slate-900 text-xl">
-                  Active Services Status
-                </h2>
-                <p className="text-slate-600 text-sm">
-                  Quick highlights that show service health status.
-                </p>
-              </div>
-              <ActiveServicesStatusCard serviceData={serviceData} />
-            </div>
+            <OverallProgressCard />
           </div>
 
           <div className="space-y-3">
