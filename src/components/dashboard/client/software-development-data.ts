@@ -46,7 +46,7 @@ export const softwareClickRateData = [
 ] as const;
 
 export const summaryMetrics = [
-  { label: "Features This Week", value: "12" },
+  { label: "Features", value: "12" },
   { label: "Bugs Closed", value: "23" },
   { label: "Uptime", value: "99.8%" },
   { label: "Test Coverage", value: "87%" },

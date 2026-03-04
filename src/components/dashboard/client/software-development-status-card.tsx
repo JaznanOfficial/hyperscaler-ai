@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { KeyInsightsGrid } from "./key-insights-grid";
 import { SoftwareDevelopmentChartSection } from "./software-development-chart-section";
-import { SoftwareDevelopmentClickRateCard } from "./software-development-click-rate-card";
+import { SoftwareDevelopmentOverviewCard } from "./software-development-click-rate-card";
 import { softwareInsights } from "./software-development-data";
 import { SoftwareDevelopmentMetricsRow } from "./software-development-metrics-row";
 import { SoftwareDevelopmentTeamStatusCard } from "./software-development-team-status-card";
@@ -46,10 +46,8 @@ export function SoftwareDevelopmentStatusCard({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* <SoftwareDevelopmentOverviewSection /> */}
-
         <section className="grid gap-6 lg:grid-cols-2">
-          <SoftwareDevelopmentClickRateCard />
+          <SoftwareDevelopmentOverviewCard />
           <SoftwareDevelopmentTeamStatusCard />
         </section>
         <SoftwareDevelopmentMetricsRow />

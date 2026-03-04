@@ -1,6 +1,8 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, TrendingUp, UsersRound } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import {
   Card,
@@ -17,11 +19,6 @@ import {
 import { BrandingContentEngagementChart } from "./branding-content-engagement-chart";
 import { InsightsDrawer } from "./insights-drawer";
 import { KeyInsightsGrid } from "./key-insights-grid";
-
-const clickRateData = [
-  { name: "Clicked", value: 46, color: "#147638" },
-  { name: "Not Clicked", value: 54, color: "#979CA3" },
-];
 
 const brandingInsights = [
   {
@@ -62,13 +59,68 @@ interface BrandingContentPerformanceCardProps {
 export function BrandingContentPerformanceCard({
   data,
 }: BrandingContentPerformanceCardProps) {
-  const brandingMetrics = [
-    { label: "Assets Produced", value: data?.["Articles Published"] || "0" },
-    { label: "Approval Rate", value: "95.5%" },
-    { label: "Content Engagement", value: data?.["Engagement Rate"] || "0" },
-    { label: "Brand Search Volume", value: data?.["Total Views"] || "0" },
-    { label: "Conversion Rate", value: data?.["Leads Generated"] || "0" },
-  ];
+  const [todayDate, setTodayDate] = useState<string>("");
+
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    setTodayDate(`${year}-${month}-${day}`);
+  }, []);
+
+  const { data: metricsData } = useQuery({
+    queryKey: ["branding-content-metrics", todayDate],
+    queryFn: async () => {
+      if (!todayDate) return null;
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=BRAND_CONTENT&date=${todayDate}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+    enabled: !!todayDate,
+  });
+
+  const { brandingMetrics, clickRateData } = useMemo(() => {
+    const metricHistory = metricsData?.metricHistories?.[0];
+    const history = metricHistory?.history || {};
+
+    const assetsProduced = Number(history?.assets_produced) || 0;
+    const approvalRate = Number(history?.approval_rate) || 0;
+    const contentEngagementRate = Number(history?.content_engagement_rate) || 0;
+    const brandSearchVolume = Number(history?.brand_search_volume) || 0;
+    const conversionRate = Number(history?.conversion_rate) || 0;
+    const contentClickedRate = Number(history?.content_clicked_rate) || 0;
+
+    const metrics = [
+      { label: "Assets Produced", value: assetsProduced.toString() },
+      { label: "Approval Rate", value: `${approvalRate.toFixed(1)}%` },
+      {
+        label: "Content Engagement Rate",
+        value: `${contentEngagementRate.toFixed(1)}%`,
+      },
+      {
+        label: "Brand Search Volume",
+        value: `${brandSearchVolume.toFixed(1)}%`,
+      },
+      { label: "Conversion Rate", value: `${conversionRate.toFixed(1)}%` },
+    ];
+
+    // Calculate click rate data from content_clicked_rate
+    const clickedPercentage = contentClickedRate;
+    const notClickedPercentage = 100 - contentClickedRate;
+
+    const clickData = [
+      { name: "Clicked", value: clickedPercentage, color: "#147638" },
+      { name: "Not Clicked", value: notClickedPercentage, color: "#979CA3" },
+    ];
+
+    return {
+      brandingMetrics: metrics,
+      clickRateData: clickData,
+    };
+  }, [metricsData]);
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardHeader className="space-y-6">
@@ -145,7 +197,7 @@ export function BrandingContentPerformanceCard({
               </ResponsiveContainer>
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
                 <span className="font-semibold text-3xl text-slate-900">
-                  46%
+                  {clickRateData[0]?.value.toFixed(1)}%
                 </span>
                 <span className="text-slate-500 text-xs">Click Rate</span>
               </div>

@@ -63,6 +63,7 @@ export function SoftwareDevelopmentOverallTab({
   defaultValues,
   onChange,
   serviceId,
+  clientId,
 }: ServiceInputProps) {
   const initialTimeline = useMemo(
     () =>
@@ -89,9 +90,11 @@ export function SoftwareDevelopmentOverallTab({
 
   useEffect(() => {
     const loadOverallData = async () => {
+      if (!clientId) return;
+
       try {
         const response = await fetch(
-          `/api/employee/metrics/get?serviceId=${OVERALL_METRIC_ID}&metricId=${OVERALL_METRIC_ID}`
+          `/api/employee/metrics/get?clientId=${clientId}&serviceId=${OVERALL_METRIC_ID}&metricId=${OVERALL_METRIC_ID}`
         );
 
         if (!response.ok) {
@@ -133,7 +136,7 @@ export function SoftwareDevelopmentOverallTab({
     };
 
     loadOverallData();
-  }, []);
+  }, [clientId]);
 
   const persist = useCallback(
     (field: string, value: unknown) => {
@@ -185,6 +188,11 @@ export function SoftwareDevelopmentOverallTab({
   };
 
   const handleSaveOverview = async () => {
+    if (!clientId) {
+      toast.error("Missing client ID");
+      return;
+    }
+
     setIsSaving(true);
     try {
       const history = {
@@ -197,15 +205,18 @@ export function SoftwareDevelopmentOverallTab({
         ? `/api/employee/metrics/${metricId}`
         : "/api/employee/metrics";
 
+      const payload = {
+        clientId,
+        serviceId: OVERALL_METRIC_ID,
+        entryDate: new Date().toISOString(),
+        history,
+        id: OVERALL_METRIC_ID,
+      };
+
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          serviceId: OVERALL_METRIC_ID,
-          entryDate: new Date().toISOString(),
-          history,
-          id: OVERALL_METRIC_ID,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

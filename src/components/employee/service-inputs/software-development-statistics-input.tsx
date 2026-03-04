@@ -47,7 +47,7 @@ export function SoftwareDevelopmentStatisticsInput({
           const day = String(selectedDate.getDate()).padStart(2, "0");
           const dateStr = `${year}-${month}-${day}`;
           const response = await fetch(
-            `/api/employee/metrics/get?serviceId=${serviceId}&date=${dateStr}`
+            `/api/employee/metrics/get?clientId=${clientId}&serviceId=${serviceId}&date=${dateStr}`
           );
 
           if (!response.ok) {
@@ -232,8 +232,10 @@ export function SoftwareDevelopmentStatisticsInput({
 
       <TabsContent value="all">
         <SoftwareDevelopmentOverallTab
+          clientId={clientId}
           defaultValues={defaultValues}
           onChange={onChange}
+          serviceId={serviceId}
         />
       </TabsContent>
     </Tabs>

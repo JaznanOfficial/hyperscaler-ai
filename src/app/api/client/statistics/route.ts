@@ -42,8 +42,9 @@ export async function GET() {
 
       for (const service of parsedServices) {
         const serviceId = service.serviceId || "";
+        // Always use SERVICE_NAMES mapping for consistency, fallback to serviceName from data
         const serviceName =
-          service.serviceName || SERVICE_NAMES[serviceId] || "Unknown Service";
+          SERVICE_NAMES[serviceId] || service.serviceName || "Unknown Service";
 
         // Only include APPROVED services in statistics
         if (clientService.status === "APPROVED") {
