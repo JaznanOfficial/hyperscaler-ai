@@ -2,49 +2,117 @@
 
 import type { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
+import { useEffect, useMemo, useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const statusCards = [
-  {
-    label: "Active Services",
-    value: "3",
-    color: "text-sky-600",
-    bgColor: "bg-sky-50",
-    borderColor: "border-sky-100",
-    chartColor: "#0ea5e9",
-  },
-  {
-    label: "On Track",
-    value: "1",
-    color: "text-emerald-600",
-    bgColor: "bg-emerald-50",
-    borderColor: "border-emerald-100",
-    chartColor: "#10b981",
-  },
-  {
-    label: "Needs Attention",
-    value: "2",
-    color: "text-amber-600",
-    bgColor: "bg-amber-50",
-    borderColor: "border-amber-100",
-    chartColor: "#f59e0b",
-  },
-  {
-    label: "Time saved due to AI",
-    value: "28hrs",
-    subValue: "/week",
-    color: "text-fuchsia-600",
-    bgColor: "bg-fuchsia-50",
-    borderColor: "border-fuchsia-100",
-    chartColor: "#d946ef",
-    isTimeSaved: true,
-  },
-];
+const DEFAULT_OVERVIEW = {
+  overallProgress: "73%",
+  activeServices: "3",
+  onTrackServices: "1",
+  needsAttentionServices: "2",
+  timeSaved: "28hrs/week",
+};
+
+const parsePercentageValue = (value?: string) => {
+  if (!value) {
+    return 0;
+  }
+
+  const numeric = Number.parseFloat(value.replace(/[^\d.]/g, ""));
+  if (Number.isNaN(numeric)) {
+    return 0;
+  }
+
+  return Math.min(Math.max(numeric, 0), 100);
+};
+
+const splitTimeSaved = (value?: string) => {
+  if (!value) {
+    return { primary: "0", sub: "" };
+  }
+  const slashIndex = value.indexOf("/");
+  if (slashIndex === -1) {
+    return { primary: value.trim(), sub: "" };
+  }
+  return {
+    primary: value.slice(0, slashIndex).trim(),
+    sub: value.slice(slashIndex).trim(),
+  };
+};
 
 export function OverallProgressCard() {
+  const [overview, setOverview] = useState(DEFAULT_OVERVIEW);
+  const [chartValue, setChartValue] = useState(() =>
+    parsePercentageValue(DEFAULT_OVERVIEW.overallProgress)
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadOverview = async () => {
+      try {
+        const response = await fetch("/api/client/overall-progress");
+        if (!response.ok) {
+          throw new Error("Failed to fetch overall progress");
+        }
+
+        const data = await response.json();
+        if (!(data?.success && data?.data && isMounted)) {
+          return;
+        }
+
+        setOverview((prev) => ({ ...prev, ...data.data }));
+        setChartValue(parsePercentageValue(data.data.overallProgress));
+      } catch (error) {
+        console.error("Client overall progress error", error);
+      }
+    };
+
+    loadOverview();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const statusCards = useMemo(() => {
+    const timeSaved = splitTimeSaved(overview.timeSaved);
+    return [
+      {
+        label: "Active Services",
+        value: overview.activeServices || "0",
+        color: "text-sky-600",
+        bgColor: "bg-sky-50",
+        borderColor: "border-sky-100",
+      },
+      {
+        label: "On Track",
+        value: overview.onTrackServices || "0",
+        color: "text-emerald-600",
+        bgColor: "bg-emerald-50",
+        borderColor: "border-emerald-100",
+      },
+      {
+        label: "Needs Attention",
+        value: overview.needsAttentionServices || "0",
+        color: "text-amber-600",
+        bgColor: "bg-amber-50",
+        borderColor: "border-amber-100",
+      },
+      {
+        label: "Time saved due to AI",
+        value: timeSaved.primary || "0",
+        subValue: timeSaved.sub,
+        color: "text-fuchsia-600",
+        bgColor: "bg-fuchsia-50",
+        borderColor: "border-fuchsia-100",
+        isTimeSaved: true,
+      },
+    ];
+  }, [overview]);
   const chartOptions: ApexOptions = {
     chart: {
       type: "radialBar" as const,
@@ -119,7 +187,7 @@ export function OverallProgressCard() {
             <ApexChart
               height={320}
               options={chartOptions}
-              series={[73]}
+              series={[chartValue]}
               type="radialBar"
               width="100%"
             />

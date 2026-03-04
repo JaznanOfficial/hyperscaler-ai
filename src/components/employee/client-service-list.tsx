@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { EmployeeClientSummary } from "@/app/(dashboards)/employee/clients/page";
+import { GeneralMetricsDialog } from "@/components/employee/general-metrics-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -36,8 +37,8 @@ function EmployeeClientListItem({ client }: { client: EmployeeClientSummary }) {
 
   return (
     <li className="px-4 py-4">
-      <div className="flex w-full flex-col gap-4 rounded-xl text-left sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-1 flex-col gap-2">
+      <div className="flex w-full flex-col gap-4 rounded-xl text-left lg:flex-row lg:items-start lg:gap-8">
+        <div className="flex flex-1 flex-col gap-2 lg:max-w-sm">
           <div className="flex flex-wrap items-center gap-3">
             <p className="font-semibold text-lg text-slate-900">
               {client.clientName}
@@ -54,14 +55,14 @@ function EmployeeClientListItem({ client }: { client: EmployeeClientSummary }) {
             {client.clientId.slice(0, 4).toUpperCase()}
           </p>
         </div>
-        <div className="flex flex-col items-start gap-3 sm:items-end">
-          <div className="flex flex-wrap gap-2">
+        <div className="flex w-full flex-col items-start gap-3 sm:flex-row sm:items-start lg:flex-1 lg:flex-row lg:items-start lg:justify-end">
+          <div className="flex w-full flex-wrap gap-2 lg:max-w-2xl lg:justify-start">
             {client.services.length === 0 ? (
               <Badge variant="outline">No services</Badge>
             ) : (
               client.services.map((service) => (
                 <Button
-                  className="cursor-pointer"
+                  className="cursor-pointer rounded-full px-3 text-sm"
                   key={service.id}
                   onClick={() => goToService(service.id)}
                   size="sm"
@@ -71,6 +72,9 @@ function EmployeeClientListItem({ client }: { client: EmployeeClientSummary }) {
                 </Button>
               ))
             )}
+          </div>
+          <div className="w-full sm:w-auto">
+            <GeneralMetricsDialog clientId={client.clientId} />
           </div>
         </div>
       </div>
