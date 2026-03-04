@@ -1,32 +1,46 @@
 "use client";
 
 import type { ApexOptions } from "apexcharts";
-import { Clock } from "lucide-react";
 import dynamic from "next/dynamic";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const statusBreakdown = [
+const statusCards = [
   {
     label: "Active Services",
     value: "3",
-
-    badgeColor: "bg-sky-100 text-sky-700",
+    color: "text-sky-600",
+    bgColor: "bg-sky-50",
+    borderColor: "border-sky-100",
+    chartColor: "#0ea5e9",
   },
   {
     label: "On Track",
     value: "1",
-
-    badgeColor: "bg-emerald-100 text-emerald-700",
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    borderColor: "border-emerald-100",
+    chartColor: "#10b981",
   },
   {
     label: "Needs Attention",
     value: "2",
-
-    badgeColor: "bg-amber-100 text-amber-700",
+    color: "text-amber-600",
+    bgColor: "bg-amber-50",
+    borderColor: "border-amber-100",
+    chartColor: "#f59e0b",
+  },
+  {
+    label: "Time saved due to AI",
+    value: "28hrs",
+    subValue: "/week",
+    color: "text-fuchsia-600",
+    bgColor: "bg-fuchsia-50",
+    borderColor: "border-fuchsia-100",
+    chartColor: "#d946ef",
+    isTimeSaved: true,
   },
 ];
 
@@ -74,58 +88,71 @@ export function OverallProgressCard() {
     },
   };
 
+  const getSmallChartOptions = (color: string): ApexOptions => ({
+    chart: {
+      type: "area" as const,
+      sparkline: { enabled: true },
+      animations: { enabled: true },
+    },
+    colors: [color],
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.3,
+        opacityTo: 0.1,
+      },
+    },
+    stroke: {
+      curve: "smooth",
+      width: 2,
+    },
+    tooltip: { enabled: false },
+  });
+
   return (
-    <Card className="min-h-76 rounded-3xl border border-slate-100 bg-white">
-      <CardContent className="flex h-full flex-col items-center justify-center gap-6 lg:flex-row">
-        <div className="h-full w-full">
-          <div className="h-full w-full">
+    <Card className="rounded-3xl border border-slate-100 bg-white">
+      <CardContent className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+        {/* Left side - Main chart (hidden on mobile) */}
+        <div className="flex-col items-center justify-center lg:flex lg:w-1/2">
+          <div className="w-full">
             <ApexChart
-              height={480}
+              height={320}
               options={chartOptions}
               series={[73]}
               type="radialBar"
               width="100%"
             />
           </div>
-          <div className="mx-auto flex w-[87%] items-center justify-between font-semibold text-slate-900 text-sm md:w-[77%] lg:w-[87%]">
+          <div className="mx-auto flex w-70 items-center justify-between font-semibold text-slate-900 text-sm md:w-70 lg:w-70 xl:w-70">
             <span>0</span>
             <span>100</span>
           </div>
         </div>
-        <div className="flex w-full flex-col gap-4 text-slate-600 text-sm lg:max-w-xs">
-          {statusBreakdown.map((status) => (
-            <div
-              className="flex items-center justify-between"
-              key={status.label}
-            >
-              <div className="flex items-center gap-2 font-medium text-gray-700 text-xs">
-                {status.label}
-              </div>
-              <span
-                className={cn(
-                  "min-w-9 rounded px-2 py-1 text-center font-semibold text-sm",
-                  status.badgeColor
-                )}
-              >
-                {status.value}
-              </span>
-            </div>
-          ))}
 
-          <div className="rounded-lg border border-fuchsia-200/70 bg-fuchsia-50/80 p-3">
-            <div className="flex items-start gap-3">
-              {/* <div className="flex h-9 w-9 items-center justify-center rounded-lg text-fuchsia-600"> */}
-              <Clock className="size-6 text-fuchsia-600" />
-              {/* </div> */}
-              <div className="space-y-1">
-                <p className="font-['Inter'] font-medium text-slate-900 text-xs">
-                  Time Saved due to AI
+        {/* Right side - Status cards grid */}
+        <div className="w-full lg:w-1/2">
+          <div className="grid grid-cols-2 gap-4">
+            {statusCards.map((card) => (
+              <div
+                className={`rounded-2xl border ${card.borderColor} ${card.bgColor} p-4`}
+                key={card.label}
+              >
+                <p className="mb-3 font-medium text-slate-700 text-xs">
+                  {card.label}
                 </p>
-                <p className="font-['Inter'] font-semibold text-[#9E32DD] text-sm">
-                  28 hrs/week
-                </p>
+                <div className="flex items-end justify-between">
+                  <div>
+                    <p className={`font-bold text-3xl ${card.color}`}>
+                      {card.value}
+                    </p>
+                    {card.subValue && (
+                      <p className={`text-xs ${card.color}`}>{card.subValue}</p>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </CardContent>
