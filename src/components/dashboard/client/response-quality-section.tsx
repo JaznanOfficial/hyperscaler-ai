@@ -1,5 +1,7 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 import {
@@ -8,12 +10,42 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-const responseQualityData = [
-  { name: "Positive", value: 70, color: "#15803d" },
-  { name: "Negative", value: 30, color: "#b91c1c" },
-];
-
 export function ResponseQualitySection() {
+  const { data: metricsData } = useQuery({
+    queryKey: ["cold-email-response-quality"],
+    queryFn: async () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const day = String(today.getDate()).padStart(2, "0");
+      const dateStr = `${year}-${month}-${day}`;
+
+      const response = await fetch(
+        `/api/client/metrics/get?serviceId=COLD_EMAIL&date=${dateStr}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      return response.json();
+    },
+  });
+
+  const { responseQualityData, positivePercentage } = useMemo(() => {
+    const metricHistory = metricsData?.metricHistories?.[0];
+    const history = metricHistory?.history || {};
+
+    const positiveResponse = Number(history?.positive_response_rate) || 0;
+    const negativeResponse = Number(history?.negative_response_rate) || 0;
+
+    const data = [
+      { name: "Positive", value: positiveResponse, color: "#15803d" },
+      { name: "Negative", value: negativeResponse, color: "#b91c1c" },
+    ];
+
+    return {
+      responseQualityData: data,
+      positivePercentage: positiveResponse.toFixed(0),
+    };
+  }, [metricsData]);
+
   return (
     <div className="rounded-2xl border border-slate-100 p-4">
       <ChartContainer className="mx-auto h-72 max-w-sm" config={{}}>
@@ -35,7 +67,9 @@ export function ResponseQualitySection() {
           </PieChart>
         </ResponsiveContainer>
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="font-semibold text-3xl text-slate-900">70%</span>
+          <span className="font-semibold text-3xl text-slate-900">
+            {positivePercentage}%
+          </span>
           <span className="text-slate-500 text-xs">Positive Response</span>
         </div>
       </ChartContainer>
@@ -52,7 +86,9 @@ export function ResponseQualitySection() {
               />
               {item.name} Response
             </div>
-            <span className="font-semibold text-slate-900">{item.value}%</span>
+            <span className="font-semibold text-slate-900">
+              {item.value.toFixed(0)}%
+            </span>
           </div>
         ))}
       </div>
