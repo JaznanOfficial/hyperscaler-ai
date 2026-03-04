@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import type { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import type { CSSProperties } from "react";
 import { useMemo } from "react";
@@ -69,33 +70,64 @@ export function ConversionRateTrendsCard() {
       for (const historyRecord of metric.metricHistories) {
         const date = new Date(historyRecord.entryDate);
         const dayOfMonth = date.getDate();
-        const history = historyRecord.history as Record<string, unknown>;
+
+        // Parse history if it's a string, otherwise use as is
+        let history: Record<string, unknown> = {};
+        if (typeof historyRecord.history === "string") {
+          try {
+            history = JSON.parse(historyRecord.history);
+          } catch {
+            history = {};
+          }
+        } else {
+          history = historyRecord.history as Record<string, unknown>;
+        }
+
         let conversionRate = 0;
 
         if (serviceId === "PAID_ADS") {
-          const clicks = Number(history?.clicks) || 0;
-          const conversions = Number(history?.conversions) || 0;
-          conversionRate = clicks > 0 ? (conversions / clicks) * 100 : 0;
+          // PAID_ADS has nested meta and google objects
+          let totalClicks = 0;
+          let totalConversions = 0;
+
+          const metaData = history?.meta as Record<string, unknown>;
+          if (metaData) {
+            totalClicks += Number(metaData?.clicks) || 0;
+            totalConversions += Number(metaData?.conversion_rate) || 0;
+          }
+
+          const googleData = history?.google as Record<string, unknown>;
+          if (googleData) {
+            totalClicks += Number(googleData?.clicks) || 0;
+            totalConversions += Number(googleData?.conversion_rate) || 0;
+          }
+
+          conversionRate =
+            totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
         } else if (serviceId === "SOCIAL_MEDIA") {
           const impressions = Number(history?.impressions) || 0;
-          const clicks = Number(history?.clicks) || 0;
-          conversionRate = impressions > 0 ? (clicks / impressions) * 100 : 0;
+          const linksClicked = Number(history?.links_clicked) || 0;
+          conversionRate =
+            impressions > 0 ? (linksClicked / impressions) * 100 : 0;
         } else if (serviceId === "COLD_EMAIL") {
           const sent = Number(history?.emails_sent) || 0;
-          const replies = Number(history?.replies) || 0;
-          conversionRate = sent > 0 ? (replies / sent) * 100 : 0;
+          const replyRate = Number(history?.reply_rate) || 0;
+          conversionRate = sent > 0 ? replyRate : 0;
         } else if (serviceId === "COLD_CALLING") {
           const calls = Number(history?.calls_made) || 0;
-          const conversions = Number(history?.conversions) || 0;
-          conversionRate = calls > 0 ? (conversions / calls) * 100 : 0;
+          const pickedUp = Number(history?.calls_picked_up) || 0;
+          conversionRate = calls > 0 ? (pickedUp / calls) * 100 : 0;
         } else if (serviceId === "LINKEDIN_OUTREACH") {
-          const outreach = Number(history?.outreach_sent) || 0;
-          const responses = Number(history?.responses) || 0;
-          conversionRate = outreach > 0 ? (responses / outreach) * 100 : 0;
+          const messagesSent = Number(history?.messages_sent) || 0;
+          const replyRate = Number(history?.reply_rate) || 0;
+          conversionRate = messagesSent > 0 ? replyRate : 0;
         } else if (serviceId === "BRAND_CONTENT") {
-          const impressions = Number(history?.impressions) || 0;
-          const clicks = Number(history?.clicks) || 0;
-          conversionRate = impressions > 0 ? (clicks / impressions) * 100 : 0;
+          const contentEngagementRate =
+            Number(history?.content_engagement_rate) || 0;
+          conversionRate = contentEngagementRate;
+        } else if (serviceId === "SOFTWARE_DEVELOPMENT") {
+          // Software development doesn't have conversion rates
+          conversionRate = 0;
         }
 
         // Determine which period this day belongs to

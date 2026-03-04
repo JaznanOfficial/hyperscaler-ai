@@ -152,7 +152,9 @@ export function ColdCallingPerformanceCard({
       const callsPickedUp = Number(record.history?.calls_picked_up) || 0;
       return callsMade > 0 ? Math.round((callsPickedUp / callsMade) * 100) : 0;
     });
-    return Math.round(rates.reduce((a, b) => a + b, 0) / rates.length);
+    return Math.round(
+      rates.reduce((a: number, b: number) => a + b, 0) / rates.length
+    );
   };
 
   // Calculate average meetings booked for the month

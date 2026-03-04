@@ -63,21 +63,44 @@ export function ColdCallingCallMeetingChart() {
     const notConverted: number[] = [];
 
     for (const week of weeks) {
-      const weekRecords = metricHistories.filter((record) => {
-        const recordDate = new Date(record.entryDate);
-        const dayOfMonth = recordDate.getDate();
-        return dayOfMonth >= week.start && dayOfMonth <= week.end;
-      });
+      const weekRecords = metricHistories.filter(
+        (record: {
+          entryDate: string | Date;
+          history?: Record<string, unknown>;
+        }) => {
+          const recordDate = new Date(record.entryDate);
+          const dayOfMonth = recordDate.getDate();
+          return dayOfMonth >= week.start && dayOfMonth <= week.end;
+        }
+      );
 
       cats.push(week.label);
 
-      const totalCalls = weekRecords.reduce((sum, record) => {
-        return sum + (Number(record.history?.calls_made) || 0);
-      }, 0);
+      const totalCalls = weekRecords.reduce(
+        (
+          sum: number,
+          record: {
+            entryDate: string | Date;
+            history?: Record<string, unknown>;
+          }
+        ) => {
+          return sum + (Number(record.history?.calls_made) || 0);
+        },
+        0
+      );
 
-      const totalMeetings = weekRecords.reduce((sum, record) => {
-        return sum + (Number(record.history?.meetings_booked) || 0);
-      }, 0);
+      const totalMeetings = weekRecords.reduce(
+        (
+          sum: number,
+          record: {
+            entryDate: string | Date;
+            history?: Record<string, unknown>;
+          }
+        ) => {
+          return sum + (Number(record.history?.meetings_booked) || 0);
+        },
+        0
+      );
 
       inMeetings.push(totalMeetings);
       notConverted.push(totalCalls - totalMeetings);
