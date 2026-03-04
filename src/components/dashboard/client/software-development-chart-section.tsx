@@ -1,7 +1,7 @@
 "use client";
 
 import { SoftwareBugTrendChart } from "./software-bug-trend-chart";
-import { bugLegend, featuresLegend } from "./software-development-data";
+import { bugLegend } from "./software-development-data";
 import { SoftwareFeaturesDeliveredChart } from "./software-features-delivered-chart";
 
 export function SoftwareDevelopmentChartSection() {
@@ -12,22 +12,19 @@ export function SoftwareDevelopmentChartSection() {
           <p className="font-semibold text-slate-900 text-sm">
             Features Delivered (Week over Week)
           </p>
-          <p className="text-slate-500 text-xs">Planned vs actual output.</p>
+          <p className="text-slate-500 text-xs">
+            Weekly feature delivery tracking.
+          </p>
         </div>
         <SoftwareFeaturesDeliveredChart />
         <div className="flex flex-wrap gap-4 text-sm">
-          {featuresLegend.map((legend) => (
-            <div
-              className="inline-flex items-center gap-2 text-slate-600"
-              key={legend.label}
-            >
-              <span
-                className="size-2.5 rounded-full"
-                style={{ backgroundColor: legend.color }}
-              />
-              <span>{legend.label}</span>
-            </div>
-          ))}
+          <div className="inline-flex items-center gap-2 text-slate-600">
+            <span
+              className="size-2.5 rounded-full"
+              style={{ backgroundColor: "#1E92FF" }}
+            />
+            <span>Delivered</span>
+          </div>
         </div>
       </div>
 
