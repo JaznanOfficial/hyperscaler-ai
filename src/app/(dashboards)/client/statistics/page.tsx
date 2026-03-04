@@ -148,7 +148,7 @@ export default function ClientStatisticsPage() {
                 30-day trend comparison across conversion rates.
               </p>
             </div>
-            <ConversionRateTrendsCard serviceData={serviceData} />
+            <ConversionRateTrendsCard />
           </div>
 
           <div className="space-y-6">
