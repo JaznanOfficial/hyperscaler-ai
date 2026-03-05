@@ -79,14 +79,17 @@ interface ClientServiceMetricsToolV2Output {
   error?: string;
 }
 
-export type ClientServiceMetricsToolOutput =
+type ScopedClientServiceMetricsToolOutput =
   | ServiceScopeOutput
-  | AllServicesScopeOutput
+  | AllServicesScopeOutput;
+
+export type ClientServiceMetricsToolOutput =
+  | ScopedClientServiceMetricsToolOutput
   | { success?: boolean; error?: string };
 
 const hasScopeField = (
   output: unknown
-): output is ClientServiceMetricsToolOutput =>
+): output is ScopedClientServiceMetricsToolOutput =>
   Boolean(
     output &&
       typeof output === "object" &&
@@ -515,6 +518,17 @@ export const renderClientServiceMetricsToolPart = (
             key={callId}
           >
             Error: {output?.error ?? "Unable to retrieve service metrics."}
+          </div>
+        );
+      }
+
+      if (!hasScopeField(output)) {
+        return (
+          <div
+            className={cn(bubbleClassName, "bg-red-50 text-red-900")}
+            key={callId}
+          >
+            Error: Unsupported response format.
           </div>
         );
       }

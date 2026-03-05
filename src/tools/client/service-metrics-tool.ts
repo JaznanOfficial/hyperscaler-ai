@@ -14,6 +14,14 @@ const toIsoString = (value: Date | string): string => {
     : parsed.toISOString();
 };
 
+const toOptionalIsoString = (value?: Date | string): string | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  return toIsoString(value);
+};
+
 export const ClientServiceMetricsTool = tool({
   description:
     "Get all service metrics data for the signed-in client, including metric histories grouped by service. Supports flexible date filtering: query by last N days (e.g., 'last 7 days'), specific date (e.g., 'March 5, 2026'), or date range (e.g., 'from March 1 to March 5, 2026'). Defaults to last 30 days if no date filter is provided.",
@@ -157,14 +165,21 @@ export const ClientServiceMetricsTool = tool({
         serviceId: serviceMetrics.serviceId,
         serviceName: serviceMetrics.serviceName,
         metrics: {},
-        history: serviceMetrics.metricHistories.map((metric) => ({
-          id: metric.id,
-          serviceId: metric.serviceId,
-          history: metric.history,
-          entryDate: toIsoString(metric.entryDate),
-          createdAt: toIsoString(metric.createdAt),
-          updatedAt: toIsoString(metric.updatedAt),
-        })),
+        history: serviceMetrics.metricHistories.map((metric) => {
+          const { createdAt, updatedAt } = metric as {
+            createdAt?: Date | string;
+            updatedAt?: Date | string;
+          };
+
+          return {
+            id: metric.id,
+            serviceId: metric.serviceId,
+            history: metric.history,
+            entryDate: toIsoString(metric.entryDate),
+            createdAt: toOptionalIsoString(createdAt),
+            updatedAt: toOptionalIsoString(updatedAt),
+          };
+        }),
       })
     );
 
