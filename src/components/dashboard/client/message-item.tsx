@@ -210,6 +210,7 @@ export function ClientAgentMessageItem({ message }: { message: ChatMessage }) {
               case "tool-ClientPackagesTool":
                 return renderClientPackagesToolPart(toolPart, bubbleClassName);
               case "tool-ClientServiceMetricsTool":
+              case "tool-ClientSingleServiceMetricsTool":
                 return renderClientServiceMetricsToolPart(
                   toolPart,
                   bubbleClassName
