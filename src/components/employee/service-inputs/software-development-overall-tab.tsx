@@ -59,6 +59,26 @@ function parseList<T>(raw: unknown, fallback: T): T[] {
 
 const OVERALL_METRIC_ID = "SOFTWARE_DEVELOPMENT_OVERALL";
 
+const buildOverviewHistory = (
+  timeline: TimelineItem[],
+  blockers: BlockerItem[]
+) => ({
+  project_timeline: JSON.stringify(timeline),
+  active_blockers: JSON.stringify(blockers),
+});
+
+const buildOverviewPayload = (
+  clientId: string,
+  history: ReturnType<typeof buildOverviewHistory>,
+  metricId: string | null
+) => ({
+  clientId,
+  serviceId: OVERALL_METRIC_ID,
+  entryDate: new Date().toISOString(),
+  history,
+  ...(metricId ? {} : { id: OVERALL_METRIC_ID }),
+});
+
 export function SoftwareDevelopmentOverallTab({
   defaultValues,
   onChange,
@@ -195,23 +215,12 @@ export function SoftwareDevelopmentOverallTab({
 
     setIsSaving(true);
     try {
-      const history = {
-        project_timeline: JSON.stringify(timeline),
-        active_blockers: JSON.stringify(blockers),
-      };
-
+      const history = buildOverviewHistory(timeline, blockers);
       const method = metricId ? "PUT" : "POST";
       const url = metricId
         ? `/api/employee/metrics/${metricId}`
         : "/api/employee/metrics";
-
-      const payload = {
-        clientId,
-        serviceId: OVERALL_METRIC_ID,
-        entryDate: new Date().toISOString(),
-        history,
-        id: OVERALL_METRIC_ID,
-      };
+      const payload = buildOverviewPayload(clientId, history, metricId);
 
       const response = await fetch(url, {
         method,
