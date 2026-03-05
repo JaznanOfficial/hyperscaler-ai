@@ -191,7 +191,11 @@ const formatDateOnly = (value?: string) => {
     return value;
   }
 
-  return parsed.toLocaleDateString();
+  const month = parsed.getUTCMonth() + 1;
+  const day = parsed.getUTCDate();
+  const year = parsed.getUTCFullYear();
+
+  return `${month}/${day}/${year}`;
 };
 
 const formatFilterSummary = (filters?: MetricFilter) => {
