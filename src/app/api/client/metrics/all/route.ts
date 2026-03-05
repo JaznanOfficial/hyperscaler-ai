@@ -19,6 +19,21 @@ export async function GET(request: Request) {
     let queryStartDate: Date;
     let queryEndDate: Date;
 
+    const parseIsoDate = (value: string, endOfDay: boolean) => {
+      const [year, month, day] = value.split("-").map(Number);
+      return new Date(
+        Date.UTC(
+          year,
+          (month ?? 1) - 1,
+          day ?? 1,
+          endOfDay ? 23 : 0,
+          endOfDay ? 59 : 0,
+          endOfDay ? 59 : 0,
+          endOfDay ? 999 : 0
+        )
+      );
+    };
+
     if (lastDays) {
       const days = Number.parseInt(lastDays, 10);
       if (Number.isNaN(days) || days < 1) {
@@ -28,29 +43,16 @@ export async function GET(request: Request) {
         );
       }
       queryEndDate = new Date();
-      queryEndDate.setHours(23, 59, 59, 999);
-      queryStartDate = new Date();
-      queryStartDate.setDate(queryStartDate.getDate() - (days - 1));
-      queryStartDate.setHours(0, 0, 0, 0);
+      queryEndDate.setUTCHours(23, 59, 59, 999);
+      queryStartDate = new Date(queryEndDate);
+      queryStartDate.setUTCDate(queryStartDate.getUTCDate() - (days - 1));
+      queryStartDate.setUTCHours(0, 0, 0, 0);
     } else if (startDate && endDate) {
-      const [startYear, startMonth, startDay] = startDate
-        .split("-")
-        .map(Number);
-      const [endYear, endMonth, endDay] = endDate.split("-").map(Number);
-      queryStartDate = new Date(
-        startYear,
-        startMonth - 1,
-        startDay,
-        0,
-        0,
-        0,
-        0
-      );
-      queryEndDate = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999);
+      queryStartDate = parseIsoDate(startDate, false);
+      queryEndDate = parseIsoDate(endDate, true);
     } else if (date) {
-      const [year, month, day] = date.split("-").map(Number);
-      queryStartDate = new Date(year, month - 1, day, 0, 0, 0, 0);
-      queryEndDate = new Date(year, month - 1, day, 23, 59, 59, 999);
+      queryStartDate = parseIsoDate(date, false);
+      queryEndDate = parseIsoDate(date, true);
     } else {
       return NextResponse.json(
         {

@@ -47,10 +47,139 @@ interface AllServicesScopeOutput {
   error?: string;
 }
 
+interface ClientServiceMetricsToolV2Filters {
+  lastDays?: number;
+  date?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+interface ClientServiceMetricsToolV2Record {
+  id?: string;
+  serviceId?: string;
+  entryDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  history?: unknown;
+}
+
+interface ClientServiceMetricsToolV2Service {
+  serviceId?: string;
+  serviceName?: string;
+  metrics?: Record<string, unknown>;
+  history?: ClientServiceMetricsToolV2Record[];
+}
+
+interface ClientServiceMetricsToolV2Output {
+  success?: boolean;
+  total?: number;
+  servicesCount?: number;
+  data?: ClientServiceMetricsToolV2Service[];
+  filtersApplied?: ClientServiceMetricsToolV2Filters;
+  error?: string;
+}
+
 export type ClientServiceMetricsToolOutput =
   | ServiceScopeOutput
   | AllServicesScopeOutput
   | { success?: boolean; error?: string };
+
+const hasScopeField = (
+  output: unknown
+): output is ClientServiceMetricsToolOutput =>
+  Boolean(
+    output &&
+      typeof output === "object" &&
+      "scope" in output &&
+      typeof (output as { scope?: unknown }).scope === "string"
+  );
+
+const isV2Output = (
+  output: unknown
+): output is ClientServiceMetricsToolV2Output =>
+  Boolean(
+    output &&
+      typeof output === "object" &&
+      Array.isArray((output as ClientServiceMetricsToolV2Output).data)
+  );
+
+const toMetricFilterFromV2 = (
+  filters?: ClientServiceMetricsToolV2Filters
+): MetricFilter | undefined => {
+  if (!filters) {
+    return undefined;
+  }
+
+  if (filters.lastDays && filters.lastDays > 0) {
+    return { type: "lastDays", lastDays: filters.lastDays };
+  }
+
+  if (filters.date) {
+    return { type: "singleDate", start: filters.date, end: filters.date };
+  }
+
+  if (filters.startDate || filters.endDate) {
+    return {
+      start: filters.startDate,
+      end: filters.endDate,
+    };
+  }
+
+  return undefined;
+};
+
+const normalizeV2Record = (
+  record: ClientServiceMetricsToolV2Record,
+  fallbackId: string
+): ServiceMetricRecord => ({
+  id: record.id ?? fallbackId,
+  entryDate:
+    record.entryDate ??
+    record.createdAt ??
+    record.updatedAt ??
+    new Date().toISOString(),
+  history: record.history,
+});
+
+const normalizeV2Service = (
+  service: ClientServiceMetricsToolV2Service,
+  index: number
+): AggregatedServiceMetrics => {
+  const safeServiceId = service.serviceId ?? `SERVICE_${index + 1}`;
+  const safeServiceName = service.serviceName ?? safeServiceId;
+  const records = (service.history ?? []).map((record, recordIndex) =>
+    normalizeV2Record(record, `${safeServiceId}-${recordIndex + 1}`)
+  );
+
+  return {
+    serviceId: safeServiceId,
+    serviceName: safeServiceName,
+    records,
+    totalRecords: records.length,
+  };
+};
+
+const convertV2ToAllServicesOutput = (
+  payload: ClientServiceMetricsToolV2Output
+): AllServicesScopeOutput => {
+  const services = (payload.data ?? []).map((service, index) =>
+    normalizeV2Service(service, index)
+  );
+
+  return {
+    success: payload.success ?? true,
+    scope: "ALL_SERVICES",
+    filters: toMetricFilterFromV2(payload.filtersApplied),
+    totalServicesEvaluated: payload.servicesCount ?? services.length,
+    totalServicesWithMetrics: services.filter(
+      (service) => service.totalRecords > 0
+    ).length,
+    totalRecords:
+      payload.total ??
+      services.reduce((sum, service) => sum + service.totalRecords, 0),
+    data: services,
+  };
+};
 
 const formatDateOnly = (value?: string) => {
   if (!value) {
@@ -90,6 +219,10 @@ const formatLabel = (label: string) =>
     .replace(/_/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase())
     .trim();
+
+const renderInlineValue = (value: ReactNode) => (
+  <span className="font-medium text-slate-900 text-sm">{value}</span>
+);
 
 const tryParseJsonString = (value: string) => {
   const trimmed = value.trim();
@@ -134,12 +267,12 @@ const renderValue = (value: unknown): ReactNode => {
 
     if (objectEntries) {
       return (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {value.map((entry) => {
             const key = JSON.stringify(entry);
             return (
-              <div className="rounded-lg border border-slate-200 p-2" key={key}>
-                {renderKeyValueList(entry as Record<string, unknown>)}
+              <div className="rounded-xl bg-white/80 p-3 shadow-sm" key={key}>
+                {renderCompactRecord(entry as Record<string, unknown>)}
               </div>
             );
           })}
@@ -164,19 +297,30 @@ const renderValue = (value: unknown): ReactNode => {
   return <span className="text-slate-900">{String(value)}</span>;
 };
 
-const renderKeyValueList = (record: Record<string, unknown>) => (
-  <dl className="grid gap-2 sm:grid-cols-2">
+const renderCompactRecord = (record: Record<string, unknown>) => (
+  <dl className="space-y-2">
     {Object.entries(record).map(([key, value]) => (
-      <div className="rounded border border-slate-200 px-2 py-1" key={key}>
-        <dt className="font-semibold text-[11px] text-slate-500 uppercase">
+      <div className="space-y-0.5" key={key}>
+        <dt className="font-semibold text-[11px] text-slate-500 uppercase tracking-wide">
           {formatLabel(key)}
         </dt>
-        <dd className="font-medium text-slate-900 text-sm">
-          {renderValue(value)}
-        </dd>
+        <dd>{renderInlineValue(renderValue(value))}</dd>
       </div>
     ))}
   </dl>
+);
+
+const renderKeyValueList = (record: Record<string, unknown>) => (
+  <div className="grid gap-3 sm:grid-cols-2">
+    {Object.entries(record).map(([key, value]) => (
+      <div className="rounded-xl bg-white/80 p-3 shadow-inner" key={key}>
+        <p className="font-semibold text-[11px] text-slate-500 uppercase tracking-wide">
+          {formatLabel(key)}
+        </p>
+        <div className="mt-1">{renderValue(value)}</div>
+      </div>
+    ))}
+  </div>
 );
 
 const renderHistoryDetails = (history: unknown) => {
@@ -350,7 +494,15 @@ export const renderClientServiceMetricsToolPart = (
         </div>
       );
     case "output-available": {
-      const output = toolPart.output as ClientServiceMetricsToolOutput;
+      const rawOutput = toolPart.output as
+        | ClientServiceMetricsToolOutput
+        | ClientServiceMetricsToolV2Output
+        | undefined;
+      const output = hasScopeField(rawOutput)
+        ? rawOutput
+        : isV2Output(rawOutput)
+          ? convertV2ToAllServicesOutput(rawOutput)
+          : (rawOutput as ClientServiceMetricsToolOutput | undefined);
 
       if (!output?.success) {
         return (
