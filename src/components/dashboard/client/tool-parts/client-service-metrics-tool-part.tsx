@@ -85,22 +85,111 @@ const formatFilterSummary = (filters?: MetricFilter) => {
   return filters.label ?? "Custom range";
 };
 
-const renderHistoryDetails = (history: unknown) => {
-  if (history === null || history === undefined) {
-    return <p className="text-slate-500 text-xs">No data recorded.</p>;
+const formatLabel = (label: string) =>
+  label
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+    .trim();
+
+const tryParseJsonString = (value: string) => {
+  const trimmed = value.trim();
+
+  if (!(trimmed && (trimmed.startsWith("{") || trimmed.startsWith("[")))) {
+    return undefined;
   }
 
-  if (typeof history === "string" || typeof history === "number") {
-    return (
-      <p className="font-medium text-slate-700 text-xs">{String(history)}</p>
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    return undefined;
+  }
+};
+
+const renderValue = (value: unknown): ReactNode => {
+  if (value === null || value === undefined) {
+    return <span className="text-slate-500">—</span>;
+  }
+
+  if (typeof value === "string") {
+    const parsed = tryParseJsonString(value);
+    return parsed !== undefined ? (
+      renderValue(parsed)
+    ) : (
+      <span className="text-slate-900">{value}</span>
     );
   }
 
-  return (
-    <pre className="overflow-x-auto rounded bg-slate-900/90 p-2 text-slate-100 text-xs">
-      {JSON.stringify(history, null, 2)}
-    </pre>
-  );
+  if (typeof value === "number" || typeof value === "boolean") {
+    return <span className="text-slate-900">{String(value)}</span>;
+  }
+
+  if (Array.isArray(value)) {
+    if (value.length === 0) {
+      return <span className="text-slate-500">No entries</span>;
+    }
+
+    const objectEntries = value.every(
+      (entry) => entry && typeof entry === "object"
+    );
+
+    if (objectEntries) {
+      return (
+        <div className="space-y-2">
+          {value.map((entry) => {
+            const key = JSON.stringify(entry);
+            return (
+              <div className="rounded-lg border border-slate-200 p-2" key={key}>
+                {renderKeyValueList(entry as Record<string, unknown>)}
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    return (
+      <ul className="list-disc pl-4 text-slate-700 text-sm">
+        {value.map((entry) => {
+          const key = typeof entry === "string" ? entry : JSON.stringify(entry);
+          return <li key={key}>{renderValue(entry)}</li>;
+        })}
+      </ul>
+    );
+  }
+
+  if (typeof value === "object") {
+    return renderKeyValueList(value as Record<string, unknown>);
+  }
+
+  return <span className="text-slate-900">{String(value)}</span>;
+};
+
+const renderKeyValueList = (record: Record<string, unknown>) => (
+  <dl className="grid gap-2 sm:grid-cols-2">
+    {Object.entries(record).map(([key, value]) => (
+      <div className="rounded border border-slate-200 px-2 py-1" key={key}>
+        <dt className="font-semibold text-[11px] text-slate-500 uppercase">
+          {formatLabel(key)}
+        </dt>
+        <dd className="font-medium text-slate-900 text-sm">
+          {renderValue(value)}
+        </dd>
+      </div>
+    ))}
+  </dl>
+);
+
+const renderHistoryDetails = (history: unknown) => {
+  const normalizedValue =
+    typeof history === "string"
+      ? (tryParseJsonString(history) ?? history)
+      : history;
+
+  if (normalizedValue === null || normalizedValue === undefined) {
+    return <p className="text-slate-500 text-xs">No data recorded.</p>;
+  }
+
+  return <div className="text-sm">{renderValue(normalizedValue)}</div>;
 };
 
 const renderServiceRecord = (record: ServiceMetricRecord) => (
