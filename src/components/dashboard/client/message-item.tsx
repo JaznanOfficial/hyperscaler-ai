@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { renderClientPackagesToolPart } from "./tool-parts/client-packages-tool-part";
 import { renderClientProjectsToolPart } from "./tool-parts/client-projects-tool-part";
+import { renderClientServiceMetricsToolPart } from "./tool-parts/client-service-metrics-tool-part";
 import type { ToolMessagePart } from "./tool-parts/types";
 
 interface StructuredButton {
@@ -208,6 +209,11 @@ export function ClientAgentMessageItem({ message }: { message: ChatMessage }) {
                 return renderClientProjectsToolPart(toolPart, bubbleClassName);
               case "tool-ClientPackagesTool":
                 return renderClientPackagesToolPart(toolPart, bubbleClassName);
+              case "tool-ClientServiceMetricsTool":
+                return renderClientServiceMetricsToolPart(
+                  toolPart,
+                  bubbleClassName
+                );
               default:
                 return null;
             }

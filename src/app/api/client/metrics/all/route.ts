@@ -19,6 +19,21 @@ export async function GET(request: Request) {
     let queryStartDate: Date;
     let queryEndDate: Date;
 
+    const parseIsoDate = (value: string, endOfDay: boolean) => {
+      const [year, month, day] = value.split("-").map(Number);
+      return new Date(
+        Date.UTC(
+          year,
+          (month ?? 1) - 1,
+          day ?? 1,
+          endOfDay ? 23 : 0,
+          endOfDay ? 59 : 0,
+          endOfDay ? 59 : 0,
+          endOfDay ? 999 : 0
+        )
+      );
+    };
+
     if (lastDays) {
       const days = Number.parseInt(lastDays, 10);
       if (Number.isNaN(days) || days < 1) {
@@ -28,29 +43,16 @@ export async function GET(request: Request) {
         );
       }
       queryEndDate = new Date();
-      queryEndDate.setHours(23, 59, 59, 999);
-      queryStartDate = new Date();
-      queryStartDate.setDate(queryStartDate.getDate() - (days - 1));
-      queryStartDate.setHours(0, 0, 0, 0);
+      queryEndDate.setUTCHours(23, 59, 59, 999);
+      queryStartDate = new Date(queryEndDate);
+      queryStartDate.setUTCDate(queryStartDate.getUTCDate() - (days - 1));
+      queryStartDate.setUTCHours(0, 0, 0, 0);
     } else if (startDate && endDate) {
-      const [startYear, startMonth, startDay] = startDate
-        .split("-")
-        .map(Number);
-      const [endYear, endMonth, endDay] = endDate.split("-").map(Number);
-      queryStartDate = new Date(
-        startYear,
-        startMonth - 1,
-        startDay,
-        0,
-        0,
-        0,
-        0
-      );
-      queryEndDate = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999);
+      queryStartDate = parseIsoDate(startDate, false);
+      queryEndDate = parseIsoDate(endDate, true);
     } else if (date) {
-      const [year, month, day] = date.split("-").map(Number);
-      queryStartDate = new Date(year, month - 1, day, 0, 0, 0, 0);
-      queryEndDate = new Date(year, month - 1, day, 23, 59, 59, 999);
+      queryStartDate = parseIsoDate(date, false);
+      queryEndDate = parseIsoDate(date, true);
     } else {
       return NextResponse.json(
         {
@@ -61,7 +63,6 @@ export async function GET(request: Request) {
       );
     }
 
-    // Get all active services for this client
     const clientServices = await prisma.clientService.findMany({
       where: {
         clientId: session.user.id,
@@ -69,43 +70,78 @@ export async function GET(request: Request) {
       },
     });
 
-    // Fetch metrics for all services
-    const allServicesMetrics = [];
-
+    const serviceNameMap = new Map<string, string>();
     for (const clientService of clientServices) {
-      const services = clientService.services
-        ? JSON.parse(clientService.services)
-        : [];
+      if (!clientService.services) {
+        continue;
+      }
 
-      for (const service of services) {
-        const serviceId = service.serviceId || "";
-        const serviceName = service.serviceName || "";
+      try {
+        const services = JSON.parse(clientService.services) as Array<
+          Record<string, unknown>
+        >;
 
-        const metricHistories = await prisma.metricHistory.findMany({
-          where: {
-            clientId: session.user.id,
-            serviceId,
-            entryDate: {
-              gte: queryStartDate,
-              lte: queryEndDate,
-            },
-          },
-          orderBy: {
-            entryDate: "asc",
-          },
-        });
+        for (const service of services) {
+          const serviceId =
+            typeof service.serviceId === "string"
+              ? service.serviceId
+              : undefined;
+          const serviceName =
+            typeof service.serviceName === "string"
+              ? service.serviceName
+              : undefined;
 
-        if (metricHistories.length > 0) {
-          allServicesMetrics.push({
-            serviceId,
-            serviceName,
-            metricHistories,
-          });
+          if (serviceId && serviceName && !serviceNameMap.has(serviceId)) {
+            serviceNameMap.set(serviceId, serviceName);
+          }
         }
+      } catch (error) {
+        console.error("Failed to parse client services", error);
       }
     }
 
-    return NextResponse.json({ data: allServicesMetrics }, { status: 200 });
+    const metricHistories = await prisma.metricHistory.findMany({
+      where: {
+        clientId: session.user.id,
+        entryDate: {
+          gte: queryStartDate,
+          lte: queryEndDate,
+        },
+      },
+      orderBy: {
+        entryDate: "asc",
+      },
+    });
+
+    const groupedMetrics = new Map<
+      string,
+      {
+        serviceId: string;
+        serviceName: string;
+        metricHistories: typeof metricHistories;
+      }
+    >();
+
+    for (const history of metricHistories) {
+      const serviceId = history.serviceId || "GENERAL";
+      const serviceName = serviceNameMap.get(serviceId) ?? serviceId;
+      const bucket = groupedMetrics.get(serviceId);
+
+      if (bucket) {
+        bucket.metricHistories.push(history);
+      } else {
+        groupedMetrics.set(serviceId, {
+          serviceId,
+          serviceName,
+          metricHistories: [history],
+        });
+      }
+    }
+
+    return NextResponse.json(
+      { data: Array.from(groupedMetrics.values()) },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Get all metrics error:", error);
     return NextResponse.json(
