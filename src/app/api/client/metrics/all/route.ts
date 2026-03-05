@@ -61,7 +61,6 @@ export async function GET(request: Request) {
       );
     }
 
-    // Get all active services for this client
     const clientServices = await prisma.clientService.findMany({
       where: {
         clientId: session.user.id,
@@ -69,43 +68,78 @@ export async function GET(request: Request) {
       },
     });
 
-    // Fetch metrics for all services
-    const allServicesMetrics = [];
-
+    const serviceNameMap = new Map<string, string>();
     for (const clientService of clientServices) {
-      const services = clientService.services
-        ? JSON.parse(clientService.services)
-        : [];
+      if (!clientService.services) {
+        continue;
+      }
 
-      for (const service of services) {
-        const serviceId = service.serviceId || "";
-        const serviceName = service.serviceName || "";
+      try {
+        const services = JSON.parse(clientService.services) as Array<
+          Record<string, unknown>
+        >;
 
-        const metricHistories = await prisma.metricHistory.findMany({
-          where: {
-            clientId: session.user.id,
-            serviceId,
-            entryDate: {
-              gte: queryStartDate,
-              lte: queryEndDate,
-            },
-          },
-          orderBy: {
-            entryDate: "asc",
-          },
-        });
+        for (const service of services) {
+          const serviceId =
+            typeof service.serviceId === "string"
+              ? service.serviceId
+              : undefined;
+          const serviceName =
+            typeof service.serviceName === "string"
+              ? service.serviceName
+              : undefined;
 
-        if (metricHistories.length > 0) {
-          allServicesMetrics.push({
-            serviceId,
-            serviceName,
-            metricHistories,
-          });
+          if (serviceId && serviceName && !serviceNameMap.has(serviceId)) {
+            serviceNameMap.set(serviceId, serviceName);
+          }
         }
+      } catch (error) {
+        console.error("Failed to parse client services", error);
       }
     }
 
-    return NextResponse.json({ data: allServicesMetrics }, { status: 200 });
+    const metricHistories = await prisma.metricHistory.findMany({
+      where: {
+        clientId: session.user.id,
+        entryDate: {
+          gte: queryStartDate,
+          lte: queryEndDate,
+        },
+      },
+      orderBy: {
+        entryDate: "asc",
+      },
+    });
+
+    const groupedMetrics = new Map<
+      string,
+      {
+        serviceId: string;
+        serviceName: string;
+        metricHistories: typeof metricHistories;
+      }
+    >();
+
+    for (const history of metricHistories) {
+      const serviceId = history.serviceId || "GENERAL";
+      const serviceName = serviceNameMap.get(serviceId) ?? serviceId;
+      const bucket = groupedMetrics.get(serviceId);
+
+      if (bucket) {
+        bucket.metricHistories.push(history);
+      } else {
+        groupedMetrics.set(serviceId, {
+          serviceId,
+          serviceName,
+          metricHistories: [history],
+        });
+      }
+    }
+
+    return NextResponse.json(
+      { data: Array.from(groupedMetrics.values()) },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Get all metrics error:", error);
     return NextResponse.json(
