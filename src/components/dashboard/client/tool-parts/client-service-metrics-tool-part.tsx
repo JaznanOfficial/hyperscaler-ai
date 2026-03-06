@@ -363,14 +363,24 @@ const renderServiceScope = (
   bubbleClassName: string
 ) => {
   const filterSummary = formatFilterSummary(output.filters);
-  const hasRecords = output.data && output.data.length > 0;
+  const service: AggregatedServiceMetrics = {
+    serviceId: output.serviceId,
+    serviceName: output.serviceName,
+    records: output.data ?? [],
+    totalRecords: output.totalRecords ?? output.data?.length ?? 0,
+  };
+
+  const hasRecords = service.totalRecords > 0;
 
   return (
     <div className={cn(bubbleClassName, "bg-slate-50 text-slate-900")}>
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2 font-semibold text-slate-600 text-xs">
           <span className="rounded-full bg-slate-200/80 px-2 py-0.5">
-            {output.serviceName} ({output.totalRecords ?? 0})
+            {service.serviceName}
+          </span>
+          <span className="rounded-full bg-slate-200/60 px-2 py-0.5">
+            Records: {service.totalRecords}
           </span>
           {filterSummary && (
             <span className="rounded-full bg-slate-200/60 px-2 py-0.5">
@@ -380,9 +390,7 @@ const renderServiceScope = (
         </div>
 
         {hasRecords ? (
-          <div className="max-h-105 space-y-2 overflow-y-auto pr-1">
-            {output.data!.map((record) => renderServiceRecord(record))}
-          </div>
+          renderServiceCard(service)
         ) : (
           <p className="text-slate-500 text-sm">No metrics recorded.</p>
         )}

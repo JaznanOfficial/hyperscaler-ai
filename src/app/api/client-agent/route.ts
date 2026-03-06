@@ -1,7 +1,10 @@
 import { openai } from "@ai-sdk/openai";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { AuthGuard } from "@/backend/utils/auth-guard";
-import { ClientServiceMetricsTool } from "@/tools/client/service-metrics-tool";
+import {
+  ClientServiceMetricsTool,
+  ClientSingleServiceMetricsTool,
+} from "@/tools/client/service-metrics-tool";
 
 export async function POST(req: Request) {
   try {
@@ -24,25 +27,31 @@ export async function POST(req: Request) {
     CORE RULES
     1. Whenever a client asks anything about service updates, performance, health, KPIs, metrics, progress, statistics, or insights (even loosely), you MUST call ClientServiceMetricsTool before responding.
        • If they ask broadly ("service update for today", "show all service stats", "how are my services doing"), call the tool with an empty object – it will automatically fetch every approved service for the default window.
-       • If they mention a service name or ID, include it in the tool input. If they only provide the name, pass it as serviceName.
        • CRITICAL: If they reference ANY timeframe (today, yesterday, last 7 days, 2025-02-10, Jan 1-10, "2nd March", "March 2 - March 3", "March 2 to March 3", etc.), you MUST extract and convert it:
-         - Single date like "2nd march" or "March 2" -> set date: "2026-03-02" (YYYY-MM-DD format, current year if not specified).
-         - Date range like "March 2 to March 3" -> set startDate: "2026-03-02" and endDate: "2026-03-03".
-         - Relative like "last 7 days" -> set lastDays: 7.
-         EXAMPLES OF CORRECT TOOL CALLS:
-         - User says "give me 2nd march data" -> Call tool with { date: "2026-03-02" }
-         - User says "March 2 to March 3" -> Call tool with { startDate: "2026-03-02", endDate: "2026-03-03" }
-         - User says "last 2 days" -> Call tool with { lastDays: 2 }
-         - User says "Paid Ads for March 2" -> Call tool with { serviceName: "Paid Ads", date: "2026-03-02" }
-         Never call the tool without these date parameters when a timeframe was mentioned.
-    2. After receiving the tool output, summarize the most useful insights in clear, client-friendly language. Highlight noteworthy changes, call out gaps, and mention totals. Offer actionable next steps (e.g., "Reach out to your success manager if you need deeper analysis").
-    3. Never fabricate metrics. If the tool returns no data, clearly say so and suggest what to do next.
+        - Single date like "2nd march" or "March 2" -> set date: "2026-03-02" (YYYY-MM-DD format, current year if not specified).
+        - Date range like "March 2 to March 3" -> set startDate: "2026-03-02" and endDate: "2026-03-03".
+        - Relative like "last 7 days" -> set lastDays: 7.
+        EXAMPLES OF CORRECT TOOL CALLS:
+        - User says "give me 2nd march data" -> Call tool with { date: "2026-03-02" }
+        - User says "March 2 to March 3" -> Call tool with { startDate: "2026-03-02", endDate: "2026-03-03" }
+        - User says "last 2 days" -> Call tool with { lastDays: 2 }
+        Never call the tool without these date parameters when a timeframe was mentioned.
+    2. If the client asks about ONE particular service, you MUST convert their wording into the canonical serviceId before calling ClientSingleServiceMetricsTool. Use this mapping (case-insensitive, ignore extra words like "service" or "campaign"):
+        - Paid Ads, Ads, Google Ads, Meta Ads -> PAID_ADS
+        - Cold Email, Email Outreach -> COLD_EMAIL
+        - Cold Calling, Calling -> COLD_CALLING
+        - Social Media, Social Media Marketing -> SOCIAL_MEDIA
+        - LinkedIn, LinkedIn Outreach, Cold LinkedIn -> LINKEDIN_OUTREACH
+        - Branding, Brand Content, Content Creation -> BRAND_CONTENT
+        - Software Development, Dev, App Build -> SOFTWARE_DEVELOPMENT
+        - General, Overall -> GENERAL
+       Pass the resolved serviceId in the tool input (serviceName is optional). If no mapping matches, explain that the service isn’t recognized.
+    3. After receiving any tool output, summarize the most useful insights in clear, client-friendly language. Highlight noteworthy changes, call out gaps, and mention totals. Offer actionable next steps (e.g., "Reach out to your success manager if you need deeper analysis").
+    4. Never fabricate metrics. If the tool returns no data, clearly say so and suggest what to do next.
 
     If a client asks about anything outside service metrics/statistics, politely redirect them to the General Agent with this structured response:
     {"message": "This channel is only for your service metrics. Please continue with our General Agent for other questions.", "buttons": [{"label": "Talk to General Agent", "url": "https://hyperscaler.scalebuild.ai/chat"}]}
     `,
-    // `You are Hyperscaler Client Agent. You help clients understand their ongoing projects, services, billing, and next steps. Focus on:
-
     // 1. Summarizing project activity, statuses, timelines, and assigned teams.
     // 2. Explaining subscribed services, usage, or renewal details.
     // 3. Guiding clients toward actionable suggestions (e.g., contact success team, upgrade plan).
@@ -53,6 +62,7 @@ export async function POST(req: Request) {
       // ClientServicesTool,
       // ClientPackagesTool,
       ClientServiceMetricsTool,
+      ClientSingleServiceMetricsTool,
     },
     onError({ error }) {
       console.error(error);

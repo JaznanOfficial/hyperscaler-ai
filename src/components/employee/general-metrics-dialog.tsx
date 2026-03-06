@@ -137,6 +137,7 @@ export function GeneralMetricsDialog({ clientId }: GeneralMetricsDialogProps) {
       const url = metricId
         ? `/api/employee/metrics/${metricId}`
         : "/api/employee/metrics";
+      const entryDateIso = new Date().toISOString();
 
       const response = await fetch(url, {
         method,
@@ -144,7 +145,7 @@ export function GeneralMetricsDialog({ clientId }: GeneralMetricsDialogProps) {
         body: JSON.stringify({
           clientId,
           serviceId: GENERAL_SERVICE_ID,
-          entryDate: new Date().toISOString(),
+          entryDate: entryDateIso,
           history: buildHistoryPayload(formData),
           ...(metricId ? {} : { id: GENERAL_SERVICE_ID }),
         }),
