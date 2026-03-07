@@ -7,11 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ClientServiceKeyInsights } from "./client-service-key-insights";
 import { InsightsDrawer } from "./insights-drawer";
-import { KeyInsightsGrid } from "./key-insights-grid";
 import { SoftwareDevelopmentChartSection } from "./software-development-chart-section";
 import { SoftwareDevelopmentOverviewCard } from "./software-development-click-rate-card";
-import { softwareInsights } from "./software-development-data";
 import { SoftwareDevelopmentMetricsRow } from "./software-development-metrics-row";
 import { SoftwareDevelopmentTeamStatusCard } from "./software-development-team-status-card";
 import { SoftwareDevelopmentTimelineSection } from "./software-development-timeline-section";
@@ -59,10 +58,10 @@ export function SoftwareDevelopmentStatusCard({
         <SoftwareDevelopmentTimelineSection />
 
         <section>
-          <p className="mb-4 font-semibold text-slate-900 text-sm">
-            Key Insights
-          </p>
-          <KeyInsightsGrid insights={softwareInsights} />
+          <ClientServiceKeyInsights
+            serviceId="SOFTWARE_DEVELOPMENT"
+            serviceName="Software Development"
+          />
         </section>
       </CardContent>
     </Card>

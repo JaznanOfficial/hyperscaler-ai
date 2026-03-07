@@ -1,12 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  AlertTriangle,
-  MousePointerClick,
-  TrendingUp,
-  UserPlus,
-} from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -15,44 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ClientServiceKeyInsights } from "./client-service-key-insights";
 import { InsightsDrawer } from "./insights-drawer";
-import { KeyInsightsGrid } from "./key-insights-grid";
 import {
   SocialMediaEngagementChart,
   socialEngagementLegend,
 } from "./social-media-engagement-chart";
 import { SocialMediaFollowerGrowthChart } from "./social-media-follower-growth-chart";
-
-const socialInsights = [
-  {
-    label: "Audience engagement rising",
-    detail: "+11% vs last week",
-    icon: TrendingUp,
-    iconBg: "bg-emerald-50",
-    iconColor: "text-emerald-600",
-  },
-  {
-    label: "Cost per engagement optimal",
-    detail: "$0.75 CPE (Target <$1.00)",
-    icon: AlertTriangle,
-    iconBg: "bg-amber-50",
-    iconColor: "text-amber-600",
-  },
-  {
-    label: "Profile traffic consistent",
-    detail: "2,500 profile visits (Target >2,000)",
-    icon: MousePointerClick,
-    iconBg: "bg-sky-50",
-    iconColor: "text-sky-600",
-  },
-  {
-    label: "Follower growth accelerating",
-    detail: "450 new followers this month",
-    icon: UserPlus,
-    iconBg: "bg-purple-50",
-    iconColor: "text-purple-600",
-  },
-];
 
 interface SocialMediaPerformanceCardProps {
   data?: Record<string, any>;
@@ -243,10 +206,10 @@ export function SocialMediaPerformanceCard({
         </section>
 
         <section>
-          <p className="mb-4 font-semibold text-slate-900 text-sm">
-            Key Insights
-          </p>
-          <KeyInsightsGrid insights={socialInsights} />
+          <ClientServiceKeyInsights
+            serviceId="SOCIAL_MEDIA"
+            serviceName="Social Media Marketing"
+          />
         </section>
       </CardContent>
     </Card>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, type Message } from "ai";
+import { DefaultChatTransport } from "ai";
 import { ArrowUp, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -118,7 +118,7 @@ export function InsightsDrawer({
     }),
   });
 
-  const mappedMessages = mapAiMessagesToChatMessages(aiMessages as Message[]);
+  const mappedMessages = mapAiMessagesToChatMessages(aiMessages);
   const messageCount = aiMessages.length;
 
   useEffect(() => {

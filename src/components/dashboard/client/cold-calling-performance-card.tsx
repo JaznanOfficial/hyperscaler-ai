@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, PhoneCall, TrendingUp, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -11,43 +10,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { ClientServiceKeyInsights } from "./client-service-key-insights";
 import {
   ColdCallingCallMeetingChart,
   callMeetingLegend,
 } from "./cold-calling-call-meeting-chart";
 import { InsightsDrawer } from "./insights-drawer";
-import { KeyInsightsGrid } from "./key-insights-grid";
-
-const callInsights = [
-  {
-    label: "Call activity steady",
-    detail: "+8% vs last week",
-    icon: TrendingUp,
-    iconBg: "bg-emerald-50",
-    iconColor: "text-emerald-600",
-  },
-  {
-    label: "Call duration optimal",
-    detail: "3.6 mins avg",
-    icon: AlertTriangle,
-    iconBg: "bg-amber-50",
-    iconColor: "text-amber-600",
-  },
-  {
-    label: "Pick-up rate healthy",
-    detail: "22% pick-up rate",
-    icon: PhoneCall,
-    iconBg: "bg-sky-50",
-    iconColor: "text-sky-600",
-  },
-  {
-    label: "Conversions qualifying well",
-    detail: "48 qualified calls",
-    icon: UsersRound,
-    iconBg: "bg-purple-50",
-    iconColor: "text-purple-600",
-  },
-];
 
 interface ColdCallingPerformanceCardProps {
   data?: Record<string, any>;
@@ -326,10 +294,10 @@ export function ColdCallingPerformanceCard({
         </section>
 
         <section>
-          <p className="mb-4 font-semibold text-slate-900 text-sm">
-            Key Insights
-          </p>
-          <KeyInsightsGrid insights={callInsights} />
+          <ClientServiceKeyInsights
+            serviceId="COLD_CALLING"
+            serviceName="Cold Calling"
+          />
         </section>
       </CardContent>
     </Card>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, TrendingUp, UsersRound } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import {
@@ -17,40 +16,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { BrandingContentEngagementChart } from "./branding-content-engagement-chart";
+import { ClientServiceKeyInsights } from "./client-service-key-insights";
 import { InsightsDrawer } from "./insights-drawer";
-import { KeyInsightsGrid } from "./key-insights-grid";
-
-const brandingInsights = [
-  {
-    label: "Content driving leads",
-    detail: "2.6% Content ➜ Lead conversion rate",
-    icon: TrendingUp,
-    iconBg: "bg-emerald-50",
-    iconColor: "text-emerald-600",
-  },
-  {
-    label: "Delivery timelines at risk",
-    detail: "3.3 days avg delivery",
-    icon: AlertTriangle,
-    iconBg: "bg-amber-50",
-    iconColor: "text-amber-600",
-    detailColor: "text-amber-600",
-  },
-  {
-    label: "Brand interest increasing",
-    detail: "+18% brand search volume",
-    icon: TrendingUp,
-    iconBg: "bg-sky-50",
-    iconColor: "text-sky-600",
-  },
-  {
-    label: "Direct traffic accelerating",
-    detail: "+21% direct visits",
-    icon: UsersRound,
-    iconBg: "bg-purple-50",
-    iconColor: "text-purple-600",
-  },
-];
 
 interface BrandingContentPerformanceCardProps {
   data?: Record<string, any>;
@@ -225,10 +192,10 @@ export function BrandingContentPerformanceCard({
         </section>
 
         <section>
-          <p className="mb-4 font-semibold text-slate-900 text-sm">
-            Key Insights
-          </p>
-          <KeyInsightsGrid insights={brandingInsights} />
+          <ClientServiceKeyInsights
+            serviceId="BRAND_CONTENT"
+            serviceName="Branding & Content Creation"
+          />
         </section>
       </CardContent>
     </Card>
