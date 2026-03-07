@@ -1,11 +1,12 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { RecommendedPackages } from "@/components/dashboard/client/recommended-packages";
 import { ClientSubscriptionList } from "@/components/dashboard/client/subscription-list";
 import { SubscriptionUpgradePrompt } from "@/components/dashboard/client/subscription-upgrade-prompt";
+import { SubscriptionsPageSkeleton } from "@/components/skeleton/subscriptions/subscriptions-page-skeleton";
 
 interface Project {
   id: string;
@@ -24,7 +25,7 @@ export default function ClientSubscriptionsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [planStatusReady, setPlanStatusReady] = useState(false);
-  const [hasActivePlan, setHasActivePlan] = useState(false);
+  const [activePlanName, setActivePlanName] = useState<string | null>(null);
 
   useEffect(() => {
     const success = searchParams.get("success");
@@ -61,11 +62,23 @@ export default function ClientSubscriptionsPage() {
       .then((data) => {
         const packages: ClientPackage[] = data.packages || [];
         const activePkg = packages.find((pkg) => pkg.status === "PAID");
-        setHasActivePlan(Boolean(activePkg));
+        setActivePlanName(activePkg?.packageName ?? null);
         setPlanStatusReady(true);
       })
       .catch(() => setPlanStatusReady(true));
   }, []);
+
+  const planContent = useMemo(() => {
+    if (!planStatusReady) {
+      return <SubscriptionsPageSkeleton />;
+    }
+
+    if (activePlanName) {
+      return <SubscriptionUpgradePrompt currentPlanName={activePlanName} />;
+    }
+
+    return <RecommendedPackages />;
+  }, [activePlanName, planStatusReady]);
 
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
@@ -85,23 +98,11 @@ export default function ClientSubscriptionsPage() {
             </p>
           </div>
           {loading ? (
-            <p className="text-center text-slate-600">Loading...</p>
+            <SubscriptionsPageSkeleton />
           ) : (
             <>
               <ClientSubscriptionList projects={projects} />
-              {planStatusReady ? (
-                <div>
-                  {hasActivePlan ? (
-                    <SubscriptionUpgradePrompt />
-                  ) : (
-                    <RecommendedPackages />
-                  )}
-                </div>
-              ) : (
-                <div className="rounded-2xl border border-slate-200 border-dashed bg-white/70 p-6 text-center text-slate-500 text-sm">
-                  Checking your plan details...
-                </div>
-              )}
+              {planContent}
             </>
           )}
         </div>
