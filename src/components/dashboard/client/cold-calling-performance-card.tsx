@@ -308,7 +308,7 @@ export function ColdCallingPerformanceCard({
               </p>
             </div>
             <ColdCallingCallMeetingChart />
-            <div className="flex flex-wrap gap-4 text-sm">
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
               {callMeetingLegend.map((legend) => (
                 <div
                   className="inline-flex items-center gap-2 text-slate-600"

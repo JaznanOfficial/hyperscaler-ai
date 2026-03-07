@@ -1,3 +1,8 @@
+const EXCLUDED_SERVICE_IDS = new Set([
+  "GENERAL",
+  "SOFTWARE_DEVELOPMENT_OVERALL",
+]);
+
 const PERIOD_BUCKETS = [
   { label: "Day 5", maxDay: 5 },
   { label: "Day 10", maxDay: 10 },
@@ -120,6 +125,10 @@ export function summarizeConversionRates(
   > = {};
 
   for (const metric of metrics) {
+    if (EXCLUDED_SERVICE_IDS.has(metric.serviceId)) {
+      continue;
+    }
+
     const histories = metric.metricHistories ?? [];
     if (histories.length === 0) {
       continue;

@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { InsightsDrawer } from "./insights-drawer";
 import { KeyInsightsGrid } from "./key-insights-grid";
 import { SoftwareDevelopmentChartSection } from "./software-development-chart-section";
 import { SoftwareDevelopmentOverviewCard } from "./software-development-click-rate-card";
@@ -43,6 +44,7 @@ export function SoftwareDevelopmentStatusCard({
               Voice-based outreach
             </CardDescription>
           </div>
+          <InsightsDrawer defaultService="software-development" />
         </div>
       </CardHeader>
       <CardContent className="space-y-6">

@@ -206,7 +206,7 @@ export function SocialMediaPerformanceCard({
               </p>
             </div>
             <SocialMediaEngagementChart />
-            <div className="flex flex-wrap gap-4 text-sm">
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
               {socialEngagementLegend.map((entry) => (
                 <div
                   className="inline-flex items-center gap-2 text-slate-600"
