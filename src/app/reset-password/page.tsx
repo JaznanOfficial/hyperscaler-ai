@@ -7,6 +7,16 @@ import { ResetPasswordForm } from "@/components/reset-password/reset-password-fo
 export default function ResetPasswordPage() {
   return (
     <div className="grid min-h-svh w-full lg:grid-cols-2">
+      <div className="relative mt-5 mr-5 hidden lg:block">
+        <Image
+          alt="Team collaborating"
+          className="object-fit"
+          fill
+          priority
+          sizes="50vw"
+          src="/signup.png"
+        />
+      </div>
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center md:justify-start">
           <Link
@@ -32,16 +42,6 @@ export default function ResetPasswordPage() {
             </Suspense>
           </div>
         </div>
-      </div>
-      <div className="relative mt-5 mr-5 hidden lg:block">
-        <Image
-          alt="Team collaborating"
-          className="object-fit"
-          fill
-          priority
-          sizes="50vw"
-          src="/signup.png"
-        />
       </div>
     </div>
   );

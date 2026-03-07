@@ -11,6 +11,7 @@ const testimonialsData = [
     role: "Founder/Chief Executive Officer, Credentials",
     comment:
       "I lacked the technical expertise to build our product. the ScaleBuild team quickly understood our fintech vision, created a roadmap, and provided daily updates. The process was seamless.",
+    videoUrl: "https://youtu.be/_m6vnjRbNPU",
   },
   {
     avatar: "/testimonials/avatar-2.png",
@@ -18,6 +19,7 @@ const testimonialsData = [
     role: "Chief Executive Officer, Ovanova",
     comment:
       "I had the pleasure of working with the ScaleBuild team. Their technical expertise, seamless collaboration, and outstanding results made the process a breeze. Highly recommended!",
+    videoUrl: "https://youtu.be/xNNTI8CCwtg",
   },
   {
     avatar: "/testimonials/avatar-3.png",
@@ -25,6 +27,7 @@ const testimonialsData = [
     role: "Founder/Chief Executive Officer, Sangria",
     comment:
       "We had a vision but not a complete product. The ScaleBuild team took our UI/UX designs, executed them, and helped us build a beautiful and continuous product. Their communication is incredible and they always deliver quality work.",
+    videoUrl: "https://youtu.be/1n3dW5CLZZk",
   },
 ];
 
@@ -69,8 +72,15 @@ const Testimonials = () => {
               </p>
             </div>
 
-            <Button className="mt-4 w-fit" size={"sm"} variant={"gradient"}>
-              <Play className="size-3" /> Watch Video
+            <Button
+              asChild
+              className="mt-4 w-fit"
+              size={"sm"}
+              variant={"gradient"}
+            >
+              <a href={item.videoUrl} rel="noreferrer" target="_blank">
+                <Play className="size-3" /> Watch Video
+              </a>
             </Button>
           </div>
         ))}
