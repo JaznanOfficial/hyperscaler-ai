@@ -17,13 +17,13 @@ export default function ServicesPage() {
       <Tabs className="mt-10" defaultValue="marketing">
         <TabsList className="cursor-pointer rounded-full border border-slate-300 bg-white text-base lg:mx-auto lg:h-12! lg:w-full lg:max-w-xl lg:px-2 lg:py-2">
           <TabsTrigger
-            className="cursor-pointer rounded-full font-semibold text-sm data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:flex-1 lg:px-5 lg:py-2 lg:text-lg"
+            className="cursor-pointer rounded-full font-normal text-black text-sm data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:flex-1 lg:px-5 lg:py-2 lg:text-lg"
             value="marketing"
           >
             Marketing Services
           </TabsTrigger>
           <TabsTrigger
-            className="cursor-pointer rounded-full font-semibold text-sm data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:flex-1 lg:px-5 lg:py-2 lg:text-lg"
+            className="cursor-pointer rounded-full font-normal text-black text-sm data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:flex-1 lg:px-5 lg:py-2 lg:text-lg"
             value="software"
           >
             Software Development Services
@@ -31,10 +31,18 @@ export default function ServicesPage() {
         </TabsList>
 
         <TabsContent className="mt-10" value="marketing">
-          <ServicesGrid services={marketingServices} />
+          <ServicesGrid
+            ctaType="talk"
+            services={marketingServices}
+            talkButtonLabel="Talk to our growth experts"
+          />
         </TabsContent>
         <TabsContent className="mt-10" value="software">
-          <ServicesGrid ctaType="talk" services={softwareServices} />
+          <ServicesGrid
+            ctaType="talk"
+            services={softwareServices}
+            talkButtonLabel="Talk to our developers"
+          />
         </TabsContent>
       </Tabs>
     </div>

@@ -255,7 +255,7 @@ export default function PortfolioPage() {
                 <div className="overflow-hidden rounded-t-lg">
                   <Image
                     alt={project.media.hero.alt}
-                    className="h-full w-full rounded-t-lg object-cover"
+                    className="h-full w-full rounded-lg object-cover"
                     height={project.media.hero.height}
                     src={project.media.hero.src}
                     width={project.media.hero.width}

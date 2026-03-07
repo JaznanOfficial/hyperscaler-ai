@@ -5,18 +5,26 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { RecommendedPackages } from "@/components/dashboard/client/recommended-packages";
 import { ClientSubscriptionList } from "@/components/dashboard/client/subscription-list";
+import { SubscriptionUpgradePrompt } from "@/components/dashboard/client/subscription-upgrade-prompt";
 
 interface Project {
   id: string;
   status: string;
-  services: any[];
+  services: { serviceName?: string }[];
   createdAt: string;
+}
+
+interface ClientPackage {
+  status: string;
+  packageName: string;
 }
 
 export default function ClientSubscriptionsPage() {
   const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [planStatusReady, setPlanStatusReady] = useState(false);
+  const [hasActivePlan, setHasActivePlan] = useState(false);
 
   useEffect(() => {
     const success = searchParams.get("success");
@@ -47,6 +55,18 @@ export default function ClientSubscriptionsPage() {
       .catch(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    fetch("/api/client/packages")
+      .then((res) => res.json())
+      .then((data) => {
+        const packages: ClientPackage[] = data.packages || [];
+        const activePkg = packages.find((pkg) => pkg.status === "PAID");
+        setHasActivePlan(Boolean(activePkg));
+        setPlanStatusReady(true);
+      })
+      .catch(() => setPlanStatusReady(true));
+  }, []);
+
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto">
@@ -67,9 +87,23 @@ export default function ClientSubscriptionsPage() {
           {loading ? (
             <p className="text-center text-slate-600">Loading...</p>
           ) : (
-            <ClientSubscriptionList projects={projects} />
+            <>
+              <ClientSubscriptionList projects={projects} />
+              {planStatusReady ? (
+                <div>
+                  {hasActivePlan ? (
+                    <SubscriptionUpgradePrompt />
+                  ) : (
+                    <RecommendedPackages />
+                  )}
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-slate-200 border-dashed bg-white/70 p-6 text-center text-slate-500 text-sm">
+                  Checking your plan details...
+                </div>
+              )}
+            </>
           )}
-          <RecommendedPackages />
         </div>
       </div>
     </section>

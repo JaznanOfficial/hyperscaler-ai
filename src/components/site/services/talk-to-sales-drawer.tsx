@@ -25,6 +25,7 @@ type ButtonVariant = ComponentProps<typeof Button>["variant"];
 interface TalkToSalesDrawerProps {
   buttonClassName?: string;
   buttonVariant?: ButtonVariant;
+  buttonLabel?: string;
   trigger?: ReactElement;
 }
 
@@ -55,6 +56,7 @@ const contactOptions = [
 
 export function TalkToSalesDrawer({
   buttonClassName,
+  buttonLabel = "Talk to Us",
   buttonVariant = "gradient",
   trigger,
 }: TalkToSalesDrawerProps) {
@@ -63,11 +65,11 @@ export function TalkToSalesDrawer({
       <SheetTrigger asChild>
         {trigger ?? (
           <Button
-            className={cn("w-fit", buttonClassName)}
+            className={cn(buttonClassName ?? "w-fit")}
             variant={buttonVariant}
           >
             <PhoneCall className="mr-1.5 size-4" />
-            Talk to Us
+            {buttonLabel}
           </Button>
         )}
       </SheetTrigger>
