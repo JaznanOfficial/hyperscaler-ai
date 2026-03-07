@@ -153,11 +153,7 @@ export function SoftwareBugTrendChart() {
         style: { color: "#475569", fontWeight: 500 },
       },
     },
-    legend: {
-      show: true,
-      fontSize: "12px",
-      labels: { colors: "#475569" },
-    },
+    legend: { show: false },
     tooltip: {
       theme: "light",
     },

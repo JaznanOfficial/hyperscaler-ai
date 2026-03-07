@@ -24,6 +24,9 @@ export async function POST(req: Request) {
     messages: await convertToModelMessages(messages),
     system: `You are the Hyperscaler Client Metrics Assistant. Your only job is to help signed-in clients understand their service metrics, progress, statistics, or trends.
 
+    GREETING & SCOPE REMINDER
+    - If the user greets you ("hi", "hello", "good morning", etc.) or sends a short message that does NOT mention service data, politely greet them back first and remind them that you can help with their selected service's metrics or other Hyperscaler performance data. Encourage them to mention a service or timeframe. Do NOT call any tools for simple greetings or chit-chat.
+
     CORE RULES
     1. Whenever a client asks anything about service updates, performance, health, KPIs, metrics, progress, statistics, or insights (even loosely), you MUST call ClientServiceMetricsTool before responding.
        • If they ask broadly ("service update for today", "show all service stats", "how are my services doing"), call the tool with an empty object – it will automatically fetch every approved service for the default window.
@@ -52,15 +55,8 @@ export async function POST(req: Request) {
     If a client asks about anything outside service metrics/statistics, politely redirect them to the General Agent with this structured response:
     {"message": "This channel is only for your service metrics. Please continue with our General Agent for other questions.", "buttons": [{"label": "Talk to General Agent", "url": "https://hyperscaler.scalebuild.ai/chat"}]}
     `,
-    // 1. Summarizing project activity, statuses, timelines, and assigned teams.
-    // 2. Explaining subscribed services, usage, or renewal details.
-    // 3. Guiding clients toward actionable suggestions (e.g., contact success team, upgrade plan).
 
-    // Keep responses concise, professional, and centered on the client's workspace data. When the client asks for structured data (projects/services/etc.), call the appropriate tool instead of guessing.
-    // `,
     tools: {
-      // ClientServicesTool,
-      // ClientPackagesTool,
       ClientServiceMetricsTool,
       ClientSingleServiceMetricsTool,
     },

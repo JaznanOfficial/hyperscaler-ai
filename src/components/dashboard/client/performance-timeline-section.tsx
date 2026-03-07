@@ -43,7 +43,9 @@ export function PerformanceTimelineSection() {
       const response = await fetch(
         `/api/client/metrics/get?serviceId=COLD_EMAIL&startDate=${formatDate(monthStart)}&endDate=${formatDate(monthEnd)}`
       );
-      if (!response.ok) throw new Error("Failed to fetch metrics");
+      if (!response.ok) {
+        throw new Error("Failed to fetch metrics");
+      }
       return response.json();
     },
   });
@@ -52,35 +54,27 @@ export function PerformanceTimelineSection() {
     const metricHistories = metricsData?.metricHistories || [];
 
     if (metricHistories.length === 0) {
-      const defaultWeekly = [
-        { day: "Sun", emailSent: 40, replies: 8, meetings: 1 },
-        { day: "Mon", emailSent: 80, replies: 20, meetings: 4 },
-        { day: "Tue", emailSent: 110, replies: 32, meetings: 6 },
-        { day: "Wed", emailSent: 140, replies: 56, meetings: 8 },
-        { day: "Thu", emailSent: 160, replies: 70, meetings: 10 },
-        { day: "Fri", emailSent: 180, replies: 85, meetings: 12 },
-        { day: "Sat", emailSent: 190, replies: 92, meetings: 14 },
-      ];
+      const defaultWeekly = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       return {
-        timelineCategories: defaultWeekly.map((p) => p.day),
+        timelineCategories: defaultWeekly,
         timelineSeries: [
           {
             key: "email" as const,
             name: performanceConfig.emailSent.label,
             color: performanceConfig.emailSent.color,
-            data: defaultWeekly.map((p) => p.emailSent),
+            data: new Array(defaultWeekly.length).fill(0),
           },
           {
             key: "reply" as const,
             name: performanceConfig.replies.label,
             color: performanceConfig.replies.color,
-            data: defaultWeekly.map((p) => p.replies),
+            data: new Array(defaultWeekly.length).fill(0),
           },
           {
             key: "meetings" as const,
             name: performanceConfig.meetings.label,
             color: performanceConfig.meetings.color,
-            data: defaultWeekly.map((p) => p.meetings),
+            data: new Array(defaultWeekly.length).fill(0),
           },
         ],
       };

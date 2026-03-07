@@ -10,8 +10,18 @@ import { OverallProgressCard } from "@/components/dashboard/client/overall-progr
 import { PaidAdsPerformanceCard } from "@/components/dashboard/client/paid-ads-performance-card";
 import { SocialMediaPerformanceCard } from "@/components/dashboard/client/social-media-performance-card";
 import { SoftwareDevelopmentStatusCard } from "@/components/dashboard/client/software-development-status-card";
+import { StatisticsPageSkeleton } from "@/components/skeleton/statistics/statistics-page-skeleton";
 
-type ServiceCardComponent = React.ComponentType<{ data: any }>;
+interface ServiceData {
+  serviceName: string;
+  serviceId?: string;
+  metrics: Record<string, unknown>;
+  history: unknown[];
+}
+
+type ServiceCardComponent = React.ComponentType<{
+  data: ServiceData["metrics"];
+}>;
 
 interface ServiceCardConfig {
   name: string;
@@ -50,7 +60,9 @@ const SERVICE_CARD_MAP: Record<string, ServiceCardConfig> = {
 };
 
 export default function ClientStatisticsPage() {
-  const [serviceData, setServiceData] = useState<Record<string, any>>({});
+  const [serviceData, setServiceData] = useState<Record<string, ServiceData>>(
+    {}
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -58,7 +70,7 @@ export default function ClientStatisticsPage() {
       .then((res) => res.json())
       .then((result) => {
         if (result.success) {
-          const dataMap: Record<string, Record<string, unknown>> = {};
+          const dataMap: Record<string, ServiceData> = {};
           for (const service of result.data) {
             // Map by serviceId to avoid duplicates, but use serviceName as display key
             const key = service.serviceId || service.serviceName;
@@ -77,11 +89,7 @@ export default function ClientStatisticsPage() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <p className="text-slate-500">Loading statistics...</p>
-      </div>
-    );
+    return <StatisticsPageSkeleton />;
   }
 
   const hasAnyServices = Object.keys(serviceData).length > 0;
@@ -138,14 +146,15 @@ export default function ClientStatisticsPage() {
           </div>
 
           <div className="space-y-6">
-            {Object.entries(serviceData).map(([, data]) => {
-              const dataRecord = data as Record<string, unknown>;
-              const displayName = dataRecord.serviceName as string;
+            {Object.entries(serviceData).map(([, dataRecord]) => {
+              const displayName = dataRecord.serviceName;
               const serviceKey = Object.keys(SERVICE_CARD_MAP).find(
                 (key) => SERVICE_CARD_MAP[key].name === displayName
               );
 
-              if (!serviceKey) return null;
+              if (!serviceKey) {
+                return null;
+              }
 
               const config = SERVICE_CARD_MAP[serviceKey];
               const CardComponent = config.component;

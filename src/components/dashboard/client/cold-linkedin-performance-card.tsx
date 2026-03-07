@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Presentation, Target, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import {
@@ -16,42 +15,11 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { ClientServiceKeyInsights } from "./client-service-key-insights";
 import { ColdLinkedinConversionChart } from "./cold-linkedin-conversion-chart";
 import { InsightsDrawer } from "./insights-drawer";
-import { KeyInsightsGrid } from "./key-insights-grid";
 
 // This will be calculated dynamically based on actual data
-
-const linkedinInsights = [
-  {
-    label: "Engaging social media posts",
-    detail: "3.1% Engagement ➜ Lead",
-    icon: TrendingUp,
-    iconBg: "bg-emerald-50",
-    iconColor: "text-emerald-600",
-  },
-  {
-    label: "Personalized email campaigns",
-    detail: "4.5% Email ➜ Lead",
-    icon: AlertTriangle,
-    iconBg: "bg-amber-50",
-    iconColor: "text-amber-600",
-  },
-  {
-    label: "Informative webinars",
-    detail: "5.0% Webinar ➜ Lead",
-    icon: Presentation,
-    iconBg: "bg-sky-50",
-    iconColor: "text-sky-600",
-  },
-  {
-    label: "Targeted online ads",
-    detail: "3.8% Ads ➜ Lead",
-    icon: Target,
-    iconBg: "bg-purple-50",
-    iconColor: "text-purple-600",
-  },
-];
 
 interface ColdLinkedinPerformanceCardProps {
   data?: Record<string, any>;
@@ -289,10 +257,10 @@ export function ColdLinkedinPerformanceCard({
         </section>
 
         <section>
-          <p className="mb-4 font-semibold text-slate-900 text-sm">
-            Key Insights
-          </p>
-          <KeyInsightsGrid insights={linkedinInsights} />
+          <ClientServiceKeyInsights
+            serviceId="LINKEDIN_OUTREACH"
+            serviceName="Cold LinkedIn Outreach"
+          />
         </section>
       </CardContent>
     </Card>

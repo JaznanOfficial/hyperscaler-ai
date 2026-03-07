@@ -343,20 +343,20 @@ const renderHistoryDetails = (history: unknown) => {
   return <div className="text-sm">{renderValue(normalizedValue)}</div>;
 };
 
-const renderServiceRecord = (record: ServiceMetricRecord) => (
-  <div
-    className="rounded-lg border border-slate-200 bg-white/95 p-3 text-slate-900 text-sm shadow-sm"
-    key={record.id}
-  >
-    <div className="flex items-center justify-between gap-2 text-slate-500 text-xs">
-      <span>Entry</span>
-      <span className="font-semibold text-slate-700">
-        {formatDateOnly(record.entryDate)}
-      </span>
-    </div>
-    <div className="mt-2">{renderHistoryDetails(record.history)}</div>
-  </div>
-);
+// const renderServiceRecord = (record: ServiceMetricRecord) => (
+//   <div
+//     className="rounded-lg border border-slate-200 bg-white/95 p-3 text-slate-900 text-sm shadow-sm"
+//     key={record.id}
+//   >
+//     <div className="flex items-center justify-between gap-2 text-slate-500 text-xs">
+//       <span>Entry</span>
+//       <span className="font-semibold text-slate-700">
+//         {formatDateOnly(record.entryDate)}
+//       </span>
+//     </div>
+//     <div className="mt-2">{renderHistoryDetails(record.history)}</div>
+//   </div>
+// );
 
 const renderServiceScope = (
   output: ServiceScopeOutput,
@@ -373,7 +373,7 @@ const renderServiceScope = (
   const hasRecords = service.totalRecords > 0;
 
   return (
-    <div className={cn(bubbleClassName, "bg-slate-50 text-slate-900")}>
+    <div className={cn("w-full", bubbleClassName, "text-slate-900")}>
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2 font-semibold text-slate-600 text-xs">
           <span className="rounded-full bg-slate-200/80 px-2 py-0.5">
@@ -401,7 +401,7 @@ const renderServiceScope = (
 
 const renderServiceCard = (service: AggregatedServiceMetrics) => (
   <div
-    className="rounded-xl border border-slate-200 bg-white/95 p-3 text-slate-900 text-sm shadow-sm"
+    className="w-full rounded-xl border border-slate-200 bg-white/95 p-3 text-slate-900 text-sm shadow-sm"
     key={service.serviceId}
   >
     <div className="flex flex-wrap items-center justify-between gap-2 font-semibold text-slate-600 text-xs">
@@ -414,7 +414,7 @@ const renderServiceCard = (service: AggregatedServiceMetrics) => (
       <div className="mt-3 space-y-2">
         {service.records.slice(0, 3).map((record) => (
           <div
-            className="rounded-lg bg-slate-50 px-2 py-1 text-xs"
+            className="w-full rounded-lg bg-slate-50 px-2 py-1 text-xs"
             key={record.id}
           >
             <p className="font-semibold text-slate-700">
@@ -447,7 +447,7 @@ const renderAllServicesScope = (
   const hasServices = output.data && output.data.length > 0;
 
   return (
-    <div className={cn(bubbleClassName, "bg-slate-50 text-slate-900")}>
+    <div className={cn("w-full", bubbleClassName, "text-slate-900")}>
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2 font-semibold text-slate-600 text-xs">
           <span className="rounded-full bg-slate-200/80 px-2 py-0.5">

@@ -17,7 +17,7 @@ export function SoftwareDevelopmentChartSection() {
           </p>
         </div>
         <SoftwareFeaturesDeliveredChart />
-        <div className="flex flex-wrap gap-4 text-sm">
+        <div className="flex flex-wrap justify-center gap-4 text-sm">
           <div className="inline-flex items-center gap-2 text-slate-600">
             <span
               className="size-2.5 rounded-full"
@@ -38,7 +38,7 @@ export function SoftwareDevelopmentChartSection() {
           </p>
         </div>
         <SoftwareBugTrendChart />
-        <div className="flex flex-wrap gap-4 text-sm">
+        <div className="flex flex-wrap justify-center gap-4 text-sm">
           {bugLegend.map((legend) => (
             <div
               className="inline-flex items-center gap-2 text-slate-600"
