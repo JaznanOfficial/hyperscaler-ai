@@ -9,11 +9,11 @@ import { Card, CardContent } from "@/components/ui/card";
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const DEFAULT_OVERVIEW = {
-  overallProgress: "73%",
-  activeServices: "3",
-  onTrackServices: "1",
-  needsAttentionServices: "2",
-  timeSaved: "28hrs/week",
+  overallProgress: "0%",
+  activeServices: "0",
+  onTrackServices: "0",
+  needsAttentionServices: "0",
+  timeSaved: "0hrs/week",
 };
 
 const parsePercentageValue = (value?: string) => {
@@ -155,28 +155,6 @@ export function OverallProgressCard() {
       },
     },
   };
-
-  const getSmallChartOptions = (color: string): ApexOptions => ({
-    chart: {
-      type: "area" as const,
-      sparkline: { enabled: true },
-      animations: { enabled: true },
-    },
-    colors: [color],
-    fill: {
-      type: "gradient",
-      gradient: {
-        shadeIntensity: 1,
-        opacityFrom: 0.3,
-        opacityTo: 0.1,
-      },
-    },
-    stroke: {
-      curve: "smooth",
-      width: 2,
-    },
-    tooltip: { enabled: false },
-  });
 
   return (
     <Card className="rounded-3xl border border-slate-100 bg-white">

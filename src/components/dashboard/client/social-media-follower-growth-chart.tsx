@@ -25,7 +25,9 @@ export function SocialMediaFollowerGrowthChart() {
       const response = await fetch(
         `/api/client/metrics/get?serviceId=SOCIAL_MEDIA&startDate=${formatDate(monthStart)}&endDate=${formatDate(monthEnd)}`
       );
-      if (!response.ok) throw new Error("Failed to fetch metrics");
+      if (!response.ok) {
+        throw new Error("Failed to fetch metrics");
+      }
       return response.json();
     },
   });
@@ -34,9 +36,17 @@ export function SocialMediaFollowerGrowthChart() {
     const metricHistories = metricsData?.metricHistories || [];
 
     if (metricHistories.length === 0) {
+      const defaultCategories = [
+        "Day 5",
+        "Day 10",
+        "Day 15",
+        "Day 20",
+        "Day 25",
+        "Day 30",
+      ];
       return {
-        categories: ["Day 5", "Day 10", "Day 15", "Day 20", "Day 25", "Day 30"],
-        followerGrowth: [3, 8, 13, 17, 22, 30],
+        categories: defaultCategories,
+        followerGrowth: new Array(defaultCategories.length).fill(0),
       };
     }
 
@@ -44,14 +54,6 @@ export function SocialMediaFollowerGrowthChart() {
     const sorted = [...metricHistories].sort(
       (a, b) =>
         new Date(a.entryDate).getTime() - new Date(b.entryDate).getTime()
-    );
-
-    // Get the month start date
-    const startDate = new Date(sorted[0].entryDate);
-    const monthStart = new Date(
-      startDate.getFullYear(),
-      startDate.getMonth(),
-      1
     );
 
     // Create 6 intervals: days 1-5, 6-10, 11-15, 16-20, 21-25, 26-30

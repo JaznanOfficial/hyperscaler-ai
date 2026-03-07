@@ -25,7 +25,9 @@ export function BrandingContentEngagementChart() {
       const response = await fetch(
         `/api/client/metrics/get?serviceId=BRAND_CONTENT&startDate=${formatDate(monthStart)}&endDate=${formatDate(monthEnd)}`
       );
-      if (!response.ok) throw new Error("Failed to fetch metrics");
+      if (!response.ok) {
+        throw new Error("Failed to fetch metrics");
+      }
       return response.json();
     },
   });
@@ -48,7 +50,7 @@ export function BrandingContentEngagementChart() {
         engagementSeries: [
           {
             name: "Engagement",
-            data: [42, 23, 24, 30, 38, 26, 25],
+            data: new Array(defaultCategories.length).fill(0),
           },
         ],
       };

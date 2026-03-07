@@ -25,7 +25,9 @@ export function PaidAdsRoasTrendChart() {
       const response = await fetch(
         `/api/client/metrics/get?serviceId=PAID_ADS&startDate=${formatDate(monthStart)}&endDate=${formatDate(monthEnd)}`
       );
-      if (!response.ok) throw new Error("Failed to fetch metrics");
+      if (!response.ok) {
+        throw new Error("Failed to fetch metrics");
+      }
       return response.json();
     },
   });
@@ -34,9 +36,17 @@ export function PaidAdsRoasTrendChart() {
     const metricHistories = metricsData?.metricHistories || [];
 
     if (metricHistories.length === 0) {
+      const defaultCategories = [
+        "Day 5",
+        "Day 10",
+        "Day 15",
+        "Day 20",
+        "Day 25",
+        "Day 30",
+      ];
       return {
-        categories: ["Day 5", "Day 10", "Day 15", "Day 20", "Day 25", "Day 30"],
-        roasData: [1.4, 1.9, 2.6, 3.3, 3.1, 2.7],
+        categories: defaultCategories,
+        roasData: new Array(defaultCategories.length).fill(0),
       };
     }
 

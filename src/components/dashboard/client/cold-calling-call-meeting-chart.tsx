@@ -39,10 +39,11 @@ export function ColdCallingCallMeetingChart() {
     const metricHistories = metricsData?.metricHistories || [];
 
     if (metricHistories.length === 0) {
+      const defaultCategories = ["Week 1", "Week 2", "Week 3", "Week 4"];
       return {
-        categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
-        callsInMeetings: [90, 60, 110, 95],
-        callsNotConverted: [120, 100, 120, 105],
+        categories: defaultCategories,
+        callsInMeetings: new Array(defaultCategories.length).fill(0),
+        callsNotConverted: new Array(defaultCategories.length).fill(0),
       };
     }
 
@@ -106,12 +107,17 @@ export function ColdCallingCallMeetingChart() {
       notConverted.push(totalCalls - totalMeetings);
     }
 
+    const fallbackCategories = ["Week 1", "Week 2", "Week 3", "Week 4"];
     return {
-      categories:
-        cats.length > 0 ? cats : ["Week 1", "Week 2", "Week 3", "Week 4"],
-      callsInMeetings: inMeetings.length > 0 ? inMeetings : [90, 60, 110, 95],
+      categories: cats.length > 0 ? cats : fallbackCategories,
+      callsInMeetings:
+        inMeetings.length > 0
+          ? inMeetings
+          : new Array(fallbackCategories.length).fill(0),
       callsNotConverted:
-        notConverted.length > 0 ? notConverted : [120, 100, 120, 105],
+        notConverted.length > 0
+          ? notConverted
+          : new Array(fallbackCategories.length).fill(0),
     };
   }, [metricsData]);
 

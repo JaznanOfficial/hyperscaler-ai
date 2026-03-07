@@ -31,7 +31,9 @@ export function SocialMediaEngagementChart() {
       const response = await fetch(
         `/api/client/metrics/get?serviceId=SOCIAL_MEDIA&startDate=${formatDate(monthStart)}&endDate=${formatDate(monthEnd)}`
       );
-      if (!response.ok) throw new Error("Failed to fetch metrics");
+      if (!response.ok) {
+        throw new Error("Failed to fetch metrics");
+      }
       return response.json();
     },
   });
@@ -40,11 +42,20 @@ export function SocialMediaEngagementChart() {
     const metricHistories = metricsData?.metricHistories || [];
 
     if (metricHistories.length === 0) {
+      const defaultCategories = [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun",
+      ];
       return {
-        categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        engagements: [420, 310, 365, 450, 470, 510, 330],
-        impressions: [500, 380, 420, 520, 540, 600, 360],
-        reach: [460, 340, 370, 480, 500, 560, 320],
+        categories: defaultCategories,
+        engagements: new Array(defaultCategories.length).fill(0),
+        impressions: new Array(defaultCategories.length).fill(0),
+        reach: new Array(defaultCategories.length).fill(0),
       };
     }
 
