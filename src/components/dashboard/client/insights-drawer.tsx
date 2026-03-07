@@ -111,7 +111,7 @@ export function InsightsDrawer({
   const {
     messages: aiMessages = [],
     sendMessage,
-    isLoading,
+    status,
   } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/client-agent",
@@ -153,13 +153,13 @@ export function InsightsDrawer({
     return content.slice(markerIndex + marker.length);
   };
 
-  const handleSend = (value?: string) => {
+  const handleSend = async (value?: string) => {
     const content = (value ?? draft).trim();
     if (!content) {
       return;
     }
 
-    sendMessage({ text: buildPrompt(content) });
+    await sendMessage({ text: buildPrompt(content) });
     setDraft("");
   };
 
@@ -265,8 +265,10 @@ export function InsightsDrawer({
               <Button
                 aria-label="Send message"
                 className="self-end rounded-xl bg-linear-to-br from-violet-600 to-fuchsia-500 text-white"
-                disabled={isLoading}
-                onClick={() => handleSend()}
+                disabled={status === "submitted" || status === "streaming"}
+                onClick={async () => {
+                  await handleSend();
+                }}
                 size="icon"
                 type="button"
               >
@@ -288,7 +290,9 @@ export function InsightsDrawer({
                   <button
                     className="w-full rounded-lg border border-slate-200 px-3 py-2 text-left font-medium text-slate-600 text-xs hover:border-violet-200 hover:bg-violet-50"
                     key={suggestion}
-                    onClick={() => handleSend(suggestion)}
+                    onClick={async () => {
+                      await handleSend(suggestion);
+                    }}
                     type="button"
                   >
                     {suggestion}
