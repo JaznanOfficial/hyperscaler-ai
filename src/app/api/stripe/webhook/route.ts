@@ -5,6 +5,30 @@ import { prisma } from "@/backend/config/prisma";
 import { sendPurchaseConfirmationEmail } from "@/lib/email";
 import { stripe } from "@/lib/stripe";
 
+const toDateFromUnix = (timestamp?: number | null) =>
+  typeof timestamp === "number" ? new Date(timestamp * 1000) : null;
+
+const getSubscriptionId = (
+  source: string | Stripe.Subscription | null | undefined
+): string | null => {
+  if (!source) {
+    return null;
+  }
+
+  return typeof source === "string" ? source : source.id;
+};
+
+async function resolveNextBillingDate(subscriptionId: string | null) {
+  if (!subscriptionId) {
+    return null;
+  }
+
+  const subscription = (await stripe.subscriptions.retrieve(
+    subscriptionId
+  )) as Stripe.Subscription & { current_period_end?: number | null };
+  return toDateFromUnix(subscription.current_period_end);
+}
+
 export async function POST(request: Request) {
   const body = await request.text();
   const headersList = await headers();
@@ -40,15 +64,23 @@ export async function POST(request: Request) {
 
           // Store package subscription
           if (session.subscription && session.customer) {
+            const subscriptionId = getSubscriptionId(session.subscription);
+            if (!subscriptionId) {
+              break;
+            }
+
+            const nextBillingAt = await resolveNextBillingDate(subscriptionId);
+
             await prisma.subscription.create({
               data: {
                 userId,
-                subscriptionId: session.subscription as string,
+                subscriptionId,
                 priceId: session.line_items?.data[0]?.price?.id || "",
                 invoiceId: session.invoice as string | null,
                 packageName: packageName || null,
                 amount: Number.parseInt(amount || "0") * 100,
                 status: "PAID",
+                nextBillingAt: nextBillingAt ?? undefined,
               },
             });
 
@@ -73,7 +105,9 @@ export async function POST(request: Request) {
 
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
-        const subscription = event.data.object as Stripe.Subscription;
+        const subscription = event.data.object as Stripe.Subscription & {
+          current_period_end?: number | null;
+        };
 
         await prisma.subscription.updateMany({
           where: { subscriptionId: subscription.id },
@@ -84,21 +118,27 @@ export async function POST(request: Request) {
                 : subscription.status === "canceled"
                   ? "CANCELLED"
                   : "UNPAID",
+            nextBillingAt:
+              toDateFromUnix(subscription.current_period_end) ?? undefined,
           },
         });
         break;
       }
 
       case "invoice.payment_succeeded": {
-        const invoice = event.data.object as any;
-        const subscriptionId = invoice.subscription;
+        const invoice = event.data.object as Stripe.Invoice & {
+          subscription?: string | Stripe.Subscription | null;
+        };
+        const subscriptionId = getSubscriptionId(invoice.subscription);
 
-        if (subscriptionId && typeof subscriptionId === "string") {
+        if (subscriptionId) {
+          const nextBillingAt = await resolveNextBillingDate(subscriptionId);
           await prisma.subscription.updateMany({
             where: { subscriptionId },
             data: {
               status: "PAID",
               invoiceId: invoice.id,
+              nextBillingAt: nextBillingAt ?? undefined,
             },
           });
         }
@@ -106,13 +146,19 @@ export async function POST(request: Request) {
       }
 
       case "invoice.payment_failed": {
-        const invoice = event.data.object as any;
-        const subscriptionId = invoice.subscription;
+        const invoice = event.data.object as Stripe.Invoice & {
+          subscription?: string | Stripe.Subscription | null;
+        };
+        const subscriptionId = getSubscriptionId(invoice.subscription);
 
-        if (subscriptionId && typeof subscriptionId === "string") {
+        if (subscriptionId) {
+          const nextBillingAt = await resolveNextBillingDate(subscriptionId);
           await prisma.subscription.updateMany({
             where: { subscriptionId },
-            data: { status: "UNPAID" },
+            data: {
+              status: "UNPAID",
+              nextBillingAt: nextBillingAt ?? undefined,
+            },
           });
         }
         break;

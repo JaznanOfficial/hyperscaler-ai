@@ -1,22 +1,50 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { ActivePlanPreviewCard } from "@/components/dashboard/client/growth-plan-preview-card";
 import { RecommendedPackages } from "@/components/dashboard/client/recommended-packages";
 import { ClientSubscriptionList } from "@/components/dashboard/client/subscription-list";
+import { SubscriptionUpgradePrompt } from "@/components/dashboard/client/subscription-upgrade-prompt";
+import { SubscriptionsPageSkeleton } from "@/components/skeleton/subscriptions/subscriptions-page-skeleton";
 
 interface Project {
   id: string;
   status: string;
-  services: any[];
+  services: { serviceName?: string }[];
   createdAt: string;
+}
+
+function formatFriendlyDate(dateString?: string | null) {
+  if (!dateString) {
+    return undefined;
+  }
+
+  const date = new Date(dateString);
+  return Number.isNaN(date.getTime())
+    ? undefined
+    : date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+}
+
+interface ClientPackage {
+  status: string;
+  packageName: string;
+  createdAt?: string;
+  amount?: number;
+  nextBillingAt?: string | null;
 }
 
 export default function ClientSubscriptionsPage() {
   const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [planStatusReady, setPlanStatusReady] = useState(false);
+  const [activePlan, setActivePlan] = useState<ClientPackage | null>(null);
 
   useEffect(() => {
     const success = searchParams.get("success");
@@ -47,6 +75,41 @@ export default function ClientSubscriptionsPage() {
       .catch(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    fetch("/api/client/packages")
+      .then((res) => res.json())
+      .then((data) => {
+        const packages: ClientPackage[] = data.packages || [];
+        const activePkg = packages.find((pkg) => pkg.status === "PAID");
+        setActivePlan(activePkg ?? null);
+        setPlanStatusReady(true);
+      })
+      .catch(() => setPlanStatusReady(true));
+  }, []);
+
+  const planContent = useMemo(() => {
+    if (!planStatusReady) {
+      return <SubscriptionsPageSkeleton />;
+    }
+
+    if (activePlan) {
+      const formattedNextBilling = formatFriendlyDate(
+        activePlan.nextBillingAt ?? activePlan.createdAt
+      );
+      return (
+        <div className="space-y-6">
+          <SubscriptionUpgradePrompt currentPlanName={activePlan.packageName} />
+          <ActivePlanPreviewCard
+            nextBillingLabel={formattedNextBilling}
+            planName={activePlan.packageName}
+          />
+        </div>
+      );
+    }
+
+    return <RecommendedPackages />;
+  }, [activePlan, planStatusReady]);
+
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto">
@@ -65,11 +128,13 @@ export default function ClientSubscriptionsPage() {
             </p>
           </div>
           {loading ? (
-            <p className="text-center text-slate-600">Loading...</p>
+            <SubscriptionsPageSkeleton />
           ) : (
-            <ClientSubscriptionList projects={projects} />
+            <>
+              <ClientSubscriptionList projects={projects} />
+              {planContent}
+            </>
           )}
-          <RecommendedPackages />
         </div>
       </div>
     </section>

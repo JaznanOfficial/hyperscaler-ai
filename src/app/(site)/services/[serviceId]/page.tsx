@@ -1,48 +1,23 @@
 import { BadgeCheck, ChevronLeft, Lock } from "lucide-react";
 import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+  fallbackServiceMetrics,
+  siteServiceMetrics,
+} from "@/data/site-service-metrics";
 import { defaultSiteService, getSiteService } from "@/data/site-services";
 import { cn } from "@/lib/utils";
 
-const siteServiceMetrics: Record<
-  string,
-  { title: string; description: string }[]
-> = {
-  "paid-ads": [
-    { title: "Impressions", description: "Total times ads were shown" },
-    { title: "Reach", description: "Unique users who saw your ads" },
-    { title: "Clicks", description: "Total number of clicks" },
-    {
-      title: "Click-Through Rate (CTR)",
-      description: "Clicks divided by impressions",
-    },
-    {
-      title: "Cost per Click (CPC)",
-      description: "Average cost you pay per click",
-    },
-    {
-      title: "Conversion Rate",
-      description: "Rate of completed desired action",
-    },
-    { title: "Ad Spend", description: "Total campaign spend" },
-    {
-      title: "Return on Ad Spend (ROAS)",
-      description: "Revenue for every dollar spent",
-    },
-  ],
-};
-
 interface SiteServiceDetailsPageProps {
-  params: { serviceId: string };
+  params: Promise<{ serviceId: string }>;
 }
 
-export default function SiteServiceDetailsPage({
+export default async function SiteServiceDetailsPage({
   params,
 }: SiteServiceDetailsPageProps) {
-  const service = getSiteService(params.serviceId) ?? defaultSiteService;
-  const metrics = siteServiceMetrics[service.id] ?? [];
+  const { serviceId } = await params;
+  const service = getSiteService(serviceId) ?? defaultSiteService;
+  const metrics = siteServiceMetrics[service.id] ?? fallbackServiceMetrics;
 
   return (
     <section className="bg-muted/20 py-10">
@@ -76,17 +51,7 @@ export default function SiteServiceDetailsPage({
               </div>
               <p className="text-base text-slate-600">{service.description}</p>
             </div>
-            <div className="flex flex-col items-end gap-3">
-              <p className="font-['Outfit'] font-bold text-3xl text-slate-900">
-                {service.price}
-                <span className="ml-1 font-medium text-base text-slate-500">
-                  {service.cadence}
-                </span>
-              </p>
-              <Button asChild className="min-w-40" variant="gradient">
-                <Link href="/login">Login to Purchase</Link>
-              </Button>
-            </div>
+            <div className="flex flex-col items-end gap-2 text-right" />
           </div>
         </Card>
 
