@@ -1,5 +1,8 @@
 "use client";
 
+import { ArrowRight, Rocket } from "lucide-react";
+import Link from "next/link";
+import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -99,7 +102,9 @@ export function ActivePlanDetailsCard({
               <IncludedServiceCard key={service.id} service={service} />
             ))}
           </div>
-        ) : null}
+        ) : (
+          <ActivationPendingCard />
+        )}
       </div>
     </Card>
   );
@@ -165,6 +170,54 @@ function ServiceSkeletonGrid() {
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+function ActivationPendingCard() {
+  return (
+    <div className="relative flex flex-col gap-5 overflow-hidden rounded-2xl border border-slate-200 bg-purple-50 p-6 text-left shadow-sm">
+      <div className="relative z-10 space-y-2">
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-purple-200/70 p-3 text-purple-800">
+            <Rocket className="size-5" />
+          </div>
+          <p className="font-semibold text-base text-slate-900">
+            Your Plan Is Being Activated
+          </p>
+        </div>
+        <div className="space-y-2">
+          <p className="text-slate-600 text-sm">
+            We’re reviewing your subscription and will reach out shortly to help
+            you select your services and schedule your strategy session.
+          </p>
+          <p className="font-semibold text-purple-600 text-sm">
+            Prefer to move faster? You can book a call with our experts anytime.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              className="w-full sm:w-auto"
+              href="https://calendly.com/ujjwalroy1/ai-implementation"
+              target="_blank"
+            >
+              <Button
+                className="group inline-flex w-full items-center justify-center gap-2 sm:w-auto"
+                variant={"gradient"}
+              >
+                Book a Strategy Session
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+              </Button>
+            </Link>
+            <TalkToSalesDrawer
+              buttonClassName="w-full border border-slate-200 bg-white text-slate-700 sm:w-auto"
+              buttonLabel="Contact Support"
+              buttonVariant="outline"
+            />
+          </div>
+        </div>
+      </div>
+      <div className="pointer-events-none absolute -bottom-10 -left-10 h-24 w-24 rounded-full bg-purple-100" />
+      <div className="pointer-events-none absolute -top-16 -right-5 h-28 w-28 rounded-full bg-purple-200/80" />
     </div>
   );
 }

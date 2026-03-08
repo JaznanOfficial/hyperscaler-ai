@@ -32,6 +32,21 @@ function formatFriendlyDate(dateString?: string | null) {
       });
 }
 
+function addOneMonthIso(dateString?: string | null) {
+  if (!dateString) {
+    return undefined;
+  }
+
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    return undefined;
+  }
+
+  const nextMonth = new Date(date);
+  nextMonth.setMonth(nextMonth.getMonth() + 1);
+  return nextMonth.toISOString();
+}
+
 interface ClientPackage {
   status: string;
   packageName: string;
@@ -113,9 +128,12 @@ export default function ClientSubscriptionsPage() {
     }
 
     if (activePlan) {
-      const formattedNextBilling = formatFriendlyDate(
-        activePlan.nextBillingAt ?? activePlan.createdAt
-      );
+      const derivedNextBilling =
+        activePlan.nextBillingAt ?? addOneMonthIso(activePlan.createdAt);
+      const formattedNextBilling =
+        formatFriendlyDate(derivedNextBilling) ??
+        formatFriendlyDate(activePlan.createdAt) ??
+        "Pending";
       return (
         <div className="space-y-6">
           <SubscriptionUpgradePrompt currentPlanName={activePlan.packageName} />
@@ -141,7 +159,7 @@ export default function ClientSubscriptionsPage() {
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto">
-        <div className="space-y-6 p-4">
+        <div className="space-y-6">
           <div className="max-w-xl">
             <h1
               className="font-semibold text-3xl leading-10"
