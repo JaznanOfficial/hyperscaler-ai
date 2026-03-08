@@ -161,11 +161,15 @@ const PLAN_LIBRARY: Record<PlanKey, PlanDefinition> = {
 interface ActivePlanPreviewCardProps {
   planName: string;
   nextBillingLabel?: string;
+  services?: IncludedService[];
+  servicesLoading?: boolean;
 }
 
 export function ActivePlanPreviewCard({
   planName,
   nextBillingLabel,
+  services,
+  servicesLoading,
 }: ActivePlanPreviewCardProps) {
   const normalizedPlan = planName.trim().toLowerCase() as PlanKey;
   const planDefinition = PLAN_LIBRARY[normalizedPlan];
@@ -182,7 +186,16 @@ export function ActivePlanPreviewCard({
       nextBillingLabel ?? planDefinition?.nextBillingLabel ?? "Pending",
   };
 
-  const services = planDefinition?.services ?? DEFAULT_SERVICES;
+  const renderedServices =
+    services && services.length > 0
+      ? services
+      : (planDefinition?.services ?? DEFAULT_SERVICES);
 
-  return <ActivePlanDetailsCard plan={summary} services={services} />;
+  return (
+    <ActivePlanDetailsCard
+      plan={summary}
+      services={renderedServices}
+      servicesLoading={servicesLoading}
+    />
+  );
 }

@@ -8,6 +8,11 @@ import { stripe } from "@/lib/stripe";
 const toDateFromUnix = (timestamp?: number | null) =>
   typeof timestamp === "number" ? new Date(timestamp * 1000) : null;
 
+const readCurrentPeriodEnd = (value?: {
+  current_period_end?: number | null;
+  current_period?: { end?: number | null } | null;
+}) => value?.current_period?.end ?? value?.current_period_end ?? null;
+
 const getSubscriptionId = (
   source: string | Stripe.Subscription | null | undefined
 ): string | null => {
@@ -25,8 +30,12 @@ async function resolveNextBillingDate(subscriptionId: string | null) {
 
   const subscription = (await stripe.subscriptions.retrieve(
     subscriptionId
-  )) as Stripe.Subscription & { current_period_end?: number | null };
-  return toDateFromUnix(subscription.current_period_end);
+  )) as Stripe.Subscription & {
+    current_period_end?: number | null;
+    current_period?: { end?: number | null } | null;
+  };
+
+  return toDateFromUnix(readCurrentPeriodEnd(subscription));
 }
 
 export async function POST(request: Request) {
@@ -107,6 +116,7 @@ export async function POST(request: Request) {
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription & {
           current_period_end?: number | null;
+          current_period?: { end?: number | null } | null;
         };
 
         await prisma.subscription.updateMany({
@@ -119,7 +129,7 @@ export async function POST(request: Request) {
                   ? "CANCELLED"
                   : "UNPAID",
             nextBillingAt:
-              toDateFromUnix(subscription.current_period_end) ?? undefined,
+              toDateFromUnix(readCurrentPeriodEnd(subscription)) ?? undefined,
           },
         });
         break;

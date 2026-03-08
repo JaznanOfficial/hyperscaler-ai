@@ -1,9 +1,9 @@
 "use client";
 
-import { LayoutDashboard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 export type ActivePlanSummary = {
@@ -40,11 +40,13 @@ const STATUS_DOT_STYLES: Record<IncludedService["statusTone"], string> = {
 interface ActivePlanDetailsCardProps {
   plan: ActivePlanSummary;
   services: IncludedService[];
+  servicesLoading?: boolean;
 }
 
 export function ActivePlanDetailsCard({
   plan,
   services,
+  servicesLoading,
 }: ActivePlanDetailsCardProps) {
   return (
     <Card className="space-y-6 border border-slate-200 bg-white p-6 shadow-sm">
@@ -89,11 +91,15 @@ export function ActivePlanDetailsCard({
         <p className="font-semibold text-slate-500 text-xs uppercase tracking-wide">
           Included services ~
         </p>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {services.map((service) => (
-            <IncludedServiceCard key={service.id} service={service} />
-          ))}
-        </div>
+        {servicesLoading ? (
+          <ServiceSkeletonGrid />
+        ) : services.length > 0 ? (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {services.map((service) => (
+              <IncludedServiceCard key={service.id} service={service} />
+            ))}
+          </div>
+        ) : null}
       </div>
     </Card>
   );
@@ -125,41 +131,40 @@ function IncludedServiceCard({ service }: { service: IncludedService }) {
 
       <div className="flex flex-col gap-3">
         <Button
-          asChild={Boolean(service.dashboardHref)}
-          className="w-full justify-center gap-2 border border-slate-200 bg-slate-100 text-slate-900 hover:bg-slate-200"
-          variant="secondary"
-        >
-          {service.dashboardHref ? (
-            <a href={service.dashboardHref} rel="noreferrer">
-              <ButtonContent label="Dashboard" />
-            </a>
-          ) : (
-            <ButtonContent label="Dashboard" />
-          )}
-        </Button>
-        <Button
-          asChild={Boolean(service.detailsHref)}
+          asChild
           className="w-full justify-center font-semibold"
           variant="outline"
         >
-          {service.detailsHref ? (
-            <a href={service.detailsHref} rel="noreferrer">
-              View
-            </a>
-          ) : (
-            <>View</>
-          )}
+          <a
+            href={service.detailsHref || "/client/statistics"}
+            rel="noreferrer"
+          >
+            View
+          </a>
         </Button>
       </div>
     </div>
   );
 }
 
-function ButtonContent({ label }: { label: string }) {
+function ServiceSkeletonGrid() {
   return (
-    <span className="inline-flex items-center gap-2">
-      <LayoutDashboard className="size-4" />
-      {label}
-    </span>
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {[1, 2, 3].map((id) => (
+        <div
+          className="flex h-full flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+          key={id}
+        >
+          <div className="space-y-3">
+            <Skeleton className="h-5 w-40 rounded-full" />
+            <Skeleton className="h-4 w-32 rounded-full" />
+          </div>
+          <div className="flex flex-col gap-3">
+            <Skeleton className="h-11 w-full rounded-md" />
+            <Skeleton className="h-11 w-full rounded-md" />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

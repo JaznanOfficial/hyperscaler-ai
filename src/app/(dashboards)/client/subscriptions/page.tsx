@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import type { IncludedService } from "@/components/dashboard/client/active-plan-details-card";
 import { ActivePlanPreviewCard } from "@/components/dashboard/client/growth-plan-preview-card";
 import { RecommendedPackages } from "@/components/dashboard/client/recommended-packages";
 import { ClientSubscriptionList } from "@/components/dashboard/client/subscription-list";
@@ -12,7 +13,7 @@ import { SubscriptionsPageSkeleton } from "@/components/skeleton/subscriptions/s
 interface Project {
   id: string;
   status: string;
-  services: { serviceName?: string }[];
+  services: unknown;
   createdAt: string;
 }
 
@@ -42,7 +43,11 @@ interface ClientPackage {
 export default function ClientSubscriptionsPage() {
   const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [statisticsServices, setStatisticsServices] = useState<
+    RawStatisticsService[]
+  >([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [statisticsLoading, setStatisticsLoading] = useState(true);
   const [planStatusReady, setPlanStatusReady] = useState(false);
   const [activePlan, setActivePlan] = useState<ClientPackage | null>(null);
 
@@ -70,9 +75,19 @@ export default function ClientSubscriptionsPage() {
       .then((res) => res.json())
       .then((projectsData) => {
         setProjects(projectsData.projects || []);
-        setLoading(false);
+        setProjectsLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => setProjectsLoading(false));
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/client/statistics")
+      .then((res) => res.json())
+      .then((statsData) => {
+        setStatisticsServices(statsData.data || []);
+        setStatisticsLoading(false);
+      })
+      .catch(() => setStatisticsLoading(false));
   }, []);
 
   useEffect(() => {
@@ -86,6 +101,11 @@ export default function ClientSubscriptionsPage() {
       })
       .catch(() => setPlanStatusReady(true));
   }, []);
+
+  const includedServices = useMemo(
+    () => buildIncludedServices(projects, statisticsServices),
+    [projects, statisticsServices]
+  );
 
   const planContent = useMemo(() => {
     if (!planStatusReady) {
@@ -102,13 +122,21 @@ export default function ClientSubscriptionsPage() {
           <ActivePlanPreviewCard
             nextBillingLabel={formattedNextBilling}
             planName={activePlan.packageName}
+            services={includedServices}
+            servicesLoading={projectsLoading || statisticsLoading}
           />
         </div>
       );
     }
 
     return <RecommendedPackages />;
-  }, [activePlan, planStatusReady]);
+  }, [
+    activePlan,
+    includedServices,
+    planStatusReady,
+    projectsLoading,
+    statisticsLoading,
+  ]);
 
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">
@@ -127,16 +155,120 @@ export default function ClientSubscriptionsPage() {
               Track the status, billing, and lifecycle of your services
             </p>
           </div>
-          {loading ? (
+          {projectsLoading ? (
             <SubscriptionsPageSkeleton />
           ) : (
-            <>
-              <ClientSubscriptionList projects={projects} />
-              {planContent}
-            </>
+            <ClientSubscriptionList projects={projects} />
           )}
+          {planContent}
         </div>
       </div>
     </section>
   );
+}
+
+type RawProjectService = {
+  serviceId?: string;
+  serviceName?: string;
+  serviceSlug?: string;
+  description?: string;
+};
+
+type RawStatisticsService = {
+  serviceId: string;
+  serviceName: string;
+};
+
+const SERVICE_STATUS_META: Record<
+  string,
+  { label: string; tone: IncludedService["statusTone"]; meta: string }
+> = {
+  APPROVED: {
+    label: "On Track",
+    tone: "success",
+    meta: "Service Running",
+  },
+  PENDING: {
+    label: "Pending",
+    tone: "warning",
+    meta: "Awaiting kickoff",
+  },
+  CANCELLED: {
+    label: "Cancelled",
+    tone: "attention",
+    meta: "Service paused",
+  },
+};
+
+function buildIncludedServices(
+  projects: Project[],
+  statistics: RawStatisticsService[]
+): IncludedService[] {
+  if (statistics.length > 0) {
+    return statistics.map(
+      (service, index) =>
+        ({
+          id: `${service.serviceId || "stat"}-${index}`,
+          name: service.serviceName ?? "Service",
+          meta: "Service Running",
+          statusLabel: "On Track",
+          statusTone: "success",
+          dashboardHref: `/client/statistics?service=${service.serviceId}`,
+          detailsHref: undefined,
+        }) satisfies IncludedService
+    );
+  }
+
+  const statsServiceMap = new Map(
+    statistics.map((service) => [service.serviceId, service.serviceName])
+  );
+
+  return projects.flatMap((project) => {
+    const services = normalizeProjectServices(project.services);
+    if (!services.length) {
+      return [];
+    }
+
+    const statusMeta =
+      SERVICE_STATUS_META[project.status] ?? SERVICE_STATUS_META.APPROVED;
+
+    return services.map((service, index) => {
+      const safeId = `${project.id}-${service.serviceId ?? index}`;
+      const statsName = service.serviceId
+        ? statsServiceMap.get(service.serviceId)
+        : undefined;
+      return {
+        id: safeId,
+        name: statsName ?? service.serviceName ?? "Service",
+        meta: service.description ?? statusMeta.meta,
+        statusLabel: statusMeta.label,
+        statusTone: statusMeta.tone,
+        dashboardHref: service.serviceId
+          ? `/client/statistics?service=${service.serviceId}`
+          : undefined,
+        detailsHref: `/client/services/${project.id}`,
+      } satisfies IncludedService;
+    });
+  });
+}
+
+function normalizeProjectServices(raw: unknown): RawProjectService[] {
+  if (!raw) {
+    return [];
+  }
+
+  if (Array.isArray(raw)) {
+    return raw as RawProjectService[];
+  }
+
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? (parsed as RawProjectService[]) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
 }
