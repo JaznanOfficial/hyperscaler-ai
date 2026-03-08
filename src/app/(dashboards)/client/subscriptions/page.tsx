@@ -13,7 +13,7 @@ import { SubscriptionsPageSkeleton } from "@/components/skeleton/subscriptions/s
 interface Project {
   id: string;
   status: string;
-  services: unknown;
+  services: any[];
   createdAt: string;
 }
 
