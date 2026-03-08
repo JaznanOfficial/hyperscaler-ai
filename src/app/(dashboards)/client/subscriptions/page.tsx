@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { ActivePlanPreviewCard } from "@/components/dashboard/client/growth-plan-preview-card";
 import { RecommendedPackages } from "@/components/dashboard/client/recommended-packages";
 import { ClientSubscriptionList } from "@/components/dashboard/client/subscription-list";
 import { SubscriptionUpgradePrompt } from "@/components/dashboard/client/subscription-upgrade-prompt";
@@ -15,9 +16,27 @@ interface Project {
   createdAt: string;
 }
 
+function formatFriendlyDate(dateString?: string | null) {
+  if (!dateString) {
+    return undefined;
+  }
+
+  const date = new Date(dateString);
+  return Number.isNaN(date.getTime())
+    ? undefined
+    : date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+}
+
 interface ClientPackage {
   status: string;
   packageName: string;
+  createdAt?: string;
+  amount?: number;
+  nextBillingAt?: string | null;
 }
 
 export default function ClientSubscriptionsPage() {
@@ -25,7 +44,7 @@ export default function ClientSubscriptionsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [planStatusReady, setPlanStatusReady] = useState(false);
-  const [activePlanName, setActivePlanName] = useState<string | null>(null);
+  const [activePlan, setActivePlan] = useState<ClientPackage | null>(null);
 
   useEffect(() => {
     const success = searchParams.get("success");
@@ -62,7 +81,7 @@ export default function ClientSubscriptionsPage() {
       .then((data) => {
         const packages: ClientPackage[] = data.packages || [];
         const activePkg = packages.find((pkg) => pkg.status === "PAID");
-        setActivePlanName(activePkg?.packageName ?? null);
+        setActivePlan(activePkg ?? null);
         setPlanStatusReady(true);
       })
       .catch(() => setPlanStatusReady(true));
@@ -73,12 +92,23 @@ export default function ClientSubscriptionsPage() {
       return <SubscriptionsPageSkeleton />;
     }
 
-    if (activePlanName) {
-      return <SubscriptionUpgradePrompt currentPlanName={activePlanName} />;
+    if (activePlan) {
+      const formattedNextBilling = formatFriendlyDate(
+        activePlan.nextBillingAt ?? activePlan.createdAt
+      );
+      return (
+        <div className="space-y-6">
+          <SubscriptionUpgradePrompt currentPlanName={activePlan.packageName} />
+          <ActivePlanPreviewCard
+            nextBillingLabel={formattedNextBilling}
+            planName={activePlan.packageName}
+          />
+        </div>
+      );
     }
 
     return <RecommendedPackages />;
-  }, [activePlanName, planStatusReady]);
+  }, [activePlan, planStatusReady]);
 
   return (
     <section className="flex h-[calc(100vh-6rem)] flex-1 flex-col overflow-hidden">

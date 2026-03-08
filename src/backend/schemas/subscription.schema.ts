@@ -7,12 +7,14 @@ export const subscriptionSchema = z.object({
   invoiceId: z.string().optional().nullable(),
   amount: z.number().int().positive(),
   status: z.enum(["PAID", "UNPAID", "CANCELLED"]),
+  nextBillingAt: z.date().optional().nullable(),
 });
 
 export const updateSubscriptionSchema = z.object({
   status: z.enum(["PAID", "UNPAID", "CANCELLED"]).optional(),
   amount: z.number().int().positive().optional(),
   invoiceId: z.string().optional().nullable(),
+  nextBillingAt: z.date().optional().nullable(),
 });
 
 export type SubscriptionInput = z.infer<typeof subscriptionSchema>;

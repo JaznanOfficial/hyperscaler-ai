@@ -16,6 +16,7 @@ export class SubscriptionRepository {
         amount: true,
         status: true,
         createdAt: true,
+        nextBillingAt: true,
         subscriptionId: true,
       },
     });
