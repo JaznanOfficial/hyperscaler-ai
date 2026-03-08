@@ -10,11 +10,6 @@ export function SubscriptionsPageSkeleton() {
         <Skeleton className="h-4 w-80 rounded-full" />
       </div>
 
-      {/* <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <Skeleton className="h-6 w-48 rounded-full" />
-        <Skeleton className="h-4 w-72 rounded-full" />
-      </div> */}
-
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {PRICING_CARD_PLACEHOLDERS.map((id) => (
           <div
