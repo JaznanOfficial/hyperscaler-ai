@@ -57,6 +57,16 @@ export function HomeNavbar() {
             >
               Portfolio
             </Link>
+            <Link
+              className={` ${
+                pathname?.startsWith("/pricing")
+                  ? activeLinkClass
+                  : inactiveLinkClass
+              }`}
+              href="/pricing"
+            >
+              Pricing
+            </Link>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -146,7 +156,17 @@ export function HomeNavbar() {
               >
                 <span>Portfolio</span>
               </Link>
-
+              <Link
+                className={`flex items-center justify-between rounded-xl px-3 py-2 hover:bg-zinc-50 ${
+                  pathname?.startsWith("/pricing")
+                    ? activeLinkClass
+                    : "text-zinc-800"
+                }`}
+                href="/pricing"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span>Pricing</span>
+              </Link>
               <div className="mt-2 flex flex-col gap-2 border-zinc-100 border-t pt-3">
                 <Button asChild size="sm" variant="gradient">
                   <Link
