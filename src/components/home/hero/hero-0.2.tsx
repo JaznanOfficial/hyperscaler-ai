@@ -24,12 +24,12 @@ const Hero02 = () => {
             {/* Pill tagline */}
             <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-neutral-300 bg-purple-50 px-4 py-2">
               <Sparkles className="h-4 w-4 text-purple-500" />
-              <span className="font-semibold text-lg text-purple-500">
+              <span className="font-medium text-base text-purple-500">
                 AI-Powered Growth & Development Platform
               </span>
             </div>
 
-            <h3 className="font-['Outfit'] font-medium text-5xl text-[#1A1A1A] leading-14">
+            <h3 className="font-['Outfit'] font-semibold text-5xl text-[#1A1A1A] leading-14">
               Your Marketing on Autopilot
             </h3>
 
