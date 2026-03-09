@@ -1,93 +1,51 @@
-import { Play } from "lucide-react";
 import Image from "next/image";
-import { SectionHeader } from "@/components/shared/section-header";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
-const testimonialsData = [
+const testimonialCards = [
   {
-    avatar: "/testimonials/avatar-1.png",
-    name: "Parfait",
-    role: "Founder/Chief Executive Officer, Credentials",
-    comment:
-      "I lacked the technical expertise to build our product. the ScaleBuild team quickly understood our fintech vision, created a roadmap, and provided daily updates. The process was seamless.",
-    videoUrl: "https://youtu.be/_m6vnjRbNPU",
+    src: "/testimonials/tst-01.png",
+    alt: "Testimonial from Parfait",
   },
   {
-    avatar: "/testimonials/avatar-2.png",
-    name: "John Carey",
-    role: "Chief Executive Officer, Ovanova",
-    comment:
-      "I had the pleasure of working with the ScaleBuild team. Their technical expertise, seamless collaboration, and outstanding results made the process a breeze. Highly recommended!",
-    videoUrl: "https://youtu.be/xNNTI8CCwtg",
+    src: "/testimonials/tst-02.png",
+    alt: "Testimonial from John Carey",
   },
   {
-    avatar: "/testimonials/avatar-3.png",
-    name: "Steve Dickerman",
-    role: "Founder/Chief Executive Officer, Sangria",
-    comment:
-      "We had a vision but not a complete product. The ScaleBuild team took our UI/UX designs, executed them, and helped us build a beautiful and continuous product. Their communication is incredible and they always deliver quality work.",
-    videoUrl: "https://youtu.be/1n3dW5CLZZk",
+    src: "/testimonials/tst-03.png",
+    alt: "Testimonial from Steve Dickerman",
   },
 ];
 
 const Testimonials = () => {
   return (
-    <section className="relative mx-auto my-container flex w-11/12 flex-col items-center justify-center gap-8 py-10 md:gap-10 md:py-12 lg:w-10/12 lg:gap-13 lg:py-16">
-      {/* section header */}
-      <SectionHeader
-        description="Trusted by founders"
-        titlePart1="Testimonials"
-      />
-      {/* body */}
-      <div className="relative z-10 grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-3">
-        {testimonialsData.map((item, index) => (
-          <div
-            className="flex flex-col justify-between rounded-lg border border-purple-200 bg-neutral-100 p-3 md:p-6"
-            key={index}
-          >
-            <div>
-              <div className="flex items-start gap-4">
-                <Image
-                  alt={item.name}
-                  className="rounded-full object-cover"
-                  height={56}
-                  src={item.avatar}
-                  width={56}
-                />
-                <div className="flex-1">
-                  <h3
-                    className={cn(
-                      "font-['Outfit']",
-                      "font-semibold text-[#1A1A1A] text-[18px]"
-                    )}
-                  >
-                    {item.name}
-                  </h3>
-                  <p className="mt-1 text-[#414851] text-sm">{item.role}</p>
-                </div>
-              </div>
-              <p className="mt-4 font-medium text-[#414851] text-base">
-                &ldquo;{item.comment}&rdquo;
-              </p>
-            </div>
+    <section className="w-full bg-white py-[110px]">
+      <div className="mx-auto flex w-11/12 flex-col items-center lg:w-10/12">
+        <div className="text-center">
+          <h2 className="text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-[#1f1f1f]">
+            Trusted by CEOs and Founders
+          </h2>
+          <p className="mt-4 text-[18px] leading-[1.6] text-[#6b7280]">
+            From launch to scale, top executives trust Hyperscaler to drive measurable results.
+          </p>
+        </div>
 
-            <Button
-              asChild
-              className="mt-4 w-fit"
-              size={"sm"}
-              variant={"gradient"}
+        <div className="mt-[72px] grid w-full grid-cols-1 justify-items-center gap-x-[28px] gap-y-[28px] md:grid-cols-2 xl:grid-cols-3">
+          {testimonialCards.map((card, index) => (
+            <div
+              key={index}
+              className="w-full max-w-[380px]"
             >
-              <a href={item.videoUrl} rel="noreferrer" target="_blank">
-                <Play className="size-3" /> Watch Video
-              </a>
-            </Button>
-          </div>
-        ))}
+              <Image
+                src={card.src}
+                alt={card.alt}
+                width={406}
+                height={341}
+                className="h-auto w-full object-contain"
+                priority={index < 3}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-
-      {/* designs */}
-      <div className="absolute bottom-0 left-1/2 aspect-square size-[308px] -translate-x-1/2 rounded-full bg-linear-to-r from-[#5B21B6] to-[#D946EF] opacity-20 blur-[170px] md:opacity-40 lg:opacity-70" />
     </section>
   );
 };
