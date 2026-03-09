@@ -13,13 +13,52 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import type { ReactNode } from "react";
 import { SectionHeader } from "@/components/shared/section-header";
 import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 import { buttonVariants } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-const scalePricingData = [
+type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
+
+interface SavingsHighlight {
+  title: string;
+  subtitle: string;
+}
+
+type PricingCta =
+  | {
+      type: "link";
+      href: string;
+      label: string;
+      variant?: ButtonVariant;
+    }
+  | {
+      type: "drawer";
+      label: string;
+      variant?: ButtonVariant;
+    };
+
+interface PricingCard {
+  icon: ReactNode;
+  name: string;
+  description: string;
+  price: {
+    amount: string;
+    cadence: string;
+    note: string;
+  };
+  comparisonLabel: string;
+  savingsHighlight?: SavingsHighlight;
+  cta: PricingCta;
+  features: string[];
+  highlight?: {
+    label?: string;
+  };
+}
+
+const scalePricingData: PricingCard[] = [
   {
     icon: <Rocket className="size-5 md:size-6" />,
     name: "Starter",
@@ -31,6 +70,10 @@ const scalePricingData = [
       note: "Billed monthly · Cancel anytime",
     },
     comparisonLabel: "What's included",
+    savingsHighlight: {
+      title: "Skip multiple hires",
+      subtitle: "Save $11,000+/month",
+    },
     cta: {
       type: "link",
       href: "#",
@@ -56,7 +99,11 @@ const scalePricingData = [
     },
     comparisonLabel: "Everything in Starter, plus",
     highlight: {
-      label: "Most Popular",
+      // label: "Most Popular",
+    },
+    savingsHighlight: {
+      title: "Combine AI + experts",
+      subtitle: "Save $19,500+/month",
     },
     cta: {
       type: "link",
@@ -82,6 +129,10 @@ const scalePricingData = [
       note: "Billed monthly · Cancel anytime",
     },
     comparisonLabel: "Everything in Growth, plus",
+    savingsHighlight: {
+      title: "Eliminate busywork",
+      subtitle: "Save $25,500+/month",
+    },
     cta: {
       type: "link",
       href: "#",
@@ -106,6 +157,10 @@ const scalePricingData = [
       note: "Tailored to your goals & budget",
     },
     comparisonLabel: "Everything in Pro, plus",
+    savingsHighlight: {
+      title: "Skip long hiring cycles",
+      subtitle: "Save $40,000+/month",
+    },
     cta: {
       type: "drawer",
       label: "Talk to Us",
@@ -212,7 +267,7 @@ const PricingComparison = () => (
   </div>
 );
 
-const buildPricingData = [
+const buildPricingData: PricingCard[] = [
   {
     icon: <Rocket className="size-5 md:size-6" />,
     name: "Starter",
@@ -223,6 +278,10 @@ const buildPricingData = [
       note: "Billed monthly · Cancel anytime",
     },
     comparisonLabel: "What's included",
+    savingsHighlight: {
+      title: "Replace multiple contractors",
+      subtitle: "Save $12,500+/month",
+    },
     cta: {
       type: "link",
       href: "#",
@@ -251,6 +310,10 @@ const buildPricingData = [
     highlight: {
       label: "Most Popular",
     },
+    savingsHighlight: {
+      title: "Keep scope lean",
+      subtitle: "Save $22,000+/month",
+    },
     cta: {
       type: "link",
       href: "#",
@@ -275,6 +338,10 @@ const buildPricingData = [
       note: "Billed monthly · Cancel anytime",
     },
     comparisonLabel: "Everything in Growth, plus",
+    savingsHighlight: {
+      title: "Avoid agency retainers",
+      subtitle: "Save $45,000+/month",
+    },
     cta: {
       type: "link",
       href: "#",
@@ -299,6 +366,10 @@ const buildPricingData = [
       note: "Tailored to your goals & budget",
     },
     comparisonLabel: "Everything in Pro, plus",
+    savingsHighlight: {
+      title: "Compress timelines",
+      subtitle: "Save $65,000+/month",
+    },
     cta: {
       type: "drawer",
       label: "Talk to Us",
@@ -355,8 +426,6 @@ const Pricing = () => {
   );
 };
 
-type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
-
 const renderPricingCta = (item: PricingCard, isAuthenticated: boolean) => {
   const overrideVariant = (variant?: ButtonVariant): ButtonVariant => {
     if (item.highlight && variant === "gradient") {
@@ -399,7 +468,40 @@ const renderPricingCta = (item: PricingCard, isAuthenticated: boolean) => {
   return null;
 };
 
-type PricingCard = (typeof scalePricingData)[number];
+const SavingsHighlightPill = ({
+  highlight,
+}: {
+  highlight?: SavingsHighlight;
+}) => {
+  if (!highlight) {
+    return null;
+  }
+
+  return (
+    <div
+      className={cn(
+        "flex w-full items-start gap-3 rounded-2xl border px-4 py-3",
+        "border-emerald-100 bg-emerald-50"
+      )}
+    >
+      <div className={cn("text-emerald-600")}>
+        <Zap className="size-4" />
+      </div>
+      <div className="flex flex-col">
+        <p className="font-['Inter'] font-medium text-[#515A65] text-xs">
+          {highlight.title}
+        </p>
+        <p
+          className={cn(
+            "font-['Inter'] font-semibold text-emerald-600 text-sm"
+          )}
+        >
+          {highlight.subtitle}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 const PricingCards = ({ data }: { data: PricingCard[] }) => {
   const { status } = useSession();
@@ -429,26 +531,26 @@ const PricingCards = ({ data }: { data: PricingCard[] }) => {
               <div
                 className={cn(
                   item.highlight
-                    ? "bg-purple-200/70 text-purple-700 ring-1 ring-white"
+                    ? "bg-purple-600 text-white ring-1 ring-white"
                     : "bg-[#D1D1D1] text-[#515A65]",
-                  "flex size-9 items-center justify-center rounded-lg md:size-11"
+                  "inline-flex items-center gap-2 rounded-xl px-3 py-1"
                 )}
               >
-                {item.icon}
-              </div>
-              <div>
+                <div className="flex size-6 items-center justify-center md:size-7">
+                  {item.icon}
+                </div>
                 <h3
                   className={cn(
-                    "font-['Outfit']",
-                    "font-medium text-[#1A1A1A] text-xl sm:text-2xl"
+                    "font-['Outfit'] font-medium text-base sm:text-lg",
+                    item.highlight ? "text-white" : "text-[#1A1A1A]"
                   )}
                 >
                   {item.name}
                 </h3>
-                <p className="text-[#515A65] text-sm leading-5">
-                  {item.description}
-                </p>
               </div>
+              <p className="text-[#515A65] text-sm leading-5">
+                {item.description}
+              </p>
             </div>
             {item.price ? (
               <div className="flex flex-col items-start gap-1">
@@ -472,12 +574,14 @@ const PricingCards = ({ data }: { data: PricingCard[] }) => {
               </div>
             ) : null}
 
-            <div
+            {/* <div
               className={cn(
                 "h-px w-full",
                 item.highlight ? "bg-[#E3D3FF]" : "bg-[#E7DFF6]"
               )}
-            />
+            /> */}
+
+            <SavingsHighlightPill highlight={item.savingsHighlight} />
 
             {item.comparisonLabel ? (
               <p className="font-['Inter'] font-medium text-[#515A65] text-xs uppercase leading-4">

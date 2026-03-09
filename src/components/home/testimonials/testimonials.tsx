@@ -20,10 +20,10 @@ const Testimonials = () => {
     <section className="w-full bg-white py-[110px]">
       <div className="mx-auto flex w-11/12 flex-col items-center lg:w-10/12">
         <div className="text-center">
-          <h2 className="font-semibold text-[#1f1f1f] text-[32px] leading-[1.1] tracking-[-0.03em]">
+          <h2 className="font-semibold text-[#1f1f1f] text-xl leading-[1.1] tracking-[-0.03em] md:text-5xl">
             Trusted by CEOs and Founders
           </h2>
-          <p className="mt-4 text-[18px] text-gray-600 leading-[1.6]">
+          <p className="mt-4 text-gray-600 text-lg leading-[1.6]">
             From launch to scale, top executives trust Hyperscaler to drive
             measurable results.
           </p>

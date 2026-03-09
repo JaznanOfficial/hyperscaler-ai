@@ -19,15 +19,15 @@ const StayCreative = () => {
 
           {/* Right Side: Text and Button */}
           <div className="flex flex-col justify-center">
-            <div className="font-['Outfit'] font-semibold text-purple-600 text-xl">
+            <div className="font-['Outfit'] font-semibold text-2xl text-purple-600">
               Stay Creative
             </div>
             <div className="flex flex-col gap-3.5">
-              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] sm:text-3xl md:text-4xl">
+              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] sm:text-3xl md:text-5xl">
                 We value branding and storytelling along with consistency in
                 social media with human touch
               </p>
-              <p className="font-['Outfit'] font-normal text-gray-600 text-xl leading-8">
+              <p className="font-['Outfit'] font-normal text-2xl text-gray-600 leading-8">
                 Automate your social media campaigns with immaculate
                 storytelling that does not look like AI Slope
               </p>

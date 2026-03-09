@@ -66,6 +66,7 @@ export function TalkToSalesDrawer({
         {trigger ?? (
           <Button
             className={cn(buttonClassName ?? "w-fit px-4 py-3")}
+            size="lg"
             variant={buttonVariant}
           >
             <PhoneCall className="mr-1 size-4" />

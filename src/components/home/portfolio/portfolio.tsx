@@ -36,17 +36,17 @@ const Portfolio = () => {
           <h3
             className={cn(
               "font-['Outfit']",
-              "font-medium text-2xl md:text-[32px]"
+              "font-medium text-2xl md:text-5xl"
             )}
           >
             Our Portfolio
           </h3>
-          <p className="text-[#515A65]">
+          <p className="text-[#515A65] text-lg md:text-2xl">
             Explore projects we&apos;ve designed and built for our clients
           </p>
         </div>
         <Link
-          className="flex items-center gap-2 font-semibold text-[#9E32DD] underline-offset-2 hover:underline"
+          className="flex items-center gap-2 font-semibold text-[#9E32DD] text-lg underline-offset-2 hover:underline md:text-2xl"
           href="/portfolio"
         >
           View Our Portfolio <ArrowRight className="size-4" />
@@ -73,12 +73,12 @@ const Portfolio = () => {
               <h3
                 className={cn(
                   "font-['Outfit']",
-                  "mt-3 font-semibold text-[#1A1A1A] text-[20px]"
+                  "mt-3 font-semibold text-[#1A1A1A] text-lg md:text-2xl"
                 )}
               >
                 {item.title}
               </h3>
-              <p className="mt-1 text-[#515A65] text-sm">{item.desc}</p>
+              <p className="mt-1 text-[#515A65] text-lg">{item.desc}</p>
             </div>
           ))}
         </div>

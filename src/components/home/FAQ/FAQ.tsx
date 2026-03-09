@@ -14,7 +14,7 @@ const faqData = [
   {
     question: "Can I subscribe to multiple services?",
     answer:
-      "Yes, you can subscribe to multiple services simultaneously. Each service is billed separately on a monthly basis, giving you complete flexibility to scale up or down base4d on your requirements.",
+      "Yes, you can subscribe to multiple services simultaneously. Each service is billed separately on a monthly basis, giving you complete flexibility to scale up or down based on your requirements.",
   },
   {
     question: "Is there a free trial available for new users?",

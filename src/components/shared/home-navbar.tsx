@@ -25,10 +25,10 @@ export function HomeNavbar() {
       <header className="sticky top-0 z-40 border-zinc-200 border-b bg-[#FBF5FF] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] backdrop-blur supports-backdrop-filter:bg-[#FBF5FF]">
         <div className="mx-auto flex w-11/12 items-center justify-between py-3 sm:py-4 lg:w-10/12">
           <Link className="flex items-center gap-2" href="/">
-            <Image alt="Hyperscaler" height={40} src="/logo.png" width={140} />
+            <Image alt="Hyperscaler" height={60} src="/logo.png" width={180} />
           </Link>
 
-          <nav className="hidden items-center gap-6 lg:ml-32 lg:flex">
+          <nav className="hidden items-center gap-6 text-lg lg:flex">
             <Link
               className={` ${
                 pathname === "/" ? activeLinkClass : inactiveLinkClass
@@ -83,7 +83,7 @@ export function HomeNavbar() {
             <Link href={primaryCtaHref}>
               <Button
                 className="hidden lg:inline-flex"
-                size="sm"
+                size="lg"
                 variant="gradient"
               >
                 {primaryCtaLabel} <ArrowRight className="size-4" />
@@ -92,7 +92,7 @@ export function HomeNavbar() {
             <Button
               asChild
               className="hidden lg:inline-flex"
-              size="sm"
+              size="lg"
               variant="outline"
             >
               <Link

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const Hero02 = () => {
   return (
-    <section className="relative w-full overflow-hidden bg-white py-16 md:py-20 lg:py-24">
+    <section className="relative w-full overflow-hidden bg-white">
       {/* Subtle purple gradient top-right */}
       {/* <div
         className="pointer-events-none absolute -top-[20%] -right-[20%] h-[60%] w-[50%] rounded-full opacity-30 blur-3xl"
@@ -24,12 +24,12 @@ const Hero02 = () => {
             {/* Pill tagline */}
             <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-neutral-300 bg-purple-50 px-4 py-2">
               <Sparkles className="h-4 w-4 text-purple-500" />
-              <span className="font-semibold text-[14px] text-purple-500">
+              <span className="font-semibold text-lg text-purple-500">
                 AI-Powered Growth & Development Platform
               </span>
             </div>
 
-            <h3 className="font-['Outfit'] font-medium text-4xl text-[#1A1A1A] leading-14">
+            <h3 className="font-['Outfit'] font-medium text-5xl text-[#1A1A1A] leading-14">
               Your Marketing on Autopilot
             </h3>
 
@@ -42,13 +42,13 @@ const Hero02 = () => {
                 strokeWidth={2.2}
                 style={{ transformOrigin: "center", translate: "0 -0.25rem" }}
               />
-              <p className="font-['Outfit'] font-medium text-lg text-purple-600 leading-6">
+              <p className="font-['Outfit'] font-medium text-purple-500 text-xl leading-6">
                 Generate Leads and Scale Marketing Without Agencies or Extra
                 Teams.
               </p>
             </div>
 
-            <p className="mt-4 font-['Outfit'] font-normal text-gray-600 text-lg leading-7">
+            <p className="mt-4 font-['Outfit'] font-normal text-gray-600 text-xl leading-7">
               AI-powered growth systems that run paid ads, outreach, and demand
               generation from one platform with clean human touch.
             </p>
@@ -56,12 +56,12 @@ const Hero02 = () => {
             {/* Buttons */}
             <div className="mt-6 flex gap-4">
               <Link href="/chat">
-                <Button variant={"gradient"}>
+                <Button className="md:w-48" size="lg" variant={"gradient"}>
                   <Sparkles className="h-4 w-4" />
-                  Talk to Hyperscale
+                  Talk to Hyperscaler
                 </Button>
               </Link>
-              <Button variant="outline">
+              <Button className="md:w-48" size={"lg"} variant="outline">
                 <Play className="h-4 w-4" />
                 View Demo
               </Button>
@@ -72,10 +72,10 @@ const Hero02 = () => {
           <div className="relative h-full w-full">
             <Image
               alt="Marketing Autopilot Dashboard"
-              className="relative z-10 w-full rounded-[20px] object-cover object-center"
-              height={400}
+              className="relative z-10 w-full rounded-4xl object-cover object-center"
+              height={320}
               src="/hero-right.png"
-              width={600}
+              width={480}
             />
           </div>
         </div>

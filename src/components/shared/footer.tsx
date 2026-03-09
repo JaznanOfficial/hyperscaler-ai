@@ -91,12 +91,12 @@ export function Footer() {
                   src="/logo-without-text.png"
                   width={54}
                 />
-                <span className="font-semibold text-lg text-white">
+                <span className="font-semibold text-2xl text-white">
                   Hyperscaler
                 </span>
               </span>
             </PlaceholderLink>
-            <p className="mt-4 max-w-xs text-[#9CA3AF] text-sm leading-relaxed">
+            <p className="mt-4 max-w-xs text-[#9CA3AF] text-lg leading-relaxed">
               Scale your business with AI-driven services. Simple, powerful, and
               built for growth.
             </p>
@@ -104,8 +104,8 @@ export function Footer() {
 
           {/* Product */}
           <div>
-            <h4 className="font-semibold text-base text-white">Product</h4>
-            <ul className="mt-4 space-y-3 text-[#9CA3AF] text-sm">
+            <h4 className="font-semibold text-lg text-white">Product</h4>
+            <ul className="mt-4 space-y-3 text-[#9CA3AF] text-lg">
               <li>
                 <Link href="/services">Services</Link>
               </li>
@@ -120,8 +120,8 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-semibold text-base text-white">Legal</h4>
-            <ul className="mt-4 space-y-3 text-[#9CA3AF] text-sm">
+            <h4 className="font-semibold text-lg text-white">Legal</h4>
+            <ul className="mt-4 space-y-3 text-[#9CA3AF] text-lg">
               <li>
                 <Link
                   href="https://scalebuild.ai/privacy-and-policy"
@@ -154,10 +154,10 @@ export function Footer() {
 
           {/* Contact Information */}
           <div>
-            <h4 className="font-semibold text-base text-white">
+            <h4 className="font-semibold text-lg text-white">
               Contact Information
             </h4>
-            <ul className="mt-4 space-y-3 text-[#9CA3AF] text-sm">
+            <ul className="mt-4 space-y-3 text-[#9CA3AF] text-lg">
               <li className="flex items-center gap-2">
                 <Mail className="size-4 shrink-0" />
                 <a href="mailto:contact@scalebuild.ai">contact@scalebuild.ai</a>
@@ -180,7 +180,7 @@ export function Footer() {
             {socialLinks.map(({ icon: Icon, href, label }) => (
               <a
                 aria-label={label}
-                className="flex size-10 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200"
+                className="flex size-12 items-center justify-center rounded-full bg-[#ECD6F8] text-[#1A1A1A] transition-colors hover:bg-purple-200"
                 href={href}
                 key={label}
                 rel="noreferrer"
@@ -191,7 +191,7 @@ export function Footer() {
             ))}
           </div>
 
-          <p className="text-[#9CA3AF] text-sm">
+          <p className="text-[#9CA3AF] text-lg">
             &copy; {new Date().getFullYear()} Hyperscaler. All rights reserved.
           </p>
         </div>
