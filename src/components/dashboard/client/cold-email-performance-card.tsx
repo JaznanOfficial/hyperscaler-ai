@@ -1,65 +1,14 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import type { LucideIcon } from "lucide-react";
-import {
-  AlertTriangle,
-  CircleCheckBig,
-  Signal,
-  TrendingUp,
-} from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { ClientServiceKeyInsights } from "./client-service-key-insights";
 import { ConversionFunnelSection } from "./conversion-funnel-section";
 import { InsightsDrawer } from "./insights-drawer";
-import { KeyInsightsGrid } from "./key-insights-grid";
 import { PerformanceTimelineSection } from "./performance-timeline-section";
 import { ResponseQualitySection } from "./response-quality-section";
-
-type Insight = {
-  label: string;
-  detail: string;
-  icon: LucideIcon;
-  iconBg: string;
-  iconColor: string;
-  detailColor: string;
-};
-
-const insights: Insight[] = [
-  {
-    label: "Reply quality improving",
-    detail: "+5% vs last period",
-    icon: TrendingUp,
-    iconBg: "bg-emerald-50",
-    iconColor: "text-emerald-600",
-    detailColor: "text-emerald-600",
-  },
-  {
-    label: "Deliverability needs attention",
-    detail: "32% bounce rate (Target < 5%)",
-    icon: AlertTriangle,
-    iconBg: "bg-amber-50",
-    iconColor: "text-amber-600",
-    detailColor: "text-amber-600",
-  },
-  {
-    label: "Inbox reputation healthy",
-    detail: "0.5% complaint rate (Industry < 1%)",
-    icon: CircleCheckBig,
-    iconBg: "bg-emerald-50",
-    iconColor: "text-emerald-600",
-    detailColor: "text-slate-600",
-  },
-  {
-    label: "Conversion Rate strong",
-    detail: "2% email-to-meeting conversion",
-    icon: Signal,
-    iconBg: "bg-sky-50",
-    iconColor: "text-sky-600",
-    detailColor: "text-sky-600",
-  },
-];
 
 export function ColdEmailPerformanceCard() {
   const [todayDate, setTodayDate] = useState<string>("");
@@ -157,10 +106,10 @@ export function ColdEmailPerformanceCard() {
         </section>
 
         <section>
-          <p className="mb-4 font-semibold text-slate-900 text-sm">
-            Key Insights
-          </p>
-          <KeyInsightsGrid insights={insights} />
+          <ClientServiceKeyInsights
+            serviceId="COLD_EMAIL"
+            serviceName="Cold Email Campaign"
+          />
         </section>
       </CardContent>
     </Card>

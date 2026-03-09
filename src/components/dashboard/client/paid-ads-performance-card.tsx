@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Activity, AlertTriangle, Target, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import {
@@ -16,8 +15,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { ClientServiceKeyInsights } from "./client-service-key-insights";
 import { InsightsDrawer } from "./insights-drawer";
-import { KeyInsightsGrid } from "./key-insights-grid";
 import { PaidAdsRoasTrendChart } from "./paid-ads-roas-trend-chart";
 
 interface SpendItem {
@@ -153,37 +152,6 @@ export function PaidAdsPerformanceCard({ data }: PaidAdsPerformanceCardProps) {
     },
   ];
 
-  const paidInsights = [
-    {
-      label: "Ad relevance improving",
-      detail: "+8% vs last period",
-      icon: TrendingUp,
-      iconBg: "bg-emerald-50",
-      iconColor: "text-emerald-600",
-    },
-    {
-      label: "Cost per click is high",
-      detail: "$3.20 CPC (Target <$2.50)",
-      icon: AlertTriangle,
-      iconBg: "bg-amber-50",
-      iconColor: "text-amber-600",
-      detailColor: "text-amber-600",
-    },
-    {
-      label: "ROAS is healthy",
-      detail: "3.5x return on ad spend",
-      icon: Activity,
-      iconBg: "bg-sky-50",
-      iconColor: "text-sky-600",
-    },
-    {
-      label: "Conversion Rate strong",
-      detail: data?.["Conversion Rate"] || "0%",
-      icon: Target,
-      iconBg: "bg-purple-50",
-      iconColor: "text-purple-600",
-    },
-  ];
   return (
     <Card className="border-none bg-white shadow-sm">
       <CardHeader className="space-y-6">
@@ -290,10 +258,10 @@ export function PaidAdsPerformanceCard({ data }: PaidAdsPerformanceCardProps) {
         </section>
 
         <section>
-          <p className="mb-4 font-semibold text-slate-900 text-sm">
-            Key Insights
-          </p>
-          <KeyInsightsGrid insights={paidInsights} />
+          <ClientServiceKeyInsights
+            serviceId="PAID_ADS"
+            serviceName="Paid Ads"
+          />
         </section>
       </CardContent>
     </Card>

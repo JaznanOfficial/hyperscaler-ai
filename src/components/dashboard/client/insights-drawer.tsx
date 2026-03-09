@@ -1,8 +1,12 @@
 "use client";
 
-import { SendHorizontal, Sparkles } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { ArrowUp, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
+import { mapAiMessagesToChatMessages } from "@/components/chat/ai-message-utils";
+import { ClientAgentMessageItem } from "@/components/dashboard/client/message-item";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -19,6 +23,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
 
 type ServiceValue =
   | "cold-email"
@@ -26,7 +31,8 @@ type ServiceValue =
   | "social-media"
   | "cold-calling"
   | "branding"
-  | "cold-linkedin";
+  | "cold-linkedin"
+  | "software-development";
 
 type InsightsDrawerProps = {
   defaultService?: ServiceValue;
@@ -38,16 +44,13 @@ export function InsightsDrawer({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedService, setSelectedService] =
     useState<ServiceValue>(defaultService);
-  const observations = [
-    "Open rates dropped 5% this week — likely due to subject line fatigue",
-    "Best send time: Tuesday 10am EST shows 32% higher engagement",
-    "45% of meetings came from follow-up sequence (2nd-3rd touchpoint)",
-  ];
+  const [draft, setDraft] = useState("");
+  const conversationEndRef = useRef<HTMLDivElement | null>(null);
 
   const suggestions = [
-    "What is affecting my conversion rate?",
-    "Compare to last month",
-    "Benchmark my performance",
+    "Give me today's highlights",
+    "How are conversions trending this week?",
+    "What should I improve next?",
   ];
 
   const services = useMemo(
@@ -79,6 +82,11 @@ export function InsightsDrawer({
           value: "cold-linkedin",
           color: "bg-indigo-500",
         },
+        {
+          label: "Software Development",
+          value: "software-development",
+          color: "bg-violet-500",
+        },
       ] satisfies {
         label: string;
         value: ServiceValue;
@@ -93,10 +101,66 @@ export function InsightsDrawer({
 
   const handleTriggerClick = () => {
     setSelectedService(defaultService);
+    setShowSuggestions(false);
   };
 
   const handleServiceChange = (value: string) => {
     setSelectedService(value as ServiceValue);
+  };
+
+  const {
+    messages: aiMessages = [],
+    sendMessage,
+    status,
+  } = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/client-agent",
+    }),
+  });
+
+  const mappedMessages = mapAiMessagesToChatMessages(aiMessages);
+  const messageCount = aiMessages.length;
+
+  useEffect(() => {
+    if (messageCount === 0) {
+      return;
+    }
+    if (conversationEndRef.current) {
+      conversationEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messageCount]);
+
+  const buildPrompt = (content: string) => {
+    const serviceLabel = services.find(
+      (svc) => svc.value === selectedService
+    )?.label;
+    return serviceLabel
+      ? `Focus on ${serviceLabel} metrics. ${content}`
+      : content;
+  };
+
+  const stripServicePrefix = (content: string) => {
+    if (!content.startsWith("Focus on ")) {
+      return content;
+    }
+
+    const marker = " metrics. ";
+    const markerIndex = content.indexOf(marker);
+    if (markerIndex === -1) {
+      return content;
+    }
+
+    return content.slice(markerIndex + marker.length);
+  };
+
+  const handleSend = async (value?: string) => {
+    const content = (value ?? draft).trim();
+    if (!content) {
+      return;
+    }
+
+    await sendMessage({ text: buildPrompt(content) });
+    setDraft("");
   };
 
   return (
@@ -107,7 +171,7 @@ export function InsightsDrawer({
         </Button>
       </SheetTrigger>
       <SheetContent
-        className="w-full max-w-md border-none bg-white p-0"
+        className="w-full max-w-md border-none bg-white p-0 lg:max-w-2xl"
         side="right"
       >
         <div className="flex h-full flex-col">
@@ -148,73 +212,67 @@ export function InsightsDrawer({
             </SheetDescription>
           </SheetHeader>
 
-          <div className="flex-1 space-y-5 overflow-y-auto px-6 py-6">
-            <div className="space-y-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
-              <div className="inline-flex items-center gap-2 font-medium text-slate-500 text-sm">
-                <span className="size-4 rounded-full border border-slate-400" />
-                3 Key observations
-              </div>
-              <ul className="list-disc space-y-2 pl-5 text-slate-600 text-sm">
-                {observations.map((observation) => (
-                  <li key={observation}>{observation}</li>
+          <div className="flex-1 overflow-y-auto px-6 py-6">
+            {mappedMessages.length > 0 ? (
+              <div className="space-y-4">
+                {mappedMessages.map((message) => (
+                  <ClientAgentMessageItem
+                    key={message.id}
+                    message={
+                      message.role === "user"
+                        ? {
+                            ...message,
+                            content: stripServicePrefix(message.content),
+                          }
+                        : message
+                    }
+                  />
                 ))}
-              </ul>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex flex-col items-end gap-1">
-                <p className="text-right font-medium text-slate-500 text-xs">
-                  You
-                </p>
-                <div className="max-w-[70%] rounded-2xl rounded-br-sm bg-linear-to-br from-violet-600 to-fuchsia-500 px-4 py-3 font-semibold text-sm text-white">
-                  Why is my reply rate low?
-                </div>
+                <div ref={conversationEndRef} />
               </div>
-              <div className="flex flex-col gap-2 text-slate-600 text-sm">
-                <p className="font-medium text-slate-500 text-xs">
-                  Hyperscaler AI Assistant
+            ) : (
+              <div className="space-y-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-5 text-slate-600 text-sm">
+                <p className="font-semibold text-base text-slate-900">
+                  Ask Hyperscaler AI
                 </p>
-                <div className="space-y-2 rounded-2xl rounded-bl-sm border border-slate-200 bg-slate-100 px-4 py-3">
-                  <p>
-                    Based on your data, I've identified 3 factors affecting your
-                    reply rate:
-                  </p>
-                  <ul className="list-decimal space-y-2 pl-4">
-                    <li>
-                      <span className="font-semibold">
-                        High bounce rate (32%)
-                      </span>{" "}
-                      — Many emails aren't reaching inboxes. Clean your list.
-                    </li>
-                    <li>
-                      <span className="font-semibold">Generic messaging</span> —
-                      Positive reply rate is 80%, but overall replies are 5.8%.
-                      Add more personalization.
-                    </li>
-                    <li>
-                      <span className="font-semibold">Timing</span> — 60% of
-                      emails go out on Mondays when inboxes are saturated. Try
-                      Tuesday/Wednesday.
-                    </li>
-                  </ul>
-                </div>
+                <p>
+                  Ask anything about your service metrics, KPIs, timelines, and
+                  current trends. I’ll use real data from your workspace.
+                </p>
+                <p className="text-slate-500">
+                  Tip: set the service dropdown to keep the conversation
+                  focused.
+                </p>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="border-slate-100 border-t bg-slate-50 px-6 py-4">
-            <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2">
-              <input
+            <div className="flex items-end gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2">
+              <Textarea
                 aria-label="Ask about this service"
-                className="flex-1 bg-transparent text-slate-700 text-sm outline-none placeholder:text-slate-400"
+                className="min-h-20 flex-1 resize-none border-0 bg-transparent text-slate-700 text-sm outline-none placeholder:text-slate-400 focus-visible:ring-0"
+                onChange={(event) => setDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    handleSend();
+                  }
+                }}
                 placeholder="Ask about this service..."
+                value={draft}
               />
               <Button
-                className="rounded-xl bg-linear-to-br from-violet-600 to-fuchsia-500 text-white"
+                aria-label="Send message"
+                className="self-end rounded-xl bg-linear-to-br from-violet-600 to-fuchsia-500 text-white"
+                disabled={status === "submitted" || status === "streaming"}
+                onClick={async () => {
+                  await handleSend();
+                }}
                 size="icon"
                 type="button"
               >
-                <SendHorizontal className="size-4" />
+                <ArrowUp className="size-4" />
               </Button>
             </div>
             <button
@@ -227,14 +285,14 @@ export function InsightsDrawer({
           </div>
           {showSuggestions && (
             <div className="border-slate-100 border-t px-6 py-5">
-              <p className="mb-3 font-medium text-slate-600 text-sm">
-                Suggested questions
-              </p>
               <div className="space-y-2">
                 {suggestions.map((suggestion) => (
                   <button
                     className="w-full rounded-lg border border-slate-200 px-3 py-2 text-left font-medium text-slate-600 text-xs hover:border-violet-200 hover:bg-violet-50"
                     key={suggestion}
+                    onClick={async () => {
+                      await handleSend(suggestion);
+                    }}
                     type="button"
                   >
                     {suggestion}

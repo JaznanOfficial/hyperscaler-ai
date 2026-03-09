@@ -8,11 +8,13 @@ import type { SiteService } from "@/data/site-services";
 interface ServicesGridProps {
   services: SiteService[];
   ctaType?: "cart" | "talk";
+  talkButtonLabel?: string;
 }
 
 export function ServicesGrid({
   services,
   ctaType = "cart",
+  talkButtonLabel,
 }: ServicesGridProps) {
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -62,7 +64,10 @@ export function ServicesGrid({
             )}
             <div className="flex w-full flex-col gap-3">
               {ctaType === "talk" ? (
-                <TalkToSalesDrawer buttonClassName="flex-1" />
+                <TalkToSalesDrawer
+                  buttonClassName="flex-1"
+                  buttonLabel={talkButtonLabel}
+                />
               ) : (
                 <Button asChild className="flex-1" variant="gradient">
                   <Link href="/login">
