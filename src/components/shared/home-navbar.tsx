@@ -77,16 +77,6 @@ export function HomeNavbar() {
             >
               Resources
             </Link>
-            <Link
-              className={` ${
-                pathname?.startsWith("/pricing")
-                  ? activeLinkClass
-                  : inactiveLinkClass
-              }`}
-              href="/pricing"
-            >
-              Pricing
-            </Link>
           </nav>
 
           <div className="flex items-center gap-4">
