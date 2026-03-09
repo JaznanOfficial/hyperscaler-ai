@@ -113,7 +113,7 @@ export function Footer() {
                 <Link href="/pricing">Pricing</Link>
               </li>
               <li>
-                <Link href="/#faqs">FAQs</Link>
+                <Link href="/resources">Resources</Link>
               </li>
             </ul>
           </div>

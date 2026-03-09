@@ -69,6 +69,16 @@ export function HomeNavbar() {
             </Link>
             <Link
               className={` ${
+                pathname?.startsWith("/resources")
+                  ? activeLinkClass
+                  : inactiveLinkClass
+              }`}
+              href="/resources"
+            >
+              Resources
+            </Link>
+            <Link
+              className={` ${
                 pathname?.startsWith("/pricing")
                   ? activeLinkClass
                   : inactiveLinkClass
@@ -176,6 +186,17 @@ export function HomeNavbar() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <span>Portfolio</span>
+              </Link>
+              <Link
+                className={`flex items-center justify-between rounded-xl px-3 py-2 hover:bg-zinc-50 ${
+                  pathname?.startsWith("/resources")
+                    ? activeLinkClass
+                    : "text-zinc-800"
+                }`}
+                href="/resources"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span>Resources</span>
               </Link>
               <Link
                 className={`flex items-center justify-between rounded-xl px-3 py-2 hover:bg-zinc-50 ${

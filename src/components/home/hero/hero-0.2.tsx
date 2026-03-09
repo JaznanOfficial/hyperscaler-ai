@@ -58,7 +58,7 @@ const Hero02 = () => {
               <Link href="/chat">
                 <Button variant={"gradient"}>
                   <Sparkles className="h-4 w-4" />
-                  Talk to hyperscale
+                  Talk to Hyperscale
                 </Button>
               </Link>
               <Button variant="outline">
