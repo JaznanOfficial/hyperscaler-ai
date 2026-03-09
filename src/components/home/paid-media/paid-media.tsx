@@ -5,7 +5,7 @@ const PaidMediaSection = () => {
   return (
     <section className="w-full py-16">
       <div className="z-10 text-center">
-        <h2 className="font-medium text-2xl text-[#1A1A1A] leading-[1.4] tracking-[0] sm:text-[28px] md:text-[32px]">
+        <h2 className="font-medium text-2xl text-[#1A1A1A] leading-[1.4] tracking-[0] sm:text-[28px] md:text-5xl">
           Everything you need to
           <span className="bg-linear-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
             {" "}
@@ -19,7 +19,7 @@ const PaidMediaSection = () => {
           — in one platform
         </h2>
 
-        <p className="mt-2 font-normal text-[#515A65] text-sm leading-[1.4] tracking-[0] sm:text-base">
+        <p className="mt-2 font-normal text-[#515A65] text-sm leading-[1.4] tracking-[0] sm:text-lg">
           From idea to growth, we&apos;ve got every stage covered with
           AI-powered execution
         </p>
@@ -39,14 +39,14 @@ const PaidMediaSection = () => {
 
           {/* Right Side: Text and Button */}
           <div className="flex flex-col justify-center gap-2">
-            <div className="font-['Outfit'] font-semibold text-purple-600 text-xl">
+            <div className="font-['Outfit'] font-semibold text-2xl text-purple-600">
               Paid Media
             </div>
             <div className="flex flex-col gap-3.5">
-              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] sm:text-3xl md:text-4xl">
+              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] sm:text-3xl md:text-5xl">
                 Launch your campaigns with full visibility
               </p>
-              <p className="font-['Outfit'] font-normal text-gray-600 text-xl leading-8">
+              <p className="font-['Outfit'] font-normal text-gray-600 text-lg leading-8">
                 Stop guessing what will work and start putting money on what
                 will work the best for your product.
               </p>

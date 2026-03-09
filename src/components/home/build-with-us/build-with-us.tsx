@@ -12,14 +12,14 @@ const BuildWithUsSection = () => {
         <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:gap-16">
           {/* Left Side: Text and Button */}
           <div className="flex flex-col justify-center">
-            <div className="font-['Outfit'] font-semibold text-purple-600 text-xl">
+            <div className="font-['Outfit'] font-semibold text-2xl text-purple-600">
               Build with us 
             </div>
             <div className="flex flex-col gap-3.5">
-              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] sm:text-3xl md:text-4xl">
+              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] sm:text-3xl md:text-5xl">
                 Launch, develop or automate 
               </p>
-              <p className="font-['Outfit'] font-normal text-gray-600 text-xl leading-8">
+              <p className="font-['Outfit'] font-normal text-2xl text-gray-600 leading-8">
                 Eliminate manual work, build clear milestones and Bring your
                 product idea to life with a structured roadmap.
               </p>
@@ -29,7 +29,7 @@ const BuildWithUsSection = () => {
             <TalkToSalesDrawer
               buttonLabel="Book a free growth session"
               trigger={
-                <Button className="mt-5 w-fit" variant={"gradient"}>
+                <Button className="mt-5 w-fit" size="lg" variant={"gradient"}>
                   <CodeXml className="size-4" />
                   Talk to our developers
                 </Button>

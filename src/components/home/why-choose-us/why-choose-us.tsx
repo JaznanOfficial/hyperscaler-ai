@@ -23,8 +23,8 @@ const WhyChooseUs = () => {
   return (
     <section className="mx-auto w-full py-[72px] md:py-[84px]">
       <div className="mx-auto flex w-11/12 flex-col items-center lg:w-10/12">
-        <div className="max-w-[820px] text-center">
-          <h2 className="font-semibold text-[#1f1f1f] text-[28px] leading-[1.08] tracking-[-0.03em] md:text-[34px]">
+        <div className="max-w-6xl text-center">
+          <h2 className="font-semibold text-2xl text-[#1f1f1f] leading-[1.08] tracking-[-0.03em] md:text-5xl">
             Built{" "}
             <span className="bg-gradient-to-r from-[#7c3aed] to-[#c026d3] bg-clip-text text-transparent">
               different
@@ -32,15 +32,15 @@ const WhyChooseUs = () => {
             from anything you&apos;ve tried
           </h2>
 
-          <p className="mx-auto mt-[10px] max-w-[790px] text-[#6b7280] text-[14px] leading-[1.45] md:text-[15px]">
+          <p className="mx-auto mt-[10px] max-w-[790px] text-[#6b7280] text-lg leading-[1.45] md:text-xl">
             Agencies move slow and charge a fortune. SaaS tools hand you a
             dashboard and wish you luck. Hyperscaler actually does the work with
             AI speed and human judgment.
           </p>
         </div>
 
-        <div className="relative mt-[34px] flex w-full max-w-[440px] items-center justify-center">
-          <div className="flex h-[40px] w-full items-center justify-between rounded-full bg-[#ececec] px-[18px] font-semibold text-[#171717] text-[13px]">
+        <div className="relative mt-[34px] flex w-full max-w-2xl items-center justify-center">
+          <div className="flex h-[40px] w-full items-center justify-between rounded-full bg-[#ececec] px-[18px] font-semibold text-[#171717] text-lg">
             <div className="flex items-center gap-[8px]">
               <Hourglass className="h-[14px] w-[14px] stroke-[2.2]" />
               <span>Traditional way</span>
@@ -52,7 +52,7 @@ const WhyChooseUs = () => {
             </div>
           </div>
 
-          <div className="absolute top-1/2 left-1/2 z-20 flex h-[48px] w-[48px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#d8d8d8] bg-[#fff] font-semibold text-[#111111] text-[13px] shadow-[0_2px_6px_rgba(0,0,0,0.06)]">
+          <div className="absolute top-1/2 left-1/2 z-20 flex h-[48px] w-[48px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#d8d8d8] bg-[#fff] font-semibold text-[#111111] text-lg shadow-[0_2px_6px_rgba(0,0,0,0.06)]">
             VS
           </div>
         </div>
@@ -71,7 +71,7 @@ const WhyChooseUs = () => {
               <div className="pointer-events-none absolute top-0 right-0 h-[16px] w-[16px] rounded-tr-[16px] border-[#cdcdcd] border-t border-r" />
 
               <div className="relative z-10 pt-[8px]">
-                <h3 className="font-semibold text-[#1b1b1b] text-[17px] tracking-[-0.02em] md:text-[18px]">
+                <h3 className="font-semibold text-[#1b1b1b] text-xl tracking-[-0.02em]">
                   Traditional Agencies
                 </h3>
 
@@ -79,7 +79,7 @@ const WhyChooseUs = () => {
                   {comparisonData.traditional.map((item) => (
                     <li className="flex items-center gap-[11px]" key={item}>
                       <span className="h-[10px] w-[10px] rounded-full bg-[#e8cccc]" />
-                      <span className="text-[#5c6169] text-[14px] leading-[1.25]">
+                      <span className="text-[#5c6169] text-lg leading-[1.25]">
                         {item}
                       </span>
                     </li>
@@ -98,7 +98,7 @@ const WhyChooseUs = () => {
               <div className="pointer-events-none absolute top-0 left-0 h-[16px] w-[16px] rounded-tl-[16px] border-[#d7b7ff] border-t border-l" />
 
               <div className="relative z-10 pt-[8px]">
-                <h3 className="font-semibold text-[17px] text-purple-600 tracking-[-0.02em] md:text-[18px]">
+                <h3 className="font-semibold text-purple-600 text-xl tracking-[-0.02em]">
                   Hyperscaler
                 </h3>
 
@@ -106,7 +106,7 @@ const WhyChooseUs = () => {
                   {comparisonData.hyperscaler.map((item) => (
                     <li className="flex items-center gap-[11px]" key={item}>
                       <span className="h-[10px] w-[10px] rounded-full bg-[#2dbd5a]" />
-                      <span className="text-[#5c6169] text-[14px] leading-[1.25]">
+                      <span className="text-[#5c6169] text-lg leading-[1.25]">
                         {item}
                       </span>
                     </li>
@@ -122,7 +122,7 @@ const WhyChooseUs = () => {
           rel="noreferrer noopener"
           target="_blank"
         >
-          <Button className="mt-5" variant={"gradient"}>
+          <Button className="mt-5" size="lg" variant={"gradient"}>
             Book a free session
             <ArrowRight className="size-4" />
           </Button>
