@@ -5,21 +5,21 @@ import { Button } from "@/components/ui/button";
 
 const BuildWithUsSection = () => {
   return (
-    <section className="relative w-full overflow-hidden py-16 md:py-20 lg:py-24">
+    <section className="relative w-full overflow- py-16 md:py-20 lg:py-24">
       <div className="pointer-events-none absolute top-1/2 right-4 z-0 h-72 w-72 -translate-y-1/2 rounded-[999px] bg-linear-to-l from-fuchsia-500 via-violet-600 to-transparent blur-[220px] md:top-2/5 md:right-0 md:h-70 md:w-70" />
 
-      <div className="relative z-10 mx-auto flex w-11/12 flex-col items-center lg:w-10/12">
-        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:gap-16">
+      <div className="">
+        <div className="  flex justify-center items-center  max-sm:flex-col-reverse">
           {/* Left Side: Text and Button */}
           <div className="flex flex-col justify-center">
-            <div className="font-['Outfit'] font-semibold text-2xl text-purple-600">
-              Build with us 
+            <div className="font-['Outfit'] font-semibold text-2xl text-purple-600 max-sm:text-xl">
+              Build with us
             </div>
             <div className="flex flex-col gap-3.5">
-              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] sm:text-3xl md:text-5xl">
-                Launch, develop or automate 
+              <p className="font-['Outfit'] mt-[8px] max-sm:text-2xl max-sm:leading-[23px] max-sm:mt-px font-normal text-3xl text-[#111111] leading-[48px] sm:text-3xl md:text-5xl">
+                Launch, develop or automate
               </p>
-              <p className="font-['Outfit'] font-normal text-2xl text-gray-600 leading-8">
+              <p className="font-['Outfit'] max-sm:text-[12px] mt-[14px] max-sm:leading-[18px] max-sm:mt-px font-normal text-gray-600 text-lg leading-8">
                 Eliminate manual work, build clear milestones and Bring your
                 product idea to life with a structured roadmap.
               </p>

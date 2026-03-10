@@ -20,7 +20,7 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
         gradient:
-          "bg-linear-to-br from-violet-800 to-fuchsia-500 text-white hover:opacity-95 focus-visible:ring-fuchsia-200",
+          "bg-linear-to-br from-[#D946EF] to-[#5B21B6] text-white hover:opacity-95 focus-visible:ring-fuchsia-200",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
