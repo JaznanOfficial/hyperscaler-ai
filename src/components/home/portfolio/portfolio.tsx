@@ -31,17 +31,17 @@ const Portfolio = () => {
   return (
     <section className="flex flex-col items-center justify-center gap-8 py-10 md:gap-10 md:py-12 lg:gap-13 lg:py-16">
       {/* header */}
-      <div className="mx-auto mb-10 flex w-11/12 flex-col justify-between gap-4 sm:flex-row sm:items-end lg:w-10/12">
+      <div className="">
         <div className="">
           <h3
             className={cn(
               "font-['Outfit']",
-              "font-medium text-2xl md:text-5xl"
+              "font-medium text-2xl leading-[1.4] sm:text-[28px] md:text-5xl"
             )}
           >
             Our Portfolio
           </h3>
-          <p className="text-[#515A65] text-lg md:text-2xl">
+          <p className="mt-2 font-normal text-[#515A65] text-sm leading-[1.4] sm:text-lg md:text-2xl">
             Explore projects we&apos;ve designed and built for our clients
           </p>
         </div>

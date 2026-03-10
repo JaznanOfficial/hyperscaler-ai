@@ -10,7 +10,7 @@ import WhyChooseUs from "@/components/home/why-choose-us/why-choose-us";
 
 export default function Page() {
   return (
-    <>
+    <div className="max-sm:px-6 max-w-[1480px] mx-auto">
       <Hero02 />
       {/* <HowItWorks /> */}
       {/* <BuildAndScale /> */}
@@ -23,6 +23,6 @@ export default function Page() {
       <Testimonials />
       <Portfolio />
       <CallToAction />
-    </>
+    </div>
   );
 }

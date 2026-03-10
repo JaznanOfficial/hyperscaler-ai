@@ -5,46 +5,48 @@ import { Button } from "@/components/ui/button";
 
 const LeadGenerationSection = () => {
   return (
-    <section className="w-full py-16">
-      <div className="mx-auto flex w-11/12 flex-col items-center lg:w-10/12">
-        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:gap-16">
-          {/* Left Side: Text and Button */}
-          <div className="flex flex-col justify-center">
-            <div className="font-['Outfit'] font-semibold text-2xl text-purple-600">
-              Generate leads
-            </div>
-            <div className="flex flex-col gap-3.5">
-              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] sm:text-3xl md:text-5xl">
-                Target Your ICP Lookalikes with AI-Powered Outreach
-              </p>
-              <p className="font-['Outfit'] font-normal text-2xl text-gray-600 leading-8">
-                Automate cold email, LinkedIn, and cold calling to generate
-                qualified leads 24/7 on autopilot.
-              </p>
-            </div>
-
-            {/* Button */}
-            <TalkToSalesDrawer
-              buttonLabel="Book a free growth session"
-              trigger={
-                <Button className="mt-5 w-fit" size="lg" variant={"gradient"}>
-                  <TrendingUp className="size-4" />
-                  Book a free growth session
-                </Button>
-              }
-            />
+    <section className="w-full pt-[100px] ">
+      <div className="  flex justify-center items-center  max-sm:flex-col-reverse">
+        {/* Left Side: Text and Button */}
+        <div className="flex flex-col justify-center">
+          <div className="font-['Outfit'] font-semibold text-2xl text-purple-600 max-sm:text-xl">
+            Generate leads
+          </div>
+          <div className="flex flex-col gap-3.5">
+            <p className="font-['Outfit'] mt-[8px] max-sm:text-2xl max-sm:leading-[23px] max-sm:mt-px font-normal text-3xl text-[#111111] leading-[48px] sm:text-3xl md:text-5xl">
+              Target Your ICP Lookalikes with AI-Powered Outreach
+            </p>
+            <p className="font-['Outfit'] max-sm:text-[12px] mt-[14px] max-sm:leading-[18px] max-sm:mt-px font-normal text-gray-600 text-lg leading-8">
+              Automate cold email, LinkedIn, and cold calling to generate
+              qualified leads 24/7 on autopilot.
+            </p>
           </div>
 
-          {/* Right Side: Image */}
-          <div className="relative h-full w-full">
-            <Image
-              alt="Lead Generation" // Place the image in the public folder
-              className="rounded-[20px] object-fill"
-              height={600}
-              src="/generate_leads.png"
-              width={600}
-            />
-          </div>
+          {/* Button */}
+          <TalkToSalesDrawer
+            buttonLabel="Book a free growth session"
+            trigger={
+              <Button className="mt-5 w-fit" size="lg" variant={"gradient"}>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16.5 5.25L10.125 11.625L6.375 7.875L1.5 12.75" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M12 5.25H16.5V9.75" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+
+                Book a free growth session
+              </Button>
+            }
+          />
+        </div>
+
+        {/* Right Side: Image */}
+        <div className="relative h-full w-full">
+          <Image
+            alt="Lead Generation" // Place the image in the public folder
+            className="rounded-[20px] object-fill"
+            height={800}
+            src="/generate_leads.png"
+            width={800}
+          />
         </div>
       </div>
     </section>
