@@ -10,18 +10,20 @@ import WhyChooseUs from "@/components/home/why-choose-us/why-choose-us";
 
 export default function Page() {
   return (
-    <div className="max-sm:px-6 max-w-[1480px] mx-auto">
-      <Hero02 />
-      {/* <HowItWorks /> */}
-      {/* <BuildAndScale /> */}
-      {/* <ControlGrowth /> */}
-      <PaidMediaSection />
-      <GenerateLeadsSection />
-      <StayCreative />
-      <BuildWithUsSection />
-      <WhyChooseUs />
-      <Testimonials />
-      <Portfolio />
+    <div>
+      <div className="max-sm:px-6 max-w-[1480px] lg:px-20 mx-auto">
+        <Hero02 />
+        {/* <HowItWorks /> */}
+        {/* <BuildAndScale /> */}
+        {/* <ControlGrowth /> */}
+        <PaidMediaSection />
+        <GenerateLeadsSection />
+        <StayCreative />
+        <BuildWithUsSection />
+        <WhyChooseUs />
+        <Testimonials />
+        <Portfolio />
+      </div>
       <CallToAction />
     </div>
   );

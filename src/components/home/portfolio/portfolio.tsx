@@ -29,7 +29,7 @@ const portfolioData = [
 
 const Portfolio = () => {
   return (
-    <section className="flex flex-col items-center justify-center gap-8 py-10 md:gap-10 md:py-12 lg:gap-13 lg:py-16">
+    <section className="flex flex-col items-start justify-center gap-8 py-10 md:gap-10 md:py-12 lg:gap-13 lg:py-16">
       {/* header */}
       <div className="">
         <div className="">
@@ -41,17 +41,18 @@ const Portfolio = () => {
           >
             Our Portfolio
           </h3>
-          <p className="mt-2 font-normal text-[#515A65] text-sm leading-[1.4] sm:text-lg md:text-2xl">
+          <p className="mt-2 font-normal text-[#515A65] text-sm leading-[1.4] sm:text-lg md:text-xl">
             Explore projects we&apos;ve designed and built for our clients
           </p>
         </div>
-        <Link
-          className="flex items-center gap-2 font-semibold text-[#9E32DD] text-lg underline-offset-2 hover:underline md:text-2xl"
-          href="/portfolio"
-        >
-          View Our Portfolio <ArrowRight className="size-4" />
-        </Link>
+
       </div>
+      <Link
+        className="flex  w-fit self-end mx-auto mr-0 items-center gap-2 font-semibold text-[#9E32DD] text-lg underline-offset-2 hover:underline md:text-lg"
+        href="/portfolio"
+      >
+        View Our Portfolio <ArrowRight className="size-4" />
+      </Link>
 
       {/* body */}
       <Marquee pauseOnHover>
