@@ -11,7 +11,7 @@ import WhyChooseUs from "@/components/home/why-choose-us/why-choose-us";
 export default function Page() {
   return (
     <div>
-      <div className="max-sm:px-6 max-w-[1480px] lg:px-20 mx-auto">
+      <div className="">
         <Hero02 />
         {/* <HowItWorks /> */}
         {/* <BuildAndScale /> */}

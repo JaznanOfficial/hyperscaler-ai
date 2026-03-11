@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const BuildWithUsSection = () => {
   return (
-    <section className="relative w-full overflow- py-16 md:py-20 lg:py-24">
-      <div className="pointer-events-none absolute top-1/2 right-4 z-0 h-72 w-72 -translate-y-1/2 rounded-[999px] bg-linear-to-l from-fuchsia-500 via-violet-600 to-transparent blur-[220px] md:top-2/5 md:right-0 md:h-70 md:w-70" />
+    <section className="w-full mt-20 px-20 max-sm:px-6">
 
       <div className="">
         <div className="  flex justify-center items-center  max-sm:flex-col-reverse">
@@ -38,14 +37,15 @@ const BuildWithUsSection = () => {
           </div>
 
           {/* Right Side: Image */}
-          <div className="relative h-full w-full">
+          <div className="relative ">
             <Image
               alt="Build With Us"
-              className="w-full rounded-[20px] object-fill"
-              height={400}
-              src="/build_withus.png"
+              className=" rounded-[20px] "
+              height={600}
+              src="/build-with-us.svg"
               width={600}
             />
+            <div className="pointer-events-none absolute  bottom-16 -z-10   h-72 w-72  rounded-[999px] bg-linear-to-l from-fuchsia-500 via-violet-600 to-transparent blur-[220px] " />
           </div>
         </div>
       </div>

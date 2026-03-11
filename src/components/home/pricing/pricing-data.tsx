@@ -214,7 +214,7 @@ export const buildPricingData: PricingCard[] = [
     name: "Enterprise",
     description: "Custom product development at any scale, your way.",
     price: {
-      amount: "Custom Pricing",
+      amount: "Let's Talk ",
       cadence: "",
       note: "Tailored to your goals & budget",
     },
