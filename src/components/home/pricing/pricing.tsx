@@ -44,6 +44,19 @@ const Pricing = () => {
           <PricingCards data={buildPricingData} />
         </TabsContent>
       </Tabs>
+      {/* Import Link from "next/link" at the top of the file if not already imported */}
+      <p className="text-center text-[16px] text-[#515A65]">
+        Need both <b> Scale </b> and <b> Build </b>? Bundle them and save,{" "}
+        <a
+          href="https://calendly.com/ujjwalroy1/ai-implementation"
+          rel="noreferrer"
+          target="_blank"
+          className="underline text-[#9E32DD] hover:text-[#7f26b5] transition-colors"
+        >
+          talk to our team
+        </a>{" "}
+        for a custom package.
+      </p>
     </section>
   );
 };

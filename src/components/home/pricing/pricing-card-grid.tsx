@@ -144,7 +144,7 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
                     className={cn(
                       "font-['Outfit'] font-semibold text-2xl leading-8",
                       isCustomPrice &&
-                        "bg-linear-to-r from-violet-800 to-fuchsia-500 bg-clip-text text-transparent"
+                      "bg-linear-to-r from-violet-800 to-fuchsia-500 bg-clip-text text-transparent"
                     )}
                   >
                     {item.price.amount}
@@ -191,7 +191,7 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
             </div>
 
             <div className="flex w-full flex-col gap-3">
-              {!isCustomPrice && (
+              {/* {!isCustomPrice && (
                 <Link
                   className={cn(
                     item.highlight
@@ -204,12 +204,25 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
                 >
                   Book a free session <ArrowRight className="size-4" />
                 </Link>
-              )}
+              )} */}
+              <Link
+                className={cn(
+                  "h-[48px]",
+                  item.highlight
+                    ? cn(buttonVariants({ variant: "gradient" }), "w-full h-[48px]")
+                    : "flex w-full items-center justify-center gap-2 rounded-lg  border-purple-100 bg-purple-50  h-[48px] font-semibold text-purple-600 text-sm transition hover:bg-purple-100"
+                )}
+                href="https://calendly.com/ujjwalroy1/ai-implementation"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Book a free session <ArrowRight className="size-4" />
+              </Link>
 
-              {ctaContent}
+              {/* {ctaContent} */}
             </div>
             {item.highlight?.label ? (
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-[#D946EF] bg-[#9E32DD] px-3 py-1.5 text-[10px] text-white md:px-4 md:text-xs">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-[#D946EF] bg-[#9E32DD] px-3 h-[48px]  text-[10px] text-white md:px-4 md:text-xs">
                 {item.highlight.label}
               </div>
             ) : null}
