@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const Hero02 = () => {
   return (
-    <section className="relative w-full overflow- bg-white">
+    <section className="relative w-full overflow- bg-white max-sm:px-6 max-w-[1480px] lg:px-20 mx-auto">
       {/* Subtle purple gradient top-right */}
       {/* <div
         className="pointer-events-none absolute -top-[20%] -right-[20%] h-[60%] w-[50%] rounded-full opacity-30 blur-3xl"
@@ -82,7 +82,7 @@ const Hero02 = () => {
               alt="Marketing Autopilot Dashboard"
               className="relative z-10 w-full rounded-4xl object-cover object-center  max-sm:mx-auto max-sm:-ml-[4%]"
               height={320}
-              src="/hero-right.png"
+              src="/hero-right-side.svg"
               width={480}
             />
           </div>

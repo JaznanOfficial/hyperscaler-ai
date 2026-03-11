@@ -3,7 +3,8 @@ import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-draw
 
 const PaidMediaSection = () => {
   return (
-    <section className="w-full pt-[220px] ">
+    <section className="w-full pt-[220px] max-sm:pt-20 px-20 max-sm:px-6">
+
       <div className="z-10 text-center">
         <h2 className="font-medium text-2xl text-[#1A1A1A] leading-[1.4] tracking-[0] sm:text-[28px] md:text-5xl ">
           Everything you need to
@@ -25,15 +26,20 @@ const PaidMediaSection = () => {
           AI-powered execution
         </p>
       </div>
-      <div className=" flex justify-center items-center max-sm:flex-col ">
+
+      <div className=" flex justify-center items-center max-sm:flex-col gap-22  mt-20">
         {/* Left Side: Image */}
-        <Image
-          alt="Paid Media"
-          className="rounded-[20px] w-full"
-          height={400}
-          src="/paid_media.png"
-          width={600}
-        />
+        <div className="relative">
+          <Image
+            alt="Paid Media"
+            className="rounded-[20px] z-10"
+            height={500}
+            src="/paid-media-left.svg"
+            width={500}
+          />
+          <div className="pointer-events-none absolute  bottom-8 -z-10   h-72 w-72  rounded-[999px] bg-linear-to-l from-fuchsia-500 via-violet-600 to-transparent blur-[220px] " />
+
+        </div>
 
         {/* Right Side: Text and Button */}
         <div className="flex flex-col justify-center gap-2">
