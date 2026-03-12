@@ -57,7 +57,7 @@ export const scalePricingData: PricingCard[] = [
     },
     features: [
       "Pick up to 3 services",
-      "Dedicated human growth strategist",
+      "AI agent + human experts managing your campaign 24/7",
       "A/B testing & creative optimization",
       "Bi-weekly strategy calls",
       "Priority support",
@@ -83,9 +83,10 @@ export const scalePricingData: PricingCard[] = [
       label: "Get Started",
       variant: "outline",
     },
-    features: [
+    features: [ 
       "All services included",
       "Lead qualification & pipeline handoff",
+      "Dedicated human growth strategist",
       "Custom funnel building & landing pages",
       "Weekly strategy calls",
       "Slack/dedicated channel support",

@@ -13,8 +13,8 @@ export default function LoginPage() {
           className="object-fit"
           fill
           priority
-          sizes="50vw"
-          src="/login.png"
+
+          src="/login-page.svg"
         />
       </div>
       <div className="flex flex-col gap-4 p-6 md:p-10">

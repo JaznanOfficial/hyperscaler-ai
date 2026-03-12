@@ -29,6 +29,65 @@ interface AIMessageShape {
 
 const DEFAULT_CHAT_ENDPOINT = "/api/chat" as const;
 
+const decodeEscapedJsonText = (value: string) =>
+  value
+    .replace(/\\n/g, "\n")
+    .replace(/\\r/g, "\r")
+    .replace(/\\t/g, "\t")
+    .replace(/\\"/g, '"')
+    .replace(/\\\\/g, "\\")
+    .replace(/\\\//g, "/");
+
+const getStreamingAssistantDisplayText = (raw: string): string => {
+  const text = raw.trim();
+  if (!text) {
+    return "";
+  }
+
+  const messageField = /["']message["']\s*:\s*(["'])/.exec(text);
+  if (!messageField || messageField.index === undefined) {
+    return text;
+  }
+
+  const quote = messageField[1];
+  const start = messageField.index + messageField[0].length;
+  let escaped = false;
+  let extracted = "";
+  let hasClosedQuote = false;
+
+  for (let index = start; index < text.length; index += 1) {
+    const char = text[index];
+
+    if (escaped) {
+      extracted += `\\${char}`;
+      escaped = false;
+      continue;
+    }
+
+    if (char === "\\") {
+      escaped = true;
+      continue;
+    }
+
+    if (char === quote) {
+      hasClosedQuote = true;
+      break;
+    }
+
+    extracted += char;
+  }
+
+  if (!hasClosedQuote && extracted.includes('"buttons"')) {
+    extracted = extracted.split('"buttons"')[0] ?? extracted;
+  }
+
+  const decoded = decodeEscapedJsonText(extracted)
+    .replace(/[,{]\s*$/, "")
+    .trim();
+
+  return decoded || text;
+};
+
 export function GeneralAgentPanel({
   messages,
   inputPlaceholder = "Type a message",
@@ -81,11 +140,17 @@ export function GeneralAgentPanel({
         continue;
       }
 
+      const isAssistant = typedMessage.role === "assistant";
+      const displayText = isAssistant
+        ? getStreamingAssistantDisplayText(textContent)
+        : textContent;
+
       parsedMessages.push({
         id: typedMessage.id,
-        role: typedMessage.role === "assistant" ? "assistant" : "user",
-        author: typedMessage.role === "assistant" ? "Agent G" : "You",
-        content: textContent,
+        role: isAssistant ? "assistant" : "user",
+        author: isAssistant ? "Agent G" : "You",
+        content: displayText,
+        rawContent: textContent,
         timestamp: "",
       });
     }

@@ -3,11 +3,11 @@ import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-draw
 
 const StayCreative = () => {
   return (
-    <section className="w-full mt-20 px-20 max-sm:px-6">
+    <section className="w-full pt-[150px] max-w-[1480px] mx-auto max-sm:pt-20 px-20 max-sm:px-6">
       <div className="">
-        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:gap-16">
+        <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:gap-16 ">
           {/* Left Side: Image */}
-          <div className="relative ">
+          <div className="relative w-full h-full flex items-center justify-center">
             <Image
               alt="Stay Creative"
               className="rounded-[20px] "
@@ -19,7 +19,7 @@ const StayCreative = () => {
           </div>
 
           {/* Right Side: Text and Button */}
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center w-full h-full">
             <div className="font-['Outfit'] font-semibold text-2xl text-purple-600 max-sm:text-xl">
               Stay Creative
             </div>

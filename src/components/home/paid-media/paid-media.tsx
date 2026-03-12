@@ -3,12 +3,11 @@ import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-draw
 
 const PaidMediaSection = () => {
   return (
-    <section className="w-full pt-[220px] max-sm:pt-20 px-20 max-sm:px-6">
+    <section className="w-full pt-[150px] max-w-[1480px] mx-auto max-sm:pt-20 px-20 max-sm:px-6">
 
-      <div className="z-10 text-center">
+      <div className="z-10 text-center ">
         <h2 className="font-medium text-2xl text-[#1A1A1A] leading-[1.4] tracking-[0] sm:text-[28px] md:text-5xl ">
           Everything you need to
-          <br />
           <span className="bg-linear-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
             {" "}
             Build{" "}
@@ -29,7 +28,7 @@ const PaidMediaSection = () => {
 
       <div className=" flex justify-center items-center max-sm:flex-col gap-22  mt-20">
         {/* Left Side: Image */}
-        <div className="relative">
+        <div className="relative w-full h-full flex items-center justify-center">
           <Image
             alt="Paid Media"
             className="rounded-[20px] z-10"
@@ -42,7 +41,7 @@ const PaidMediaSection = () => {
         </div>
 
         {/* Right Side: Text and Button */}
-        <div className="flex flex-col justify-center gap-2">
+        <div className="flex flex-col justify-center gap-2 w-full h-full">
           <div className="font-['Outfit'] font-semibold text-2xl text-purple-600 max-sm:text-xl">
             Paid Media
           </div>

@@ -23,7 +23,7 @@ export function HomeNavbar() {
   return (
     <>
       <header className="sticky top-0 z-40 border-zinc-200 border-b bg-[#FBF5FF] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] backdrop-blur supports-backdrop-filter:bg-[#FBF5FF]">
-        <div className="mx-auto flex w-11/12 items-center justify-between py-3 sm:py-4 lg:w-10/12">
+        <div className="mx-auto flex  items-center justify-between py-3 sm:py-4 max-sm:px-6 max-w-[1480px] lg:px-20">
           <Link className="flex items-center gap-2" href="/">
             <Image alt="Hyperscaler" height={60} src="/logo.png" width={180} />
           </Link>
@@ -69,13 +69,13 @@ export function HomeNavbar() {
             </Link>
             <Link
               className={` ${
-                pathname?.startsWith("/resources")
+                pathname?.startsWith("/faq")
                   ? activeLinkClass
                   : inactiveLinkClass
               }`}
-              href="/resources"
+              href="/faq"
             >
-              Resources
+              FAQ
             </Link>
           </nav>
 

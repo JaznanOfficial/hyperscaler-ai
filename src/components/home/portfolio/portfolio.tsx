@@ -23,7 +23,17 @@ const portfolioData = [
   {
     title: "College Wrapped",
     desc: "Clean Energy Project Management",
-    img: "/portfolio/portfolio-3.png",
+    img: "/portfolio/portfolio-4.png",
+  },
+  {
+    title: "Eleven A",
+    desc: "Smart Networking for Modern Professionals",
+    img: "/portfolio/portfolio-5.png",
+  },
+  {
+    title: "Unreal Curry ",
+    desc: "Himalayan-Inspired Culinary Experience",
+    img: "/portfolio/portfolio-6.png",
   },
 ];
 
@@ -31,7 +41,7 @@ const Portfolio = () => {
   return (
     <section className="">
       {/* header */}
-      <div className="w-full my-10  px-20 max-sm:px-6">
+      <div className="w-full mb-[52px] max-sm:mb-5  pt-[150px] max-sm:pt-20 px-20 max-sm:px-6">
         <div className="">
           <div className="">
             <h3
@@ -58,7 +68,7 @@ const Portfolio = () => {
 
       {/* body */}
       <Marquee pauseOnHover>
-        <div className="flex flex-nowrap">
+        <div className="flex flex-nowrap ">
           {portfolioData.map((item, index) => (
             <div
               className={cn("ml-10 text-left", index % 2 === 1 && "mt-[90px]")}

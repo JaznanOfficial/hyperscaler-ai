@@ -46,34 +46,34 @@ const TikTokIcon = (props: LucideProps) => (
 const socialLinks = [
   {
     icon: Twitter,
-    href: "https://twitter.com/scalebuildai",
+    href: "https://x.com/hyperscalerai",
     label: "Twitter",
   },
   {
     icon: Linkedin,
-    href: "https://www.linkedin.com/company/scalebuildai",
+    href: "https://www.linkedin.com/company/hyperscalerai/",
     label: "LinkedIn",
   },
   {
     icon: Facebook,
-    href: "https://www.facebook.com/scalebuildai",
+    href: "https://www.facebook.com/hyperscalerai",
     label: "Facebook",
   },
-  {
-    icon: Instagram,
-    href: "https://www.instagram.com/scalebuildai",
-    label: "Instagram",
-  },
-  {
-    icon: PinterestIcon,
-    href: "https://www.pinterest.es/scalebuildai/",
-    label: "Pinterest",
-  },
-  {
-    icon: TikTokIcon,
-    href: "https://www.tiktok.com/@scalebuildai?_t=8foXTR0OSKP&_r=1",
-    label: "Tiktok",
-  },
+  // {
+  //   icon: Instagram,
+  //   href: "https://www.instagram.com/scalebuildai",
+  //   label: "Instagram",
+  // },
+  // {
+  //   icon: PinterestIcon,
+  //   href: "https://www.pinterest.es/scalebuildai/",
+  //   label: "Pinterest",
+  // },
+  // {
+  //   icon: TikTokIcon,
+  //   href: "https://www.tiktok.com/@scalebuildai?_t=8foXTR0OSKP&_r=1",
+  //   label: "Tiktok",
+  // },
 ];
 
 export function Footer() {
@@ -124,27 +124,26 @@ export function Footer() {
             <ul className="mt-4 space-y-3 text-[#9CA3AF] text-lg">
               <li>
                 <Link
-                  href="https://scalebuild.ai/privacy-and-policy"
+                  href="/privacy-policy"
                   rel="noreferrer"
-                  target="_blank"
+                  
                 >
                   Privacy Policy
                 </Link>
               </li>
               <li>
                 <Link
-                  href="https://scalebuild.ai/terms-of-service"
+                  href="/terms-of-service"
                   rel="noreferrer"
-                  target="_blank"
+                 
                 >
                   Terms &amp; Conditions
                 </Link>
               </li>
               <li>
                 <Link
-                  href="https://scalebuild.ai/cookie-policy"
+                  href="/cookie-policy"
                   rel="noreferrer"
-                  target="_blank"
                 >
                   Cookie Policy
                 </Link>

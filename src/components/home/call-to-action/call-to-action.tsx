@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const CallToAction = () => {
   return (
-    <section className="relative mt-12 overflow-hidden bg-[#9E32DD]/10">
+    <section className="relative mt-[265px] max-sm:mt-20 overflow-hidden bg-[#9E32DD]/10">
       <div className="my-container flex flex-col items-center justify-center gap-4 py-10 md:gap-6 md:py-12 lg:py-16">
         <div className="inline-flex items-center rounded-full border border-purple-600 bg-white px-2.5 py-1.5 font-medium text-[#9E32DD] max-md:text-lg md:px-4 md:py-2">
           <Sparkles className="mr-2 size-3" /> Start scaling today
@@ -18,11 +18,11 @@ const CallToAction = () => {
 
         <div className="mt-4 flex items-center justify-center gap-5">
           <Link href={"/login"}>
-            <Button size="lg" variant={"gradient"}>
+            <Button className="custom" size="custom" variant={"gradient"}>
               Get Stated <ArrowRight className="size-4" />
             </Button>
           </Link>
-          <TalkToSalesDrawer buttonVariant={"outline"} />
+          <TalkToSalesDrawer buttonClassName="px-[54px] h-[48px]"  buttonVariant={"outline"} />
         </div>
       </div>
 
