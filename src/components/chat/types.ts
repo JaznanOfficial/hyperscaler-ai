@@ -5,6 +5,7 @@ export interface ChatMessage {
   role: ChatRole;
   author: string;
   content: string;
+  rawContent?: string;
   timestamp: string;
   parts?: Array<{ type: string; [key: string]: unknown }>;
 }

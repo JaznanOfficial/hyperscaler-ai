@@ -12,23 +12,54 @@ import { cn } from "@/lib/utils";
 
 const faqData = [
   {
-    question: "Can I subscribe to multiple services?",
+    question: "What exactly is Hyperscaler?",
     answer:
-      "Yes, you can subscribe to multiple services simultaneously. Each service is billed separately on a monthly basis, giving you complete flexibility to scale up or down based on your requirements.",
+      "Hyperscaler is an AI-powered SaaS platform that replaces fragmented marketing teams, agencies, and tools with a single, automated growth and product execution system. Think of it as the operating system for your company's growth.",
   },
   {
-    question: "Is there a free trial available for new users?",
-    answer: "Yes, we offer a 14-day free trial for new users.",
+    question: "How is Hyperscaler different from a marketing agency?",
+    answer:
+      "Hyperscaler is a system, not a service. While agencies deliver work manually through account managers, Hyperscaler automates execution across every marketing channel and surfaces real-time performance data - so you get consistent, measurable output without managing people.",
   },
   {
-    question: "How can I cancel my subscription?",
+    question: "Which marketing channels does Hyperscaler support?",
     answer:
-      "The benefits of using Hyperscaler include scalability, security, and cost-effectiveness.",
+      "Hyperscaler runs Paid Ads, Cold Email Campaigns, Social Media Marketing, Branding & Content Creation, Cold LinkedIn Outreach, and Cold Calling, all managed from a single dashboard with unified analytics.",
   },
   {
-    question: "What payment methods are accepted for subscriptions?",
+    question: "What metrics can I track on the dashboard?",
     answer:
-      "The benefits of using Hyperscaler include scalability, security, and cost-effectiveness.",
+      "Every channel reports Leads Generated, Qualified Leads (MQL/SQL), Conversion Rate, Cost Per Lead (CPL), Customer Acquisition Cost (CAC), Revenue Attributed, ROI, Click-Through Rate (CTR), and Engagement Metrics, all in real time.",
+  },
+  {
+    question: "Who is Hyperscaler built for?",
+    answer:
+      "Hyperscaler is designed for high-growth technology companies like SaaS startups, AI companies, venture-backed teams, and software firms, primarily in the US and North America. The primary buyers are CEOs, CMOs, CTOs, and Growth Leaders.",
+  },
+  {
+    question: "Do I need to hire a team to use Hyperscaler?",
+    answer:
+      "No. That's the point. Hyperscaler is designed to eliminate the need for large internal marketing teams or managing multiple vendors. Automation handles the execution while you focus on strategy and decisions.",
+  },
+  {
+    question: "How quickly can we get started?",
+    answer:
+      "Onboarding is structured for speed. The platform is built to move companies from kickoff to active campaigns and development milestones rapidly without the ramp-up time of traditional agencies or new hires.",
+  },
+  {
+    question: "What types of companies have used Hyperscaler?",
+    answer:
+      "Hyperscaler serves SaaS companies, AI startups, technology service firms, and growth-stage startups looking to scale customer acquisition and ship products faster without building large internal teams.",
+  },
+  {
+    question: "What's the long-term vision for the platform?",
+    answer:
+      "The vision is to become the single intelligent dashboard where businesses can launch products, scale marketing, automate workflows, and track all business performance, an operating system for company growth.",
+  },
+  {
+    question: "Can Hyperscaler help us build a product or MVP?",
+    answer:
+      "Yes. The Build layer supports SaaS, AI products, mobile apps (Android & iOS), workflow automation, and enterprise tools. You get structured milestones, progress visibility, and predictable delivery timelines, no more guessing when your MVP ships.",
   },
 ];
 

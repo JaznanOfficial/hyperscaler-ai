@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const Hero02 = () => {
   return (
-    <section className="relative w-full overflow- bg-white max-sm:px-6 max-w-[1480px] lg:px-20 mx-auto">
+    <section className="mt-10 w-full  bg-white max-sm:px-6 max-w-[1480px] lg:px-20 mx-auto">
       {/* Subtle purple gradient top-right */}
       {/* <div
         className="pointer-events-none absolute -top-[20%] -right-[20%] h-[60%] w-[50%] rounded-full opacity-30 blur-3xl"

@@ -18,6 +18,65 @@ export interface AIMessageShape {
   content?: string;
 }
 
+const decodeEscapedJsonText = (value: string) =>
+  value
+    .replace(/\\n/g, "\n")
+    .replace(/\\r/g, "\r")
+    .replace(/\\t/g, "\t")
+    .replace(/\\"/g, '"')
+    .replace(/\\\\/g, "\\")
+    .replace(/\\\//g, "/");
+
+const getStreamingAssistantDisplayText = (raw: string): string => {
+  const text = raw.trim();
+  if (!text) {
+    return "";
+  }
+
+  const messageField = /["']message["']\s*:\s*(["'])/.exec(text);
+  if (!messageField || messageField.index === undefined) {
+    return text;
+  }
+
+  const quote = messageField[1];
+  const start = messageField.index + messageField[0].length;
+  let escaped = false;
+  let extracted = "";
+  let hasClosedQuote = false;
+
+  for (let index = start; index < text.length; index += 1) {
+    const char = text[index];
+
+    if (escaped) {
+      extracted += `\\${char}`;
+      escaped = false;
+      continue;
+    }
+
+    if (char === "\\") {
+      escaped = true;
+      continue;
+    }
+
+    if (char === quote) {
+      hasClosedQuote = true;
+      break;
+    }
+
+    extracted += char;
+  }
+
+  if (!hasClosedQuote && extracted.includes('"buttons"')) {
+    extracted = extracted.split('"buttons"')[0] ?? extracted;
+  }
+
+  const decoded = decodeEscapedJsonText(extracted)
+    .replace(/[,{]\s*$/, "")
+    .trim();
+
+  return decoded || text;
+};
+
 const getTextFromParts = (parts: AIMultiPart[] = []) =>
   parts
     .map((part) => {
@@ -44,11 +103,17 @@ export const mapAiMessagesToChatMessages = (
       : (message.content ?? "");
 
     if (textContent || parts.length > 0) {
+      const isAssistant = message.role === "assistant";
+      const displayContent = isAssistant
+        ? getStreamingAssistantDisplayText(textContent)
+        : textContent;
+
       parsedMessages.push({
         id: message.id,
-        role: message.role === "assistant" ? "assistant" : "user",
-        author: message.role === "assistant" ? "Agent G" : "You",
-        content: textContent,
+        role: isAssistant ? "assistant" : "user",
+        author: isAssistant ? "Agent G" : "You",
+        content: displayContent,
+        rawContent: textContent,
         timestamp: "",
         parts: message.parts as Array<{ type: string; [key: string]: unknown }>,
       });

@@ -158,9 +158,8 @@ export function InsightsDrawer({
     if (!content) {
       return;
     }
-
-    await sendMessage({ text: buildPrompt(content) });
     setDraft("");
+    await sendMessage({ text: buildPrompt(content) });
   };
 
   return (
@@ -171,7 +170,7 @@ export function InsightsDrawer({
         </Button>
       </SheetTrigger>
       <SheetContent
-        className="w-full max-w-md border-none bg-white p-0 lg:max-w-2xl"
+        className="w-full max-w-[90%] border-none bg-white p-0 lg:max-w-4xl"
         side="right"
       >
         <div className="flex h-full flex-col">
@@ -221,9 +220,9 @@ export function InsightsDrawer({
                     message={
                       message.role === "user"
                         ? {
-                            ...message,
-                            content: stripServicePrefix(message.content),
-                          }
+                          ...message,
+                          content: stripServicePrefix(message.content),
+                        }
                         : message
                     }
                   />

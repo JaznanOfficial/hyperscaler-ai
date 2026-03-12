@@ -131,13 +131,14 @@ export function SuperAdminAgentMessageItem({
   message: ChatMessage;
 }) {
   const isUser = message.role === "user";
+  const rawAssistantContent = message.rawContent ?? message.content;
   const proseClassName = cn(
     "prose prose-sm dark:prose-invert max-w-none",
     isUser ? "prose-invert" : "prose-slate"
   );
   const structuredEntries = isUser
     ? []
-    : parseStructuredEntries(message.content);
+    : parseStructuredEntries(rawAssistantContent);
   const trimmedContent = message.content.trim();
   const bubbleClassName = cn(
     "max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-relaxed sm:max-w-[70%]",

@@ -21,10 +21,10 @@ const comparisonData = {
 
 const WhyChooseUs = () => {
   return (
-    <section className="mx-auto w-full py-[72px] md:py-[84px] max-sm:px-6">
+    <section className="mx-auto w-full pt-[150px] max-sm:pt-20 px-20 max-sm:px-6">
       <div className="mx-auto flex w-11/12 flex-col items-center lg:w-10/12">
         <div className="max-w-6xl text-center">
-          <h2 className="font-semibold text-2xl text-[#1f1f1f] leading-[1.08] tracking-[-0.03em] md:text-5xl">
+          <h2 className="font-semibold text-[32px] text-[#1f1f1f] leading-[1.08] tracking-[-0.03em] md:text-[32px]">
             Built{" "}
             <span className="bg-gradient-to-r from-[#7c3aed] to-[#c026d3] bg-clip-text text-transparent">
               different
@@ -32,10 +32,8 @@ const WhyChooseUs = () => {
             from anything you&apos;ve tried
           </h2>
 
-          <p className="mx-auto mt-[10px] max-w-[790px] max-sm:w-screen text-[#6b7280] text-lg leading-[1.45] md:text-lg max-sm:text-base">
-            Agencies move slow and charge a fortune. SaaS tools hand you a
-            dashboard and wish you luck. Hyperscaler actually does the work with
-            AI speed and human judgment.
+          <p className="mx-auto mt-[10px] max-w-[790px] max-sm:w-screen text-[#6b7280] text-[16px] leading-[1.45] md:text-lg max-sm:text-[16px]">
+            Agencies move slow and charge a fortune. SaaS tools hand you a dashboard and wish you luck. Hyperscaler actually does the work with AI speed and human judgment.
           </p>
         </div>
 

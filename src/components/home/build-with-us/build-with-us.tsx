@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 
 const BuildWithUsSection = () => {
   return (
-    <section className="w-full mt-20 px-20 max-sm:px-6">
+    <section className="w-full pt-[150px] max-w-[1480px] mx-auto max-sm:pt-20 px-20 max-sm:px-6">
 
       <div className="">
-        <div className="  flex justify-center items-center  max-sm:flex-col-reverse">
+        <div className="   flex justify-center items-center  max-sm:flex-col-reverse">
           {/* Left Side: Text and Button */}
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col  justify-center w-full h-full">
             <div className="font-['Outfit'] font-semibold text-2xl text-purple-600 max-sm:text-xl">
               Build with us
             </div>
@@ -37,10 +37,10 @@ const BuildWithUsSection = () => {
           </div>
 
           {/* Right Side: Image */}
-          <div className="relative ">
+          <div className="relative w-full h-full flex items-center justify-center">
             <Image
               alt="Build With Us"
-              className=" rounded-[20px] "
+              className=" rounded-[20px] " 
               height={600}
               src="/build-with-us.svg"
               width={600}

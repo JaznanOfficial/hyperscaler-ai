@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 
 const LeadGenerationSection = () => {
   return (
-    <section className="w-full mt-20 px-20 max-sm:px-6">
-      <div className="  flex justify-center items-center  max-sm:flex-col-reverse gap-22">
+    <section className="w-full pt-[150px] max-w-[1480px] mx-auto max-sm:pt-20 px-20 max-sm:px-6">
+      <div className="   flex justify-center items-center  max-sm:flex-col-reverse gap-22">
         {/* Left Side: Text and Button */}
-        <div className="flex flex-col justify-center ">
+        <div className="flex flex-col justify-center w-full h-full">
           <div className="font-['Outfit'] font-semibold text-2xl text-purple-600 max-sm:text-xl">
             Generate leads
           </div>
@@ -39,7 +39,7 @@ const LeadGenerationSection = () => {
         </div>
 
         {/* Right Side: Image */}
-        <div className="relative">
+        <div className="relative w-full h-full items-center justify-center">
           <Image
             alt="Lead Generation" // Place the image in the public folder
             className="rounded-[20px] z-10"
