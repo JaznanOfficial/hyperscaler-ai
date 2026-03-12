@@ -87,6 +87,7 @@ export const scalePricingData: PricingCard[] = [
       "All services included",
       "Lead qualification & pipeline handoff",
       "Dedicated human growth strategist",
+      "Dedicated product manager",
       "Custom funnel building & landing pages",
       "Weekly strategy calls",
       "Slack/dedicated channel support",
