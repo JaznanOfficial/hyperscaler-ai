@@ -27,6 +27,7 @@ interface TalkToSalesDrawerProps {
   buttonVariant?: ButtonVariant;
   buttonLabel?: string;
   trigger?: ReactElement;
+  buttonSize?: string;
 }
 
 const contactOptions = [
@@ -59,6 +60,7 @@ export function TalkToSalesDrawer({
   buttonLabel = "Talk to Us",
   buttonVariant = "gradient",
   trigger,
+  buttonSize = "default",
 }: TalkToSalesDrawerProps) {
   return (
     <Sheet>
@@ -66,7 +68,7 @@ export function TalkToSalesDrawer({
         {trigger ?? (
           <Button
             className={buttonClassName}
-            size="custom"
+            size="default"
             variant={buttonVariant}
           >
             
