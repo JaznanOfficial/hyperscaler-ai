@@ -65,8 +65,9 @@ export function ServicesGrid({
             <div className="flex w-full flex-col gap-3">
               {ctaType === "talk" ? (
                 <TalkToSalesDrawer
-                  buttonClassName="flex-1"
+                  buttonClassName="flex-1 "
                   buttonLabel={talkButtonLabel}
+                  buttonSize="custom"
                 />
               ) : (
                 <Button asChild className="flex-1" variant="gradient">
