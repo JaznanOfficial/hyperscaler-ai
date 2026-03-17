@@ -76,6 +76,21 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
 }
 
+model OnboardingProfile {
+  id                  String   @id @default(cuid())
+  userId              String?  @unique
+  email               String?  @unique
+  businessName        String
+  industry            String
+  businessStage       String
+  websiteUrl          String?
+  monthlyRevenueRange String?
+  services            Json     @default("[]")
+  discoverySource     String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
 enum UserRole {
   EMPLOYEE
   MANAGER
