@@ -58,7 +58,7 @@ const contactOptions = [
 export function TalkToSalesDrawer({
   buttonClassName,
   buttonLabel = "Talk to Us",
-  buttonVariant = "gradient",
+  buttonVariant = "outline",
   trigger,
   buttonSize = "default",
 }: TalkToSalesDrawerProps) {
@@ -67,14 +67,12 @@ export function TalkToSalesDrawer({
       <SheetTrigger asChild>
         {trigger ?? (
           <Button
-            className={buttonClassName}
-            size="default"
+            className={cn("h-[46px] w-full bg-white font-semibold sm:w-[228px] hover:bg-gray-50", buttonClassName)}
+            size="lg"
             variant={buttonVariant}
           >
-            
-            <PhoneCall className="size-4" />
-            
-            {buttonLabel} 
+            <PhoneCall className="size-[18px]" />
+            {buttonLabel}
           </Button>
         )}
       </SheetTrigger>
