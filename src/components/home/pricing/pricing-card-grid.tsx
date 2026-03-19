@@ -198,7 +198,7 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
                       ? buttonVariants({ variant: "gradient" })
                       : "flex w-full items-center justify-center gap-2 rounded-lg border border-purple-100 bg-purple-50 px-4 py-2.5 font-semibold text-purple-600 text-sm transition hover:bg-purple-100"
                   )}
-                  href="https://calendly.com/ujjwalroy1/ai-implementation"
+                  href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
                   rel="noreferrer"
                   target="_blank"
                 >
@@ -212,7 +212,7 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
                     ? cn(buttonVariants({ variant: "gradient" }), "w-full h-[48px]")
                     : "flex w-full items-center justify-center gap-2 rounded-lg  border-purple-100 bg-purple-50  h-[48px] font-semibold text-purple-600 text-sm transition hover:bg-purple-100"
                 )}
-                href="https://calendly.com/ujjwalroy1/ai-implementation"
+                href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
                 rel="noreferrer"
                 target="_blank"
               >
@@ -222,9 +222,9 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
               {/* {ctaContent} */}
             </div>
             {item.highlight?.label ? (
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-[#D946EF] bg-[#9E32DD] px-3 h-[48px]  text-[10px] text-white md:px-4 md:text-xs">
-                {item.highlight.label}
-              </div>
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-[#D946EF] bg-[#9E32DD] px-3 py-1.5 text-[10px] text-white md:px-4 md:text-xs z-10">
+              {item.highlight.label}
+            </div>
             ) : null}
           </div>
         );

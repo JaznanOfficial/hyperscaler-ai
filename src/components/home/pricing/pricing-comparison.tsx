@@ -24,6 +24,8 @@ export const PricingComparison = () => (
               High overhead
             </span>
           </div>
+
+          {/* Pricing Roles Grid */}
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {traditionalHiringRoles.map((role) => (
               <div
@@ -39,6 +41,8 @@ export const PricingComparison = () => (
               </div>
             ))}
           </div>
+
+          {/* Cost Summary */}
           <div className="flex flex-wrap items-center justify-between gap-4 text-sm">
             <p className="font-['Inter'] text-slate-500 text-xs">
               *Excluding hardware, software, and taxes
@@ -49,6 +53,7 @@ export const PricingComparison = () => (
           </div>
         </div>
 
+        {/* Monthly Savings Section */}
         <div className="rounded-2xl border border-violet-200/60 bg-purple-50 p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-start gap-3">
@@ -56,27 +61,28 @@ export const PricingComparison = () => (
                 <Sparkles className="text-purple-500" />
               </div>
               <div>
-                <p className="font-['Inter'] font-semibold text-purple-600 text-sm">
-                  Avg. monthly savings
+                <p className="font-['Outfit'] font-extrabold text-3xl text-purple-700">
+                  Monthly Savings
                 </p>
-                <p className="font-['Outfit'] font-semibold text-3xl text-purple-600">
-                  $21,000
+                <p className="mt-1 font-['Inter'] text-purple-500 text-xs">
+                  $21,000/month
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2 rounded-full border border-purple-200/80 bg-purple-50 px-4 py-2 font-semibold text-purple-600 text-xs">
               <Sparkles className="size-4 text-purple-600" />
-              <span> That&apos;s $252k / year back into your growth capital.</span>
+              <span> $252k / year back into your growth capital.</span>
             </div>
           </div>
           <p className="mt-4 font-['Inter'] text-purple-600 text-sm">
-          Hyperscaler can automate your entire marketing and development
-          journey, scale smarter without extra hires, and turn insights into
-          measurable growth.
+            Hyperscaler can automate your entire marketing and development
+            journey, scale smarter without extra hires, and turn insights into
+            measurable growth.
           </p>
         </div>
       </div>
 
+      {/* Right Side: Plan and Pricing */}
       <div className="flex w-full max-w-xs flex-col items-center justify-center space-y-7 rounded-3xl border border-purple-200/60 bg-purple-50 px-6 py-10 text-center sm:mx-auto lg:max-w-sm">
         <DollarSign className="size-6 text-purple-600" />
         <p className="font-['Inter'] font-medium text-purple-600 text-xs uppercase tracking-[0.3em]">

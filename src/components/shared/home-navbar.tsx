@@ -96,7 +96,7 @@ export function HomeNavbar() {
               variant="outline"
             >
               <Link
-                href="https://calendly.com/ujjwalroy1/ai-implementation"
+                href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
                 rel="noreferrer noopener"
                 target="_blank"
               >
@@ -210,7 +210,7 @@ export function HomeNavbar() {
                 </Button>
                 <Button asChild size="sm" variant="outline">
                   <Link
-                    href="https://calendly.com/ujjwalroy1/ai-implementation"
+                    href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
                     rel="noreferrer noopener"
                     target="_blank"
                   >

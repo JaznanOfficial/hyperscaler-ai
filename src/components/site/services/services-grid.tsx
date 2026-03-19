@@ -66,9 +66,9 @@ export function ServicesGrid({
               {ctaType === "talk" ? (
                 <TalkToSalesDrawer
                   buttonClassName="flex-1 "
-                  buttonLabel={talkButtonLabel}
-                  buttonSize="custom"
-                />
+                  buttonLabel={talkButtonLabel}                  
+                  buttonVariant="gradient"
+              />
               ) : (
                 <Button asChild className="flex-1" variant="gradient">
                   <Link href="/login">

@@ -43,7 +43,7 @@ export const scalePricingData: PricingCard[] = [
     },
     comparisonLabel: "Everything in Starter, plus",
     highlight: {
-      // label: "Most Popular",
+      label: "Most Popular",
     },
     savingsHighlight: {
       title: "Combine AI + experts",

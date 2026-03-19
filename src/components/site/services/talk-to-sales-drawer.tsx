@@ -1,5 +1,3 @@
-"use client";
-
 import {
   ArrowUpRight,
   CalendarDays,
@@ -21,13 +19,14 @@ import {
 import { cn } from "@/lib/utils";
 
 type ButtonVariant = ComponentProps<typeof Button>["variant"];
+type ButtonSize = "default" | "xs" | "sm" | "lg" | "icon" | "custom" | "icon-xs" | "icon-sm" | "icon-lg"; // Added valid size options
 
 interface TalkToSalesDrawerProps {
   buttonClassName?: string;
   buttonVariant?: ButtonVariant;
   buttonLabel?: string;
   trigger?: ReactElement;
-  buttonSize?: string;
+  buttonSize?: ButtonSize; // Updated to restrict size options
 }
 
 const contactOptions = [
@@ -42,7 +41,7 @@ const contactOptions = [
     title: "Book via Calendly",
     description: "Pick a time that works for you using our Calendly link.",
     ctaLabel: "Open Calendly",
-    href: "https://calendly.com/ujjwalroy1/ai-implementation",
+    href: "https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build",
     icon: CalendarDays,
   },
   {
@@ -60,15 +59,15 @@ export function TalkToSalesDrawer({
   buttonLabel = "Talk to Us",
   buttonVariant = "outline",
   trigger,
-  buttonSize = "default",
+  buttonSize = "default", // Default to "default"
 }: TalkToSalesDrawerProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
         {trigger ?? (
           <Button
-            className={cn("h-[46px] w-full bg-white font-semibold sm:w-[228px] hover:bg-gray-50", buttonClassName)}
-            size="lg"
+            className={buttonClassName}
+            size={buttonSize} 
             variant={buttonVariant}
           >
             <PhoneCall className="size-[18px]" />

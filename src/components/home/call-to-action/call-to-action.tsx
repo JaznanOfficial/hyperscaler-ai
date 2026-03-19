@@ -22,7 +22,7 @@ const CallToAction = () => {
               Get Stated <ArrowRight className="size-4" />
             </Button>
           </Link>
-          <TalkToSalesDrawer buttonClassName="px-[54px] h-[48px]"  buttonVariant={"outline"} />
+          <TalkToSalesDrawer buttonClassName="h-[46px] w-full bg-white font-semibold sm:w-[228px] hover:bg-gray-50"  buttonVariant={"outline"} />
         </div>
       </div>
 

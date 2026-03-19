@@ -91,13 +91,15 @@ export function RecommendedPackages() {
               }`}
               key={pkg.name}
             >
+              {/* Most Popular Tag */}
               {pkg.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-purple-300 bg-purple-600 px-3 py-1 text-[10px] text-white">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10 rounded-full border border-purple-300 bg-purple-600 px-3 py-1 text-[10px] text-white">
                   Most Popular
                 </div>
               )}
+              {/* Active Package Tag */}
               {isActive && (
-                <div className="absolute -top-3 right-4 rounded-full border border-emerald-300 bg-emerald-600 px-3 py-1 text-[10px] text-white">
+                <div className="absolute -top-3 right-4 z-20 rounded-full border border-emerald-300 bg-emerald-600 px-3 py-1 text-[10px] text-white">
                   Active
                 </div>
               )}
@@ -117,16 +119,12 @@ export function RecommendedPackages() {
                   <h3 className="font-['Outfit'] font-semibold text-slate-900 text-xl">
                     {pkg.name}
                   </h3>
-                  <p className="mt-1 text-slate-600 text-sm">
-                    {pkg.description}
-                  </p>
+                  <p className="mt-1 text-slate-600 text-sm">{pkg.description}</p>
                 </div>
                 <div>
                   <p className="font-['Outfit'] font-bold text-3xl text-slate-900">
                     ${pkg.price.toLocaleString()}
-                    <span className="ml-1 font-medium text-base text-slate-500">
-                      /month
-                    </span>
+                    <span className="ml-1 font-medium text-base text-slate-500">/month</span>
                   </p>
                 </div>
                 <div className="h-px w-full bg-slate-200" />
@@ -142,9 +140,7 @@ export function RecommendedPackages() {
                       >
                         <Check className="size-3 text-purple-700" />
                       </div>
-                      <p className="text-slate-700 text-sm leading-5">
-                        {feature}
-                      </p>
+                      <p className="text-slate-700 text-sm leading-5">{feature}</p>
                     </div>
                   ))}
                 </div>
