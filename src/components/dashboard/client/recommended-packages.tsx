@@ -2,9 +2,10 @@
 
 import { Check, Rocket, Target, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
-import { BuyPackageButton } from "@/components/client/buy-package-button";
+// import { BuyPackageButton } from "@/components/client/buy-package-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 
 const packages = [
   {
@@ -153,7 +154,8 @@ export function RecommendedPackages() {
                     Current Plan
                   </Button>
                 ) : (
-                  <BuyPackageButton amount={pkg.price} packageName={pkg.name} />
+                  // <BuyPackageButton amount={pkg.price} packageName={pkg.name} />
+                  <TalkToSalesDrawer buttonVariant='gradient' buttonClassName="w-full"/>
                 )}
               </div>
             </Card>
