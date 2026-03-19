@@ -197,7 +197,7 @@ function ActivationPendingCard() {
           <div className="flex flex-wrap gap-3">
             <Link
               className="w-full sm:w-auto"
-              href="https://calendly.com/ujjwalroy1/ai-implementation"
+              href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
               target="_blank"
             >
               <Button

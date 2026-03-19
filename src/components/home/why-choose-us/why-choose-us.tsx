@@ -131,7 +131,7 @@ const WhyChooseUs = () => {
         </div>
 
         <Link
-          href="https://calendly.com/ujjwalroy1/ai-implementation"
+          href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
           rel="noreferrer noopener"
           target="_blank"
         >

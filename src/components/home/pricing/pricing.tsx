@@ -48,7 +48,7 @@ const Pricing = () => {
       <p className="text-center text-[16px] text-[#515A65]">
         Need both <b> Scale </b> and <b> Build </b>? Bundle them and save,{" "}
         <a
-          href="https://calendly.com/ujjwalroy1/ai-implementation"
+          href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
           rel="noreferrer"
           target="_blank"
           className="underline text-[#9E32DD] hover:text-[#7f26b5] transition-colors"

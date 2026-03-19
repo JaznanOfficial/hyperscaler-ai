@@ -57,7 +57,7 @@ const PaidMediaSection = () => {
 
           {/* Button */}
           <div>
-            <TalkToSalesDrawer buttonClassName="py-[24px] w-fit" buttonLabel="Talk to a Growth Expert" />
+            <TalkToSalesDrawer buttonClassName="py-[24px] w-fit" buttonVariant='gradient' buttonLabel="Talk to a Growth Expert" />
           </div>
         </div>
       </div>

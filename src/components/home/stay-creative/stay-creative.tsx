@@ -40,7 +40,9 @@ const StayCreative = () => {
             {/* Button */}
             <TalkToSalesDrawer
               buttonClassName="mt-5 w-[230px] max-sm:w-full"
-              buttonLabel="Talk to us"
+              buttonLabel="Talk to Us"
+              buttonSize='lg'
+              buttonVariant='gradient'
             />
           </div>
         </div>
