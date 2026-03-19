@@ -59,21 +59,16 @@ const socialLinks = [
     href: "https://www.facebook.com/hyperscalerai",
     label: "Facebook",
   },
-  // {
-  //   icon: Instagram,
-  //   href: "https://www.instagram.com/scalebuildai",
-  //   label: "Instagram",
-  // },
-  // {
-  //   icon: PinterestIcon,
-  //   href: "https://www.pinterest.es/scalebuildai/",
-  //   label: "Pinterest",
-  // },
-  // {
-  //   icon: TikTokIcon,
-  //   href: "https://www.tiktok.com/@scalebuildai?_t=8foXTR0OSKP&_r=1",
-  //   label: "Tiktok",
-  // },
+  {
+    icon: Instagram,
+    href: "https://www.instagram.com/hyperscalerai/",
+    label: "Instagram",
+  },
+  {
+    icon: TikTokIcon,
+    href: "https://www.tiktok.com/@hyperscalerai",
+    label: "Tiktok",
+  },
 ];
 
 export function Footer() {
@@ -113,7 +108,7 @@ export function Footer() {
                 <Link href="/pricing">Pricing</Link>
               </li>
               <li>
-                <Link href="/resources">Resources</Link>
+                <Link href="/faq">Resources</Link>
               </li>
             </ul>
           </div>
