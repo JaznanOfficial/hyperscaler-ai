@@ -19,7 +19,6 @@ const Pricing = () => {
         titlePart1="Growth shouldn't cost you "
       />
 
-      <PricingComparison />
 
       <Tabs className="w-full" defaultValue="scale">
         <TabsList className="mx-auto h-5 w-full max-w-40 cursor-pointer rounded-full border border-slate-300 bg-white text-base lg:h-12! lg:max-w-62 lg:px-2 lg:py-2">
@@ -45,6 +44,7 @@ const Pricing = () => {
         </TabsContent>
       </Tabs>
       {/* Import Link from "next/link" at the top of the file if not already imported */}
+      <PricingComparison />
       <p className="text-center text-[16px] text-[#515A65]">
         Need both <b> Scale </b> and <b> Build </b>? Bundle them and save,{" "}
         <a

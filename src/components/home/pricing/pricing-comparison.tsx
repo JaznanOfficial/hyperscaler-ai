@@ -33,7 +33,7 @@ export const PricingComparison = () => (
                 <p className="font-['Inter'] font-semibold text-[10px] text-gray-400 uppercase tracking-wide">
                   {role.title}
                 </p>
-                <p className="mt-2 font-['Outfit'] font-semibold text-lg text-slate-900">
+                <p className="mt-2 font-['Outfit'] font-semibold text-lg text-slate-900 line-through decoration-red-600">
                   {role.cost}
                 </p>
               </div>
@@ -43,7 +43,7 @@ export const PricingComparison = () => (
             <p className="font-['Inter'] text-slate-500 text-xs">
               *Excluding hardware, software, and taxes
             </p>
-            <p className="font-['Outfit'] font-medium text-lg text-slate-700">
+            <p className="font-['Outfit'] font-medium text-lg text-red-700 line-through decoration-red-600">
               $22,000 total
             </p>
           </div>
@@ -57,22 +57,22 @@ export const PricingComparison = () => (
               </div>
               <div>
                 <p className="font-['Inter'] font-semibold text-purple-600 text-sm">
-                  Hyperscaler plan
+                  Avg. monthly savings
                 </p>
                 <p className="font-['Outfit'] font-semibold text-3xl text-purple-600">
-                  $2,500/mo
+                  $21,000
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2 rounded-full border border-purple-200/80 bg-purple-50 px-4 py-2 font-semibold text-purple-600 text-xs">
               <Sparkles className="size-4 text-purple-600" />
-              <span>Expert human touch + AI efficiency</span>
+              <span> That&apos;s $252k / year back into your growth capital.</span>
             </div>
           </div>
           <p className="mt-4 font-['Inter'] text-purple-600 text-sm">
-            Hyperscaler can automate your entire marketing and development
-            journey, scale smarter without extra hires, and turn insights into
-            measurable growth.
+          Hyperscaler can automate your entire marketing and development
+          journey, scale smarter without extra hires, and turn insights into
+          measurable growth.
           </p>
         </div>
       </div>
@@ -80,15 +80,14 @@ export const PricingComparison = () => (
       <div className="flex w-full max-w-xs flex-col items-center justify-center space-y-7 rounded-3xl border border-purple-200/60 bg-purple-50 px-6 py-10 text-center sm:mx-auto lg:max-w-sm">
         <DollarSign className="size-6 text-purple-600" />
         <p className="font-['Inter'] font-medium text-purple-600 text-xs uppercase tracking-[0.3em]">
-          Avg. monthly savings
+          Start with Hyperscaler Starter plan
         </p>
         <p className="mt-3 bg-linear-to-r from-violet-800 to-fuchsia-500 bg-clip-text font-['Outfit'] font-extrabold text-5xl text-transparent">
-          $19,500
+          $1,000/mo
         </p>
         <div className="mt-4 w-full border-white/40 border-t" />
         <p className="mt-4 font-['Outfit'] font-medium text-base text-purple-600">
-          That’s <span className="font-semibold underline">$234k / year</span>{" "}
-          back into your growth capital.
+          <span className="font-semibold underline">Expert human touch + AI efficiency</span>
         </p>
       </div>
     </div>
