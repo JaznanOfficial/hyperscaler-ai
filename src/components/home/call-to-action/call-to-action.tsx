@@ -16,13 +16,13 @@ const CallToAction = () => {
           titlePart1="Ready to scale without the chaos?"
         />
 
-        <div className="mt-4 flex items-center justify-center gap-5">
+        <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-5">
           <Link href={"/login"}>
-            <Button className="custom" size="custom" variant={"gradient"}>
-              Get Stated <ArrowRight className="size-4" />
+            <Button className="custom w-full sm:w-auto" size="custom" variant={"gradient"}>
+              Get Started <ArrowRight className="size-4" />
             </Button>
           </Link>
-          <TalkToSalesDrawer buttonClassName="h-[46px] w-full bg-white font-semibold sm:w-[228px] hover:bg-gray-50"  buttonVariant={"outline"} />
+          <TalkToSalesDrawer buttonClassName="h-[46px] w-full bg-white font-semibold sm:w-[228px] hover:bg-gray-50" buttonVariant={"outline"} />
         </div>
       </div>
 

@@ -21,112 +21,111 @@ export function HomeNavbar() {
   const inactiveLinkClass = "text-zinc-700";
 
   return (
-    <>
-      <header className="sticky top-0 z-40 border-zinc-200 border-b bg-[#FBF5FF] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] backdrop-blur supports-backdrop-filter:bg-[#FBF5FF]">
-        <div className="mx-auto flex  items-center justify-between py-3 sm:py-4 max-sm:px-6 max-w-[1480px] lg:px-20">
-          <Link className="flex items-center gap-2" href="/">
-            <Image alt="Hyperscaler" height={60} src="/logo.png" width={180} />
+    <header className="sticky top-0 z-40 border-zinc-200 border-b bg-[#FBF5FF] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] backdrop-blur supports-backdrop-filter:bg-[#FBF5FF]">
+      <div className="mx-auto flex items-center justify-between py-3 sm:py-4 max-sm:px-6 max-w-[1480px] lg:px-20">
+        <Link className="flex items-center gap-2" href="/">
+          <Image alt="Hyperscaler" height={60} src="/logo.png" width={180} />
+        </Link>
+
+        <nav className="hidden items-center gap-6 text-lg lg:flex">
+          <Link
+            className={` ${
+              pathname === "/" ? activeLinkClass : inactiveLinkClass
+            }`}
+            href="/"
+          >
+            Home
           </Link>
+          <Link
+            className={` ${
+              pathname?.startsWith("/services")
+                ? activeLinkClass
+                : inactiveLinkClass
+            }`}
+            href="/services"
+          >
+            Services
+          </Link>
+          <Link
+            className={` ${
+              pathname?.startsWith("/pricing")
+                ? activeLinkClass
+                : inactiveLinkClass
+            }`}
+            href="/pricing"
+          >
+            Pricing
+          </Link>
+          <Link
+            className={` ${
+              pathname?.startsWith("/portfolio")
+                ? activeLinkClass
+                : inactiveLinkClass
+            }`}
+            href="/portfolio"
+          >
+            Portfolio
+          </Link>
+          <Link
+            className={` ${
+              pathname?.startsWith("/faq")
+                ? activeLinkClass
+                : inactiveLinkClass
+            }`}
+            href="/faq"
+          >
+            FAQ
+          </Link>
+        </nav>
 
-          <nav className="hidden items-center gap-6 text-lg lg:flex">
-            <Link
-              className={` ${
-                pathname === "/" ? activeLinkClass : inactiveLinkClass
-              }`}
-              href="/"
-            >
-              Home
-            </Link>
-            <Link
-              className={` ${
-                pathname?.startsWith("/services")
-                  ? activeLinkClass
-                  : inactiveLinkClass
-              }`}
-              href="/services"
-            >
-              Services
-            </Link>
-            <Link
-              className={` ${
-                pathname?.startsWith("/pricing")
-                  ? activeLinkClass
-                  : inactiveLinkClass
-              }`}
-              href="/pricing"
-            >
-              Pricing
-            </Link>
-            <Link
-              className={` ${
-                pathname?.startsWith("/portfolio")
-                  ? activeLinkClass
-                  : inactiveLinkClass
-              }`}
-              href="/portfolio"
-            >
-              Portfolio
-            </Link>
-            <Link
-              className={` ${
-                pathname?.startsWith("/faq")
-                  ? activeLinkClass
-                  : inactiveLinkClass
-              }`}
-              href="/faq"
-            >
-              FAQ
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <Link href={primaryCtaHref}>
-              <Button
-                className="hidden lg:inline-flex"
-                size="lg"
-                variant="gradient"
-              >
-                {primaryCtaLabel} <ArrowRight className="size-4" />
-              </Button>
-            </Link>
+        <div className="flex items-center gap-4">
+          <Link href={primaryCtaHref}>
             <Button
-              asChild
               className="hidden lg:inline-flex"
               size="lg"
-              variant="outline"
+              variant="gradient"
             >
-              <Link
-                href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
-                rel="noreferrer noopener"
-                target="_blank"
-              >
-                Contact us
-              </Link>
+              {primaryCtaLabel} <ArrowRight className="size-4" />
             </Button>
-
-            <button
-              aria-label="Menu"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 shadow-sm hover:bg-zinc-50 lg:hidden"
-              onClick={() => setMobileMenuOpen((v) => !v)}
-              type="button"
+          </Link>
+          <Button
+            asChild
+            className="hidden lg:inline-flex"
+            size="lg"
+            variant="outline"
+          >
+            <Link
+              href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
+              rel="noreferrer noopener"
+              target="_blank"
             >
-              {mobileMenuOpen ? (
-                <X className="h-5 w-5" strokeWidth={1.8} />
-              ) : (
-                <Menu className="h-5 w-5" strokeWidth={1.8} />
-              )}
-            </button>
-          </div>
-        </div>
-      </header>
+              Contact us
+            </Link>
+          </Button>
 
+          <button
+            aria-label="Menu"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 shadow-sm hover:bg-zinc-50 lg:hidden"
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            type="button"
+          >
+            {mobileMenuOpen ? (
+              <X className="h-5 w-5" strokeWidth={1.8} />
+            ) : (
+              <Menu className="h-5 w-5" strokeWidth={1.8} />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu - now INSIDE the sticky header */}
       <div className="lg:hidden">
         <div
           aria-hidden={!mobileMenuOpen}
           className={`absolute right-0 left-0 z-40 px-3 pb-3 transition-all duration-300 ease-out ${
             mobileMenuOpen
-              ? "pointer-events-auto top-20 opacity-100"
-              : "pointer-events-none top-16 opacity-0"
+              ? "pointer-events-auto top-full opacity-100"
+              : "pointer-events-none top-full opacity-0"
           }`}
         >
           <div
@@ -179,25 +178,14 @@ export function HomeNavbar() {
               </Link>
               <Link
                 className={`flex items-center justify-between rounded-xl px-3 py-2 hover:bg-zinc-50 ${
-                  pathname?.startsWith("/resources")
+                  pathname?.startsWith("/faq")
                     ? activeLinkClass
                     : "text-zinc-800"
                 }`}
-                href="/resources"
+                href="/faq"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <span>Resources</span>
-              </Link>
-              <Link
-                className={`flex items-center justify-between rounded-xl px-3 py-2 hover:bg-zinc-50 ${
-                  pathname?.startsWith("/pricing")
-                    ? activeLinkClass
-                    : "text-zinc-800"
-                }`}
-                href="/pricing"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <span>Pricing</span>
+                <span>FAQ</span>
               </Link>
               <div className="mt-2 flex flex-col gap-2 border-zinc-100 border-t pt-3">
                 <Button asChild size="sm" variant="gradient">
@@ -222,6 +210,6 @@ export function HomeNavbar() {
           </div>
         </div>
       </div>
-    </>
+    </header>
   );
 }
