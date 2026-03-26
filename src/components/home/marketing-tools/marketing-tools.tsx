@@ -10,6 +10,52 @@ const sharedSizeClass = "size-[112px] md:size-[128px] lg:size-[216px]";
 const sharedIconClass =
   "h-[61px] w-[61px] md:h-[69px] md:w-[69px] lg:h-[120px] lg:w-[120px]";
 
+const getSizeScale = (width: number) => {
+  if (width < 640) {
+    return 0.5;
+  }
+  if (width < 1024) {
+    return 0.7;
+  }
+  return 0.85;
+};
+
+const getMaxHalf = (width: number) => {
+  if (width < 640) {
+    return 70;
+  }
+  if (width < 1024) {
+    return 90;
+  }
+  return 110;
+};
+
+const getOuterRadiusDelta = (width: number) => {
+  if (width < 640) {
+    return 160;
+  }
+  if (width < 1024) {
+    return 220;
+  }
+  return 280;
+};
+
+const getCenterShift = (width: number) => {
+  if (width < 640) {
+    return { x: -60, y: -36 };
+  }
+  if (width < 1024) {
+    return { x: -80, y: -44 };
+  }
+  if (width < 1280) {
+    return { x: -100, y: -52 };
+  }
+  if (width < 1440) {
+    return { x: -132, y: -58 };
+  }
+  return { x: -165, y: -64 };
+};
+
 interface ToolIcon {
   id: string;
   src: string;
@@ -149,27 +195,21 @@ const MarketingTools = () => {
   }, []);
 
   return (
-    <section className="mx-auto w-full max-w-[1480px] px-20 py-20 max-sm:px-6 lg:py-36">
+    <section className="mx-auto w-full max-w-[1480px] px-20 py-20 max-sm:px-6 lg:my-20 lg:py-36">
       <div
         className="relative mx-auto flex min-h-[360px] max-w-4xl flex-col items-center justify-center gap-6 px-10 py-16 text-center"
         ref={containerRef}
       >
         {toolIcons.map((icon, index) => {
-          const sizeScale =
-            containerWidth < 640 ? 0.5 : containerWidth < 1024 ? 0.7 : 0.85;
+          const sizeScale = getSizeScale(containerWidth);
           const baseAngle = (index / iconCount) * Math.PI * 2;
           const angle = baseAngle + (icon.angleOffset ?? 0);
-          const maxHalf =
-            containerWidth < 640 ? 70 : containerWidth < 1024 ? 90 : 110;
+          const maxHalf = getMaxHalf(containerWidth);
           const baseRadius = Math.max(200, containerWidth / 2 - maxHalf);
           const radius = baseRadius * (icon.radiusScale ?? 1);
-          const outerRadius =
-            radius +
-            (containerWidth < 640 ? 160 : containerWidth < 1024 ? 220 : 280);
-          const centerShiftX =
-            containerWidth < 640 ? -40 : containerWidth < 1024 ? -54 : -70;
-          const centerShiftY =
-            containerWidth < 640 ? -12 : containerWidth < 1024 ? -16 : -20;
+          const outerRadius = radius + getOuterRadiusDelta(containerWidth);
+          const { x: centerShiftX, y: centerShiftY } =
+            getCenterShift(containerWidth);
           const x = Math.cos(angle) * radius + centerShiftX;
           const y = Math.sin(angle) * radius + centerShiftY;
           const outerX = Math.cos(angle) * outerRadius + centerShiftX;
