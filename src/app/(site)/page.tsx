@@ -8,7 +8,7 @@ import PaidMediaSection from "@/components/home/paid-media/paid-media";
 import Portfolio from "@/components/home/portfolio/portfolio";
 import StayCreative from "@/components/home/stay-creative/stay-creative";
 import Testimonials from "@/components/home/testimonials/testimonials";
-import WhyChooseUs from "@/components/home/why-choose-us/why-choose-us";
+import HowHyperscalerWorks from "@/components/home/why-choose-us/why-choose-us";
 
 export default function Page() {
   return (
@@ -24,7 +24,7 @@ export default function Page() {
         <BuildWithUsSection />
         <MarketingTools />
         <EverythingYouNeed />
-        <WhyChooseUs />
+        <HowHyperscalerWorks />
         <Testimonials />
         <Portfolio />
       </div>
