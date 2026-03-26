@@ -59,7 +59,7 @@ const EverythingYouNeed = () => {
           Everything your business needs to grow
         </h2>
 
-        <p className="mx-auto mt-[10px] max-w-[790px] text-[#6b7280] text-[16px] leading-[1.45] max-sm:w-screen max-sm:text-[16px] md:text-lg">
+        <p className="mx-auto mt-[10px] text-[#6b7280] text-[16px] leading-[1.45] max-sm:text-[16px] md:text-lg">
           Hyperscaler brings your entire growth engine, marketing stack, AI
           insights, and product development all into one place that actually
           makes sense.
