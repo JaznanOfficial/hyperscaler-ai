@@ -86,7 +86,7 @@ const scenes = [
   },
   {
     id: "scene-3",
-    steps: [steps[2], steps[3]],
+    steps: [steps[2]],
     visual: placeholderVisuals[2],
   },
 ];
@@ -137,29 +137,36 @@ const HowHyperscalerWorks = () => {
         </div>
 
         <div className="hidden flex-col gap-20 lg:flex">
-          {scenes.map((scene) => (
-            <div
-              className="grid grid-cols-[minmax(0,620px)_minmax(0,520px)] items-start gap-12"
-              key={scene.id}
-            >
-              <div className="relative flex min-h-[256px] flex-col gap-10">
-                <span className="absolute top-2 left-[14px] h-[calc(100%-16px)] w-[3px] bg-gradient-to-b from-[#f0abfc] via-[#c084fc] to-[#8b5cf6] opacity-80" />
+          {scenes.map((scene, sceneIdx) => (
+            <div key={scene.id}>
+              <div className="grid grid-cols-[1fr_1fr] items-start gap-12">
                 <div className="relative flex min-h-[256px] flex-col gap-10">
-                  {scene.steps.length > 1 ? (
-                    <div className="flex h-full flex-col justify-between">
-                      <StepDetail step={scene.steps[0]} />
-                      <StepDetail step={scene.steps[1]} />
-                    </div>
-                  ) : (
-                    scene.steps.map((step) => (
-                      <StepDetail key={step.id} step={step} />
-                    ))
-                  )}
+                  <div className="relative flex min-h-[256px] flex-col gap-10">
+                    {scene.steps.map((step, stepIdx) => (
+                      <div key={step.id}>
+                        <StepDetail step={step} />
+                        {!(sceneIdx === 2 && stepIdx === 0) && (
+                          <div className="absolute left-[14px] -mt-10 h-88 w-[3px]">
+                            <span className="block h-full w-full bg-gradient-to-b from-fuchsia-500 to-violet-800 opacity-80" />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
+                <VisualCard visual={scene.visual} />
               </div>
-              <VisualCard visual={scene.visual} />
             </div>
           ))}
+          <div className="-mt-20 grid grid-cols-[1fr_1fr] items-start gap-12">
+            <div className="relative flex flex-col gap-10">
+              <div className="absolute -top-76 left-[14px] h-72 w-[3px]">
+                <span className="block h-full w-full bg-gradient-to-b from-fuchsia-500 to-violet-800 opacity-80" />
+              </div>
+              <StepDetail step={steps[3]} />
+            </div>
+            <div />
+          </div>
         </div>
 
         <div className="flex flex-col gap-16 lg:hidden">
@@ -171,6 +178,7 @@ const HowHyperscalerWorks = () => {
               <VisualCard visual={scene.visual} />
             </div>
           ))}
+          <StepDetail step={steps[3]} />
         </div>
       </div>
     </section>
