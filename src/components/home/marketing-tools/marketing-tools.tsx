@@ -31,116 +31,96 @@ const toolIcons: ToolIcon[] = [
     src: "/marketing-tools/x.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    radiusScale: 3,
-    angleOffset: -2.5,
   },
   {
     id: "slack",
     src: "/marketing-tools/slack-connect.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 0.18,
   },
   {
     id: "airtable",
     src: "/marketing-tools/airtable.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 0.28,
   },
   {
     id: "google-ads",
     src: "/marketing-tools/google-ads.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 0.38,
   },
   {
     id: "youtube",
     src: "/marketing-tools/youtube.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 0.48,
   },
   {
     id: "facebook",
     src: "/marketing-tools/facebook.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 0.58,
   },
   {
     id: "linkedin",
     src: "/marketing-tools/linkedin.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 0.68,
   },
   {
     id: "telegram",
     src: "/marketing-tools/telegram.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 0.78,
   },
   {
     id: "reddit",
     src: "/marketing-tools/reddit.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 0.88,
   },
   {
     id: "miro",
     src: "/marketing-tools/miro.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 0.98,
   },
   {
     id: "n8n",
     src: "/marketing-tools/n8n.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 1.08,
   },
   {
     id: "bolt",
     src: "/marketing-tools/bolt.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 1.18,
   },
   {
     id: "mainchimp",
     src: "/marketing-tools/mainchimp.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    angleOffset: 1.28,
   },
   {
     id: "purplexity",
     src: "/marketing-tools/purplexity.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    radiusScale: 1,
-    angleOffset: 0.05,
   },
   {
     id: "openclaw",
     src: "/marketing-tools/openclaw.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    radiusScale: 1,
-    angleOffset: 0.42,
   },
   {
     id: "replit",
     src: "/marketing-tools/replit.svg",
     sizeClass: sharedSizeClass,
     iconClass: sharedIconClass,
-    radiusScale: 1,
-    angleOffset: 0.95,
   },
 ];
 
@@ -149,11 +129,6 @@ const MarketingTools = () => {
   const [containerWidth, setContainerWidth] = useState(0);
   const inView = useInView(containerRef, { amount: 0.25, once: false });
   const iconCount = toolIcons.length;
-  const isLargeLayout = containerWidth >= 1024;
-  const verticalSpacing = containerWidth < 1280 ? 110 : 130;
-  const horizontalOffset = containerWidth < 1280 ? 220 : 260;
-  const leftTotal = Math.ceil(iconCount / 2);
-  const rightTotal = iconCount - leftTotal;
 
   useEffect(() => {
     const node = containerRef.current;
@@ -182,45 +157,23 @@ const MarketingTools = () => {
         {toolIcons.map((icon, index) => {
           const sizeScale =
             containerWidth < 640 ? 0.5 : containerWidth < 1024 ? 0.7 : 0.85;
-          let x = 0;
-          let y = 0;
-          let outerX = 0;
-          let outerY = 0;
-
-          if (isLargeLayout) {
-            const isLeftColumn = index < leftTotal;
-            const rowsForColumn = isLeftColumn ? leftTotal : rightTotal;
-            const startY = -((rowsForColumn - 1) * verticalSpacing) / 2;
-            const rowIndex = isLeftColumn ? index : index - leftTotal;
-            const baseX = isLeftColumn ? -horizontalOffset : horizontalOffset;
-            const curvatureFactor = containerWidth < 1440 ? 0.07 : 0.09;
-            const curvatureShift =
-              Math.abs(startY + rowIndex * verticalSpacing) * curvatureFactor;
-            const centerShiftY = -8;
-            y = startY + rowIndex * verticalSpacing + centerShiftY;
-            x = baseX + (isLeftColumn ? -curvatureShift : curvatureShift);
-            const outerMultiplier = 1.35;
-            outerX = x * outerMultiplier;
-            outerY = y * outerMultiplier;
-          } else {
-            const baseAngle = (index / iconCount) * Math.PI * 2;
-            const angle = baseAngle + (icon.angleOffset ?? 0);
-            const maxHalf =
-              containerWidth < 640 ? 70 : containerWidth < 1024 ? 90 : 110;
-            const baseRadius = Math.max(180, containerWidth / 2 - maxHalf);
-            const radius = baseRadius * (icon.radiusScale ?? 1);
-            const outerRadius =
-              radius +
-              (containerWidth < 640 ? 160 : containerWidth < 1024 ? 220 : 280);
-            const centerShiftX =
-              containerWidth < 640 ? -50 : containerWidth < 1024 ? -66 : -92;
-            const centerShiftY =
-              containerWidth < 640 ? -26 : containerWidth < 1024 ? -32 : -42;
-            x = Math.cos(angle) * radius + centerShiftX;
-            y = Math.sin(angle) * radius + centerShiftY;
-            outerX = Math.cos(angle) * outerRadius + centerShiftX;
-            outerY = Math.sin(angle) * outerRadius + centerShiftY;
-          }
+          const baseAngle = (index / iconCount) * Math.PI * 2;
+          const angle = baseAngle + (icon.angleOffset ?? 0);
+          const maxHalf =
+            containerWidth < 640 ? 70 : containerWidth < 1024 ? 90 : 110;
+          const baseRadius = Math.max(200, containerWidth / 2 - maxHalf);
+          const radius = baseRadius * (icon.radiusScale ?? 1);
+          const outerRadius =
+            radius +
+            (containerWidth < 640 ? 160 : containerWidth < 1024 ? 220 : 280);
+          const centerShiftX =
+            containerWidth < 640 ? -40 : containerWidth < 1024 ? -54 : -70;
+          const centerShiftY =
+            containerWidth < 640 ? -12 : containerWidth < 1024 ? -16 : -20;
+          const x = Math.cos(angle) * radius + centerShiftX;
+          const y = Math.sin(angle) * radius + centerShiftY;
+          const outerX = Math.cos(angle) * outerRadius + centerShiftX;
+          const outerY = Math.sin(angle) * outerRadius + centerShiftY;
 
           return (
             <motion.div
