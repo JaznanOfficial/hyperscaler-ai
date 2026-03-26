@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/backend/config/prisma";
 import { onboardingSchema } from "@/backend/schemas/onboarding.schema";
 

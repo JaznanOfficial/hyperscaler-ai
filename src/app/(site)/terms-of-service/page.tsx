@@ -59,11 +59,11 @@ const policySections = [
 
 export default function TermsOfServicePage() {
   return (
-    <section className="mx-auto max-sm:py-20 py-[100px] px-20 max-sm:px-6">
+    <section className="mx-auto px-20 py-[100px] max-sm:px-6 max-sm:py-20">
       <div className="">
         <div
           aria-hidden
-          className="-top-24 -right-24 pointer-events-none absolute h-64 w-64 rounded-full bg-linear-to-l from-fuchsia-200/40 to-violet-300/40 blur-3xl"
+          className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-linear-to-l from-fuchsia-200/40 to-violet-300/40 blur-3xl"
         />
         <div className="relative space-y-8">
           <header className="space-y-3">
@@ -85,7 +85,7 @@ export default function TermsOfServicePage() {
 
           <div className="">
             {policySections.map((section) => (
-              <article className=" p-5 md:p-6" key={section.title}>
+              <article className="p-5 md:p-6" key={section.title}>
                 <h2 className="font-['Outfit'] font-medium text-[#1A1A1A] text-lg md:text-xl">
                   {section.title}
                 </h2>
@@ -98,7 +98,7 @@ export default function TermsOfServicePage() {
             ))}
           </div>
 
-          <footer className=" text-[#515A65] text-sm leading-relaxed md:text-base">
+          <footer className="text-[#515A65] text-sm leading-relaxed md:text-base">
             If you have any terms-related questions, contact us at{" "}
             <a
               className="font-medium text-[#9E32DD] underline decoration-[#9E32DD]/30 underline-offset-4"
@@ -113,4 +113,3 @@ export default function TermsOfServicePage() {
     </section>
   );
 }
-  

@@ -1,5 +1,6 @@
 import BuildWithUsSection from "@/components/home/build-with-us/build-with-us";
 import CallToAction from "@/components/home/call-to-action/call-to-action";
+import EverythingYouNeed from "@/components/home/everything-you-need/everything-you-need";
 import GenerateLeadsSection from "@/components/home/generate-leads/generate-leads";
 import Hero02 from "@/components/home/hero/hero-0.2";
 import PaidMediaSection from "@/components/home/paid-media/paid-media";
@@ -20,6 +21,7 @@ export default function Page() {
         <GenerateLeadsSection />
         <StayCreative />
         <BuildWithUsSection />
+        <EverythingYouNeed />
         <WhyChooseUs />
         <Testimonials />
         <Portfolio />

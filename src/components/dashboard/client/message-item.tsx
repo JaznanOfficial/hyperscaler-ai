@@ -154,7 +154,7 @@ export function ClientAgentMessageItem({ message }: { message: ChatMessage }) {
   return (
     <article className={cn("flex", isUser ? "justify-end" : "justify-start")}>
       {hasStructuredEntries && (
-        <div className="flex w-full flex-col gap-4 ">
+        <div className="flex w-full flex-col gap-4">
           {structuredEntries.map((entry, index) => (
             <div className={bubbleClassName} key={`${message.id}-${index}`}>
               <div className={proseClassName}>
@@ -199,8 +199,8 @@ export function ClientAgentMessageItem({ message }: { message: ChatMessage }) {
         </div>
       )}
 
-      {toolParts.length > 0 && (  
-        <div className="flex w-full  flex-col gap-4 ">
+      {toolParts.length > 0 && (
+        <div className="flex w-full flex-col gap-4">
           {toolParts.map((part) => {
             const toolPart = part as ToolMessagePart;
 

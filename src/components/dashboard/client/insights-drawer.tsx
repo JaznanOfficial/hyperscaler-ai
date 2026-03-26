@@ -220,9 +220,9 @@ export function InsightsDrawer({
                     message={
                       message.role === "user"
                         ? {
-                          ...message,
-                          content: stripServicePrefix(message.content),
-                        }
+                            ...message,
+                            content: stripServicePrefix(message.content),
+                          }
                         : message
                     }
                   />

@@ -16,10 +16,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
 
 type ButtonVariant = ComponentProps<typeof Button>["variant"];
-type ButtonSize = "default" | "xs" | "sm" | "lg" | "icon" | "custom" | "icon-xs" | "icon-sm" | "icon-lg"; // Added valid size options
+type ButtonSize =
+  | "default"
+  | "xs"
+  | "sm"
+  | "lg"
+  | "icon"
+  | "custom"
+  | "icon-xs"
+  | "icon-sm"
+  | "icon-lg"; // Added valid size options
 
 interface TalkToSalesDrawerProps {
   buttonClassName?: string;
@@ -67,7 +75,7 @@ export function TalkToSalesDrawer({
         {trigger ?? (
           <Button
             className={buttonClassName}
-            size={buttonSize} 
+            size={buttonSize}
             variant={buttonVariant}
           >
             <PhoneCall className="size-[18px]" />

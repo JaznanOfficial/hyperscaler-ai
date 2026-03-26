@@ -83,7 +83,7 @@ export const scalePricingData: PricingCard[] = [
       label: "Get Started",
       variant: "outline",
     },
-    features: [ 
+    features: [
       "All services included",
       "Lead qualification & pipeline handoff",
       "Dedicated human growth strategist",

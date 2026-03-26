@@ -50,10 +50,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       >
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-5TC4XCD4"
             height="0"
-            width="0"
+            src="https://www.googletagmanager.com/ns.html?id=GTM-5TC4XCD4"
             style={{ display: "none", visibility: "hidden" }}
+            width="0"
           />
         </noscript>
         <AuthSessionProvider>

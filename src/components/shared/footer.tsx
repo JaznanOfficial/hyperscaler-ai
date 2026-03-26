@@ -118,28 +118,17 @@ export function Footer() {
             <h4 className="font-semibold text-lg text-white">Legal</h4>
             <ul className="mt-4 space-y-3 text-[#9CA3AF] text-lg">
               <li>
-                <Link
-                  href="/privacy-policy"
-                  rel="noreferrer"
-                  
-                >
+                <Link href="/privacy-policy" rel="noreferrer">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/terms-of-service"
-                  rel="noreferrer"
-                 
-                >
+                <Link href="/terms-of-service" rel="noreferrer">
                   Terms &amp; Conditions
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/cookie-policy"
-                  rel="noreferrer"
-                >
+                <Link href="/cookie-policy" rel="noreferrer">
                   Cookie Policy
                 </Link>
               </li>

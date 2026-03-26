@@ -2,10 +2,10 @@
 
 import { Check, Rocket, Target, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
+import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 // import { BuyPackageButton } from "@/components/client/buy-package-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 
 const packages = [
   {
@@ -94,7 +94,7 @@ export function RecommendedPackages() {
             >
               {/* Most Popular Tag */}
               {pkg.highlight && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10 rounded-full border border-purple-300 bg-purple-600 px-3 py-1 text-[10px] text-white">
+                <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 transform rounded-full border border-purple-300 bg-purple-600 px-3 py-1 text-[10px] text-white">
                   Most Popular
                 </div>
               )}
@@ -120,12 +120,16 @@ export function RecommendedPackages() {
                   <h3 className="font-['Outfit'] font-semibold text-slate-900 text-xl">
                     {pkg.name}
                   </h3>
-                  <p className="mt-1 text-slate-600 text-sm">{pkg.description}</p>
+                  <p className="mt-1 text-slate-600 text-sm">
+                    {pkg.description}
+                  </p>
                 </div>
                 <div>
                   <p className="font-['Outfit'] font-bold text-3xl text-slate-900">
                     ${pkg.price.toLocaleString()}
-                    <span className="ml-1 font-medium text-base text-slate-500">/month</span>
+                    <span className="ml-1 font-medium text-base text-slate-500">
+                      /month
+                    </span>
                   </p>
                 </div>
                 <div className="h-px w-full bg-slate-200" />
@@ -141,7 +145,9 @@ export function RecommendedPackages() {
                       >
                         <Check className="size-3 text-purple-700" />
                       </div>
-                      <p className="text-slate-700 text-sm leading-5">{feature}</p>
+                      <p className="text-slate-700 text-sm leading-5">
+                        {feature}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -155,7 +161,10 @@ export function RecommendedPackages() {
                   </Button>
                 ) : (
                   // <BuyPackageButton amount={pkg.price} packageName={pkg.name} />
-                  <TalkToSalesDrawer buttonVariant='gradient' buttonClassName="w-full"/>
+                  <TalkToSalesDrawer
+                    buttonClassName="w-full"
+                    buttonVariant="gradient"
+                  />
                 )}
               </div>
             </Card>

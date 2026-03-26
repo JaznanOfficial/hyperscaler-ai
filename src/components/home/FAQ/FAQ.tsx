@@ -83,7 +83,7 @@ const FAQ = () => {
           return (
             <Collapsible
               className={cn(
-                "group cursor-pointer w-full rounded-xl border border-[#D1D1D1] bg-[#F9F7FA] px-5 py-3 text-left transition-all duration-200 hover:border-purple-300 hover:bg-purple-50 data-[state=open]:shadow-md"
+                "group w-full cursor-pointer rounded-xl border border-[#D1D1D1] bg-[#F9F7FA] px-5 py-3 text-left transition-all duration-200 hover:border-purple-300 hover:bg-purple-50 data-[state=open]:shadow-md"
               )}
               key={faq.question}
               onOpenChange={() =>
@@ -93,7 +93,7 @@ const FAQ = () => {
             >
               <CollapsibleTrigger
                 className={cn(
-                  "flex cursor-pointer w-full items-center justify-between gap-3 focus-visible:outline-none",
+                  "flex w-full cursor-pointer items-center justify-between gap-3 focus-visible:outline-none",
                   "font-['Outfit']",
                   "font-medium text-[#1A1A1A] text-md md:text-lg"
                 )}

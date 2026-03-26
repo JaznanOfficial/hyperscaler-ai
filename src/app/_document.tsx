@@ -1,4 +1,4 @@
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import Document, { Head, Html, Main, NextScript } from "next/document";
 
 class MyDocument extends Document {
   render() {
@@ -14,17 +14,17 @@ class MyDocument extends Document {
                 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
               })(window,document,'script','dataLayer','GTM-5TC4XCD4');`,
             }}
-          ></script>
+          />
         </Head>
         <body>
           {/* Google Tag Manager (noscript) */}
           <noscript>
             <iframe
-              src="https://www.googletagmanager.com/ns.html?id=GTM-5TC4XCD4"
               height="0"
-              width="0"
+              src="https://www.googletagmanager.com/ns.html?id=GTM-5TC4XCD4"
               style={{ display: "none", visibility: "hidden" }}
-            ></iframe>
+              width="0"
+            />
           </noscript>
 
           <Main />
