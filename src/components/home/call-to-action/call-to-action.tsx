@@ -1,11 +1,40 @@
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 const CallToAction = () => {
   return (
     <section className="my-24 flex items-center justify-center px-6">
-      <div className="flex h-96 w-full max-w-5xl flex-col items-center justify-center gap-10 rounded-2xl bg-white p-5 text-center shadow-[0px_40px_140px_rgba(157,78,221,0.28)]">
+      <div className="relative flex h-96 w-full max-w-5xl flex-col items-center justify-center gap-10 overflow-visible rounded-2xl bg-white p-5 text-center shadow-[0px_40px_140px_rgba(157,78,221,0.28)]">
+        <Image
+          alt="CTA decoration"
+          className="absolute -top-8 -left-28 w-64 animate-bounce"
+          height={320}
+          src="/call-to-action/cta-left-top.svg"
+          width={320}
+        />
+        <Image
+          alt="CTA decoration"
+          className="absolute -top-8 -right-20 w-64 animate-bounce"
+          height={320}
+          src="/call-to-action/cta-right-top.svg"
+          width={320}
+        />
+        <Image
+          alt="CTA decoration"
+          className="absolute -bottom-20 -left-12 w-64 animate-bounce"
+          height={320}
+          src="/call-to-action/cta-left-bottom.svg"
+          width={320}
+        />
+        <Image
+          alt="CTA decoration"
+          className="absolute -right-32 -bottom-20 w-64 animate-bounce"
+          height={320}
+          src="/call-to-action/cta-right-bottom.svg"
+          width={320}
+        />
         <div className="flex flex-col items-center gap-4">
           <p className="font-semibold text-lg text-purple-600">
             Hard Launch With Hyperscaler
