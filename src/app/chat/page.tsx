@@ -5,10 +5,7 @@ export default function AgentGPage() {
   return (
     <>
       <HomeNavbar />
-      <GeneralAgentPanel
-        inputPlaceholder="Talk with Hyperscaler AI Assistant..."
-        messages={[]}
-      />
+      <GeneralAgentPanel inputPlaceholder="Talk with Eva AI..." messages={[]} />
     </>
   );
 }

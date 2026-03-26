@@ -1,5 +1,9 @@
+"use client";
+
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +15,25 @@ import {
 } from "@/components/ui/card";
 
 export default function Page() {
+  const router = useRouter();
+  const [secondsRemaining, setSecondsRemaining] = useState(5);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setSecondsRemaining((prev) => {
+        if (prev <= 1) return 0;
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    if (secondsRemaining !== 0) return;
+    router.push("/chat");
+  }, [router, secondsRemaining]);
+
   return (
     <main className="min-h-[calc(100vh-4rem)] bg-background text-foreground">
       <div className="mx-auto flex w-full max-w-3xl flex-col items-center justify-center px-4 py-10 sm:py-14">
@@ -38,6 +61,17 @@ export default function Page() {
           </CardHeader>
 
           <CardContent className="space-y-5">
+            <div className="rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 text-center">
+              <p
+                className="font-semibold text-base"
+                style={{ fontFamily: "var(--font-outfit)" }}
+              >
+                <span className="inline-block bg-linear-to-r from-violet-800 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
+                  Redirecting to Eva AI in {secondsRemaining}s…
+                </span>
+              </p>
+            </div>
+
             <div className="rounded-lg border bg-card px-4 py-3">
               <div className="font-medium">What happens next</div>
               <div className="mt-2 space-y-2 text-muted-foreground">
@@ -65,7 +99,7 @@ export default function Page() {
 
           <CardFooter className="flex flex-col gap-3 sm:flex-row sm:justify-end">
             <Button asChild className="w-full sm:w-auto" variant="outline">
-              <Link href="/onboarding/book-a-call">Book another time</Link>
+              <Link href="/onboarding/book-a-demo">Book another time</Link>
             </Button>
             <Button asChild className="w-full sm:w-auto" variant="gradient">
               <Link href="/client">Go to dashboard</Link>

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const CallToAction = () => {
   return (
-    <section className="relative mt-[100px] max-sm:mt-20 overflow-hidden bg-[#9E32DD]/10">
+    <section className="relative mt-[100px] overflow-hidden bg-[#9E32DD]/10 max-sm:mt-20">
       <div className="my-container flex flex-col items-center justify-center gap-4 py-10 md:gap-6 md:py-12 lg:py-16">
         <div className="inline-flex items-center rounded-full border border-purple-600 bg-white px-2.5 py-1.5 font-medium text-[#9E32DD] max-md:text-lg md:px-4 md:py-2">
           <Sparkles className="mr-2 size-3" /> Start scaling today
@@ -16,13 +16,20 @@ const CallToAction = () => {
           titlePart1="Ready to scale without the chaos?"
         />
 
-        <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-5">
+        <div className="mt-4 flex flex-col items-center justify-center gap-5 sm:flex-row">
           <Link href={"/login"}>
-            <Button className="custom w-full sm:w-auto" size="custom" variant={"gradient"}>
+            <Button
+              className="custom w-full sm:w-auto"
+              size="custom"
+              variant={"gradient"}
+            >
               Get Started <ArrowRight className="size-4" />
             </Button>
           </Link>
-          <TalkToSalesDrawer buttonClassName="h-[46px] w-full bg-white font-semibold sm:w-[228px] hover:bg-gray-50" buttonVariant={"outline"} />
+          <TalkToSalesDrawer
+            buttonClassName="h-[46px] w-full bg-white font-semibold sm:w-[228px] hover:bg-gray-50"
+            buttonVariant={"outline"}
+          />
         </div>
       </div>
 

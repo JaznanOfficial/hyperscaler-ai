@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
+import { ZodError } from "zod";
 import { prisma } from "@/backend/config/prisma";
 import { onboardingSchema } from "@/backend/schemas/onboarding.schema";
 
@@ -71,18 +72,18 @@ export async function POST(request: NextRequest) {
       },
       { status: isUpdate ? 200 : 201 }
     );
-  } catch (error: any) {
-    if (error.name === "ZodError") {
-      const firstError = error.errors[0];
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      const firstIssue = error.issues?.[0];
       return NextResponse.json(
-        { success: false, message: firstError.message },
+        { success: false, message: firstIssue?.message ?? "Invalid request" },
         { status: 400 }
       );
     }
 
-    return NextResponse.json(
-      { success: false, message: "Internal server error" },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error ? error.message : "Internal server error";
+
+    return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }

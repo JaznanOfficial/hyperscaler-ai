@@ -39,6 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: user.email,
           name: user.name,
           role: user.role,
+          getStarted: (user as unknown as { getStarted: boolean }).getStarted,
         };
       },
     }),
@@ -48,6 +49,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.id = user.id;
         token.role = (user as User).role;
+        token.getStarted = (user as User).getStarted;
+      } else if (token.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { role: true, getStarted: true },
+        });
+
+        if (dbUser) {
+          token.role = dbUser.role;
+          token.getStarted = dbUser.getStarted;
+        }
       }
       return token;
     },
@@ -55,6 +67,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
+        session.user.getStarted = token.getStarted as boolean;
       }
       return session;
     },

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
@@ -8,18 +7,27 @@ import {
   Facebook,
   Instagram,
   Linkedin,
+  Loader2,
   Mail,
   Search,
 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 
-const logoLinkedIn = "https://www.figma.com/api/mcp/asset/eb37de3a-9208-4f6c-9577-075920b97d6e";
-const logoGoogle = "https://www.figma.com/api/mcp/asset/65ed1871-a951-406d-bc68-2679560cafc7";
-const logoInstagram = "https://www.figma.com/api/mcp/asset/b1aa4fe3-3dcd-4938-a711-c1dd04a87136";
-const logoFacebook = "https://www.figma.com/api/mcp/asset/04980a44-371a-4694-a959-b0f93940d706";
-const logoGmail = "https://www.figma.com/api/mcp/asset/bb565eec-e2ea-4df3-bd48-538a45a5b8e8";
+const logoLinkedIn =
+  "https://www.figma.com/api/mcp/asset/eb37de3a-9208-4f6c-9577-075920b97d6e";
+const logoGoogle =
+  "https://www.figma.com/api/mcp/asset/65ed1871-a951-406d-bc68-2679560cafc7";
+const logoInstagram =
+  "https://www.figma.com/api/mcp/asset/b1aa4fe3-3dcd-4938-a711-c1dd04a87136";
+const logoFacebook =
+  "https://www.figma.com/api/mcp/asset/04980a44-371a-4694-a959-b0f93940d706";
+const logoGmail =
+  "https://www.figma.com/api/mcp/asset/bb565eec-e2ea-4df3-bd48-538a45a5b8e8";
 
 const SOURCE_OPTIONS = [
   { id: "linkedin", label: "LinkedIn", icon: Linkedin },
@@ -31,30 +39,84 @@ const SOURCE_OPTIONS = [
 ] as const;
 
 export default function SourcePage() {
-  const [source, setSource] = useState<(typeof SOURCE_OPTIONS)[number]["id"]>("linkedin");
+  const router = useRouter();
+  const [source, setSource] =
+    useState<(typeof SOURCE_OPTIONS)[number]["id"]>("linkedin");
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function onContinue() {
+    if (isLoading) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/auth/onboarding/source", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          discoverySource: source,
+        }),
+      });
+
+      const data = (await response.json()) as {
+        success: boolean;
+        message?: string;
+      };
+
+      if (!(response.ok && data.success)) {
+        throw new Error(data.message || "Failed to save discovery source");
+      }
+
+      router.push("/onboarding/success");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      toast.error(message, { richColors: true });
+      setIsLoading(false);
+    }
+  }
 
   return (
-    <main className="bg-white min-h-svh w-full lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
+    <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
       <section className="relative hidden overflow-hidden bg-[#EBDDFA] lg:block">
-        <div className="absolute -left-[520px] -top-[350px] h-[980px] w-[980px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -left-[360px] -top-[190px] h-[760px] w-[760px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -left-[220px] -top-[60px] h-[540px] w-[540px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -left-[80px] top-[90px] h-[320px] w-[320px] rounded-full border border-[#DDC4F8]" />
+        <div className="absolute -top-[350px] -left-[520px] h-[980px] w-[980px] rounded-full border border-[#DDC4F8]" />
+        <div className="absolute -top-[190px] -left-[360px] h-[760px] w-[760px] rounded-full border border-[#DDC4F8]" />
+        <div className="absolute -top-[60px] -left-[220px] h-[540px] w-[540px] rounded-full border border-[#DDC4F8]" />
+        <div className="absolute top-[90px] -left-[80px] h-[320px] w-[320px] rounded-full border border-[#DDC4F8]" />
 
-        <div className="absolute left-[72px] top-[110px] rounded-xl bg-[#D8ADF1]/40 p-2">
-          <img alt="LinkedIn" className="h-[72px] w-[72px] rounded-[7px] object-cover" src={logoLinkedIn} />
+        <div className="absolute top-[110px] left-[72px] rounded-xl bg-[#D8ADF1]/40 p-2">
+          <img
+            alt="LinkedIn"
+            className="h-[72px] w-[72px] rounded-[7px] object-cover"
+            src={logoLinkedIn}
+          />
         </div>
-        <div className="absolute left-[289px] top-[199px] rounded-xl bg-[#D8ADF1]/40 p-2">
-          <img alt="Google" className="h-[72px] w-[72px] rounded-[7px] object-cover" src={logoGoogle} />
+        <div className="absolute top-[199px] left-[289px] rounded-xl bg-[#D8ADF1]/40 p-2">
+          <img
+            alt="Google"
+            className="h-[72px] w-[72px] rounded-[7px] object-cover"
+            src={logoGoogle}
+          />
         </div>
-        <div className="absolute left-[109px] top-[397px] rounded-xl bg-[#D8ADF1]/40 p-2">
-          <img alt="Instagram" className="h-[72px] w-[72px] rounded-[7px] object-cover" src={logoInstagram} />
+        <div className="absolute top-[397px] left-[109px] rounded-xl bg-[#D8ADF1]/40 p-2">
+          <img
+            alt="Instagram"
+            className="h-[72px] w-[72px] rounded-[7px] object-cover"
+            src={logoInstagram}
+          />
         </div>
-        <div className="absolute left-[324px] top-[460px] rounded-xl bg-[#D8ADF1]/40 p-2">
-          <img alt="Facebook" className="h-[72px] w-[72px] rounded-[7px] object-cover" src={logoFacebook} />
+        <div className="absolute top-[460px] left-[324px] rounded-xl bg-[#D8ADF1]/40 p-2">
+          <img
+            alt="Facebook"
+            className="h-[72px] w-[72px] rounded-[7px] object-cover"
+            src={logoFacebook}
+          />
         </div>
-        <div className="absolute left-[145px] top-[647px] rounded-xl bg-[#D8ADF1]/40 p-2">
-          <img alt="Gmail" className="h-[72px] w-[72px] rounded-[7px] object-cover" src={logoGmail} />
+        <div className="absolute top-[647px] left-[145px] rounded-xl bg-[#D8ADF1]/40 p-2">
+          <img
+            alt="Gmail"
+            className="h-[72px] w-[72px] rounded-[7px] object-cover"
+            src={logoGmail}
+          />
         </div>
 
         <div className="absolute inset-y-0 right-0 w-[56%] bg-linear-to-r from-[#EBDDFA]/0 to-white/85" />
@@ -82,7 +144,7 @@ export default function SourcePage() {
           </div>
 
           <div className="mb-10">
-            <h1 className="font-['Outfit'] font-medium text-[#1A1A1A] text-3xl leading-normal sm:text-[32px]">
+            <h1 className="font-['Outfit'] font-medium text-3xl text-[#1A1A1A] leading-normal sm:text-[32px]">
               How did you discover Hyperscaler?
             </h1>
           </div>
@@ -103,7 +165,7 @@ export default function SourcePage() {
                   type="button"
                 >
                   <Icon className="size-[18px] text-[#1A1A1A]" />
-                  <span className="font-semibold text-[#1A1A1A] text-2sm leading-[1.4]">
+                  <span className="font-semibold text-2sm text-[#1A1A1A] leading-[1.4]">
                     {label}
                   </span>
                 </button>
@@ -112,10 +174,38 @@ export default function SourcePage() {
           </div>
 
           <div className="mt-7">
-            <Button className="h-[45px] w-[155px]" type="button" variant="gradient">
-              Continue
-              <ArrowRight aria-hidden="true" className="size-[18px]" />
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                className="h-[45px] w-[155px]"
+                onClick={() => router.push("/onboarding/book-a-demo")}
+                type="button"
+                variant="outline"
+              >
+                Skip
+              </Button>
+              <Button
+                className="h-[45px] w-[155px]"
+                disabled={isLoading}
+                onClick={onContinue}
+                type="button"
+                variant="gradient"
+              >
+                {isLoading ? (
+                  <>
+                    Saving
+                    <Loader2
+                      aria-hidden="true"
+                      className="size-[18px] animate-spin"
+                    />
+                  </>
+                ) : (
+                  <>
+                    Continue
+                    <ArrowRight aria-hidden="true" className="size-[18px]" />
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </section>

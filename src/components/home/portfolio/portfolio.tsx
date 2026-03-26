@@ -41,7 +41,7 @@ const Portfolio = () => {
   return (
     <section className="">
       {/* header */}
-      <div className="w-full mb-[52px] max-sm:mb-5  pt-[150px] max-sm:pt-20 px-20 max-sm:px-6">
+      <div className="mb-[52px] w-full px-20 pt-[150px] max-sm:mb-5 max-sm:px-6 max-sm:pt-20">
         <div className="">
           <div className="">
             <h3
@@ -56,10 +56,9 @@ const Portfolio = () => {
               Explore projects we&apos;ve designed and built for our clients
             </p>
           </div>
-
         </div>
         <Link
-          className="flex  w-fit self-end mx-auto mr-0 items-center gap-2 font-semibold text-[#9E32DD] text-lg underline-offset-2 hover:underline md:text-lg"
+          className="mx-auto mr-0 flex w-fit items-center gap-2 self-end font-semibold text-[#9E32DD] text-lg underline-offset-2 hover:underline md:text-lg"
           href="/portfolio"
         >
           View Our Portfolio <ArrowRight className="size-4" />
@@ -68,7 +67,7 @@ const Portfolio = () => {
 
       {/* body */}
       <Marquee pauseOnHover>
-        <div className="flex flex-nowrap ">
+        <div className="flex flex-nowrap">
           {portfolioData.map((item, index) => (
             <div
               className={cn("ml-10 text-left", index % 2 === 1 && "mt-[90px]")}

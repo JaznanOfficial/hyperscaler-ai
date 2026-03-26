@@ -5,17 +5,17 @@ import { Button } from "@/components/ui/button";
 
 const Hero02 = () => {
   return (
-    <section className="relative mt-10 w-full overflow-hidden bg-white max-sm:px-6 max-w-[1480px] lg:px-20 mx-auto">
+    <section className="relative mx-auto mt-10 w-full max-w-[1480px] overflow-hidden bg-white max-sm:px-6 lg:px-20">
       {/* Subtle purple gradient top-right */}
       <div
-        className="pointer-events-none absolute -right-20 top-1/4 z-0 h-96 w-96 rounded-full blur-[120px] opacity-60"
+        className="pointer-events-none absolute top-1/4 -right-20 z-0 h-96 w-96 rounded-full opacity-60 blur-[120px]"
         style={{
           background:
             "radial-gradient(circle, rgba(168,85,247,0.3) 0%, rgba(139,92,246,0.2) 40%, transparent 70%)",
         }}
       />
       <div
-        className="pointer-events-none absolute right-1/4 top-1/3 z-0 h-72 w-72 rounded-full blur-[100px] opacity-50"
+        className="pointer-events-none absolute top-1/3 right-1/4 z-0 h-72 w-72 rounded-full opacity-50 blur-[100px]"
         style={{
           background:
             "radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%)",
@@ -29,18 +29,18 @@ const Hero02 = () => {
             {/* Pill tagline */}
             <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-neutral-300 bg-purple-50 px-4 py-2">
               <svg
-                width="16"
+                fill="none"
                 height="16"
                 viewBox="0 0 16 16"
-                fill="none"
+                width="16"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
                   d="M13.3333 1.33332V3.99999M14.6667 2.66666H12M7.34466 1.87599C7.37323 1.72306 7.45438 1.58493 7.57406 1.48553C7.69374 1.38614 7.84442 1.33173 8 1.33173C8.15557 1.33173 8.30625 1.38614 8.42593 1.48553C8.54561 1.58493 8.62677 1.72306 8.65533 1.87599L9.356 5.58132C9.40576 5.84475 9.53378 6.08707 9.72335 6.27664C9.91292 6.46621 10.1552 6.59423 10.4187 6.64399L14.124 7.34466C14.2769 7.37322 14.4151 7.45437 14.5145 7.57405C14.6138 7.69374 14.6683 7.84441 14.6683 7.99999C14.6683 8.15557 14.6138 8.30624 14.5145 8.42592C14.4151 8.54561 14.2769 8.62676 14.124 8.65532L10.4187 9.35599C10.1552 9.40575 9.91292 9.53377 9.72335 9.72334C9.53378 9.91291 9.40576 10.1552 9.356 10.4187L8.65533 14.124C8.62677 14.2769 8.54561 14.415 8.42593 14.5144C8.30625 14.6138 8.15557 14.6683 8 14.6683C7.84442 14.6683 7.69374 14.6138 7.57406 14.5144C7.45438 14.415 7.37323 14.2769 7.34466 14.124L6.644 10.4187C6.59423 10.1552 6.46621 9.91291 6.27664 9.72334C6.08707 9.53377 5.84476 9.40575 5.58133 9.35599L1.876 8.65532C1.72307 8.62676 1.58494 8.54561 1.48554 8.42592C1.38614 8.30624 1.33173 8.15557 1.33173 7.99999C1.33173 7.84441 1.38614 7.69374 1.48554 7.57405C1.58494 7.45437 1.72307 7.37322 1.876 7.34466L5.58133 6.64399C5.84476 6.59423 6.08707 6.46621 6.27664 6.27664C6.46621 6.08707 6.59423 5.84475 6.644 5.58132L7.34466 1.87599ZM4 13.3333C4 14.0697 3.40304 14.6667 2.66666 14.6667C1.93028 14.6667 1.33333 14.0697 1.33333 13.3333C1.33333 12.5969 1.93028 12 2.66666 12C3.40304 12 4 12.5969 4 13.3333Z"
                   stroke="#9E32DD"
-                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  strokeWidth="1.5"
                 />
               </svg>
               <span className="font-medium text-[14px] text-purple-600 max-sm:text-[12px]">
@@ -72,7 +72,7 @@ const Hero02 = () => {
             </p>
 
             {/* Buttons */}
-            <div className="mt-10 flex w-full flex-col gap-3 sm:flex-row sm:gap-4 max-sm:items-center">
+            <div className="mt-10 flex w-full flex-col gap-3 max-sm:items-center sm:flex-row sm:gap-4">
               <Link className="w-full sm:w-auto" href="/chat">
                 <Button
                   className="h-[46px] w-full font-semibold sm:w-[228px]"
@@ -80,10 +80,10 @@ const Hero02 = () => {
                   variant="gradient"
                 >
                   <svg
-                    width="20"
+                    fill="none"
                     height="20"
                     viewBox="0 0 20 20"
-                    fill="none"
+                    width="20"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
@@ -121,43 +121,43 @@ const Hero02 = () => {
 
           {/* Right Column: Video + Floating Images */}
           <div className="relative flex min-h-[580px] items-center justify-center max-sm:min-h-[460px]">
-          
-            <div className="absolute left-1/2 top-1/2 h-[320px] w-[560px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl shadow-xl max-md:h-[200px] max-md:w-[350px]">
-             
-                <video
-                  className="h-full w-full object-cover"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  controls={false}
-                  src={process.env.NEXT_PUBLIC_HERO_VIDEO_URL ?? "/platform_overview_2.mp4"}
-                />
-         
+            <div className="absolute top-1/2 left-1/2 h-[320px] w-[560px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl shadow-xl max-md:h-[200px] max-md:w-[350px]">
+              <video
+                autoPlay
+                className="h-full w-full object-cover"
+                controls={false}
+                loop
+                muted
+                playsInline
+                src={
+                  process.env.NEXT_PUBLIC_HERO_VIDEO_URL ??
+                  "/platform_overview_2.mp4"
+                }
+              />
             </div>
 
             {/* Top-left floating image */}
             <Image
-              src="/spend_distribution.png"
               alt="Total Spend - $5,000"
-              width={160}
+              className="absolute top-0 left-0 z-20 h-[140px] w-[160px] object-contain max-md:top-2 max-md:left-2 max-md:h-[100px] max-md:w-[120px]"
               height={140}
-              className="absolute left-0 top-0 z-20 h-[140px] w-[160px] object-contain max-md:left-2 max-md:top-2 max-md:h-[100px] max-md:w-[120px]"
+              src="/spend_distribution.png"
               style={{
                 animation: "float 3s ease-in-out infinite",
               }}
+              width={160}
             />
 
             {/* Bottom-right floating image */}
             <Image
-              src="/chart_interaction.png"
               alt="Bugs Closed vs Opened"
-              width={220}
+              className="absolute right-0 bottom-0 z-20 h-[140px] w-[220px] object-contain max-md:right-2 max-md:bottom-2 max-md:h-[100px] max-md:w-[140px]"
               height={140}
-              className="absolute bottom-0 right-0 z-20 h-[140px] w-[220px] object-contain max-md:right-2 max-md:bottom-2 max-md:h-[100px] max-md:w-[140px]"
+              src="/chart_interaction.png"
               style={{
                 animation: "float 3.5s ease-in-out 0.5s infinite",
               }}
+              width={220}
             />
           </div>
         </div>

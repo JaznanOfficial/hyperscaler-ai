@@ -15,6 +15,7 @@ model User {
   phone       String?
   password    String
   role        UserRole @default(CLIENT)
+  getStarted  Boolean  @default(false) @map("get_started")
   projects    Json     @default("[]")
   generalInfo Json?
   createdAt   DateTime @default(now())

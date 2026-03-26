@@ -3,8 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const CALENDLY_URL = "https://calendly.com/scalebuildai/30min";
-const SUCCESS_URL = "/onboarding/book-a-call/success";
+const CALENDLY_URL =
+  "https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build";
+const SUCCESS_URL = "/onboarding/book-a-demo/success";
 
 export default function Page() {
   const router = useRouter();

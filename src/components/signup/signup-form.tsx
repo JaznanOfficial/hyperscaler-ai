@@ -4,8 +4,6 @@ import { ArrowRight, Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
-import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
-import "react-phone-number-input/style.css";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -26,8 +24,6 @@ export function SignupForm({
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
-  const [phoneValue, setPhoneValue] = React.useState<string>();
   const {
     signupMutation,
     autoLoginMutation,
@@ -41,32 +37,13 @@ export function SignupForm({
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const confirmPassword = formData.get("confirm-password") as string;
-
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match", { richColors: true });
-      return;
-    }
-
-    if (phoneValue && !isValidPhoneNumber(phoneValue)) {
-      toast.error("Please enter a valid phone number", { richColors: true });
-      return;
-    }
-
-    if (!phoneValue) {
-      toast.error("Phone number is required", { richColors: true });
-      return;
-    }
 
     try {
       const data = await signupMutation.mutateAsync({
-        name,
         email,
         password,
-        phone: phoneValue,
       });
       const successMessage =
         typeof data.message === "string"
@@ -102,7 +79,7 @@ export function SignupForm({
       if (role === "ADMIN") {
         router.push("/s-admin");
       } else if (role === "CLIENT") {
-        router.push("/client");
+        router.push("/onboarding/welcome");
       } else if (role === "EMPLOYEE" || role === "MANAGER") {
         router.push("/employee");
       } else {
@@ -128,21 +105,9 @@ export function SignupForm({
               Create your account
             </h1>
             <p className="text-balance text-muted-foreground text-sm">
-              Enter your name, email and password to create an account.
+              Enter your email and password to create an account.
             </p>
           </div>
-          <Field>
-            <FieldLabel htmlFor="full-name">Full name</FieldLabel>
-            <Input
-              disabled={isLoading}
-              id="full-name"
-              name="name"
-              placeholder="Ada Lovelace"
-              required
-              type="text"
-            />
-          </Field>
-
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
@@ -154,23 +119,6 @@ export function SignupForm({
               required
               type="email"
             />
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="phone">Phone Number</FieldLabel>
-            <PhoneInput
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              defaultCountry="US"
-              disabled={isLoading}
-              id="phone"
-              international
-              onChange={setPhoneValue}
-              placeholder="Enter phone number"
-              value={phoneValue}
-            />
-            <FieldDescription>
-              Include country code for international numbers
-            </FieldDescription>
           </Field>
 
           <Field>
@@ -205,41 +153,6 @@ export function SignupForm({
             <FieldDescription>
               Must be at least 8 characters with uppercase, lowercase, and a
               number.
-            </FieldDescription>
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="confirm-password">Confirm password</FieldLabel>
-            <div className="relative mt-1">
-              <Input
-                className="pr-10"
-                disabled={isLoading}
-                id="confirm-password"
-                name="confirm-password"
-                placeholder="********"
-                required
-                type={isConfirmVisible ? "text" : "password"}
-              />
-              <button
-                aria-label={
-                  isConfirmVisible
-                    ? "Hide confirmation password"
-                    : "Show confirmation password"
-                }
-                className="absolute inset-y-0 right-0 flex cursor-pointer items-center px-3 text-muted-foreground transition-colors hover:text-foreground"
-                disabled={isLoading}
-                onClick={() => setIsConfirmVisible((prev) => !prev)}
-                type="button"
-              >
-                {isConfirmVisible ? (
-                  <EyeClosed aria-hidden="true" className="size-4" />
-                ) : (
-                  <Eye aria-hidden="true" className="size-4" />
-                )}
-              </button>
-            </div>
-            <FieldDescription>
-              Please confirm your password matches.
             </FieldDescription>
           </Field>
 
