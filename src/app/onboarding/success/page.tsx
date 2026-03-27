@@ -29,23 +29,20 @@ export default function SuccessPage() {
   const firstName = session?.user?.name?.trim().split(/\s+/)[0];
 
   return (
-    <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
-      <section className="relative hidden overflow-hidden bg-[#EBDDFA] lg:block">
-        <div className="absolute -top-[350px] -left-[520px] h-[980px] w-[980px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -top-[190px] -left-[360px] h-[760px] w-[760px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -top-[60px] -left-[220px] h-[540px] w-[540px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute top-[90px] -left-[80px] h-[320px] w-[320px] rounded-full border border-[#DDC4F8]" />
-        <img
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-y-0 right-0 h-full w-[78%] object-cover opacity-40"
-          src={sidebarPreviewImage}
+    <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[1fr_3fr]">
+      <section className="relative hidden w-full overflow-hidden bg-[#EBDDFA] lg:block">
+        <video
+          autoPlay
+          className="h-full object-contain"
+          loop
+          muted
+          src="/chat-video.mp4"
         />
-        <div className="absolute inset-y-0 right-0 w-[64%] bg-linear-to-r from-[#EBDDFA]/0 to-white/85" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-40 bg-gradient-to-r from-transparent via-white/40 to-white" />
       </section>
 
-      <section className="flex min-h-svh items-center justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
-        <div className="w-full max-w-[640px]">
+      <section className="lg-cols-2 flex w-full items-center justify-center">
+        <div className="flex w-full max-w-[560px] flex-col items-center gap-12 px-6 py-16 text-center sm:px-10 lg:px-16">
           <div className="mb-12 flex flex-col items-center gap-4 text-center">
             <span className="flex size-16 items-center justify-center rounded-full border border-[#A7E8BF] bg-[#D3F3DF] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.02),0px_2px_4px_0px_rgba(0,0,0,0.04)]">
               <Check aria-hidden="true" className="size-7 text-[#15803D]" />

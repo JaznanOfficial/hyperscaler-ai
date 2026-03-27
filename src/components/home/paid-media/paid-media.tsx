@@ -6,7 +6,7 @@ const PaidMediaSection = () => {
   return (
     <section className="mx-auto w-full max-w-[1480px] px-20 pt-[150px] max-sm:px-6 max-sm:pt-20">
       <div className="z-10 text-center">
-        <h2 className="font-medium text-2xl text-[#1A1A1A] leading-[1.4] tracking-[0] sm:text-[28px] md:text-5xl">
+        <h2 className="font-medium text-[#1A1A1A] text-[32px] leading-[1.4] tracking-[0] sm:text-[28px] md:text-[32px]">
           Everything you need to
           <span className="bg-linear-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
             {" "}
@@ -17,7 +17,7 @@ const PaidMediaSection = () => {
             {" "}
             Scale{" "}
           </span>
-          — in one platform
+          in one platform
         </h2>
 
         <p className="mt-2 font-normal text-[#515A65] text-sm leading-[1.4] tracking-[0] sm:text-lg">

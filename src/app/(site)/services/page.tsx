@@ -15,18 +15,18 @@ export default function ServicesPage() {
       </div>
 
       <Tabs className="mt-10" defaultValue="marketing">
-        <TabsList className="cursor-pointer rounded-full border border-slate-300 bg-white text-base lg:mx-auto lg:h-12! lg:w-full lg:max-w-xl lg:px-2 lg:py-2">
+        <TabsList className="cursor-pointer rounded-full border border-slate-300 bg-white text-base lg:mx-auto lg:h-12! lg:px-2 lg:py-2">
           <TabsTrigger
             className="cursor-pointer rounded-full font-normal text-black text-sm data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:flex-1 lg:px-5 lg:py-2 lg:text-lg"
             value="marketing"
           >
-            Marketing Services
+            Scale
           </TabsTrigger>
           <TabsTrigger
             className="cursor-pointer rounded-full font-normal text-black text-sm data-[state=active]:bg-[#9E32DD] data-[state=active]:text-white lg:h-9 lg:flex-1 lg:px-5 lg:py-2 lg:text-lg"
             value="software"
           >
-            Software Development Services
+            Build
           </TabsTrigger>
         </TabsList>
 
