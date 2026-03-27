@@ -5,41 +5,22 @@ import {
   ArrowRight,
   Code,
   Funnel,
+  Loader2,
+  Pencil,
   Share2,
   TrendingUp,
+  Zap,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import type { ComponentType } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 
-const SERVICE_IMAGES = [
-  {
-    id: "paid-ads",
-    clear: "/services/Paid Ads/Clear.svg",
-    blurred: "/services/Paid Ads/Blurred.svg",
-    alt: "Paid Ads",
-  },
-  {
-    id: "social-media",
-    clear: "/services/Social Media/Clear.svg",
-    blurred: "/services/Social Media/Blurred.svg",
-    alt: "Social Media",
-  },
-  {
-    id: "software-dev",
-    clear: "/services/Software Dev/Clear.svg",
-    blurred: "/services/Software Dev/Blurred.svg",
-    alt: "Content & Brand",
-  },
-  {
-    id: "outbound-growth",
-    clear: "/services/Outbound Growth/Clear.svg",
-    blurred: "/services/Outbound Growth/Blurred.svg",
-    alt: "Outbound Growth",
-  },
-];
+const leftPreviewImage = "/onboarding/business-onboarding.png";
 
 type ServiceOption = {
   id: string;
@@ -61,12 +42,12 @@ const SERVICE_OPTIONS: ServiceOption[] = [
     description: "Content strategy and management",
     icon: Share2,
   },
-  // {
-  //   id: "content-brand",
-  //   title: "Content & Brand",
-  //   description: "Visual identity and storytelling",
-  //   icon: Pencil,
-  // },
+  {
+    id: "content-brand",
+    title: "Content & Brand",
+    description: "Visual identity and storytelling",
+    icon: Pencil,
+  },
   {
     id: "outbound-growth",
     title: "Outbound Growth",
@@ -79,16 +60,30 @@ const SERVICE_OPTIONS: ServiceOption[] = [
     description: "Web apps, mobile, custom tools",
     icon: Code,
   },
-  // {
-  //   id: "automation",
-  //   title: "Automation & Systems",
-  //   description: "Workflows, integrations, CRM",
-  //   icon: Zap,
-  // },
+  {
+    id: "automation",
+    title: "Automation & Systems",
+    description: "Workflows, integrations, CRM",
+    icon: Zap,
+  },
 ];
 
 export default function ServicesPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
+  const anonId = searchParams.get("anonId");
+
+  useEffect(() => {
+    if (status === "loading") return;
+    if (!(isAuthenticated || anonId)) {
+      router.replace("/onboarding/business");
+    }
+  }, [anonId, isAuthenticated, router, status]);
+
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   function toggleService(id: string) {
     setSelectedServices((prev) =>
@@ -98,35 +93,73 @@ export default function ServicesPage() {
     );
   }
 
+  async function onContinue() {
+    if (isLoading) return;
+
+    if (!(isAuthenticated || anonId)) {
+      toast.error("Missing anonymous onboarding identifier", {
+        richColors: true,
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        isAuthenticated
+          ? "/api/auth/onboarding/services"
+          : "/api/onboarding/anon/services",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...(isAuthenticated ? {} : { anonId: anonId as string }),
+            services: selectedServices,
+          }),
+        }
+      );
+
+      const data = (await response.json()) as {
+        success: boolean;
+        message?: string;
+      };
+
+      if (!(response.ok && data.success)) {
+        throw new Error(data.message || "Failed to save services");
+      }
+
+      if (isAuthenticated) {
+        router.push("/onboarding/source");
+        return;
+      }
+
+      if (!anonId) {
+        throw new Error("Missing anonymous onboarding identifier");
+      }
+
+      router.push(`/onboarding/source?anonId=${encodeURIComponent(anonId)}`);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      toast.error(message, { richColors: true });
+      setIsLoading(false);
+    }
+  }
+
   return (
     <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
-      <section
-        className="relative hidden overflow-hidden lg:flex lg:flex-col lg:items-center lg:justify-center"
-        style={{
-          backgroundImage: "url('/services/services-bg.svg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="mx-auto flex w-2/3 flex-col gap-5 px-8">
-          {SERVICE_IMAGES.map((service, index) => {
-            const isSelected = selectedServices.includes(service.id);
-
-            return (
-              <div
-                className={`flex ${index % 2 === 0 ? "justify-start" : "justify-end"}`}
-                key={service.id}
-              >
-                <Image
-                  alt={service.alt}
-                  height={200}
-                  src={isSelected ? service.clear : service.blurred}
-                  width={200}
-                />
-              </div>
-            );
-          })}
-        </div>
+      <section className="relative hidden overflow-hidden bg-[#EBDDFA] lg:block">
+        <div className="absolute -top-[350px] -left-[520px] h-[980px] w-[980px] rounded-full border border-[#DDC4F8]" />
+        <div className="absolute -top-[190px] -left-[360px] h-[760px] w-[760px] rounded-full border border-[#DDC4F8]" />
+        <div className="absolute -top-[60px] -left-[220px] h-[540px] w-[540px] rounded-full border border-[#DDC4F8]" />
+        <div className="absolute top-[90px] -left-[80px] h-[320px] w-[320px] rounded-full border border-[#DDC4F8]" />
+        <img
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-y-0 right-0 h-full w-[78%] object-cover opacity-40"
+          src={leftPreviewImage}
+        />
+        <div className="absolute inset-y-0 right-0 w-[64%] bg-linear-to-r from-[#EBDDFA]/0 to-white/85" />
       </section>
 
       <section className="flex min-h-svh justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
@@ -143,7 +176,11 @@ export default function ServicesPage() {
 
             <Link
               className="inline-flex items-center gap-1.5 font-medium text-[#515A65] text-base no-underline"
-              href="/onboarding/business"
+              href={
+                isAuthenticated || !anonId
+                  ? "/onboarding/business"
+                  : `/onboarding/business?anonId=${encodeURIComponent(anonId)}`
+              }
             >
               <ArrowLeft aria-hidden="true" className="size-5" />
               Back
@@ -193,14 +230,44 @@ export default function ServicesPage() {
           </div>
 
           <div className="mt-[26px]">
-            <Button
-              className="h-[45px] w-[155px]"
-              type="button"
-              variant="gradient"
-            >
-              Continue
-              <ArrowRight aria-hidden="true" className="size-[18px]" />
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                className="h-[45px] w-[155px]"
+                onClick={() =>
+                  router.push(
+                    isAuthenticated || !anonId
+                      ? "/onboarding/book-a-demo"
+                      : `/onboarding/book-a-demo?anonId=${encodeURIComponent(anonId)}`
+                  )
+                }
+                type="button"
+                variant="outline"
+              >
+                Skip
+              </Button>
+              <Button
+                className="h-[45px] w-[155px]"
+                disabled={isLoading}
+                onClick={onContinue}
+                type="button"
+                variant="gradient"
+              >
+                {isLoading ? (
+                  <>
+                    Saving
+                    <Loader2
+                      aria-hidden="true"
+                      className="size-[18px] animate-spin"
+                    />
+                  </>
+                ) : (
+                  <>
+                    Continue
+                    <ArrowRight aria-hidden="true" className="size-[18px]" />
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </section>

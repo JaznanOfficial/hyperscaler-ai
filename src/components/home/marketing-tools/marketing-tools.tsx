@@ -79,7 +79,7 @@ const MarketingTools = () => {
           <FadeInUp delay={0.1}>
             <Button asChild className="px-6! py-5!" variant="gradient">
               <Link
-                href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
+                href="/onboarding/book-a-demo"
                 target="_blank"
               >
                 <svg

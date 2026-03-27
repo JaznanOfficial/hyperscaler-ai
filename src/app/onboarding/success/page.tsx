@@ -2,8 +2,13 @@
 
 import { Check, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
+
+const sidebarPreviewImage =
+  "https://www.figma.com/api/mcp/asset/7742e611-3546-4f19-b3ca-30c73e278f6b";
 
 const NEXT_STEPS = [
   "The team has been notified",
@@ -12,6 +17,17 @@ const NEXT_STEPS = [
 ];
 
 export default function SuccessPage() {
+  const { data: session, update } = useSession();
+  const didRefreshRef = useRef(false);
+
+  useEffect(() => {
+    if (didRefreshRef.current) return;
+    didRefreshRef.current = true;
+    void update();
+  }, [update]);
+
+  const firstName = session?.user?.name?.trim().split(/\s+/)[0];
+
   return (
     <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[1fr_3fr]">
       <section className="relative hidden w-full overflow-hidden bg-[#EBDDFA] lg:block">
@@ -32,7 +48,7 @@ export default function SuccessPage() {
               <Check aria-hidden="true" className="size-7 text-[#15803D]" />
             </span>
             <h1 className="font-['Outfit'] font-medium text-4xl text-[#1A1A1A] leading-[1.4] sm:text-[40px]">
-              You&apos;re all set, Jamie !
+              You&apos;re all set{firstName ? `, ${firstName} !` : " !"}
             </h1>
           </div>
 
@@ -61,9 +77,9 @@ export default function SuccessPage() {
               size="lg"
               variant="gradient"
             >
-              <Link href="/client">
+              <Link href="/chat">
                 <LayoutDashboard aria-hidden="true" className="size-[18px]" />
-                Go to my Dashboard
+                Talk to Eva
               </Link>
             </Button>
             <Button
@@ -72,7 +88,7 @@ export default function SuccessPage() {
               size="lg"
               variant="outline"
             >
-              <Link href="/contact">Schedule a Call</Link>
+              <Link href="/onboarding/book-a-demo">Schedule a Call</Link>
             </Button>
           </div>
         </div>

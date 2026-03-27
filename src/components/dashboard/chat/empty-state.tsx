@@ -55,7 +55,7 @@ export function GeneralAgentEmptyState({
         </div>
         <div className="flex flex-col gap-1">
           <p className="font-semibold text-3xl text-slate-900 leading-10">
-            Good morning, Jamie
+            Hello there!
           </p>
           <p className="text-base text-slate-600 leading-6">
             What would you like to know about your services today?
@@ -77,7 +77,7 @@ export function GeneralAgentEmptyState({
                 onSubmit();
               }
             }}
-            placeholder="How can Hyperscaler AI Assistant help you today?"
+            placeholder="How can Eva AI Assistant help you today?"
             ref={textareaRef}
             rows={3}
             value={draft}
