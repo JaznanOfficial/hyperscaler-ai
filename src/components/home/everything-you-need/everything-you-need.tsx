@@ -1,5 +1,4 @@
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -9,13 +8,15 @@ const EverythingYouNeed = () => {
       id: "marketing-tools",
       title: "Connect 30+ marketing tools through one platform",
       content: (
-        <div className="relative h-full w-full overflow-hidden">
-          <Image
-            alt="Connect tools"
-            className="object-cover"
-            fill
-            sizes="(min-width: 1024px) 20rem, 100vw"
-            src="/everyting-you-need/connect-tools.svg"
+        <div className="relative h-full w-full overflow-hidden rounded-lg">
+          <video
+            autoPlay
+            className="h-full w-full object-contain"
+            controls={false}
+            loop
+            muted
+            playsInline
+            src="/everyting-you-need/video-1.mp4"
           />
         </div>
       ),
@@ -24,13 +25,15 @@ const EverythingYouNeed = () => {
       id: "ai-efficiency",
       title: "Get the ideal blend of AI efficiency and human expertise",
       content: (
-        <div className="relative h-full w-full overflow-hidden">
-          <Image
-            alt="AI efficiency"
-            className="object-cover"
-            fill
-            sizes="(min-width: 1024px) 20rem, 100vw"
-            src="/everyting-you-need/idea-blend.svg"
+        <div className="relative h-full w-full overflow-hidden rounded-lg">
+          <video
+            autoPlay
+            className="h-full w-full object-contain"
+            controls={false}
+            loop
+            muted
+            playsInline
+            src="/everyting-you-need/video-2.mp4"
           />
         </div>
       ),
@@ -39,13 +42,15 @@ const EverythingYouNeed = () => {
       id: "growth-metrics",
       title: "We scale your growth and build your product.",
       content: (
-        <div className="relative h-full w-full overflow-hidden">
-          <Image
-            alt="Growth metrics"
-            className="object-cover"
-            fill
-            sizes="(min-width: 1024px) 20rem, 100vw"
-            src="/everyting-you-need/growth.svg"
+        <div className="relative h-full w-full overflow-hidden rounded-lg">
+          <video
+            autoPlay
+            className="h-full w-full object-contain"
+            controls={false}
+            loop
+            muted
+            playsInline
+            src="/everyting-you-need/video-3.mp4"
           />
         </div>
       ),
@@ -66,10 +71,10 @@ const EverythingYouNeed = () => {
         </p>
       </div>
 
-      <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="mb-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
         {cards.map((card) => (
           <div
-            className="flex h-80 flex-col gap-10 rounded-xl border border-neutral-300/50 bg-white p-6 shadow-[0px_1px_3px_rgba(0,0,0,0.02),0px_2px_4px_rgba(0,0,0,0.04)]"
+            className="flex h-88 flex-col gap-10 rounded-xl border border-neutral-300/50 bg-white p-6 shadow-[0px_1px_3px_rgba(0,0,0,0.02),0px_2px_4px_rgba(0,0,0,0.04)] md:h-96 lg:h-88"
             key={card.id}
           >
             <h3 className="font-['Outfit'] font-medium text-[#1F1F1F] text-xl">
