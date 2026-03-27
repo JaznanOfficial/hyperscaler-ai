@@ -93,7 +93,9 @@ export const PricingComparison = () => (
         </p>
         <div className="mt-4 w-full border-white/40 border-t" />
         <p className="mt-4 font-['Outfit'] font-medium text-base text-purple-600">
-          <span className="font-semibold underline">Expert human touch + AI efficiency</span>
+          <span className="font-semibold underline">
+            Expert human touch + AI efficiency
+          </span>
         </p>
       </div>
     </div>

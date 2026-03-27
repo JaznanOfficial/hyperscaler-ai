@@ -20,7 +20,7 @@ const onboardingBaseSchema = z.object({
 
 export const onboardingSchema = onboardingBaseSchema.superRefine(
   (data, context) => {
-    if (!data.userId && !data.email) {
+    if (!(data.userId || data.email)) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Either userId or email is required",

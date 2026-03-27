@@ -1,34 +1,62 @@
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { SectionHeader } from "@/components/shared/section-header";
-import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-drawer";
 import { Button } from "@/components/ui/button";
 
 const CallToAction = () => {
   return (
-    <section className="relative mt-[100px] max-sm:mt-20 overflow-hidden bg-[#9E32DD]/10">
-      <div className="my-container flex flex-col items-center justify-center gap-4 py-10 md:gap-6 md:py-12 lg:py-16">
-        <div className="inline-flex items-center rounded-full border border-purple-600 bg-white px-2.5 py-1.5 font-medium text-[#9E32DD] max-md:text-lg md:px-4 md:py-2">
-          <Sparkles className="mr-2 size-3" /> Start scaling today
-        </div>
-        <SectionHeader
-          description="Start with one service or talk to our team for enterprise plan"
-          titlePart1="Ready to scale without the chaos?"
+    <section className="my-48 flex items-center justify-center px-6">
+      <div className="relative flex h-96 w-full flex-col items-center justify-center gap-10 overflow-visible rounded-2xl bg-white p-5 text-center shadow-[0px_40px_140px_rgba(157,78,221,0.28)] lg:max-w-4xl xl:max-w-5xl">
+        <Image
+          alt="CTA decoration"
+          className="absolute hidden w-64 lg:-top-12 lg:-left-8 lg:block xl:-top-12 xl:-left-28"
+          height={320}
+          src="/call-to-action/cta-left-top.svg"
+          width={320}
         />
-
-        <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-5">
-          <Link href={"/login"}>
-            <Button className="custom w-full sm:w-auto" size="custom" variant={"gradient"}>
-              Get Started <ArrowRight className="size-4" />
-            </Button>
-          </Link>
-          <TalkToSalesDrawer buttonClassName="h-[46px] w-full bg-white font-semibold sm:w-[228px] hover:bg-gray-50" buttonVariant={"outline"} />
+        <Image
+          alt="CTA decoration"
+          className="absolute hidden w-64 lg:-top-14 lg:-right-10 lg:block xl:-top-8 xl:-right-20"
+          height={320}
+          src="/call-to-action/cta-right-top.svg"
+          width={320}
+        />
+        <Image
+          alt="CTA decoration"
+          className="absolute -bottom-12 -left-12 hidden w-64 lg:block"
+          height={320}
+          src="/call-to-action/cta-left-bottom.svg"
+          width={320}
+        />
+        <Image
+          alt="CTA decoration"
+          className="absolute -bottom-20 hidden w-64 lg:-right-12 lg:block xl:-right-32"
+          height={320}
+          src="/call-to-action/cta-right-bottom.svg"
+          width={320}
+        />
+        <div className="flex flex-col items-center gap-4">
+          <p className="font-semibold text-lg text-purple-600">
+            Hard Launch With Hyperscaler
+          </p>
+          <h2 className="font-['Outfit'] font-medium text-3xl text-[#111322] max-md:text-2xl">
+            AI efficiency with just enough human touch
+          </h2>
+          <div className="flex flex-wrap items-center justify-center gap-2 font-medium text-[#586174] text-sm">
+            <span>Marketing</span>
+            <span className="size-1.5 rounded-full bg-[#D0D5DD]" />
+            <span>Development</span>
+            <span className="size-1.5 rounded-full bg-[#D0D5DD]" />
+            <span>Growth</span>
+          </div>
         </div>
+        <Button asChild className="px-6! py-5!" variant="gradient">
+          <Link href="/signup">
+            Get Started
+            <ArrowRight className="size-4" />
+          </Link>
+        </Button>
       </div>
-
-      {/* designs */}
-      <div className="absolute -top-16 -left-16 aspect-square size-[150px] rounded-full bg-[#9E32DD] opacity-10 sm:-top-32 sm:-left-32 sm:size-[220px] md:size-[300px]" />
-      <div className="absolute -right-16 -bottom-16 aspect-square size-[150px] rounded-full bg-[#9E32DD] opacity-10 sm:-right-32 sm:-bottom-32 sm:size-[220px] md:size-[300px]" />
     </section>
   );
 };

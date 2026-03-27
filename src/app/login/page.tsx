@@ -13,7 +13,6 @@ export default function LoginPage() {
           className="object-fit"
           fill
           priority
-
           src="/login-page.svg"
         />
       </div>
