@@ -13,14 +13,14 @@ const NEXT_STEPS = [
 
 export default function SuccessPage() {
   return (
-    <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
+    <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,50%)_1fr]">
       <section className="relative hidden w-2/3 overflow-hidden bg-[#EBDDFA] lg:block">
         <video
           autoPlay
-          className="h-full object-cover"
+          className="h-full object-contain"
           loop
           muted
-          src="/welcome-page-video.mp4"
+          src="/chat-video.mp4"
         />
       </section>
 
