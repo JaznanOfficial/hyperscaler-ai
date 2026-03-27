@@ -103,16 +103,18 @@ const StepDetail = ({ step }: { step: Step }) => (
 
 const VisualCard = ({ visual }: { visual: Visual }) => (
   <FadeInUp>
-    <div className="w-fit overflow-hidden rounded-3xl">
-      <video
-        autoPlay
-        className="h-full w-full object-contain"
-        controls={false}
-        loop
-        muted
-        playsInline
-        src={visual.videoSrc}
-      />
+    <div className="w-full overflow-hidden rounded-3xl">
+      <div className="h-[400px] w-full">
+        <video
+          autoPlay
+          className="h-full w-full object-contain"
+          controls={false}
+          loop
+          muted
+          playsInline
+          src={visual.videoSrc}
+        />
+      </div>
     </div>
   </FadeInUp>
 );
@@ -134,16 +136,14 @@ const HowHyperscalerWorks = () => {
             <div key={scene.id}>
               <div className="grid grid-cols-[1fr_1fr] items-start gap-20">
                 <div className="relative flex min-h-[256px] flex-col gap-10">
-                  <div className="relative flex min-h-[256px] flex-col gap-10">
-                    {scene.steps.map((step, stepIdx) => (
-                      <div key={step.id}>
-                        <StepDetail step={step} />
-                        <div className="absolute top-15 left-[14px] h-64 w-[3px] xl:top-15 xl:h-92">
-                          <span className="block h-full w-full bg-gradient-to-b from-fuchsia-500 to-violet-800 opacity-80" />
-                        </div>
+                  {scene.steps.map((step, stepIdx) => (
+                    <div key={step.id}>
+                      <StepDetail step={step} />
+                      <div className="absolute top-15 left-[14px] h-64 w-[3px] xl:top-15 xl:h-92">
+                        <span className="block h-full w-full bg-gradient-to-b from-fuchsia-500 to-violet-800 opacity-80" />
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
                 <VisualCard visual={scene.visual} />
               </div>
