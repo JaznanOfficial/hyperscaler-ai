@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FadeInUp } from "@/components/animations/fade-in-up";
+import { HeroVideoReveal } from "@/components/home/hero/hero-video-reveal";
 import { Button } from "@/components/ui/button";
 
 const Hero02 = () => {
@@ -117,25 +118,12 @@ const Hero02 = () => {
 
           {/* Right Column: Video + Floating Images */}
           <div className="relative flex w-full items-center justify-center lg:col-span-2">
-            <div className="relative w-full overflow-hidden rounded-3xl shadow-[0_25px_80px_rgba(64,0,128,0.18)]">
-              <div
-                className="relative w-full"
-                style={{ paddingBottom: "56.25%" }}
-              >
-                <video
-                  autoPlay
-                  className="absolute inset-0 h-full w-full object-cover"
-                  controls={false}
-                  loop
-                  muted
-                  playsInline
-                  src={
-                    process.env.NEXT_PUBLIC_HERO_VIDEO_URL ??
-                    "/platform_overview_2.mp4"
-                  }
-                />
-              </div>
-            </div>
+            <HeroVideoReveal
+              src={
+                process.env.NEXT_PUBLIC_HERO_VIDEO_URL ??
+                "/platform_overview_2.mp4"
+              }
+            />
 
             {/* Top-left floating image */}
             {/* <Image
