@@ -13,8 +13,8 @@ const NEXT_STEPS = [
 
 export default function SuccessPage() {
   return (
-    <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,50%)_1fr]">
-      <section className="relative hidden w-2/3 overflow-hidden bg-[#EBDDFA] lg:block">
+    <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[1fr_3fr]">
+      <section className="relative hidden w-full overflow-hidden bg-[#EBDDFA] lg:block">
         <video
           autoPlay
           className="h-full object-contain"
@@ -22,9 +22,10 @@ export default function SuccessPage() {
           muted
           src="/chat-video.mp4"
         />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-40 bg-gradient-to-r from-transparent via-white/40 to-white" />
       </section>
 
-      <section className="flex w-full items-center justify-center">
+      <section className="lg-cols-2 flex w-full items-center justify-center">
         <div className="flex w-full max-w-[560px] flex-col items-center gap-12 px-6 py-16 text-center sm:px-10 lg:px-16">
           <div className="mb-12 flex flex-col items-center gap-4 text-center">
             <span className="flex size-16 items-center justify-center rounded-full border border-[#A7E8BF] bg-[#D3F3DF] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.02),0px_2px_4px_0px_rgba(0,0,0,0.04)]">
