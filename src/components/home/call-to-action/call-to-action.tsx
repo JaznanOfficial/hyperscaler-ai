@@ -6,31 +6,31 @@ import { Button } from "@/components/ui/button";
 const CallToAction = () => {
   return (
     <section className="my-48 flex items-center justify-center px-6">
-      <div className="relative flex h-96 w-full max-w-5xl flex-col items-center justify-center gap-10 overflow-visible rounded-2xl bg-white p-5 text-center shadow-[0px_40px_140px_rgba(157,78,221,0.28)]">
+      <div className="relative flex h-96 w-full flex-col items-center justify-center gap-10 overflow-visible rounded-2xl bg-white p-5 text-center shadow-[0px_40px_140px_rgba(157,78,221,0.28)] lg:max-w-4xl xl:max-w-5xl">
         <Image
           alt="CTA decoration"
-          className="absolute -top-8 -left-28 hidden w-64 lg:block"
+          className="absolute hidden w-64 lg:-top-12 lg:-left-8 lg:block xl:-top-12 xl:-left-28"
           height={320}
           src="/call-to-action/cta-left-top.svg"
           width={320}
         />
         <Image
           alt="CTA decoration"
-          className="absolute -top-8 -right-20 hidden w-64 lg:block"
+          className="absolute hidden w-64 lg:-top-14 lg:-right-10 lg:block xl:-top-8 xl:-right-20"
           height={320}
           src="/call-to-action/cta-right-top.svg"
           width={320}
         />
         <Image
           alt="CTA decoration"
-          className="absolute -bottom-20 -left-12 hidden w-64 lg:block"
+          className="absolute -bottom-12 -left-12 hidden w-64 lg:block"
           height={320}
           src="/call-to-action/cta-left-bottom.svg"
           width={320}
         />
         <Image
           alt="CTA decoration"
-          className="absolute -right-32 -bottom-20 hidden w-64 lg:block"
+          className="absolute -bottom-20 hidden w-64 lg:-right-12 lg:block xl:-right-32"
           height={320}
           src="/call-to-action/cta-right-bottom.svg"
           width={320}

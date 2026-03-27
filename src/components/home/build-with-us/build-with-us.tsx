@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const BuildWithUsSection = () => {
   return (
-    <section className="mx-auto w-full max-w-[1480px] px-20 pt-[150px] max-sm:px-6 max-sm:pt-20">
+    <section className="mx-auto w-full max-w-[1480px] px-20 py-[150px] max-sm:px-6 max-sm:py-20">
       <div className="">
         <div className="flex items-center justify-center max-sm:flex-col-reverse">
           {/* Left Side: Text and Button */}
