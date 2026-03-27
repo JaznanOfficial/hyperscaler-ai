@@ -12,8 +12,9 @@ import {
   Search,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,18 @@ const SOURCE_OPTIONS = [
 
 export default function SourcePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
+  const anonId = searchParams.get("anonId");
+
+  useEffect(() => {
+    if (status === "loading") return;
+    if (!(isAuthenticated || anonId)) {
+      router.replace("/onboarding/business");
+    }
+  }, [anonId, isAuthenticated, router, status]);
+
   const [source, setSource] =
     useState<(typeof SOURCE_OPTIONS)[number]["id"]>("linkedin");
   const [isLoading, setIsLoading] = useState(false);
@@ -47,15 +60,28 @@ export default function SourcePage() {
   async function onContinue() {
     if (isLoading) return;
 
+    if (!(isAuthenticated || anonId)) {
+      toast.error("Missing anonymous onboarding identifier", {
+        richColors: true,
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const response = await fetch("/api/auth/onboarding/source", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          discoverySource: source,
-        }),
-      });
+      const response = await fetch(
+        isAuthenticated
+          ? "/api/auth/onboarding/source"
+          : "/api/onboarding/anon/source",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...(isAuthenticated ? {} : { anonId: anonId as string }),
+            discoverySource: source,
+          }),
+        }
+      );
 
       const data = (await response.json()) as {
         success: boolean;
@@ -66,7 +92,18 @@ export default function SourcePage() {
         throw new Error(data.message || "Failed to save discovery source");
       }
 
-      router.push("/onboarding/success");
+      if (isAuthenticated) {
+        router.push("/onboarding/success");
+        return;
+      }
+
+      if (!anonId) {
+        throw new Error("Missing anonymous onboarding identifier");
+      }
+
+      router.push(
+        `/onboarding/book-a-demo?anonId=${encodeURIComponent(anonId)}`
+      );
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Something went wrong";
@@ -136,7 +173,11 @@ export default function SourcePage() {
 
             <Link
               className="inline-flex items-center gap-1.5 font-medium text-[#515A65] text-base no-underline"
-              href="/onboarding/services"
+              href={
+                isAuthenticated || !anonId
+                  ? "/onboarding/services"
+                  : `/onboarding/services?anonId=${encodeURIComponent(anonId)}`
+              }
             >
               <ArrowLeft aria-hidden="true" className="size-5" />
               Back
@@ -177,7 +218,13 @@ export default function SourcePage() {
             <div className="flex items-center gap-3">
               <Button
                 className="h-[45px] w-[155px]"
-                onClick={() => router.push("/onboarding/book-a-demo")}
+                onClick={() =>
+                  router.push(
+                    isAuthenticated || !anonId
+                      ? "/onboarding/book-a-demo"
+                      : `/onboarding/book-a-demo?anonId=${encodeURIComponent(anonId)}`
+                  )
+                }
                 type="button"
                 variant="outline"
               >

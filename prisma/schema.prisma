@@ -92,6 +92,21 @@ model OnboardingProfile {
   updatedAt           DateTime @updatedAt
 }
 
+model NonLoggedOnboardingProfile {
+  id                  String   @id @default(cuid())
+  name                String
+  phone               String
+  businessName        String
+  industry            String
+  businessStage       String
+  websiteUrl          String?
+  monthlyRevenueRange String?
+  services            Json     @default("[]")
+  discoverySource     String   @default("unknown")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
 enum UserRole {
   EMPLOYEE
   MANAGER

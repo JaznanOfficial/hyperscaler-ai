@@ -176,7 +176,7 @@ const WhyChooseUs = () => {
         </div>
 
         <Link
-          href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
+          href="/onboarding/book-a-demo/"
           rel="noreferrer noopener"
           target="_blank"
         >

@@ -23,13 +23,7 @@ export default async function OnboardingLayout({
 }) {
   const session = await auth();
 
-  if (!session?.user) {
-    redirect("/login");
-  }
-
-  console.log(session.user);
-
-  if (session.user.role !== "CLIENT") {
+  if (session?.user && session.user.role !== "CLIENT") {
     redirect(getRoleBasedRedirect(session.user.role));
   }
 

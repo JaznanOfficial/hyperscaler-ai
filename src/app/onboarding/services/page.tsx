@@ -12,9 +12,10 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import type { ComponentType } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -69,6 +70,18 @@ const SERVICE_OPTIONS: ServiceOption[] = [
 
 export default function ServicesPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
+  const anonId = searchParams.get("anonId");
+
+  useEffect(() => {
+    if (status === "loading") return;
+    if (!(isAuthenticated || anonId)) {
+      router.replace("/onboarding/business");
+    }
+  }, [anonId, isAuthenticated, router, status]);
+
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -83,15 +96,28 @@ export default function ServicesPage() {
   async function onContinue() {
     if (isLoading) return;
 
+    if (!(isAuthenticated || anonId)) {
+      toast.error("Missing anonymous onboarding identifier", {
+        richColors: true,
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const response = await fetch("/api/auth/onboarding/services", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          services: selectedServices,
-        }),
-      });
+      const response = await fetch(
+        isAuthenticated
+          ? "/api/auth/onboarding/services"
+          : "/api/onboarding/anon/services",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...(isAuthenticated ? {} : { anonId: anonId as string }),
+            services: selectedServices,
+          }),
+        }
+      );
 
       const data = (await response.json()) as {
         success: boolean;
@@ -102,7 +128,16 @@ export default function ServicesPage() {
         throw new Error(data.message || "Failed to save services");
       }
 
-      router.push("/onboarding/source");
+      if (isAuthenticated) {
+        router.push("/onboarding/source");
+        return;
+      }
+
+      if (!anonId) {
+        throw new Error("Missing anonymous onboarding identifier");
+      }
+
+      router.push(`/onboarding/source?anonId=${encodeURIComponent(anonId)}`);
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Something went wrong";
@@ -141,7 +176,11 @@ export default function ServicesPage() {
 
             <Link
               className="inline-flex items-center gap-1.5 font-medium text-[#515A65] text-base no-underline"
-              href="/onboarding/business"
+              href={
+                isAuthenticated || !anonId
+                  ? "/onboarding/business"
+                  : `/onboarding/business?anonId=${encodeURIComponent(anonId)}`
+              }
             >
               <ArrowLeft aria-hidden="true" className="size-5" />
               Back
@@ -194,7 +233,13 @@ export default function ServicesPage() {
             <div className="flex items-center gap-3">
               <Button
                 className="h-[45px] w-[155px]"
-                onClick={() => router.push("/onboarding/book-a-demo")}
+                onClick={() =>
+                  router.push(
+                    isAuthenticated || !anonId
+                      ? "/onboarding/book-a-demo"
+                      : `/onboarding/book-a-demo?anonId=${encodeURIComponent(anonId)}`
+                  )
+                }
                 type="button"
                 variant="outline"
               >

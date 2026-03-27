@@ -3,6 +3,7 @@
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -42,6 +43,8 @@ const sidebarSurfaceImage = "/onboarding/bg-business.png";
 
 export default function BusinessPage() {
   const router = useRouter();
+  const { status } = useSession();
+  const isAuthenticated = status === "authenticated";
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -63,30 +66,48 @@ export default function BusinessPage() {
 
     setIsLoading(true);
     try {
-      const response = await fetch("/api/auth/onboarding/business", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          phone,
-          businessName,
-          industry,
-          businessStage: selectedStage,
-          websiteUrl,
-          monthlyRevenueRange,
-        }),
-      });
+      const response = await fetch(
+        isAuthenticated
+          ? "/api/auth/onboarding/business"
+          : "/api/onboarding/anon/business",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            phone,
+            businessName,
+            industry,
+            businessStage: selectedStage,
+            websiteUrl,
+            monthlyRevenueRange,
+          }),
+        }
+      );
 
       const data = (await response.json()) as {
         success: boolean;
         message?: string;
+        data?: {
+          anonId?: string;
+        };
       };
 
       if (!(response.ok && data.success)) {
         throw new Error(data.message || "Failed to save onboarding data");
       }
 
-      router.push("/onboarding/services");
+      if (isAuthenticated) {
+        router.push("/onboarding/services");
+        return;
+      }
+
+      const anonId = data.data?.anonId;
+      if (!anonId) {
+        throw new Error("Failed to create anonymous onboarding profile");
+      }
+
+      router.push(`/onboarding/services?anonId=${encodeURIComponent(anonId)}`);
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Something went wrong";

@@ -101,7 +101,7 @@ export function HomeNavbar() {
           )}
           <Button
             asChild
-            className="hidden bg-linear-to-br from-[#D946EF] to-[#5B21B6] p-px lg:inline-flex"
+            className="hidden min-w-[170px] justify-center bg-linear-to-br from-[#D946EF] to-[#5B21B6] p-px lg:inline-flex"
             size="lg"
             variant="outline"
           >
@@ -225,7 +225,7 @@ export function HomeNavbar() {
                 )}
                 <Button
                   asChild
-                  className="bg-linear-to-br from-[#D946EF] to-[#5B21B6] p-px"
+                  className="min-w-[170px] justify-center bg-linear-to-br from-[#D946EF] to-[#5B21B6] p-px"
                   size="sm"
                   variant="outline"
                 >

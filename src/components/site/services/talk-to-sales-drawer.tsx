@@ -49,7 +49,7 @@ const contactOptions = [
     title: "Book via Calendly",
     description: "Pick a time that works for you using our Calendly link.",
     ctaLabel: "Open Calendly",
-    href: "https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build",
+    href: "/onboarding/book-a-demo/",
     icon: CalendarDays,
   },
   {
