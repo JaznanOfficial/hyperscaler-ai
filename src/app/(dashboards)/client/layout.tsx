@@ -18,7 +18,7 @@ import {
 
 const clientNavItems: AppSidebarNavItem[] = [
   {
-    title: "Hyperscaler AI",
+    title: "Eva - Your AI CMO",
     url: "/client",
     icon: "bot",
     matchSubRoutes: false,
@@ -70,6 +70,10 @@ export default async function ClientDashboardLayout({
 
   if (session.user.role !== "CLIENT") {
     redirect(getRoleBasedRedirect(session.user.role));
+  }
+
+  if (!session.user.getStarted) {
+    redirect("/onboarding/welcome");
   }
   return (
     <SidebarProvider>

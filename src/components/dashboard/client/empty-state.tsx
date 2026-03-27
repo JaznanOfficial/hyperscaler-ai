@@ -77,7 +77,7 @@ export function ClientAgentEmptyState({
                 onSubmit();
               }
             }}
-            placeholder="How can Hyperscaler AI help you today?"
+            placeholder="How can Eva AI help you today?"
             ref={textareaRef}
             rows={3}
             value={draft}

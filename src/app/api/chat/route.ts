@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       and when you'll try to convince him, then send a button with the links from the below URLs:-
 
       For whatsapp call:- https://wa.me/19195766153
-      For calendly:- https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build
+      For calendly:- /onboarding/book-a-demo/
       For direct phone call:- +19195766153
 
       always send the response in structured format. like {"message": "", "buttons": [{"label": "", "url": ""}]}
