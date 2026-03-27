@@ -22,6 +22,14 @@ const MarketingTools = () => {
     }
   }, [inView]);
 
+  const logos = [
+    { src: "/marketing-tools/airtable.svg", left: 15, top: 10 },
+    { src: "/marketing-tools/slack-connect.svg", left: 75, top: 15 },
+    { src: "/marketing-tools/google-ads.svg", left: 80, top: 70 },
+    { src: "/marketing-tools/facebook.svg", left: 10, top: 65 },
+    { src: "/marketing-tools/linkedin.svg", left: 45, top: 80 },
+  ];
+
   return (
     <section className="mx-auto w-full">
       <div
@@ -29,7 +37,7 @@ const MarketingTools = () => {
         ref={containerRef}
       >
         <video
-          className="absolute inset-0 -z-10 h-full w-full rounded-2xl"
+          className="absolute inset-0 -z-10 hidden h-full w-full rounded-2xl lg:block"
           controls={false}
           loop
           muted
@@ -40,6 +48,26 @@ const MarketingTools = () => {
             "/marketing-tools.mp4"
           }
         />
+        <div className="absolute inset-0 -z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#F5F1FF] to-[#F0E8FF] lg:hidden">
+          {logos.map((logo, index) => (
+            <div
+              className="absolute animate-pulse"
+              key={index}
+              style={{
+                left: `${logo.left}%`,
+                top: `${logo.top}%`,
+                animationDelay: `${index * 0.2}s`,
+              }}
+            >
+              <img
+                alt="marketing tool logo"
+                height={60}
+                src={logo.src}
+                width={60}
+              />
+            </div>
+          ))}
+        </div>
         <div className="flex flex-col items-center gap-4">
           <FadeInUp delay={0}>
             <h2 className="font-['Outfit'] font-semibold text-[#111322] text-[32px]">
