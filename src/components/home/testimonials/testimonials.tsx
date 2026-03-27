@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { FadeInUp } from "@/components/animations/fade-in-up";
 
 const testimonialCards = [
   {
@@ -31,16 +32,18 @@ const Testimonials = () => {
 
         <div className="mt-[72px] grid w-full grid-cols-1 justify-items-center gap-10 md:grid-cols-2 xl:grid-cols-3">
           {testimonialCards.map((card, index) => (
-            <div className="w-full" key={index}>
-              <Image
-                alt={card.alt}
-                className="h-auto w-full object-contain"
-                height={340}
-                priority={index < 3}
-                src={card.src}
-                width={406}
-              />
-            </div>
+            <FadeInUp delay={0.2 + 0.1 * index} key={index}>
+              <div className="w-full">
+                <Image
+                  alt={card.alt}
+                  className="h-auto w-full object-contain"
+                  height={340}
+                  priority={index < 3}
+                  src={card.src}
+                  width={406}
+                />
+              </div>
+            </FadeInUp>
           ))}
         </div>
       </div>

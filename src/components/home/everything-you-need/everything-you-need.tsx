@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { FadeInUp } from "@/components/animations/fade-in-up";
 import { Button } from "@/components/ui/button";
 
 const EverythingYouNeed = () => {
@@ -72,26 +73,29 @@ const EverythingYouNeed = () => {
       </div>
 
       <div className="mb-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {cards.map((card) => (
-          <div
-            className="flex h-88 flex-col gap-10 rounded-xl border border-neutral-300/50 bg-white p-6 shadow-[0px_1px_3px_rgba(0,0,0,0.02),0px_2px_4px_rgba(0,0,0,0.04)] md:h-96 lg:h-88"
-            key={card.id}
-          >
-            <h3 className="font-['Outfit'] font-medium text-[#1F1F1F] text-xl">
-              {card.title}
-            </h3>
-            {card.content}
-          </div>
+        {cards.map((card, index) => (
+          <FadeInUp delay={0.1 * index} key={card.id}>
+            <div className="flex h-88 flex-col gap-10 rounded-xl border border-neutral-300/50 bg-white p-6 shadow-[0px_1px_3px_rgba(0,0,0,0.02),0px_2px_4px_rgba(0,0,0,0.04)] md:h-96 lg:h-88">
+              <FadeInUp delay={0.1 * index + 0.05}>
+                <h3 className="font-['Outfit'] font-medium text-[#1F1F1F] text-xl">
+                  {card.title}
+                </h3>
+              </FadeInUp>
+              {card.content}
+            </div>
+          </FadeInUp>
         ))}
       </div>
 
       <div className="flex justify-center">
-        <Button asChild className="px-6! py-5!" size="lg" variant="gradient">
-          <Link href="/signup">
-            Get Started
-            <ArrowRight className="size-4" />
-          </Link>
-        </Button>
+        <FadeInUp delay={0.4}>
+          <Button asChild className="px-6! py-5!" size="lg" variant="gradient">
+            <Link href="/signup">
+              Get Started
+              <ArrowRight className="size-4" />
+            </Link>
+          </Button>
+        </FadeInUp>
       </div>
     </section>
   );

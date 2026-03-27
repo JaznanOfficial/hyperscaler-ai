@@ -1,3 +1,5 @@
+import { FadeInUp } from "@/components/animations/fade-in-up";
+
 type Step = {
   description: string;
   id: string;
@@ -82,33 +84,37 @@ const scenes = [
 ];
 
 const StepDetail = ({ step }: { step: Step }) => (
-  <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:gap-6">
-    <span className="font-['Outfit'] font-medium text-3xl text-[#0f0f0f] leading-[48px]">
-      {step.id}
-    </span>
-    <div className="space-y-2.5">
-      <h3 className="font-['Outfit'] font-medium text-3xl text-[#1a1a1a] leading-[48px]">
-        {step.title}
-      </h3>
-      <p className="font-['Inter'] font-normal text-[#6b7280] text-base leading-6">
-        {step.description}
-      </p>
+  <FadeInUp>
+    <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:gap-6">
+      <span className="font-['Outfit'] font-medium text-3xl text-[#0f0f0f] leading-[48px]">
+        {step.id}
+      </span>
+      <div className="space-y-2.5">
+        <h3 className="font-['Outfit'] font-medium text-3xl text-[#1a1a1a] leading-[48px]">
+          {step.title}
+        </h3>
+        <p className="font-['Inter'] font-normal text-[#6b7280] text-base leading-6">
+          {step.description}
+        </p>
+      </div>
     </div>
-  </div>
+  </FadeInUp>
 );
 
 const VisualCard = ({ visual }: { visual: Visual }) => (
-  <div className="w-fit overflow-hidden rounded-3xl">
-    <video
-      autoPlay
-      className="h-full w-full object-contain"
-      controls={false}
-      loop
-      muted
-      playsInline
-      src={visual.videoSrc}
-    />
-  </div>
+  <FadeInUp>
+    <div className="w-fit overflow-hidden rounded-3xl">
+      <video
+        autoPlay
+        className="h-full w-full object-contain"
+        controls={false}
+        loop
+        muted
+        playsInline
+        src={visual.videoSrc}
+      />
+    </div>
+  </FadeInUp>
 );
 
 const HowHyperscalerWorks = () => {
@@ -116,9 +122,11 @@ const HowHyperscalerWorks = () => {
     <section className="mx-auto w-full max-w-[1480px] px-20 pt-[150px] max-sm:px-6 max-sm:pt-20">
       <div className="mx-auto flex w-full flex-col items-stretch gap-16">
         <div className="text-center">
-          <p className="font-['Outfit'] font-medium text-4xl text-[#111322] leading-[56px]">
-            How Hyperscaler Works
-          </p>
+          <FadeInUp>
+            <p className="font-['Outfit'] font-medium text-4xl text-[#111322] leading-[56px]">
+              How Hyperscaler Works
+            </p>
+          </FadeInUp>
         </div>
 
         <div className="hidden flex-col gap-20 lg:flex">
