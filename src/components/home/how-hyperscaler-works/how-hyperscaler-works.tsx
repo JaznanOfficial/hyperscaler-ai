@@ -103,19 +103,15 @@ const StepDetail = ({ step }: { step: Step }) => (
 
 const VisualCard = ({ visual }: { visual: Visual }) => (
   <FadeInUp>
-    <div className="w-full overflow-hidden rounded-3xl">
-      <div className="h-[400px] w-full">
-        <video
-          autoPlay
-          className="h-full w-full object-contain"
-          controls={false}
-          loop
-          muted
-          playsInline
-          src={visual.videoSrc}
-        />
-      </div>
-    </div>
+    <video
+      autoPlay
+      className="h-96 w-full overflow-hidden rounded-3xl object-contain"
+      controls={false}
+      loop
+      muted
+      playsInline
+      src={visual.videoSrc}
+    />
   </FadeInUp>
 );
 
