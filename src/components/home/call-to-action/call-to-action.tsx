@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { FadeInUp } from "@/components/animations/fade-in-up";
 import { Button } from "@/components/ui/button";
 
 const CallToAction = () => {
@@ -36,26 +37,34 @@ const CallToAction = () => {
           width={320}
         />
         <div className="flex flex-col items-center gap-4">
-          <p className="font-semibold text-lg text-purple-600">
-            Hard Launch With Hyperscaler
-          </p>
-          <h2 className="font-['Outfit'] font-medium text-3xl text-[#111322] max-md:text-2xl">
-            AI efficiency with just enough human touch
-          </h2>
-          <div className="flex flex-wrap items-center justify-center gap-2 font-medium text-[#586174] text-sm">
-            <span>Marketing</span>
-            <span className="size-1.5 rounded-full bg-[#D0D5DD]" />
-            <span>Development</span>
-            <span className="size-1.5 rounded-full bg-[#D0D5DD]" />
-            <span>Growth</span>
-          </div>
+          <FadeInUp delay={0}>
+            <p className="font-semibold text-lg text-purple-600">
+              Hard Launch With Hyperscaler
+            </p>
+          </FadeInUp>
+          <FadeInUp delay={0.1}>
+            <h2 className="font-['Outfit'] font-medium text-3xl text-[#111322] max-md:text-2xl">
+              AI efficiency with just enough human touch
+            </h2>
+          </FadeInUp>
+          <FadeInUp delay={0.2}>
+            <div className="flex flex-wrap items-center justify-center gap-2 font-medium text-[#586174] text-sm">
+              <span>Marketing</span>
+              <span className="size-1.5 rounded-full bg-[#D0D5DD]" />
+              <span>Development</span>
+              <span className="size-1.5 rounded-full bg-[#D0D5DD]" />
+              <span>Growth</span>
+            </div>
+          </FadeInUp>
         </div>
-        <Button asChild className="px-6! py-5!" variant="gradient">
-          <Link href="/signup">
-            Get Started
-            <ArrowRight className="size-4" />
-          </Link>
-        </Button>
+        <FadeInUp delay={0.3}>
+          <Button asChild className="px-6! py-5!" variant="gradient">
+            <Link href="/signup">
+              Get Started
+              <ArrowRight className="size-4" />
+            </Link>
+          </Button>
+        </FadeInUp>
       </div>
     </section>
   );
