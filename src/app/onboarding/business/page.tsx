@@ -47,6 +47,7 @@ export default function BusinessPage() {
           className="h-full w-full object-contain"
           src={leftPreviewImage}
         />
+        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-r from-transparent to-white" />
       </section>
 
       <section className="flex items-center justify-center px-6 py-10 sm:px-10 lg:min-h-0 lg:px-14">
