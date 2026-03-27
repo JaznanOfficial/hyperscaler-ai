@@ -10,13 +10,30 @@ import {
   TrendingUp,
   Zap,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { ComponentType } from "react";
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 
-const leftPreviewImage = "/onboarding/business-onboarding.png";
+const SERVICE_IMAGES = [
+  { id: "paid-ads", src: "/services/Paid Ads/Clear.svg", alt: "Paid Ads" },
+  {
+    id: "social-media",
+    src: "/services/Social Media/Clear.svg",
+    alt: "Social Media",
+  },
+  {
+    id: "content-brand",
+    src: "/services/Software Dev/Clear.svg",
+    alt: "Content & Brand",
+  },
+  {
+    id: "outbound-growth",
+    src: "/services/Outbound Growth/Clear.svg",
+    alt: "Outbound Growth",
+  },
+];
 
 type ServiceOption = {
   id: string;
@@ -77,18 +94,29 @@ export default function ServicesPage() {
 
   return (
     <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
-      <section className="relative hidden overflow-hidden bg-[#EBDDFA] lg:block">
-        <div className="absolute -top-[350px] -left-[520px] h-[980px] w-[980px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -top-[190px] -left-[360px] h-[760px] w-[760px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -top-[60px] -left-[220px] h-[540px] w-[540px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute top-[90px] -left-[80px] h-[320px] w-[320px] rounded-full border border-[#DDC4F8]" />
-        <img
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-y-0 right-0 h-full w-[78%] object-cover opacity-40"
-          src={leftPreviewImage}
-        />
-        <div className="absolute inset-y-0 right-0 w-[64%] bg-linear-to-r from-[#EBDDFA]/0 to-white/85" />
+      <section
+        className="relative hidden overflow-hidden lg:flex lg:flex-col lg:items-center lg:justify-center"
+        style={{
+          backgroundImage: "url('/services/services-bg.svg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="mx-auto flex w-2/3 flex-col gap-5 px-8">
+          {SERVICE_IMAGES.map((service, index) => (
+            <div
+              className={`flex ${index % 2 === 0 ? "justify-start" : "justify-end"}`}
+              key={service.id}
+            >
+              <Image
+                alt={service.alt}
+                height={200}
+                src={service.src}
+                width={200}
+              />
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="flex min-h-svh justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
