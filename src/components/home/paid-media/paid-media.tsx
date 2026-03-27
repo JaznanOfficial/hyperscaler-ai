@@ -42,7 +42,7 @@ const PaidMediaSection = () => {
         </FadeInUp>
 
         {/* Right Side: Text and Button */}
-        <div className="flex h-full w-full flex-col justify-center gap-2">
+        <div className="flex h-full w-full flex-col justify-center gap-3">
           <FadeInUp delay={0.2}>
             <div className="font-['Outfit'] font-semibold text-2xl text-purple-600 max-sm:text-xl">
               Paid Media

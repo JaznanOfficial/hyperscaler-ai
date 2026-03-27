@@ -9,11 +9,11 @@ const BuildWithUsSection = () => {
       <div className="">
         <div className="flex items-center justify-center max-sm:flex-col-reverse">
           {/* Left Side: Text and Button */}
-          <div className="flex h-full w-full flex-col justify-center">
+          <div className="flex h-full w-full flex-col justify-center gap-3">
             <div className="font-['Outfit'] font-semibold text-2xl text-purple-600 max-sm:text-xl">
               Build with us
             </div>
-            <div className="flex flex-col gap-3.5">
+            <div className="flex flex-col gap-3">
               <p className="mt-[8px] font-['Outfit'] font-normal text-3xl text-[#111111] leading-[48px] max-sm:mt-px max-sm:text-2xl max-sm:leading-[23px] sm:text-3xl md:text-5xl">
                 Launch, develop or automate
               </p>
@@ -28,7 +28,7 @@ const BuildWithUsSection = () => {
               buttonLabel="Book a free growth session"
               trigger={
                 <Button
-                  className="mt-5 w-fit px-6! py-5!"
+                  className="w-fit px-6! py-5!"
                   size="lg"
                   variant={"gradient"}
                 >

@@ -8,13 +8,13 @@ const LeadGenerationSection = () => {
     <section className="mx-auto w-full max-w-[1480px] px-20 pt-[150px] max-sm:px-6 max-sm:pt-20">
       <div className="flex items-center justify-center gap-22 max-sm:flex-col-reverse">
         {/* Left Side: Text and Button */}
-        <div className="flex h-full w-full flex-col justify-center">
+        <div className="flex h-full w-full flex-col justify-center gap-3">
           <FadeInUp delay={0}>
             <div className="font-['Outfit'] font-semibold text-2xl text-purple-600 max-sm:text-xl">
               Generate leads
             </div>
           </FadeInUp>
-          <div className="flex flex-col gap-3.5">
+          <div className="flex flex-col gap-3">
             <FadeInUp delay={0.1}>
               <p className="mt-[8px] font-['Outfit'] font-normal text-3xl text-[#111111] leading-[48px] max-sm:mt-px max-sm:text-2xl max-sm:leading-[23px] sm:text-3xl md:text-5xl">
                 Target Your ICP Lookalikes with AI-Powered Outreach
@@ -30,38 +30,36 @@ const LeadGenerationSection = () => {
 
           {/* Button */}
           <FadeInUp delay={0.3}>
-            <div>
-              <TalkToSalesDrawer
-                buttonLabel="Book a free growth session"
-                trigger={
-                  <Button className="mt-5 w-fit" size="lg" variant={"gradient"}>
-                    <svg
-                      fill="none"
-                      height="18"
-                      viewBox="0 0 18 18"
-                      width="18"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M16.5 5.25L10.125 11.625L6.375 7.875L1.5 12.75"
-                        stroke="white"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                      />
-                      <path
-                        d="M12 5.25H16.5V9.75"
-                        stroke="white"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                      />
-                    </svg>
-                    Book a free growth session
-                  </Button>
-                }
-              />
-            </div>
+            <TalkToSalesDrawer
+              buttonLabel="Book a free growth session"
+              trigger={
+                <Button className="w-fit" size="lg" variant={"gradient"}>
+                  <svg
+                    fill="none"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    width="18"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M16.5 5.25L10.125 11.625L6.375 7.875L1.5 12.75"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                    <path
+                      d="M12 5.25H16.5V9.75"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  Book a free growth session
+                </Button>
+              }
+            />
           </FadeInUp>
         </div>
 

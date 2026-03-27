@@ -19,11 +19,11 @@ const StayCreative = () => {
           </div>
 
           {/* Right Side: Text and Button */}
-          <div className="flex h-full w-full flex-col justify-center">
+          <div className="flex h-full w-full flex-col justify-center gap-3">
             <div className="font-['Outfit'] font-semibold text-2xl text-purple-600 max-sm:text-xl">
               Stay Creative
             </div>
-            <div className="flex flex-col gap-3.5">
+            <div className="flex flex-col gap-3">
               <p className="mt-[8px] font-['Outfit'] font-normal text-3xl text-[#111111] leading-[48px] max-sm:mt-px max-sm:text-2xl max-sm:leading-[23px] sm:text-3xl md:text-5xl">
                 We value branding and storytelling along with consistency in
               </p>
@@ -38,7 +38,7 @@ const StayCreative = () => {
 
             {/* Button */}
             <TalkToSalesDrawer
-              buttonClassName="mt-5 w-[230px]"
+              buttonClassName=" w-[230px]"
               buttonLabel="Talk to Us"
               buttonSize="lg"
               buttonVariant="gradient"

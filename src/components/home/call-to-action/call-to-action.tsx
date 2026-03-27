@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const CallToAction = () => {
   return (
-    <section className="my-48 flex items-center justify-center px-6">
+    <section className="my-24 flex items-center justify-center px-6 lg:my-48">
       <div className="relative flex h-96 w-full flex-col items-center justify-center gap-10 overflow-visible rounded-2xl bg-white p-5 text-center shadow-[0px_40px_140px_rgba(157,78,221,0.28)] lg:max-w-4xl xl:max-w-5xl">
         <Image
           alt="CTA decoration"
