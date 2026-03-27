@@ -5,10 +5,8 @@ import {
   ArrowRight,
   Code,
   Funnel,
-  Pencil,
   Share2,
   TrendingUp,
-  Zap,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,7 +22,7 @@ const SERVICE_IMAGES = [
     alt: "Social Media",
   },
   {
-    id: "content-brand",
+    id: "software-dev",
     src: "/services/Software Dev/Clear.svg",
     alt: "Content & Brand",
   },
@@ -55,12 +53,12 @@ const SERVICE_OPTIONS: ServiceOption[] = [
     description: "Content strategy and management",
     icon: Share2,
   },
-  {
-    id: "content-brand",
-    title: "Content & Brand",
-    description: "Visual identity and storytelling",
-    icon: Pencil,
-  },
+  // {
+  //   id: "content-brand",
+  //   title: "Content & Brand",
+  //   description: "Visual identity and storytelling",
+  //   icon: Pencil,
+  // },
   {
     id: "outbound-growth",
     title: "Outbound Growth",
@@ -73,12 +71,12 @@ const SERVICE_OPTIONS: ServiceOption[] = [
     description: "Web apps, mobile, custom tools",
     icon: Code,
   },
-  {
-    id: "automation",
-    title: "Automation & Systems",
-    description: "Workflows, integrations, CRM",
-    icon: Zap,
-  },
+  // {
+  //   id: "automation",
+  //   title: "Automation & Systems",
+  //   description: "Workflows, integrations, CRM",
+  //   icon: Zap,
+  // },
 ];
 
 export default function ServicesPage() {
