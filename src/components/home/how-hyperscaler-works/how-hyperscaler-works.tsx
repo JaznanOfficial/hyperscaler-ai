@@ -1,13 +1,3 @@
-import Image from "next/image";
-
-const createPlaceholderSrc = (label: string) => {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='560' height='320'>
-    <rect width='100%' height='100%' rx='24' fill='#f3e8ff'/>
-    <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, sans-serif' font-size='20' fill='#7c3aed' font-weight='600'>${label}</text>
-  </svg>`;
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-};
-
 type Step = {
   description: string;
   id: string;
@@ -17,7 +7,7 @@ type Step = {
 type Visual = {
   alt: string;
   id: string;
-  src: string;
+  videoSrc: string;
   subtitle: string;
   title: string;
 };
@@ -52,24 +42,24 @@ const steps: Step[] = [
 const placeholderVisuals: Visual[] = [
   {
     id: "login",
-    alt: "Login placeholder",
+    alt: "Login video",
     title: "Login to your account",
     subtitle: "client@example.com",
-    src: createPlaceholderSrc("Login placeholder"),
+    videoSrc: "/how-it-works/video-1.mp4",
   },
   {
     id: "chat",
-    alt: "Eva chat placeholder",
+    alt: "Eva chat video",
     title: "Chat with Eva",
     subtitle: "Why is my reply rate low?",
-    src: createPlaceholderSrc("Chat placeholder"),
+    videoSrc: "/how-it-works/video-2.mp4",
   },
   {
     id: "calendar",
-    alt: "Calendar placeholder",
+    alt: "Calendar video",
     title: "Strategy call booked",
     subtitle: "Thu, Mar 26 · 2:00 PM",
-    src: createPlaceholderSrc("Strategy placeholder"),
+    videoSrc: "/how-it-works/video-3.mp4",
   },
 ];
 
@@ -108,28 +98,23 @@ const StepDetail = ({ step }: { step: Step }) => (
 );
 
 const VisualCard = ({ visual }: { visual: Visual }) => (
-  <div className="w-full rounded-3xl border border-[#e4e4e7] bg-white p-6 shadow-[0px_8px_40px_rgba(0,0,0,0.08)]">
-    <Image
-      alt={visual.alt}
-      className="h-64 w-full rounded-2xl object-cover"
-      height={320}
-      src={visual.src}
-      unoptimized
-      width={560}
+  <div className="w-fit overflow-hidden rounded-3xl">
+    <video
+      autoPlay
+      className="h-full w-full object-contain"
+      controls={false}
+      loop
+      muted
+      playsInline
+      src={visual.videoSrc}
     />
-    <div className="mt-4 text-center">
-      <p className="font-['Outfit'] font-medium text-[#111322] text-lg">
-        {visual.title}
-      </p>
-      <p className="font-['Inter'] text-[#9ca3af] text-sm">{visual.subtitle}</p>
-    </div>
   </div>
 );
 
 const HowHyperscalerWorks = () => {
   return (
-    <section className="mx-auto w-full px-20 pt-[150px] max-sm:px-6 max-sm:pt-20">
-      <div className="mx-auto flex w-full max-w-[1280px] flex-col items-stretch gap-16">
+    <section className="mx-auto w-full max-w-[1480px] px-20 pt-[150px] max-sm:px-6 max-sm:pt-20">
+      <div className="mx-auto flex w-full flex-col items-stretch gap-16">
         <div className="text-center">
           <p className="font-['Outfit'] font-medium text-4xl text-[#111322] leading-[56px]">
             How Hyperscaler Works
@@ -146,7 +131,7 @@ const HowHyperscalerWorks = () => {
                       <div key={step.id}>
                         <StepDetail step={step} />
                         {!(sceneIdx === 2 && stepIdx === 0) && (
-                          <div className="absolute left-[14px] -mt-10 h-88 w-[3px]">
+                          <div className="absolute top-15 left-[14px] h-160 w-[3px]">
                             <span className="block h-full w-full bg-gradient-to-b from-fuchsia-500 to-violet-800 opacity-80" />
                           </div>
                         )}
@@ -160,7 +145,7 @@ const HowHyperscalerWorks = () => {
           ))}
           <div className="-mt-20 grid grid-cols-[1fr_1fr] items-start gap-12">
             <div className="relative flex flex-col gap-10">
-              <div className="absolute -top-76 left-[14px] h-72 w-[3px]">
+              <div className="absolute -top-145 left-[14px] h-140 w-[3px]">
                 <span className="block h-full w-full bg-gradient-to-b from-fuchsia-500 to-violet-800 opacity-80" />
               </div>
               <StepDetail step={steps[3]} />
