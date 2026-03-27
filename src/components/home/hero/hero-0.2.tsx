@@ -1,34 +1,17 @@
-import Image from "next/image";
 import Link from "next/link";
 import { FadeInUp } from "@/components/animations/fade-in-up";
 import { Button } from "@/components/ui/button";
 
 const Hero02 = () => {
   return (
-    <section className="relative mx-auto mt-10 w-full max-w-[1480px] overflow-hidden bg-white max-sm:px-6 lg:px-20">
-      {/* Subtle purple gradient top-right */}
-      <div
-        className="pointer-events-none absolute top-1/4 -right-20 z-0 h-96 w-96 rounded-full opacity-60 blur-[120px]"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(168,85,247,0.3) 0%, rgba(139,92,246,0.2) 40%, transparent 70%)",
-        }}
-      />
-      <div
-        className="pointer-events-none absolute top-1/3 right-1/4 z-0 h-72 w-72 rounded-full opacity-50 blur-[100px]"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%)",
-        }}
-      />
-
-      <div className="relative z-10 mx-auto">
-        <div className="grid w-full grid-cols-1 items-center gap-8 md:grid-cols-2 lg:gap-16">
+    <section className="relative mx-auto w-full overflow-hidden bg-[url('/hero-bg.svg')] bg-center bg-cover bg-white bg-no-repeat pt-10 max-sm:px-6 lg:px-20 lg:pt-40">
+      <div className="relative z-10 mx-auto max-w-[1480px]">
+        <div className="flex w-full flex-col items-center items-center gap-8 lg:gap-16">
           {/* Left Column: Text & CTA */}
-          <div className="flex flex-col justify-center max-sm:mt-20 max-sm:items-center max-sm:text-center">
+          <div className="flex flex-col items-center text-center">
             {/* Pill tagline */}
             <FadeInUp delay={0}>
-              <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-neutral-300 bg-purple-50 px-4 py-2">
+              <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-purple-200/75 bg-purple-50/30 px-4 py-2 font-medium">
                 <svg
                   fill="none"
                   height="16"
@@ -51,8 +34,11 @@ const Hero02 = () => {
             </FadeInUp>
 
             <FadeInUp delay={0.1}>
-              <h1 className="font-['Outfit'] font-semibold text-5xl text-[#1A1A1A] leading-tight max-sm:text-3xl max-sm:leading-10">
-                Your Marketing on Autopilot
+              <h1 className="font-['Outfit'] font-medium text-7xl text-[#1A1A1A] leading-tight max-sm:text-5xl max-sm:leading-10">
+                Your Marketing on{" "}
+                <span className="bg-linear-to-r from-fuchsia-500 to-violet-800 bg-clip-text text-transparent">
+                  Autopilot
+                </span>
               </h1>
             </FadeInUp>
 
@@ -71,15 +57,15 @@ const Hero02 = () => {
             </div> */}
 
             <FadeInUp delay={0.2}>
-              <p className="mt-5 font-['Outfit'] font-normal text-gray-600 text-xl leading-7 max-sm:text-base">
-                AI-powered growth systems that run paid ads, outreach, and
-                demand generation from one platform with clean human touch.
+              <p className="mt-5 max-w-2xl font-['Outfit'] font-normal text-2xl text-gray-700 leading-7 max-sm:text-base">
+                Run paid ads, outreach, and demand generation from one platform
+                with clean human touch.
               </p>
             </FadeInUp>
 
             {/* Buttons */}
             <FadeInUp delay={0.3}>
-              <div className="mt-10 flex w-full flex-col gap-3 max-sm:items-center sm:flex-row sm:gap-4">
+              <div className="mt-10 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
                 <Link className="w-full sm:w-auto" href="/chat">
                   <Button
                     className="h-[46px] w-full font-semibold sm:w-[228px]"
@@ -145,7 +131,7 @@ const Hero02 = () => {
             </div>
 
             {/* Top-left floating image */}
-            <Image
+            {/* <Image
               alt="Total Spend - $5,000"
               className="absolute top-0 left-0 z-20 h-[140px] w-[160px] object-contain max-md:top-2 max-md:left-2 max-md:h-[100px] max-md:w-[120px]"
               height={140}
@@ -154,10 +140,10 @@ const Hero02 = () => {
                 animation: "float 3s ease-in-out infinite",
               }}
               width={160}
-            />
+            /> */}
 
             {/* Bottom-right floating image */}
-            <Image
+            {/* <Image
               alt="Bugs Closed vs Opened"
               className="absolute right-0 bottom-0 z-20 h-[140px] w-[220px] object-contain max-md:right-2 max-md:bottom-2 max-md:h-[100px] max-md:w-[140px]"
               height={140}
@@ -166,7 +152,7 @@ const Hero02 = () => {
                 animation: "float 3.5s ease-in-out 0.5s infinite",
               }}
               width={220}
-            />
+            /> */}
           </div>
         </div>
       </div>
