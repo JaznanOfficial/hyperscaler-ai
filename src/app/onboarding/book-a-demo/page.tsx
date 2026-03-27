@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
-const CALENDLY_URL = "/onboarding/book-a-demo/";
+const CALENDLY_URL = "https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build";
 const SUCCESS_URL = "/onboarding/book-a-demo/success";
 
 export default function Page() {

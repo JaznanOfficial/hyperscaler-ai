@@ -2,8 +2,13 @@
 
 import { Check, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
+
+const sidebarPreviewImage =
+  "https://www.figma.com/api/mcp/asset/7742e611-3546-4f19-b3ca-30c73e278f6b";
 
 const NEXT_STEPS = [
   "The team has been notified",
@@ -12,26 +17,41 @@ const NEXT_STEPS = [
 ];
 
 export default function SuccessPage() {
+  const { data: session, update } = useSession();
+  const didRefreshRef = useRef(false);
+
+  useEffect(() => {
+    if (didRefreshRef.current) return;
+    didRefreshRef.current = true;
+    void update();
+  }, [update]);
+
+  const firstName = session?.user?.name?.trim().split(/\s+/)[0];
+
   return (
     <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
-      <section className="relative hidden w-2/3 overflow-hidden bg-[#EBDDFA] lg:block">
-        <video
-          autoPlay
-          className="h-full object-cover"
-          loop
-          muted
-          src="/welcome-page-video.mp4"
+      <section className="relative hidden overflow-hidden bg-[#EBDDFA] lg:block">
+        <div className="absolute -top-[350px] -left-[520px] h-[980px] w-[980px] rounded-full border border-[#DDC4F8]" />
+        <div className="absolute -top-[190px] -left-[360px] h-[760px] w-[760px] rounded-full border border-[#DDC4F8]" />
+        <div className="absolute -top-[60px] -left-[220px] h-[540px] w-[540px] rounded-full border border-[#DDC4F8]" />
+        <div className="absolute top-[90px] -left-[80px] h-[320px] w-[320px] rounded-full border border-[#DDC4F8]" />
+        <img
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-y-0 right-0 h-full w-[78%] object-cover opacity-40"
+          src={sidebarPreviewImage}
         />
+        <div className="absolute inset-y-0 right-0 w-[64%] bg-linear-to-r from-[#EBDDFA]/0 to-white/85" />
       </section>
 
-      <section className="flex w-full items-center justify-center">
-        <div className="flex w-full max-w-[560px] flex-col items-center gap-12 px-6 py-16 text-center sm:px-10 lg:px-16">
+      <section className="flex min-h-svh items-center justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
+        <div className="w-full max-w-[640px]">
           <div className="mb-12 flex flex-col items-center gap-4 text-center">
             <span className="flex size-16 items-center justify-center rounded-full border border-[#A7E8BF] bg-[#D3F3DF] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.02),0px_2px_4px_0px_rgba(0,0,0,0.04)]">
               <Check aria-hidden="true" className="size-7 text-[#15803D]" />
             </span>
             <h1 className="font-['Outfit'] font-medium text-4xl text-[#1A1A1A] leading-[1.4] sm:text-[40px]">
-              You&apos;re all set, Jamie !
+              You&apos;re all set{firstName ? `, ${firstName} !` : " !"}
             </h1>
           </div>
 
@@ -60,9 +80,9 @@ export default function SuccessPage() {
               size="lg"
               variant="gradient"
             >
-              <Link href="/client">
+              <Link href="/chat">
                 <LayoutDashboard aria-hidden="true" className="size-[18px]" />
-                Go to my Dashboard
+                Talk to Eva
               </Link>
             </Button>
             <Button
@@ -71,7 +91,7 @@ export default function SuccessPage() {
               size="lg"
               variant="outline"
             >
-              <Link href="/contact">Schedule a Call</Link>
+              <Link href="/onboarding/book-a-demo">Schedule a Call</Link>
             </Button>
           </div>
         </div>
