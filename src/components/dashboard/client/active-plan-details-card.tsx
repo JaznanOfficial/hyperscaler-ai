@@ -140,10 +140,7 @@ function IncludedServiceCard({ service }: { service: IncludedService }) {
           className="w-full justify-center font-semibold"
           variant="outline"
         >
-          <a
-            href={service.detailsHref || "/client/statistics"}
-            rel="noreferrer"
-          >
+          <a href={service.detailsHref || "/client/dashboard"} rel="noreferrer">
             View
           </a>
         </Button>

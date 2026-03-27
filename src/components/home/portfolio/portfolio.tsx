@@ -2,6 +2,8 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";
+import { FadeInUp } from "@/components/animations/fade-in-up";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 const portfolioData = [
@@ -17,7 +19,7 @@ const portfolioData = [
   },
   {
     title: "The Order AI",
-    desc: "Personalized Drink Recommendation Platform",
+    desc: "Personalized Drink Recommendation",
     img: "/portfolio/portfolio-3.png",
   },
   {
@@ -66,32 +68,42 @@ const Portfolio = () => {
       </div>
 
       {/* body */}
-      <Marquee pauseOnHover>
+      <Marquee className="py-6" pauseOnHover>
         <div className="flex flex-nowrap">
           {portfolioData.map((item, index) => (
-            <div
-              className={cn("ml-10 text-left", index % 2 === 1 && "mt-[90px]")}
-              key={index}
-            >
-              <div className="overflow-hidden rounded-2xl shadow-md">
-                <Image
-                  alt={item.title}
-                  className="h-auto w-full object-cover max-sm:w-80"
-                  height={200}
-                  src={item.img}
-                  width={409}
-                />
-              </div>
-              <h3
+            <FadeInUp delay={0.1 * index} key={item.title}>
+              <Card
                 className={cn(
-                  "font-['Outfit']",
-                  "mt-3 font-semibold text-[#1A1A1A] text-lg md:text-2xl"
+                  "ml-10 flex w-[24rem] min-w-[20rem] shrink-0 flex-col gap-0 rounded-[20px] bg-white p-0 text-left shadow-md outline outline-purple-200/60 -outline-offset-1 transition-all duration-300 hover:-translate-y-2 max-sm:w-80",
+                  index % 2 === 1 ? "mt-16" : "mb-16"
                 )}
               >
-                {item.title}
-              </h3>
-              <p className="mt-1 text-[#515A65] text-lg">{item.desc}</p>
-            </div>
+                <div className="relative h-48 w-full bg-violet-200">
+                  <div className="h-full w-full p-5">
+                    <Image
+                      alt={item.title}
+                      className="h-full w-full object-cover"
+                      height={200}
+                      src={item.img}
+                      width={409}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1 p-5">
+                  <h3
+                    className={cn(
+                      "font-['Outfit']",
+                      "font-semibold text-[#0F172A] text-xl"
+                    )}
+                  >
+                    {item.title}
+                  </h3>
+                  <p className="text-[#475467] text-sm md:text-base">
+                    {item.desc}
+                  </p>
+                </div>
+              </Card>
+            </FadeInUp>
           ))}
         </div>
       </Marquee>

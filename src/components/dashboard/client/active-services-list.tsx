@@ -89,7 +89,7 @@ export function ActiveServicesList() {
             <div className="flex w-full flex-col gap-4 pt-4">
               <div className="flex w-full flex-col gap-3 min-[450px]:flex-row">
                 <Button asChild className="flex-1" variant="outline">
-                  <Link href={`/client/statistics?service=${service.id}`}>
+                  <Link href={`/client/dashboard?service=${service.id}`}>
                     View
                   </Link>
                 </Button>

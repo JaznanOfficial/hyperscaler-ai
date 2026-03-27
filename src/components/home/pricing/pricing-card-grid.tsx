@@ -13,7 +13,7 @@ import type { PricingCard, SavingsHighlight } from "./types";
 
 const overrideVariant = (
   variant: ButtonVariant | undefined,
-  isHighlight: boolean,
+  isHighlight: boolean
 ): ButtonVariant => {
   if (isHighlight && variant === "gradient") {
     return "outline";
@@ -34,7 +34,7 @@ const renderPricingCta = (item: PricingCard, isAuthenticated: boolean) => {
           buttonVariants({
             variant: overrideVariant(item.cta.variant, !!item.highlight),
           }),
-          "w-full",
+          "w-full"
         )}
         href={href}
       >
@@ -49,7 +49,7 @@ const renderPricingCta = (item: PricingCard, isAuthenticated: boolean) => {
         buttonClassName="w-full"
         buttonVariant={overrideVariant(
           item.cta.variant ?? "outline",
-          !!item.highlight,
+          !!item.highlight
         )}
       />
     );
@@ -107,7 +107,7 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
           <div
             className={cn(
               "relative flex w-full flex-col items-start justify-between gap-7 rounded-xl border px-7 py-8",
-              highlightStyles,
+              highlightStyles
             )}
             key={item.name}
           >
@@ -117,7 +117,7 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
                   item.highlight
                     ? "bg-purple-600 text-white ring-1 ring-white"
                     : "bg-[#D1D1D1] text-[#515A65]",
-                  "inline-flex items-center gap-2 rounded-xl px-3 py-1",
+                  "inline-flex items-center gap-2 rounded-xl px-3 py-1"
                 )}
               >
                 <div className="flex size-6 items-center justify-center md:size-7">
@@ -126,7 +126,7 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
                 <h3
                   className={cn(
                     "font-['Outfit'] font-medium text-base sm:text-lg",
-                    item.highlight ? "text-white" : "text-[#1A1A1A]",
+                    item.highlight ? "text-white" : "text-[#1A1A1A]"
                   )}
                 >
                   {item.name}
@@ -144,7 +144,7 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
                     className={cn(
                       "font-['Outfit'] font-semibold text-2xl leading-8",
                       isCustomPrice &&
-                        "bg-linear-to-r from-violet-800 to-fuchsia-500 bg-clip-text text-transparent",
+                        "bg-linear-to-r from-violet-800 to-fuchsia-500 bg-clip-text text-transparent"
                     )}
                   >
                     {item.price.amount}
@@ -178,7 +178,7 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
                       "rounded-full p-1",
                       item.highlight
                         ? "bg-purple-100 ring-1 ring-purple-200"
-                        : "bg-[#ECD6F8B2]",
+                        : "bg-[#ECD6F8B2]"
                     )}
                   >
                     <Check className="size-3 font-bold text-purple-800 md:size-3.5" />
@@ -198,7 +198,7 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
                       ? buttonVariants({ variant: "gradient" })
                       : "flex w-full items-center justify-center gap-2 rounded-lg border border-purple-100 bg-purple-50 px-4 py-2.5 font-semibold text-purple-600 text-sm transition hover:bg-purple-100"
                   )}
-                  href="/onboarding/book-a-demo/"
+                  href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
                   rel="noreferrer"
                   target="_blank"
                 >
@@ -211,11 +211,11 @@ export const PricingCards = ({ data }: PricingCardsProps) => {
                   item.highlight
                     ? cn(
                         buttonVariants({ variant: "gradient" }),
-                        "h-[48px] w-full",
+                        "h-[48px] w-full"
                       )
-                    : "flex h-[48px] w-full items-center justify-center gap-2 rounded-lg border-purple-100 bg-purple-50 font-semibold text-purple-600 text-sm transition hover:bg-purple-100",
+                    : "flex h-[48px] w-full items-center justify-center gap-2 rounded-lg border-purple-100 bg-purple-50 font-semibold text-purple-600 text-sm transition hover:bg-purple-100"
                 )}
-                href="/onboarding/book-a-demo/"
+                href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
                 rel="noreferrer"
                 target="_blank"
               >

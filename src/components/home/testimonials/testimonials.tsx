@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { FadeInUp } from "@/components/animations/fade-in-up";
 
 const testimonialCards = [
   {
@@ -17,8 +18,8 @@ const testimonialCards = [
 
 const Testimonials = () => {
   return (
-    <section className="w-full bg-white px-20 pt-[150px] max-sm:px-6 max-sm:pt-20">
-      <div className="mx-auto flex w-11/12 flex-col items-center lg:w-10/12">
+    <section className="w-full bg-white pt-[150px] max-sm:px-6 max-sm:pt-20">
+      <div className="mx-auto flex flex-col items-center lg:w-10/12">
         <div className="text-center">
           <h2 className="font-semibold text-[#1f1f1f] text-xl leading-[1.1] tracking-[-0.03em] md:text-5xl">
             Trusted by CEOs and Founders
@@ -31,16 +32,18 @@ const Testimonials = () => {
 
         <div className="mt-[72px] grid w-full grid-cols-1 justify-items-center gap-10 md:grid-cols-2 xl:grid-cols-3">
           {testimonialCards.map((card, index) => (
-            <div className="w-full" key={index}>
-              <Image
-                alt={card.alt}
-                className="h-auto w-full object-contain"
-                height={340}
-                priority={index < 3}
-                src={card.src}
-                width={406}
-              />
-            </div>
+            <FadeInUp delay={0.2 + 0.1 * index} key={index}>
+              <div className="w-full">
+                <Image
+                  alt={card.alt}
+                  className="h-auto w-full object-contain"
+                  height={340}
+                  priority={index < 3}
+                  src={card.src}
+                  width={406}
+                />
+              </div>
+            </FadeInUp>
           ))}
         </div>
       </div>

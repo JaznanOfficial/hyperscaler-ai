@@ -24,8 +24,8 @@ const clientNavItems: AppSidebarNavItem[] = [
     matchSubRoutes: false,
   },
   {
-    title: "Statistics",
-    url: "/client/statistics",
+    title: "Dashboard",
+    url: "/client/dashboard",
     icon: "chartColumn",
     matchSubRoutes: false,
   },
