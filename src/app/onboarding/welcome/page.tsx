@@ -12,7 +12,6 @@ export default function WelcomePage() {
     <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
       <section className="relative hidden min-h-screen overflow-hidden bg-[#EBDDFA] lg:block">
         <video
-          alt="Hyperscaler welcome video"
           autoPlay
           className="h-screen w-full object-cover"
           loop
