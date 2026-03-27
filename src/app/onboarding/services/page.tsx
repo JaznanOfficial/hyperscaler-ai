@@ -15,20 +15,28 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 const SERVICE_IMAGES = [
-  { id: "paid-ads", src: "/services/Paid Ads/Clear.svg", alt: "Paid Ads" },
+  {
+    id: "paid-ads",
+    clear: "/services/Paid Ads/Clear.svg",
+    blurred: "/services/Paid Ads/Blurred.svg",
+    alt: "Paid Ads",
+  },
   {
     id: "social-media",
-    src: "/services/Social Media/Clear.svg",
+    clear: "/services/Social Media/Clear.svg",
+    blurred: "/services/Social Media/Blurred.svg",
     alt: "Social Media",
   },
   {
     id: "software-dev",
-    src: "/services/Software Dev/Clear.svg",
+    clear: "/services/Software Dev/Clear.svg",
+    blurred: "/services/Software Dev/Blurred.svg",
     alt: "Content & Brand",
   },
   {
     id: "outbound-growth",
-    src: "/services/Outbound Growth/Clear.svg",
+    clear: "/services/Outbound Growth/Clear.svg",
+    blurred: "/services/Outbound Growth/Blurred.svg",
     alt: "Outbound Growth",
   },
 ];
@@ -101,19 +109,23 @@ export default function ServicesPage() {
         }}
       >
         <div className="mx-auto flex w-2/3 flex-col gap-5 px-8">
-          {SERVICE_IMAGES.map((service, index) => (
-            <div
-              className={`flex ${index % 2 === 0 ? "justify-start" : "justify-end"}`}
-              key={service.id}
-            >
-              <Image
-                alt={service.alt}
-                height={200}
-                src={service.src}
-                width={200}
-              />
-            </div>
-          ))}
+          {SERVICE_IMAGES.map((service, index) => {
+            const isSelected = selectedServices.includes(service.id);
+
+            return (
+              <div
+                className={`flex ${index % 2 === 0 ? "justify-start" : "justify-end"}`}
+                key={service.id}
+              >
+                <Image
+                  alt={service.alt}
+                  height={200}
+                  src={isSelected ? service.clear : service.blurred}
+                  width={200}
+                />
+              </div>
+            );
+          })}
         </div>
       </section>
 
