@@ -5,9 +5,6 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
-const sidebarPreviewImage =
-  "https://www.figma.com/api/mcp/asset/7742e611-3546-4f19-b3ca-30c73e278f6b";
-
 const NEXT_STEPS = [
   "The team has been notified",
   "Your dashboard is being personalized",
@@ -17,22 +14,18 @@ const NEXT_STEPS = [
 export default function SuccessPage() {
   return (
     <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
-      <section className="relative hidden overflow-hidden bg-[#EBDDFA] lg:block">
-        <div className="absolute -top-[350px] -left-[520px] h-[980px] w-[980px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -top-[190px] -left-[360px] h-[760px] w-[760px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -top-[60px] -left-[220px] h-[540px] w-[540px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute top-[90px] -left-[80px] h-[320px] w-[320px] rounded-full border border-[#DDC4F8]" />
-        <img
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-y-0 right-0 h-full w-[78%] object-cover opacity-40"
-          src={sidebarPreviewImage}
+      <section className="relative hidden w-2/3 overflow-hidden bg-[#EBDDFA] lg:block">
+        <video
+          autoPlay
+          className="h-full object-cover"
+          loop
+          muted
+          src="/welcome-page-video.mp4"
         />
-        <div className="absolute inset-y-0 right-0 w-[64%] bg-linear-to-r from-[#EBDDFA]/0 to-white/85" />
       </section>
 
-      <section className="flex min-h-svh items-center justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
-        <div className="w-full max-w-[640px]">
+      <section className="flex w-full items-center justify-center">
+        <div className="flex w-full max-w-[560px] flex-col items-center gap-12 px-6 py-16 text-center sm:px-10 lg:px-16">
           <div className="mb-12 flex flex-col items-center gap-4 text-center">
             <span className="flex size-16 items-center justify-center rounded-full border border-[#A7E8BF] bg-[#D3F3DF] shadow-[0px_1px_3px_0px_rgba(0,0,0,0.02),0px_2px_4px_0px_rgba(0,0,0,0.04)]">
               <Check aria-hidden="true" className="size-7 text-[#15803D]" />

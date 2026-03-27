@@ -24,7 +24,7 @@ const MarketingTools = () => {
   return (
     <section className="mx-auto w-full">
       <div
-        className="relative flex h-96 w-full flex-col items-center justify-center gap-6 text-center lg:h-250"
+        className="relative flex h-80 w-full flex-col items-center justify-center gap-6 text-center lg:h-250"
         ref={containerRef}
       >
         <video

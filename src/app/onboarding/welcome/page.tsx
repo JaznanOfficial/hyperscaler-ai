@@ -10,26 +10,13 @@ const sidebarSurfaceImage =
 export default function WelcomePage() {
   return (
     <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
-      <section className="relative m-4 hidden overflow-hidden rounded-3xl bg-[#EBDDFA] lg:block">
-        <div className="absolute -top-[350px] -left-[520px] h-[980px] w-[980px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -top-[190px] -left-[360px] h-[760px] w-[760px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -top-[60px] -left-[220px] h-[540px] w-[540px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute top-[90px] -left-[80px] h-[320px] w-[320px] rounded-full border border-[#DDC4F8]" />
-
-        <div className="absolute inset-y-[10%] left-[18%] w-[62%] rounded-3xl border border-white/30 bg-white/55 p-4 shadow-2xl backdrop-blur-[1px]">
-          <img
-            alt="Hyperscaler assistant preview"
-            className="h-full w-full rounded-2xl object-cover opacity-90"
-            src={sidebarSurfaceImage}
-          />
-        </div>
-
-        <div className="absolute bottom-[18%] left-[2%] h-[38%] w-[96%] bg-linear-to-r from-[#EBDDFA]/0 via-white/85 to-white" />
-        <img
-          alt=""
-          aria-hidden="true"
-          className="absolute top-1/2 -right-[70%] hidden h-[92%] -translate-y-1/2 rounded-2xl object-cover opacity-50 xl:block"
-          src={sidebarPreviewImage}
+      <section className="relative hidden min-h-screen overflow-hidden bg-[#EBDDFA] lg:block">
+        <video
+          autoPlay
+          className="h-screen w-full object-cover"
+          loop
+          muted
+          src="/welcome-page-video.mp4"
         />
       </section>
 

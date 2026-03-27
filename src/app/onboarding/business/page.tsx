@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const leftPreviewImage = "/onboarding/business-onboarding.png";
+const leftPreviewImage = "/business.gif";
 
 const INDUSTRIES = [
   "SaaS",
@@ -40,10 +40,17 @@ export default function BusinessPage() {
   const [selectedStage, setSelectedStage] = useState("Startup");
 
   return (
-    <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
-      <section className="relative hidden overflow-hidden bg-[#EBDDFA] lg:block" />
+    <main className="w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
+      <section className="relative hidden overflow-hidden lg:block">
+        <img
+          alt="Business onboarding"
+          className="h-full w-full object-contain"
+          src={leftPreviewImage}
+        />
+        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-r from-transparent to-white" />
+      </section>
 
-      <section className="flex min-h-svh justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
+      <section className="flex items-center justify-center px-6 py-10 sm:px-10 lg:min-h-0 lg:px-14">
         <div className="w-full max-w-[760px]">
           <div className="mb-9 flex items-center justify-between">
             <div className="w-[160px]">

@@ -1,19 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
-
 import { LoginForm } from "@/components/login/login-form";
 
 export default function LoginPage() {
   return (
     <div className="grid min-h-svh w-full lg:grid-cols-2">
-      <div className="relative mt-5 mr-5 hidden lg:block">
-        <Image
-          alt="Team collaborating"
-          className="object-fit"
-          fill
-          priority
-          src="/login-page.svg"
+      <div className="relative hidden overflow-hidden lg:block">
+        <video
+          autoPlay
+          className="h-full w-full object-cover"
+          loop
+          muted
+          src="/login.mp4"
         />
       </div>
       <div className="flex flex-col gap-4 p-6 md:p-10">

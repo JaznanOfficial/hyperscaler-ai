@@ -96,7 +96,7 @@ export default function ClientSubscriptionsPage() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/client/statistics")
+    fetch("/api/client/dashboard")
       .then((res) => res.json())
       .then((statsData) => {
         setStatisticsServices(statsData.data || []);
@@ -231,7 +231,7 @@ function buildIncludedServices(
           meta: "Service Running",
           statusLabel: "On Track",
           statusTone: "success",
-          dashboardHref: `/client/statistics?service=${service.serviceId}`,
+          dashboardHref: `/client/dashboard?service=${service.serviceId}`,
           detailsHref: undefined,
         }) satisfies IncludedService
     );
@@ -262,7 +262,7 @@ function buildIncludedServices(
         statusLabel: statusMeta.label,
         statusTone: statusMeta.tone,
         dashboardHref: service.serviceId
-          ? `/client/statistics?service=${service.serviceId}`
+          ? `/client/dashboard?service=${service.serviceId}`
           : undefined,
         detailsHref: `/client/services/${project.id}`,
       } satisfies IncludedService;
