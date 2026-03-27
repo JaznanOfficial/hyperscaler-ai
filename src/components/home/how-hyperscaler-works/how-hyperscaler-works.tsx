@@ -138,7 +138,7 @@ const HowHyperscalerWorks = () => {
                     {scene.steps.map((step, stepIdx) => (
                       <div key={step.id}>
                         <StepDetail step={step} />
-                        <div className="absolute top-15 left-[14px] h-100 w-[3px] xl:top-15 xl:h-160">
+                        <div className="absolute top-15 left-[14px] h-64 w-[3px] xl:top-15 xl:h-92">
                           <span className="block h-full w-full bg-gradient-to-b from-fuchsia-500 to-violet-800 opacity-80" />
                         </div>
                       </div>
