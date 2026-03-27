@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 
 const Hero02 = () => {
   return (
-    <section className="relative mx-auto w-full overflow-hidden bg-[url('/hero-bg.svg')] bg-center bg-cover bg-white bg-no-repeat pt-10 max-sm:px-6 lg:px-20 lg:pt-40">
+    <section className="relative mx-auto w-full overflow-hidden bg-[url('/hero-bg.svg')] bg-center bg-cover bg-white bg-no-repeat py-10 max-sm:px-6 lg:px-20 lg:py-40">
       <div className="relative z-10 mx-auto max-w-[1480px]">
-        <div className="flex w-full flex-col items-center items-center gap-8 lg:gap-16">
+        <div className="grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16 lg:gap-y-12">
           {/* Left Column: Text & CTA */}
-          <div className="flex flex-col items-center text-center">
+          <div className="flex flex-col items-center text-center lg:col-span-2">
             {/* Pill tagline */}
             <FadeInUp delay={0}>
               <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-purple-200/75 bg-purple-50/30 px-4 py-2 font-medium">
@@ -73,10 +73,12 @@ const Hero02 = () => {
                     variant="gradient"
                   >
                     <svg
+                      aria-hidden="true"
+                      className="h-8 w-8"
                       fill="none"
-                      height="20"
+                      height="32"
                       viewBox="0 0 20 20"
-                      width="20"
+                      width="32"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
@@ -114,20 +116,25 @@ const Hero02 = () => {
           </div>
 
           {/* Right Column: Video + Floating Images */}
-          <div className="relative flex min-h-[580px] items-center justify-center max-sm:min-h-[460px]">
-            <div className="absolute top-1/2 left-1/2 h-[320px] w-[560px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl shadow-xl max-md:h-[200px] max-md:w-[350px]">
-              <video
-                autoPlay
-                className="h-full w-full object-cover"
-                controls={false}
-                loop
-                muted
-                playsInline
-                src={
-                  process.env.NEXT_PUBLIC_HERO_VIDEO_URL ??
-                  "/platform_overview_2.mp4"
-                }
-              />
+          <div className="relative flex w-full items-center justify-center lg:col-span-2">
+            <div className="relative w-full overflow-hidden rounded-3xl shadow-[0_25px_80px_rgba(64,0,128,0.18)]">
+              <div
+                className="relative w-full"
+                style={{ paddingBottom: "56.25%" }}
+              >
+                <video
+                  autoPlay
+                  className="absolute inset-0 h-full w-full object-cover"
+                  controls={false}
+                  loop
+                  muted
+                  playsInline
+                  src={
+                    process.env.NEXT_PUBLIC_HERO_VIDEO_URL ??
+                    "/platform_overview_2.mp4"
+                  }
+                />
+              </div>
             </div>
 
             {/* Top-left floating image */}
