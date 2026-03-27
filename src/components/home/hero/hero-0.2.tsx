@@ -91,7 +91,7 @@ const Hero02 = () => {
                       fill="white"
                     />
                   </svg>
-                  Talk to Hyperscaler
+                  Talk to Eva AI
                 </Button>
               </Link>
               {/* <Button

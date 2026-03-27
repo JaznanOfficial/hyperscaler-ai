@@ -18,7 +18,7 @@ import {
 
 const clientNavItems: AppSidebarNavItem[] = [
   {
-    title: "Hyperscaler AI",
+    title: "Hyperscaler AI(Eva)",
     url: "/client",
     icon: "bot",
     matchSubRoutes: false,

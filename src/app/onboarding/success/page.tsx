@@ -3,6 +3,7 @@
 import { Check, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -16,7 +17,15 @@ const NEXT_STEPS = [
 ];
 
 export default function SuccessPage() {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
+  const didRefreshRef = useRef(false);
+
+  useEffect(() => {
+    if (didRefreshRef.current) return;
+    didRefreshRef.current = true;
+    void update();
+  }, [update]);
+
   const firstName = session?.user?.name?.trim().split(/\s+/)[0];
 
   return (

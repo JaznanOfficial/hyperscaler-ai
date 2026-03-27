@@ -48,15 +48,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.name = user.name;
         token.role = (user as User).role;
         token.getStarted = (user as User).getStarted;
       } else if (token.id) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
-          select: { role: true, getStarted: true },
+          select: { name: true, role: true, getStarted: true },
         });
 
         if (dbUser) {
+          token.name = dbUser.name;
           token.role = dbUser.role;
           token.getStarted = dbUser.getStarted;
         }
@@ -66,6 +68,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.name = token.name as string;
         session.user.role = token.role as string;
         session.user.getStarted = token.getStarted as boolean;
       }

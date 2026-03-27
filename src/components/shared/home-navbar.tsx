@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, Loader2, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,6 +13,7 @@ export function HomeNavbar() {
   const { status } = useSession();
   const pathname = usePathname();
   const isAuthenticated = status === "authenticated";
+  const isAuthLoading = status === "loading";
   const primaryCtaHref = isAuthenticated ? "/client" : "/login";
   const primaryCtaLabel = isAuthenticated ? "Dashboard" : "Login";
 
@@ -77,27 +78,41 @@ export function HomeNavbar() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Link href={primaryCtaHref}>
+          {isAuthLoading ? (
             <Button
-              className="hidden lg:inline-flex"
+              aria-label="Loading"
+              className="hidden min-w-[170px] justify-center lg:inline-flex"
+              disabled
               size="lg"
               variant="gradient"
             >
-              {primaryCtaLabel} <ArrowRight className="size-4" />
+              <Loader2 className="size-4 animate-spin" />
             </Button>
-          </Link>
+          ) : (
+            <Link href={primaryCtaHref}>
+              <Button
+                className="hidden min-w-[170px] justify-center lg:inline-flex"
+                size="lg"
+                variant="gradient"
+              >
+                {primaryCtaLabel} <ArrowRight className="size-4" />
+              </Button>
+            </Link>
+          )}
           <Button
             asChild
-            className="hidden lg:inline-flex"
+            className="hidden bg-linear-to-br from-[#D946EF] to-[#5B21B6] p-px lg:inline-flex"
             size="lg"
             variant="outline"
           >
             <Link
-              href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
+              href="/onboarding/book-a-demo"
               rel="noreferrer noopener"
               target="_blank"
             >
-              Contact us
+              <span className="inline-flex h-full w-full items-center justify-center rounded-[calc(theme(borderRadius.md)-1px)] bg-[#FBF5FF] px-6 text-zinc-900">
+                Book a Demo
+              </span>
             </Link>
           </Button>
 
@@ -186,21 +201,42 @@ export function HomeNavbar() {
                 <span>FAQ</span>
               </Link>
               <div className="mt-2 flex flex-col gap-2 border-zinc-100 border-t pt-3">
-                <Button asChild size="sm" variant="gradient">
-                  <Link
-                    href={primaryCtaHref}
-                    onClick={() => setMobileMenuOpen(false)}
+                {isAuthLoading ? (
+                  <Button
+                    aria-label="Loading"
+                    className="min-w-[170px] justify-center"
+                    disabled
+                    size="sm"
+                    variant="gradient"
                   >
-                    {primaryCtaLabel} <ArrowRight className="size-4" />
-                  </Link>
-                </Button>
-                <Button asChild size="sm" variant="outline">
+                    <Loader2 className="size-4 animate-spin" />
+                  </Button>
+                ) : (
+                  <Button asChild size="sm" variant="gradient">
+                    <Link
+                      href={primaryCtaHref}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <span className="inline-flex min-w-[170px] items-center justify-center">
+                        {primaryCtaLabel} <ArrowRight className="size-4" />
+                      </span>
+                    </Link>
+                  </Button>
+                )}
+                <Button
+                  asChild
+                  className="bg-linear-to-br from-[#D946EF] to-[#5B21B6] p-px"
+                  size="sm"
+                  variant="outline"
+                >
                   <Link
-                    href="https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build"
+                    href="/onboarding/book-a-demo"
                     rel="noreferrer noopener"
                     target="_blank"
                   >
-                    Contact us
+                    <span className="inline-flex h-full w-full items-center justify-center rounded-[calc(theme(borderRadius.md)-1px)] bg-white px-3 text-zinc-900">
+                      Contact us
+                    </span>
                   </Link>
                 </Button>
               </div>
