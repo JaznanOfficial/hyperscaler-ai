@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 const BuildWithUsSection = () => {
   return (
     <section className="mx-auto w-full max-w-[1480px] px-20 py-[150px] max-sm:px-6 max-sm:py-20">
-      <div className="relative flex items-center justify-center gap-10 max-sm:flex-col-reverse">
+      <div className="relative mt-20 flex items-center justify-center gap-10 max-sm:flex-col-reverse">
         <div className="pointer-events-none absolute right-0 bottom-16 -z-10 h-72 w-72 rounded-[999px] bg-linear-to-l from-fuchsia-500 via-violet-600 to-transparent blur-[220px]" />
         {/* Left Side: Text and Button */}
         <div className="flex h-full w-1/2 flex-col justify-center gap-3 max-sm:w-full">
@@ -54,10 +54,10 @@ const BuildWithUsSection = () => {
         <FadeInUp delay={0.2}>
           <Image
             alt="Build With Us"
-            className="h-auto w-full max-sm:w-full"
-            height={600}
+            className="h-auto w-full"
+            height={800}
             src="/build-with-us.svg"
-            width={600}
+            width={800}
           />
         </FadeInUp>
       </div>

@@ -5,16 +5,16 @@ import { TalkToSalesDrawer } from "@/components/site/services/talk-to-sales-draw
 const StayCreative = () => {
   return (
     <section className="mx-auto w-full max-w-[1480px] px-20 pt-[150px] max-sm:px-6 max-sm:pt-20">
-      <div className="relative flex items-center justify-center gap-10 max-sm:flex-col">
+      <div className="relative mt-20 flex items-center justify-center gap-10 max-sm:flex-col">
         <div className="pointer-events-none absolute bottom-16 left-0 -z-10 h-72 w-72 rounded-[999px] bg-linear-to-l from-fuchsia-500 via-violet-600 to-transparent blur-[220px]" />
         {/* Left Side: Image */}
         <FadeInUp delay={0.2}>
           <Image
             alt="Stay Creative"
-            className="h-auto w-full max-sm:w-full"
-            height={600}
+            className="h-auto w-full"
+            height={800}
             src="/stay-creative.svg"
-            width={600}
+            width={800}
           />
         </FadeInUp>
 
