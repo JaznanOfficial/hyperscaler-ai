@@ -37,7 +37,7 @@ const BuildWithUsSection = () => {
                 buttonLabel="Book a free growth session"
                 trigger={
                   <Button
-                    className="h-13 w-fit p-5! font-semibold sm:min-w-57"
+                    className="mt-5 h-13 w-fit p-5! font-semibold sm:min-w-57"
                     size="lg"
                     variant={"gradient"}
                   >
