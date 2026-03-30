@@ -64,7 +64,7 @@ const Hero02 = () => {
               <div className="mt-10 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
                 <Link className="w-full sm:w-auto" href="/chat">
                   <Button
-                    className="h-13 w-full font-semibold sm:w-[228px]"
+                    className="h-13 w-full p-5! font-semibold sm:min-w-57"
                     size="lg"
                     variant="gradient"
                   >

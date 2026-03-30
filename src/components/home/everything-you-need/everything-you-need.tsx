@@ -89,7 +89,12 @@ const EverythingYouNeed = () => {
 
       <div className="flex justify-center">
         <FadeInUp delay={0.4}>
-          <Button asChild className="px-6! py-5!" size="lg" variant="gradient">
+          <Button
+            asChild
+            className="h-13 w-full p-5! font-semibold sm:min-w-57"
+            size="lg"
+            variant="gradient"
+          >
             <Link href="/signup">
               Get Started
               <ArrowRight className="size-4" />

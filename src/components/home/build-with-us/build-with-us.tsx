@@ -10,7 +10,7 @@ const BuildWithUsSection = () => {
       <div className="relative mt-20 flex items-center justify-center gap-10 max-sm:flex-col-reverse">
         <div className="pointer-events-none absolute right-0 bottom-16 -z-10 h-72 w-72 rounded-[999px] bg-linear-to-l from-fuchsia-500 via-violet-600 to-transparent blur-[220px]" />
         {/* Left Side: Text and Button */}
-        <div className="flex h-full w-1/2 flex-col justify-center gap-3 max-sm:w-full">
+        <div className="flex h-full w-1/2 flex-col justify-center gap-2 max-sm:w-full">
           <FadeInUp delay={0}>
             <div className="font-['Outfit'] font-semibold text-purple-600 text-xl max-sm:text-xl">
               Build with us
@@ -18,12 +18,12 @@ const BuildWithUsSection = () => {
           </FadeInUp>
           <div className="flex flex-col gap-3">
             <FadeInUp delay={0.1}>
-              <p className="mt-[8px] font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] max-sm:mt-px max-sm:text-2xl max-sm:leading-[23px] sm:text-3xl md:text-4xl">
+              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] max-sm:text-2xl max-sm:leading-[23px] sm:text-3xl md:text-4xl">
                 Launch, develop or automate
               </p>
             </FadeInUp>
             <FadeInUp delay={0.2}>
-              <p className="mt-[14px] font-['Outfit'] font-normal text-gray-600 text-lg leading-8 max-sm:mt-px max-sm:text-[12px] max-sm:leading-[18px]">
+              <p className="font-['Outfit'] font-normal text-gray-600 text-lg leading-8 max-sm:text-[12px] max-sm:leading-[18px]">
                 Eliminate manual work, build clear milestones and Bring your
                 product idea to life with a structured roadmap.
               </p>
@@ -37,7 +37,7 @@ const BuildWithUsSection = () => {
                 buttonLabel="Book a free growth session"
                 trigger={
                   <Button
-                    className="w-fit px-6! py-5!"
+                    className="h-13 w-fit p-5! font-semibold sm:min-w-57"
                     size="lg"
                     variant={"gradient"}
                   >

@@ -17,7 +17,7 @@ type Visual = {
 const steps: Step[] = [
   {
     id: "01",
-    title: "Log In",
+    title: "Sign up",
     description:
       "Create your account in seconds and access your personalized marketing dashboard.",
   },
@@ -43,9 +43,9 @@ const steps: Step[] = [
 
 const placeholderVisuals: Visual[] = [
   {
-    id: "login",
-    alt: "Login video",
-    title: "Login to your account",
+    id: "signup",
+    alt: "Signup video",
+    title: "Signup to your account",
     subtitle: "client@example.com",
     videoSrc: "/how-it-works/video-1.mp4",
   },
