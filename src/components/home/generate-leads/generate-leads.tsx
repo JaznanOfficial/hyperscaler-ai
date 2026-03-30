@@ -74,8 +74,10 @@ const LeadGenerationSection = () => {
             alt="Lead Generation"
             className="h-auto w-full max-sm:w-full"
             height={800}
-            src="/generate-leads.svg"
+            src="/generate-leads.webp"
             width={800}
+            priority
+            quality={100}
           />
         </FadeInUp>
       </div>

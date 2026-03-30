@@ -124,7 +124,7 @@ function IncludedServiceCard({ service }: { service: IncludedService }) {
         <span
           className={cn(
             "inline-flex items-center gap-2 rounded-full px-3 py-1 font-semibold text-xs",
-            STATUS_STYLES[tone],
+            STATUS_STYLES[tone]
           )}
         >
           <span

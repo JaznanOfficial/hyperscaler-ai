@@ -32,10 +32,13 @@ const PaidMediaSection = () => {
         <FadeInUp delay={0.2}>
           <Image
             alt="Stay Creative"
-            className="h-auto w-full"
-            height={800}
-            src="/paid-media-left.svg"
-            width={800}
+            className=" w-full max-sm:w-[1000px] "
+            height={1000}
+            src="/paid-media-banner.webp"
+            width={1000}
+            priority
+            quality={100}
+
           />
         </FadeInUp>
 

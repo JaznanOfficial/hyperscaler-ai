@@ -11,10 +11,10 @@ const StayCreative = () => {
         <FadeInUp delay={0.2}>
           <Image
             alt="Stay Creative"
-            className="h-auto w-full"
-            height={800}
-            src="/stay-creative.svg"
-            width={800}
+            className="h-auto"
+            height={600}
+            src="/Stay-Creative.webp"
+            width={600}
           />
         </FadeInUp>
 
