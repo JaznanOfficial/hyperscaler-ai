@@ -54,10 +54,12 @@ const BuildWithUsSection = () => {
         <FadeInUp delay={0.2}>
           <Image
             alt="Build With Us"
-            className="h-auto w-full"
-            height={800}
-            src="/build-with-us.svg"
-            width={800}
+            className="h-auto "
+            height={600}
+            src="/Build-With-Us.webp"
+            width={600}
+            priority
+            quality={100}
           />
         </FadeInUp>
       </div>

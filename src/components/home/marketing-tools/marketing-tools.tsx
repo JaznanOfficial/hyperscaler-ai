@@ -83,10 +83,7 @@ const MarketingTools = () => {
               size="lg"
               variant="gradient"
             >
-              <Link
-                href="/onboarding/book-a-demo"
-                target="_blank"
-              >
+              <Link href="/onboarding/book-a-demo" target="_blank">
                 <svg
                   fill="none"
                   height="18"

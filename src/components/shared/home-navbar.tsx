@@ -105,10 +105,7 @@ export function HomeNavbar() {
             size="lg"
             variant="outline"
           >
-            <Link
-              href="/onboarding/book-a-demo"
-              rel="noreferrer noopener"
-            >
+            <Link href="/onboarding/book-a-demo" rel="noreferrer noopener">
               <span className="inline-flex h-full w-full items-center justify-center rounded-[calc(theme(borderRadius.md)-1px)] bg-[#FBF5FF] px-6 text-zinc-900">
                 Book a Demo
               </span>

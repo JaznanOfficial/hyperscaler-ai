@@ -67,8 +67,11 @@ export default function Page() {
             </h1>
           </div>
 
-          <div className="mx-auto mb-11 rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 text-center max-w-[470px]">
-            <p className="font-semibold text-base" style={{ fontFamily: "var(--font-outfit)" }}>
+          <div className="mx-auto mb-11 max-w-[470px] rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 text-center">
+            <p
+              className="font-semibold text-base"
+              style={{ fontFamily: "var(--font-outfit)" }}
+            >
               <span className="inline-block bg-linear-to-r from-violet-800 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
                 Redirecting to Eva AI in {secondsRemaining}s…
               </span>

@@ -4,7 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
-const CALENDLY_URL = "https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build";
+const CALENDLY_URL =
+  "https://calendly.com/ujjwalroy1/hyperscaler-scale-your-build";
 const SUCCESS_URL = "/onboarding/book-a-demo/success";
 
 export default function Page() {
@@ -36,7 +37,7 @@ export default function Page() {
 
   useEffect(() => {
     const existing = document.querySelector<HTMLScriptElement>(
-      'script[src="https://assets.calendly.com/assets/external/widget.js"]',
+      'script[src="https://assets.calendly.com/assets/external/widget.js"]'
     );
     if (existing) return;
 
