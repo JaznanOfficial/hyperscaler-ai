@@ -17,7 +17,7 @@ type Visual = {
 const steps: Step[] = [
   {
     id: "01",
-    title: "Log In",
+    title: "Sign up",
     description:
       "Create your account in seconds and access your personalized marketing dashboard.",
   },
@@ -43,9 +43,9 @@ const steps: Step[] = [
 
 const placeholderVisuals: Visual[] = [
   {
-    id: "login",
-    alt: "Login video",
-    title: "Login to your account",
+    id: "signup",
+    alt: "Signup video",
+    title: "Signup to your account",
     subtitle: "client@example.com",
     videoSrc: "/how-it-works/video-1.mp4",
   },
@@ -103,17 +103,15 @@ const StepDetail = ({ step }: { step: Step }) => (
 
 const VisualCard = ({ visual }: { visual: Visual }) => (
   <FadeInUp>
-    <div className="w-fit overflow-hidden rounded-3xl">
-      <video
-        autoPlay
-        className="h-full w-full object-contain"
-        controls={false}
-        loop
-        muted
-        playsInline
-        src={visual.videoSrc}
-      />
-    </div>
+    <video
+      autoPlay
+      className="h-[480px] w-full overflow-hidden rounded-3xl object-contain"
+      controls={false}
+      loop
+      muted
+      playsInline
+      src={visual.videoSrc}
+    />
   </FadeInUp>
 );
 
@@ -134,16 +132,14 @@ const HowHyperscalerWorks = () => {
             <div key={scene.id}>
               <div className="grid grid-cols-[1fr_1fr] items-start gap-20">
                 <div className="relative flex min-h-[256px] flex-col gap-10">
-                  <div className="relative flex min-h-[256px] flex-col gap-10">
-                    {scene.steps.map((step, stepIdx) => (
-                      <div key={step.id}>
-                        <StepDetail step={step} />
-                        <div className="absolute top-15 left-[14px] h-64 w-[3px] xl:top-15 xl:h-92">
-                          <span className="block h-full w-full bg-gradient-to-b from-fuchsia-500 to-violet-800 opacity-80" />
-                        </div>
+                  {scene.steps.map((step, stepIdx) => (
+                    <div key={step.id}>
+                      <StepDetail step={step} />
+                      <div className="absolute top-15 left-[14px] h-123 w-[3px] xl:top-15 xl:h-123">
+                        <span className="block h-full w-full bg-gradient-to-b from-fuchsia-500 to-violet-800 opacity-80" />
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
                 <VisualCard visual={scene.visual} />
               </div>

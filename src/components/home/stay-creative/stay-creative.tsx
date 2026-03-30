@@ -19,7 +19,7 @@ const StayCreative = () => {
         </FadeInUp>
 
         {/* Right Side: Text and Button */}
-        <div className="flex h-full w-1/2 flex-col justify-center gap-3 max-sm:w-full">
+        <div className="flex h-full w-1/2 flex-col justify-center gap-2 max-sm:w-full">
           <FadeInUp delay={0}>
             <div className="font-['Outfit'] font-semibold text-purple-600 text-xl max-sm:text-xl">
               Stay Creative
@@ -27,17 +27,14 @@ const StayCreative = () => {
           </FadeInUp>
           <div className="flex flex-col gap-3">
             <FadeInUp delay={0.1}>
-              <p className="mt-[8px] font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] max-sm:mt-px max-sm:text-2xl max-sm:leading-[23px] sm:text-3xl md:text-4xl">
+              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] max-sm:text-2xl max-sm:leading-[23px] sm:text-3xl md:text-4xl">
                 We value branding and storytelling along with consistency in
-              </p>
-            </FadeInUp>
-            <FadeInUp delay={0.15}>
-              <p className="font-['Outfit'] font-normal text-3xl text-[#111111] leading-[48px] max-sm:mt-px max-sm:text-xl max-sm:leading-[23px] sm:text-3xl md:text-3xl">
                 social media with human touch
               </p>
             </FadeInUp>
+
             <FadeInUp delay={0.2}>
-              <p className="mt-[14px] font-['Outfit'] font-normal text-gray-600 text-lg leading-8 max-sm:mt-px max-sm:text-[12px] max-sm:leading-[18px]">
+              <p className="font-['Outfit'] font-normal text-gray-600 text-lg leading-8 max-sm:text-[12px] max-sm:leading-[18px]">
                 Automate your social media campaigns with immaculate
                 storytelling that does not look like AI Slope
               </p>
@@ -48,7 +45,7 @@ const StayCreative = () => {
           <FadeInUp delay={0.3}>
             <div>
               <TalkToSalesDrawer
-                buttonClassName=" w-[230px]"
+                buttonClassName="font-semibold h-13 p-5! sm:min-w-57 w-fit"
                 buttonLabel="Talk to Us"
                 buttonSize="lg"
                 buttonVariant="gradient"

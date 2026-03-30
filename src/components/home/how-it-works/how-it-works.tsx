@@ -65,7 +65,11 @@ const HowItWorks = () => {
         <div className="pointer-events-none absolute inset-0 z-0 hidden h-1 w-3/4 -translate-x-1/2 -translate-y-1/3 rounded-full bg-purple-500 lg:top-1/3 lg:left-1/2 lg:block" />
       </div>
       <Link href={"/services"}>
-        <Button className="w-fit" variant={"gradient"}>
+        <Button
+          className="h-13 w-full p-5! font-semibold sm:min-w-57"
+          size="lg"
+          variant={"gradient"}
+        >
           Get Started <ArrowRight className="size-4" />
         </Button>
       </Link>

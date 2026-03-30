@@ -40,7 +40,7 @@ const PaidMediaSection = () => {
         </FadeInUp>
 
         {/* Right Side: Text and Button */}
-        <div className="flex h-full w-1/2 flex-col justify-center gap-3 max-sm:w-full">
+        <div className="flex h-full w-1/2 flex-col justify-center gap-2 max-sm:w-full">
           <FadeInUp delay={0.2}>
             <div className="font-['Outfit'] font-semibold text-purple-600 text-xl max-sm:text-xl">
               Paid Media
@@ -48,12 +48,12 @@ const PaidMediaSection = () => {
           </FadeInUp>
           <div className="flex flex-col gap-3.5">
             <FadeInUp delay={0.3}>
-              <p className="mt-[8px] font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] max-sm:mt-[1px] max-sm:text-2xl max-sm:leading-[23px] sm:text-3xl md:text-4xl">
+              <p className="font-['Outfit'] font-medium text-3xl text-[#111111] leading-[48px] max-sm:text-2xl max-sm:leading-[23px] sm:text-3xl md:text-4xl">
                 Launch your campaigns with full visibility
               </p>
             </FadeInUp>
             <FadeInUp delay={0.4}>
-              <p className="mt-[14px] font-['Outfit'] font-normal text-gray-600 text-lg leading-8 max-sm:mt-[1px] max-sm:text-[12px] max-sm:leading-[18px]">
+              <p className="font-['Outfit'] font-normal text-gray-600 text-lg leading-8 max-sm:text-[12px] max-sm:leading-[18px]">
                 Stop guessing what will work and start putting money on what
                 will work the best for your product.
               </p>
@@ -64,8 +64,9 @@ const PaidMediaSection = () => {
           <FadeInUp delay={0.5}>
             <div>
               <TalkToSalesDrawer
-                buttonClassName="py-[24px] w-fit px-6! py-5!"
+                buttonClassName="font-semibold h-13 p-5! sm:min-w-57 w-fit"
                 buttonLabel="Talk to a Growth Expert"
+                buttonSize="lg"
                 buttonVariant="gradient"
               />
             </div>
