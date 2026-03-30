@@ -126,6 +126,22 @@
   }
 }
 
+@keyframes headlineGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-headline-gradient {
+  animation: headlineGradientShift 4s ease-in-out infinite;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -138,3 +154,4 @@
     @apply bg-background text-foreground;
   }
 }
+
