@@ -32,7 +32,7 @@ const Hero02 = () => {
       <div className="z-10 mx-auto max-w-[1480px] xl:px-20">
         <div className="grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16 lg:gap-y-12">
           {/* Left Column: Text & CTA */}
-          <div className="flex flex-col items-center text-center lg:col-span-2">
+          <div className="flex flex-col items-center justify-center text-center lg:col-span-2 lg:min-h-[calc(100dvh-5rem)]">
             {/* Pill tagline */}
             <FadeInUp delay={1}>
               <div className="mb-4 inline-flex w-fit items-center rounded-full border border-purple-200/75 bg-purple-50/30 px-4 py-2 font-medium">
