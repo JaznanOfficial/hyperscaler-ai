@@ -7,6 +7,10 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  Calendar04Icon
+} from "@hugeicons/core-free-icons";
 
 export function HomeNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -106,8 +110,15 @@ export function HomeNavbar() {
             variant="outline"
           >
             <Link href="/onboarding/book-a-demo" rel="noreferrer noopener">
-              <span className="inline-flex h-full w-full items-center justify-center rounded-[calc(theme(borderRadius.md)-1px)] bg-[#FBF5FF] px-6 text-zinc-900">
-                Book a Demo
+              <span className="inline-flex h-full w-full items-center justify-center gap-2 rounded-[calc(var(--radius-md)-1px)] bg-[#FBF5FF] px-6 text-zinc-900 leading-none">
+                <HugeiconsIcon
+                  className="shrink-0"
+                  color="#000"
+                  icon={Calendar04Icon}
+                  size={16}
+                  strokeWidth={1.8}
+                />
+                <span>Book a Demo</span>
               </span>
             </Link>
           </Button>
@@ -230,7 +241,7 @@ export function HomeNavbar() {
                     rel="noreferrer noopener"
                     target="_blank"
                   >
-                    <span className="inline-flex h-full w-full items-center justify-center rounded-[calc(theme(borderRadius.md)-1px)] bg-white px-3 text-zinc-900">
+                    <span className="inline-flex h-full w-full items-center justify-center rounded-[calc(var(--radius-md)-1px)] bg-white px-3 text-zinc-900">
                       Contact us
                     </span>
                   </Link>
