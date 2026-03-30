@@ -105,7 +105,7 @@ const VisualCard = ({ visual }: { visual: Visual }) => (
   <FadeInUp>
     <video
       autoPlay
-      className="h-96 w-full overflow-hidden rounded-3xl object-contain"
+      className="h-[480px] w-full overflow-hidden rounded-3xl object-contain"
       controls={false}
       loop
       muted
@@ -135,7 +135,7 @@ const HowHyperscalerWorks = () => {
                   {scene.steps.map((step, stepIdx) => (
                     <div key={step.id}>
                       <StepDetail step={step} />
-                      <div className="absolute top-15 left-[14px] h-64 w-[3px] xl:top-15 xl:h-92">
+                      <div className="absolute top-15 left-[14px] h-123 w-[3px] xl:top-15 xl:h-123">
                         <span className="block h-full w-full bg-gradient-to-b from-fuchsia-500 to-violet-800 opacity-80" />
                       </div>
                     </div>
