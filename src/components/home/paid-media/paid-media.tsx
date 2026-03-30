@@ -64,7 +64,7 @@ const PaidMediaSection = () => {
           <FadeInUp delay={0.5}>
             <div>
               <TalkToSalesDrawer
-                buttonClassName="font-semibold h-13 p-5! sm:min-w-57 w-fit"
+                buttonClassName="font-semibold h-13 p-5! sm:min-w-57 w-fit mt-5"
                 buttonLabel="Talk to a Growth Expert"
                 buttonSize="lg"
                 buttonVariant="gradient"
