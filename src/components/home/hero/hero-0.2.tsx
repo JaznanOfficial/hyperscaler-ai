@@ -1,20 +1,19 @@
-import Link from "next/link";
-import Image from "next/image";
-import { FadeInUp } from "@/components/animations/fade-in-up";
-import { HeroVideoReveal } from "@/components/home/hero/hero-video-reveal";
-import { Button } from "@/components/ui/button";
-import { HugeiconsIcon } from "@hugeicons/react";
 import {
   BriefcaseDollarIcon,
   Rocket02Icon,
   WorkflowCircle01Icon,
 } from "@hugeicons/core-free-icons";
-
+import { HugeiconsIcon } from "@hugeicons/react";
+import Image from "next/image";
+import Link from "next/link";
+import { FadeInUp } from "@/components/animations/fade-in-up";
+import { HeroVideoReveal } from "@/components/home/hero/hero-video-reveal";
+import { Button } from "@/components/ui/button";
 
 const aiModelStack = [
-  { name: "hyperscaler", src: "/logo-without-text.png", },
-  { name: "GPT", src: "/gpt.png", },
-  { name: "Claude", src: "/claude.png", },
+  { name: "hyperscaler", src: "/logo-without-text.png" },
+  { name: "GPT", src: "/gpt.png" },
+  { name: "Claude", src: "/claude.png" },
 ];
 
 const heroHighlights = [
@@ -23,11 +22,10 @@ const heroHighlights = [
   { text: "No agency overhead", icon: BriefcaseDollarIcon },
 ];
 
-
 const Hero02 = () => {
   return (
-    <section className="relative isolate mx-auto w-full overflow-hidden bg-[url('/hero-bg.svg')] bg-center bg-cover bg-white bg-no-repeat py-12 max-sm:px-6 lg:px-20 lg:py-36">
-      <div className="-top-16 -left-8 pointer-events-none absolute h-56 w-56 rounded-full bg-fuchsia-300/20 blur-3xl" />
+    <section className="relative isolate mx-auto w-full overflow-hidden bg-[url('/hero-bg.svg')] bg-center bg-cover bg-white bg-no-repeat py-12 max-sm:px-6 lg:px-20 lg:pb-36">
+      <div className="pointer-events-none absolute -top-16 -left-8 h-56 w-56 rounded-full bg-fuchsia-300/20 blur-3xl" />
       <div className="pointer-events-none absolute right-0 bottom-8 h-64 w-64 rounded-full bg-violet-300/25 blur-3xl" />
       <div className="z-10 mx-auto max-w-[1480px] xl:px-20">
         <div className="grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16 lg:gap-y-12">
@@ -43,14 +41,16 @@ const Hero02 = () => {
                   >
                     {aiModelStack.map((model, index) => (
                       <span
-                        className={`-ml-2.5  bg-white inline-flex h-8 w-8 items-center justify-center rounded-full border border-white leading-none shadow-sm first:ml-0`}
+                        className={
+                          "-ml-2.5 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white bg-white leading-none shadow-sm first:ml-0"
+                        }
                         key={model.name}
                         style={{ zIndex: aiModelStack.length - index }}
                         title={model.name}
                       >
                         <Image
                           alt={`${model.name} logo`}
-                          className="h-6 w-6 object-contain rounded-full"
+                          className="h-6 w-6 rounded-full object-contain"
                           height={26}
                           src={model.src}
                           width={26}
@@ -69,7 +69,7 @@ const Hero02 = () => {
               </div>
             </FadeInUp>
 
-            <h1 className="group flex max-w-6xl flex-wrap justify-center gap-x-3 gap-y-2 font-['Outfit'] font-medium text-6xl text-[#1A1A1A] leading-tight sm:text-7xl max-sm:text-4xl max-sm:leading-tight">
+            <h1 className="group flex max-w-6xl flex-wrap justify-center gap-x-3 gap-y-2 font-['Outfit'] font-medium text-6xl text-[#1A1A1A] leading-tight max-sm:text-4xl max-sm:leading-tight sm:text-7xl">
               {["Your", "Marketing", "on"].map((word, index) => (
                 <FadeInUp
                   className="inline-block"
@@ -82,9 +82,9 @@ const Hero02 = () => {
                 </FadeInUp>
               ))}
               <FadeInUp className="inline-block" delay={0.1 + 3 * 0.1}>
-                <span className="relative inline-block cursor-default bg-linear-to-r from-fuchsia-500 via-violet-600 to-fuchsia-500 bg-size-[200%_100%] bg-clip-text text-transparent transition-transform duration-300 ease-out hover:-translate-y-1 hover:scale-[1.03] animate-headline-gradient">
+                <span className="relative inline-block animate-headline-gradient cursor-default bg-linear-to-r bg-size-[200%_100%] from-fuchsia-500 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent transition-transform duration-300 ease-out hover:-translate-y-1 hover:scale-[1.03]">
                   Autopilot
-                  <span className="-translate-x-1/2 pointer-events-none absolute -bottom-1 left-1/2 h-[3px] w-0 rounded-full bg-linear-to-r from-fuchsia-400 to-violet-600 transition-all duration-500 group-hover:left-0 group-hover:w-full group-hover:translate-x-0" />
+                  <span className="pointer-events-none absolute -bottom-1 left-1/2 h-[3px] w-0 -translate-x-1/2 rounded-full bg-linear-to-r from-fuchsia-400 to-violet-600 transition-all duration-500 group-hover:left-0 group-hover:w-full group-hover:translate-x-0" />
                 </span>
               </FadeInUp>
             </h1>
@@ -104,7 +104,7 @@ const Hero02 = () => {
             </div> */}
 
             <FadeInUp delay={0.7}>
-              <p className="mt-5 max-w-3xl font-['Outfit'] font-normal text-xl text-gray-700 leading-8 max-sm:text-base">
+              <p className="mt-5 max-w-3xl font-['Outfit'] font-normal text-gray-700 text-xl leading-8 max-sm:text-base">
                 Run paid ads, outreach, and demand generation from one platform
                 with clean human touch.
               </p>
@@ -134,14 +134,14 @@ const Hero02 = () => {
               <div className="mt-10 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
                 <Link className="w-full sm:w-auto" href="/chat">
                   <Button
-                    className="h-13 w-full shadow-xl p-5! font-semibold sm:min-w-57"
+                    className="h-13 w-full p-5! font-semibold shadow-xl sm:min-w-57"
                     size="custom"
                     variant="gradient"
                   >
                     <div className="flex items-center justify-center rounded-full bg-white p-1">
                       <Image
                         alt="Hyperscaler"
-                        className="h-6 w-6 object-contain rounded-full"
+                        className="h-6 w-6 rounded-full object-contain"
                         height={100}
                         src="/logo-without-text.png"
                         width={100}
@@ -187,17 +187,19 @@ const Hero02 = () => {
             />
 
             <div className="absolute top-8 left-2 z-20 hidden rounded-xl border border-violet-200 bg-white/90 px-4 py-2 text-left shadow-lg backdrop-blur-xs md:block">
-              <p className="text-xs uppercase tracking-wide text-violet-500">
+              <p className="text-violet-500 text-xs uppercase tracking-wide">
                 Revenue Impact
               </p>
-              <p className="mt-1 text-lg font-semibold text-gray-900">+38%</p>
+              <p className="mt-1 font-semibold text-gray-900 text-lg">+38%</p>
             </div>
 
             <div className="absolute right-3 bottom-8 z-20 hidden rounded-xl border border-fuchsia-200 bg-white/90 px-4 py-2 text-left shadow-lg backdrop-blur-xs md:block">
-              <p className="text-xs uppercase tracking-wide text-fuchsia-500">
+              <p className="text-fuchsia-500 text-xs uppercase tracking-wide">
                 Time Saved
               </p>
-              <p className="mt-1 text-lg font-semibold text-gray-900">12 hrs/wk</p>
+              <p className="mt-1 font-semibold text-gray-900 text-lg">
+                12 hrs/wk
+              </p>
             </div>
           </div>
         </div>

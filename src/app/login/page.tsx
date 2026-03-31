@@ -5,17 +5,17 @@ import { LoginForm } from "@/components/login/login-form";
 
 export default function LoginPage() {
   return (
-    <div className="grid min-h-svh w-full lg:grid-cols-2">
-      <div className="relative hidden overflow-hidden lg:block">
+    <div className="grid w-full gap-10 p-6 md:p-10 lg:flex">
+      <div className="relative hidden w-[50%] overflow-hidden lg:block">
         <video
           autoPlay
-          className="h-full w-full object-cover"
+          className="h-[full] w-full object-contain"
           loop
           muted
           src="/login.mp4"
         />
       </div>
-      <div className="flex flex-col gap-4 p-6 md:p-10">
+      <div className="flex w-[55%] flex-col gap-4">
         <div className="flex justify-center md:justify-start">
           <Link
             aria-label="Hyperscaler home"

@@ -19,17 +19,6 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 
-const logoLinkedIn =
-  "https://www.figma.com/api/mcp/asset/eb37de3a-9208-4f6c-9577-075920b97d6e";
-const logoGoogle =
-  "https://www.figma.com/api/mcp/asset/65ed1871-a951-406d-bc68-2679560cafc7";
-const logoInstagram =
-  "https://www.figma.com/api/mcp/asset/b1aa4fe3-3dcd-4938-a711-c1dd04a87136";
-const logoFacebook =
-  "https://www.figma.com/api/mcp/asset/04980a44-371a-4694-a959-b0f93940d706";
-const logoGmail =
-  "https://www.figma.com/api/mcp/asset/bb565eec-e2ea-4df3-bd48-538a45a5b8e8";
-
 const SOURCE_OPTIONS = [
   { id: "linkedin", label: "LinkedIn", icon: Linkedin },
   { id: "google", label: "Google Search", icon: Search },
@@ -113,56 +102,22 @@ export default function SourcePage() {
   }
 
   return (
-    <main className="min-h-svh w-full bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
-      <section className="relative hidden overflow-hidden bg-[#EBDDFA] lg:block">
-        <div className="absolute -top-[350px] -left-[520px] h-[980px] w-[980px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -top-[190px] -left-[360px] h-[760px] w-[760px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute -top-[60px] -left-[220px] h-[540px] w-[540px] rounded-full border border-[#DDC4F8]" />
-        <div className="absolute top-[90px] -left-[80px] h-[320px] w-[320px] rounded-full border border-[#DDC4F8]" />
-
-        <div className="absolute top-[110px] left-[72px] rounded-xl bg-[#D8ADF1]/40 p-2">
-          <img
-            alt="LinkedIn"
-            className="h-[72px] w-[72px] rounded-[7px] object-cover"
-            src={logoLinkedIn}
-          />
-        </div>
-        <div className="absolute top-[199px] left-[289px] rounded-xl bg-[#D8ADF1]/40 p-2">
-          <img
-            alt="Google"
-            className="h-[72px] w-[72px] rounded-[7px] object-cover"
-            src={logoGoogle}
-          />
-        </div>
-        <div className="absolute top-[397px] left-[109px] rounded-xl bg-[#D8ADF1]/40 p-2">
-          <img
-            alt="Instagram"
-            className="h-[72px] w-[72px] rounded-[7px] object-cover"
-            src={logoInstagram}
-          />
-        </div>
-        <div className="absolute top-[460px] left-[324px] rounded-xl bg-[#D8ADF1]/40 p-2">
-          <img
-            alt="Facebook"
-            className="h-[72px] w-[72px] rounded-[7px] object-cover"
-            src={logoFacebook}
-          />
-        </div>
-        <div className="absolute top-[647px] left-[145px] rounded-xl bg-[#D8ADF1]/40 p-2">
-          <img
-            alt="Gmail"
-            className="h-[72px] w-[72px] rounded-[7px] object-cover"
-            src={logoGmail}
-          />
-        </div>
-
-        <div className="absolute inset-y-0 right-0 w-[56%] bg-linear-to-r from-[#EBDDFA]/0 to-white/85" />
+    <main className="min-h-svh w-full bg-white lg:flex">
+      <section className="relative hidden w-1/2 overflow-hidden lg:block">
+        <video
+          autoPlay
+          className="h-full w-full object-cover"
+          loop
+          muted
+          playsInline
+          src="/source.mp4"
+        />
       </section>
 
-      <section className="flex min-h-svh justify-center px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
-        <div className="w-full max-w-[760px]">
-          <div className="mb-9 flex items-center justify-between">
-            <div className="w-[160px]">
+      <section className="flex w-full items-center justify-center">
+        <div className="flex w-full flex-col items-center gap-12 px-6 py-16 text-center sm:px-10 lg:px-16">
+          <div className="mb-9 flex w-full items-center justify-between">
+            <div className="w-[160px] text-left">
               <p className="mb-3 text-[#515A65] text-base">Step 3 of 3</p>
               <div className="flex items-center gap-[5px]">
                 <span className="h-2 w-[53px] rounded bg-[#B9BDC1]" />
@@ -176,7 +131,7 @@ export default function SourcePage() {
               href={
                 isAuthenticated || !anonId
                   ? "/onboarding/services"
-                  : `/onboarding/services?anonId=${encodeURIComponent(anonId)}`
+                  : `/onboarding/services?anonId=${encodeURIComponent(anonId ?? "")}`
               }
             >
               <ArrowLeft aria-hidden="true" className="size-5" />
@@ -184,13 +139,13 @@ export default function SourcePage() {
             </Link>
           </div>
 
-          <div className="mb-10">
-            <h1 className="font-['Outfit'] font-medium text-3xl text-[#1A1A1A] leading-normal sm:text-[32px]">
+          <div className="space-y-4">
+            <h1 className="font-['Outfit'] font-medium text-4xl text-[#1A1A1A] leading-[1.4] sm:text-[40px]">
               How did you discover Hyperscaler?
             </h1>
           </div>
 
-          <div className="space-y-[22px]">
+          <div className="w-full space-y-[22px]">
             {SOURCE_OPTIONS.map(({ id, label, icon: Icon }) => {
               const selected = source === id;
 
@@ -214,45 +169,44 @@ export default function SourcePage() {
             })}
           </div>
 
-          <div className="mt-7">
-            <div className="flex items-center gap-3">
-              <Button
-                className="h-[45px] w-[155px]"
-                onClick={() =>
-                  router.push(
-                    isAuthenticated || !anonId
-                      ? "/onboarding/book-a-demo"
-                      : `/onboarding/book-a-demo?anonId=${encodeURIComponent(anonId)}`
-                  )
-                }
-                type="button"
-                variant="outline"
-              >
-                Skip
-              </Button>
-              <Button
-                className="h-[45px] w-[155px]"
-                disabled={isLoading}
-                onClick={onContinue}
-                type="button"
-                variant="gradient"
-              >
-                {isLoading ? (
-                  <>
-                    Saving
-                    <Loader2
-                      aria-hidden="true"
-                      className="size-[18px] animate-spin"
-                    />
-                  </>
-                ) : (
-                  <>
-                    Continue
-                    <ArrowRight aria-hidden="true" className="size-[18px]" />
-                  </>
-                )}
-              </Button>
-            </div>
+          <div className="flex items-center gap-3 self-start">
+            <Button
+              className="h-[45px] w-[155px]"
+              disabled={isLoading}
+              onClick={() =>
+                router.push(
+                  isAuthenticated || !anonId
+                    ? "/onboarding/book-a-demo"
+                    : `/onboarding/book-a-demo?anonId=${encodeURIComponent(anonId ?? "")}`
+                )
+              }
+              type="button"
+              variant="outline"
+            >
+              Skip
+            </Button>
+            <Button
+              className="h-[45px] w-[155px]"
+              disabled={isLoading}
+              onClick={onContinue}
+              type="button"
+              variant="gradient"
+            >
+              {isLoading ? (
+                <>
+                  Saving
+                  <Loader2
+                    aria-hidden="true"
+                    className="size-[18px] animate-spin"
+                  />
+                </>
+              ) : (
+                <>
+                  Continue
+                  <ArrowRight aria-hidden="true" className="size-[18px]" />
+                </>
+              )}
+            </Button>
           </div>
         </div>
       </section>

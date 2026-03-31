@@ -154,7 +154,7 @@ export function LoginForm({
               Don't have an account?{" "}
               <Link
                 className="font-medium text-purple-500 no-underline"
-                href="/signup"
+                href="/onboarding/book-a-demo"
               >
                 Sign up
               </Link>

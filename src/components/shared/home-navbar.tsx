@@ -1,5 +1,7 @@
 "use client";
 
+import { Calendar04Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight, Loader2, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,10 +9,6 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  Calendar04Icon
-} from "@hugeicons/core-free-icons";
 
 export function HomeNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

@@ -95,7 +95,7 @@ const EverythingYouNeed = () => {
             size="lg"
             variant="gradient"
           >
-            <Link href="/signup">
+            <Link href="/onboarding/book-a-demo">
               Get Started
               <ArrowRight className="size-4" />
             </Link>

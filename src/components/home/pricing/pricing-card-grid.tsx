@@ -26,7 +26,7 @@ const renderPricingCta = (item: PricingCard, isAuthenticated: boolean) => {
     const priceAmount = item.price?.amount?.replace(/[$,]/g, "") || "0";
     const href = isAuthenticated
       ? `/client?package=${encodeURIComponent(item.name)}&amount=${priceAmount}`
-      : `/signup?package=${encodeURIComponent(item.name)}&amount=${priceAmount}`;
+      : "/onboarding/book-a-demo";
 
     return (
       <Link

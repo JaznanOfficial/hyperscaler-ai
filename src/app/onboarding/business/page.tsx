@@ -1,6 +1,8 @@
 "use client";
 
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
@@ -16,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const leftPreviewImage = "/onboarding/business-onboarding.png";
+const leftPreviewImage = "/business.gif";
 
 const INDUSTRIES = [
   "SaaS",
@@ -37,8 +39,19 @@ const REVENUE_RANGES = [
 ];
 
 const STAGES = ["Startup", "Growing", "Established", "Enterprise"];
+const WEBSITE_PROTOCOL_REGEX = /^https?:\/\//i;
 
-const sidebarSurfaceImage = "/onboarding/bg-business.png";
+function normalizeWebsiteUrl(url: string) {
+  if (!url.trim()) {
+    return "";
+  }
+
+  if (WEBSITE_PROTOCOL_REGEX.test(url)) {
+    return url;
+  }
+
+  return `https://${url}`;
+}
 
 export default function BusinessPage() {
   const router = useRouter();
@@ -49,6 +62,7 @@ export default function BusinessPage() {
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
 
   const [businessName, setBusinessName] = useState("");
   const [industry, setIndustry] = useState(INDUSTRIES[0]);
@@ -61,7 +75,9 @@ export default function BusinessPage() {
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (isLoading) return;
+    if (isLoading) {
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -75,10 +91,11 @@ export default function BusinessPage() {
           body: JSON.stringify({
             name,
             phone,
+            email,
             businessName,
             industry,
             businessStage: selectedStage,
-            websiteUrl,
+            websiteUrl: normalizeWebsiteUrl(websiteUrl),
             monthlyRevenueRange,
           }),
         }
@@ -116,16 +133,20 @@ export default function BusinessPage() {
   }
 
   return (
-    <main className="h-svh w-full overflow-hidden bg-white lg:grid lg:grid-cols-[minmax(420px,40%)_1fr]">
-      <section className="relative hidden h-svh overflow-hidden bg-[#EBDDFA] lg:block">
-        <img
-          alt="Hyperscaler assistant preview"
-          className="absolute inset-0 h-full w-full object-cover object-top opacity-90"
-          src={sidebarSurfaceImage}
+    <main className="w-full xxl:grid-cols-[minmax(420px,30%)_1fr] bg-white xl:grid xl:grid-cols-[minmax(420px,40%)_1fr]">
+      <section className="relative hidden overflow-hidden xl:block">
+        <Image
+          alt="Business onboarding"
+          className="h-full w-full object-contain"
+          height={600}
+          priority
+          src={leftPreviewImage}
+          width={600}
         />
+        <div className="absolute inset-y-0 right-0 w-32 bg-linear-to-r from-transparent to-white" />
       </section>
 
-      <section className="flex h-svh justify-center overflow-y-auto px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
+      <section className="flex min-h-svh items-center justify-center px-6 py-10 sm:px-10 lg:min-h-0 lg:px-14">
         <div className="w-full max-w-[760px]">
           <div className="mb-9 flex items-center justify-between">
             <div className="w-[160px]">
@@ -136,6 +157,14 @@ export default function BusinessPage() {
                 <span className="h-2 w-[51px] rounded bg-[#B9BDC1]" />
               </div>
             </div>
+
+            <Link
+              className="inline-flex items-center gap-1.5 font-medium text-[#515A65] text-base no-underline"
+              href="/onboarding/welcome"
+            >
+              <ArrowLeft aria-hidden="true" className="size-5" />
+              Back
+            </Link>
           </div>
 
           <div className="mb-10 space-y-2">
@@ -188,22 +217,43 @@ export default function BusinessPage() {
               </div>
             </div>
 
-            <div className="space-y-3">
-              <label
-                className="font-normal text-[#1A1A1A] text-base"
-                htmlFor="business-name"
-              >
-                Business Name
-              </label>
-              <Input
-                className="h-10 border-[#E4E4E7] bg-[#F5F5F5] placeholder:text-[#71717A]"
-                disabled={isLoading}
-                id="business-name"
-                onChange={(e) => setBusinessName(e.target.value)}
-                placeholder="Acme Inc"
-                required
-                value={businessName}
-              />
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className="space-y-3">
+                <label
+                  className="font-normal text-[#1A1A1A] text-base"
+                  htmlFor="business-name"
+                >
+                  Business Name
+                </label>
+                <Input
+                  className="h-10 border-[#E4E4E7] bg-[#F5F5F5] placeholder:text-[#71717A]"
+                  disabled={isLoading}
+                  id="business-name"
+                  onChange={(e) => setBusinessName(e.target.value)}
+                  placeholder="Acme Inc"
+                  required
+                  value={businessName}
+                />
+              </div>
+
+              <div className="space-y-3">
+                <label
+                  className="font-normal text-[#1A1A1A] text-base"
+                  htmlFor="business-email"
+                >
+                  Work email
+                </label>
+                <Input
+                  className="h-10 border-[#E4E4E7] bg-[#F5F5F5] placeholder:text-[#71717A]"
+                  disabled={isLoading}
+                  id="business-email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@company.com"
+                  required
+                  type="email"
+                  value={email}
+                />
+              </div>
             </div>
 
             <div className="space-y-3">
